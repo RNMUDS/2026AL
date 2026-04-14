@@ -1151,21 +1151,24 @@ max_tries = <span class="num">5</span>
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>コードの動きを予測する</h3>
+        <h3>繰り返し＋条件分岐のトレース</h3>
       </div>
-      <p>以下のコードを<strong>実行せずに</strong>出力を予測しなさい。予測を書いた後に実行して確かめなさい。</p>
-      <pre><span class="code-label">Python</span>
-answer = <span class="num">10</span>
-guess = <span class="num">15</span>
+      <p>以下のコードを<strong>実行せずに</strong>、ループが何回まわり、最終的に何が表示されるかを予測しなさい。<br>予測を書いた後に、<code>AL01-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL01-3.py</span>
+answer = <span class="num">30</span>
+guess = <span class="num">50</span>
+count = <span class="num">0</span>
 
-<span class="kw">if</span> guess == answer:
-    <span class="fn">print</span>(<span class="str">"正解！"</span>)
-<span class="kw">elif</span> guess > answer:
-    <span class="fn">print</span>(<span class="str">"もっと小さい数です"</span>)
-<span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">"もっと大きい数です"</span>)
+<span class="kw">while</span> guess != answer:
+    <span class="kw">if</span> guess > answer:
+        guess = guess - <span class="num">10</span>
+    <span class="kw">else</span>:
+        guess = guess + <span class="num">5</span>
+    count = count + <span class="num">1</span>
+    <span class="fn">print</span>(<span class="str">f"</span>{count}<span class="str">回目: guess = </span>{guess}<span class="str">"</span>)
 
-<span class="fn">print</span>(<span class="str">"判定終了"</span>)</pre>
+<span class="fn">print</span>(<span class="str">f"</span>{count}<span class="str">回で到達！"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> guess が毎回どう変化するか、1回ずつ表に書いて追うと分かりやすいです。</p>
       <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
@@ -1276,13 +1279,17 @@ guess = <span class="num">15</span>
     <details>
       <summary><span class="tag tag-standard" style="font-size:0.7rem">標準</span> 標準課題 2 解答</summary>
       <div class="answer-content">
-        <ul class="point-list">
-          <li><strong>予測:</strong>「もっと小さい数です」と「判定終了」の2行が表示される</li>
-          <li><code>guess(15)</code> は <code>answer(10)</code> と等しくないので <code>if</code> は通らない</li>
-          <li><code>guess(15) > answer(10)</code> なので <code>elif</code> の条件が成立</li>
-          <li>「もっと小さい数です」が表示される</li>
-          <li><code>print("判定終了")</code> は if文の外にあるので必ず実行される</li>
-        </ul>
+        <p><strong>ループのトレース:</strong></p>
+        <table>
+          <tr><th>回数</th><th>guess（実行前）</th><th>条件</th><th>変化</th><th>guess（実行後）</th></tr>
+          <tr><td>1</td><td>50</td><td>50 &gt; 30 → 真</td><td>-10</td><td>40</td></tr>
+          <tr><td>2</td><td>40</td><td>40 &gt; 30 → 真</td><td>-10</td><td>30</td></tr>
+        </table>
+        <p style="margin-top:0.5rem">2回目の実行後に <code>guess = 30 = answer</code> なので <code>while guess != answer</code> が偽になりループ終了。</p>
+        <p><strong>出力:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">1回目: guess = 40
+2回目: guess = 30
+2回で到達！</pre>
       </div>
     </details>
 
