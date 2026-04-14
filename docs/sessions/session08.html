@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8回: 挿入ソート（直接挿入法） | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(147,213,0,0.2), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: rgba(118,185,0,0.15); font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; } pre .fn { color: #93D500; } pre .str { color: #FFB800; } pre .cmt { color: #616161; font-style: italic; } pre .num { color: #fab387; } pre .op { color: #4FC3F7; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #a6adc8; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '▸'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第8回: 挿入ソート（直接挿入法）</h1>
+    <p>トランプの手札を並べる感覚 ── 1枚ずつ正しい位置に差し込むソートアルゴリズム</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#93D500;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#FFB800">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. EXPLANATION ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>説明</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.1 なぜソートが重要なのか</h4>
+      <ul class="point-list">
+        <li><strong>検索の高速化</strong>: ソート済みデータなら二分探索 O(log n) が使える</li>
+        <li><strong>データ分析</strong>: 中央値、最大値、最小値が簡単に見つかる</li>
+        <li><strong>重複の検出</strong>: ソート済みなら隣同士を比較するだけ</li>
+        <li><strong>表示の整理</strong>: 名前順、日付順、成績順など</li>
+      </ul>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.2 挿入ソートの考え方</h4>
+      <div class="analogy">
+        トランプのカードを手に持って、<strong>1枚ずつ正しい位置に差し込む</strong>動作と同じです。
+        最初のカードは「整列済み」（1枚だけなので）。
+        2枚目を取り、手札の中で正しい位置を見つけて差し込む。3枚目以降も同様。
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.3 アルゴリズムの手順</h4>
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 360" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">挿入ソートのステップ</text>
+
+          <!-- Initial -->
+          <text x="30" y="60" fill="#888" font-size="12">初期:</text>
+          <rect x="100" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/><text x="125" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
+          <rect x="155" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="180" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
+          <rect x="210" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="235" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
+          <rect x="265" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="290" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
+          <rect x="320" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
+
+          <!-- Step 1 -->
+          <text x="30" y="115" fill="#FFB800" font-weight="700" font-size="12">Step 1:</text>
+          <text x="420" y="115" fill="#888" font-size="11">34 &lt; 64 → 64の前に挿入</text>
+          <rect x="100" y="97" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
+          <rect x="155" y="97" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
+          <rect x="210" y="97" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="235" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
+          <rect x="265" y="97" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="290" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
+          <rect x="320" y="97" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
+
+          <!-- Step 2 -->
+          <text x="30" y="170" fill="#FFB800" font-weight="700" font-size="12">Step 2:</text>
+          <text x="420" y="170" fill="#888" font-size="11">25 &lt; 64, 25 &lt; 34 → 先頭に挿入</text>
+          <rect x="100" y="152" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
+          <rect x="155" y="152" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
+          <rect x="210" y="152" width="50" height="32" rx="6" fill="#76B900"/><text x="235" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
+          <rect x="265" y="152" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="290" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
+          <rect x="320" y="152" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
+
+          <!-- Step 3 -->
+          <text x="30" y="225" fill="#FFB800" font-weight="700" font-size="12">Step 3:</text>
+          <text x="420" y="225" fill="#888" font-size="11">12 は最小 → 先頭に挿入</text>
+          <rect x="100" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
+          <rect x="155" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
+          <rect x="210" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="235" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
+          <rect x="265" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="290" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
+          <rect x="320" y="207" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
+
+          <!-- Step 4 -->
+          <text x="30" y="280" fill="#FFB800" font-weight="700" font-size="12">Step 4:</text>
+          <text x="420" y="280" fill="#888" font-size="11">22 &gt; 12 → 12の後に挿入</text>
+          <rect x="100" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
+          <rect x="155" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
+          <rect x="210" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="235" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
+          <rect x="265" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="290" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
+          <rect x="320" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="345" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
+
+          <!-- Legend -->
+          <rect x="100" y="310" width="14" height="14" rx="3" fill="#76B900"/>
+          <text x="120" y="322" fill="#aaa" font-size="10">整列済み</text>
+          <rect x="190" y="310" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="210" y="322" fill="#aaa" font-size="10">未整列</text>
+          <rect x="270" y="310" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+          <text x="290" y="322" fill="#aaa" font-size="10">最初の1枚</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.4 計算量</h4>
+      <table>
+        <tr><th>ケース</th><th>比較回数</th><th>特徴</th></tr>
+        <tr><td>最良（ソート済み）</td><td>O(n)</td><td>各要素で1回の比較のみ</td></tr>
+        <tr><td>平均</td><td>O(n<sup>2</sup>)</td><td>約 n(n-1)/4 回</td></tr>
+        <tr><td>最悪（逆順）</td><td>O(n<sup>2</sup>)</td><td>n(n-1)/2 回</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. EXAMPLES ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>2つの変数を交換する</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># --- 方法1: 一時変数を使う ---</span>
+value_a = <span class="num">30</span>
+value_b = <span class="num">10</span>
+<span class="fn">print</span>(<span class="str">f"交換前: a={value_a}, b={value_b}"</span>)
+
+temp = value_a
+value_a = value_b
+value_b = temp
+<span class="fn">print</span>(<span class="str">f"交換後: a={value_a}, b={value_b}"</span>)
+
+<span class="cmt"># --- 方法2: Pythonのタプル交換 ---</span>
+value_x, value_y = <span class="num">50</span>, <span class="num">20</span>
+value_x, value_y = value_y, value_x  <span class="cmt"># 一行で交換!</span></pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>挿入位置を見つけて要素を挿入する</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+sorted_part = [<span class="num">12</span>, <span class="num">25</span>, <span class="num">34</span>, <span class="num">64</span>]
+new_value = <span class="num">22</span>
+
+<span class="cmt"># 右端から左に向かって比較</span>
+position = <span class="fn">len</span>(sorted_part)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(sorted_part) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
+    <span class="kw">if</span> sorted_part[i] > new_value:
+        position = i
+    <span class="kw">else</span>:
+        <span class="kw">break</span>
+
+<span class="fn">print</span>(<span class="str">f"挿入位置: {position}"</span>)  <span class="cmt"># → 1（12の後）</span>
+<span class="cmt"># 要素をずらして挿入 → [12, 22, 25, 34, 64]</span></pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>挿入ソートの1パス</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+data = [<span class="num">25</span>, <span class="num">34</span>, <span class="num">64</span>, <span class="num">12</span>, <span class="num">22</span>]  <span class="cmt"># 先頭3つがソート済み</span>
+target_index = <span class="num">3</span>  <span class="cmt"># data[3]=12 を挿入する</span>
+
+key = data[target_index]
+j = target_index - <span class="num">1</span>
+
+<span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> data[j] > key:
+    data[j + <span class="num">1</span>] = data[j]  <span class="cmt"># 要素を右にずらす</span>
+    j = j - <span class="num">1</span>
+
+data[j + <span class="num">1</span>] = key  <span class="cmt"># keyを空いた位置に挿入</span>
+<span class="fn">print</span>(<span class="str">f"結果: {data}"</span>)  <span class="cmt"># → [12, 25, 34, 64, 22]</span></pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>完全な挿入ソート（比較回数カウント付き）</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">insertion_sort</span>(data):
+    n = <span class="fn">len</span>(data)
+    comparison_count = <span class="num">0</span>
+    shift_count = <span class="num">0</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n):
+        key = data[i]
+        j = i - <span class="num">1</span>
+
+        <span class="kw">while</span> j >= <span class="num">0</span>:
+            comparison_count += <span class="num">1</span>
+            <span class="kw">if</span> data[j] > key:
+                data[j + <span class="num">1</span>] = data[j]
+                shift_count += <span class="num">1</span>
+                j -= <span class="num">1</span>
+            <span class="kw">else</span>:
+                <span class="kw">break</span>
+
+        data[j + <span class="num">1</span>] = key
+        <span class="fn">print</span>(<span class="str">f"  ステップ{i}: key={key} → {data}"</span>)
+
+    <span class="fn">print</span>(<span class="str">f"比較回数: {comparison_count}, 移動回数: {shift_count}"</span>)
+    <span class="kw">return</span> data
+
+test_data = [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>]
+<span class="fn">insertion_sort</span>(test_data[:])</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>テキストベースのソート可視化</h3>
+      </div>
+      <p>棒グラフ風のテキストで、挿入ソートの過程を可視化します。整列済み部分を <code>#</code>、挿入中を <code>@</code>、未整列を <code>-</code> で表示します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">visualize_sort</span>(data):
+    n = <span class="fn">len</span>(data)
+    max_value = <span class="fn">max</span>(data)
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n):
+        key = data[i]
+        j = i - <span class="num">1</span>
+        <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> data[j] > key:
+            data[j + <span class="num">1</span>] = data[j]
+            j -= <span class="num">1</span>
+        data[j + <span class="num">1</span>] = key
+
+        <span class="cmt"># 棒グラフ風に表示</span>
+        <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(n):
+            bar_len = <span class="fn">int</span>(data[k] / max_value * <span class="num">30</span>)
+            <span class="kw">if</span> k == j + <span class="num">1</span>:
+                bar = <span class="str">"@"</span> * bar_len
+            <span class="kw">elif</span> k <= i:
+                bar = <span class="str">"#"</span> * bar_len
+            <span class="kw">else</span>:
+                bar = <span class="str">"-"</span> * bar_len
+            <span class="fn">print</span>(<span class="str">f"  data[{k:>2}]={data[k]:>3} |{bar}"</span>)
+        <span class="fn">print</span>()
+
+<span class="fn">visualize_sort</span>([<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">50</span>, <span class="num">15</span>])</pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ─ 2026年度前期 ─ 第8回
+  </div>
+</footer>
+
+</body>
+</html>

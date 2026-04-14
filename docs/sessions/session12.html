@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第12回: アルゴリズムの効率比較 | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+.card {
+  background: #1A1A1A;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example   { border-left: 4px solid #76B900; }
+.tag {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-example   { background: rgba(118,185,0,0.15); color: #76B900; }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: #1A1A1A;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+pre {
+  background: #0A0A0A;
+  color: #cdd6f4;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #888888;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+.concept-box {
+  background: #1A1A1A;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #333;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1700;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+.diagram-container {
+  display: flex; justify-content: center;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.diagram-container svg {
+  max-width: 100%; height: auto;
+  background: #1A1A1A;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #444;
+}
+footer {
+  background: #0A0A0A;
+  color: #888888;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .section-num { width: 36px; height: 36px; font-size: 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第12回: アルゴリズムの効率比較</h1>
+    <p>Big O 記法で計算量を理解し、BFS と DFS による迷路探索を学ぶ</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#f59e0b">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 学習目標 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>学習目標</h2>
+    </div>
+    <ul class="point-list">
+      <li><strong>Big O 記法</strong>で主要な計算量を理解し、アルゴリズムの効率を比較できる</li>
+      <li><strong>幅優先探索</strong>（BFS）をキューを使って実装し、最短経路を見つけられる</li>
+      <li><strong>深さ優先探索</strong>（DFS）をスタック/再帰で実装できる</li>
+      <li>BFS と DFS の違いを迷路探索で体感する</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 1. 説明 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>説明</h2>
+    </div>
+
+    <!-- 1.1 Big O -->
+    <div class="concept-box">
+      <h4>1.1 Big O 記法（計算量の表し方）</h4>
+      <p>アルゴリズムの効率を表すために <strong>Big O 記法</strong> を使います。データ量 n が増えたとき、処理時間がどのように増加するかを示します。</p>
+      <table>
+        <tr><th>Big O</th><th>名前</th><th>例</th><th>n=1000 のとき</th></tr>
+        <tr><td>O(1)</td><td>定数時間</td><td>配列のインデックスアクセス</td><td>1回</td></tr>
+        <tr><td>O(log n)</td><td>対数時間</td><td>二分探索</td><td>約10回</td></tr>
+        <tr><td>O(n)</td><td>線形時間</td><td>配列の全要素走査</td><td>1,000回</td></tr>
+        <tr><td>O(n log n)</td><td>線形対数時間</td><td>マージソート、Timsort</td><td>約10,000回</td></tr>
+        <tr><td>O(n^2)</td><td>二乗時間</td><td>挿入ソート、バブルソート</td><td>1,000,000回</td></tr>
+        <tr><td>O(2^n)</td><td>指数時間</td><td>全組み合わせ探索</td><td>天文学的数字</td></tr>
+      </table>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 380" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の増加速度の比較</text>
+
+          <!-- Axes -->
+          <line x1="80" y1="330" x2="650" y2="330" stroke="#555" stroke-width="2"/>
+          <line x1="80" y1="330" x2="80" y2="50" stroke="#555" stroke-width="2"/>
+          <text x="370" y="365" text-anchor="middle" fill="#888" font-size="12">データ量 n</text>
+          <text x="40" y="190" text-anchor="middle" fill="#888" font-size="12" transform="rotate(-90,40,190)">処理時間</text>
+
+          <!-- O(1) -->
+          <line x1="80" y1="310" x2="640" y2="310" stroke="#76B900" stroke-width="2.5"/>
+          <text x="645" y="314" fill="#76B900" font-size="11" font-weight="700">O(1)</text>
+
+          <!-- O(log n) -->
+          <path d="M80 310 Q200 280 300 260 Q450 240 640 230" stroke="#76B900" stroke-width="2.5" fill="none"/>
+          <text x="645" y="234" fill="#76B900" font-size="11" font-weight="700">O(log n)</text>
+
+          <!-- O(n) -->
+          <line x1="80" y1="310" x2="640" y2="170" stroke="#76B900" stroke-width="2.5"/>
+          <text x="645" y="174" fill="#E0E0E0" font-size="11" font-weight="700">O(n)</text>
+
+          <!-- O(n log n) -->
+          <path d="M80 310 Q250 250 400 180 Q500 140 640 100" stroke="#76B900" stroke-width="2.5" fill="none"/>
+          <text x="645" y="104" fill="#76B900" font-size="11" font-weight="700">O(n log n)</text>
+
+          <!-- O(n^2) -->
+          <path d="M80 310 Q200 300 300 260 Q400 190 500 90 Q520 70 540 55" stroke="#76B900" stroke-width="2.5" fill="none"/>
+          <text x="545" y="50" fill="#FF5252" font-size="11" font-weight="700">O(n^2)</text>
+
+          <!-- Tick marks -->
+          <line x1="200" y1="330" x2="200" y2="335" stroke="#555" stroke-width="1.5"/>
+          <text x="200" y="350" text-anchor="middle" fill="#888" font-size="10">100</text>
+          <line x1="350" y1="330" x2="350" y2="335" stroke="#555" stroke-width="1.5"/>
+          <text x="350" y="350" text-anchor="middle" fill="#888" font-size="10">500</text>
+          <line x1="500" y1="330" x2="500" y2="335" stroke="#555" stroke-width="1.5"/>
+          <text x="500" y="350" text-anchor="middle" fill="#888" font-size="10">1000</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 1.2 計算量一覧 -->
+    <div class="concept-box">
+      <h4>1.2 これまで学んだアルゴリズムの計算量</h4>
+      <table>
+        <tr><th>アルゴリズム</th><th>最良</th><th>平均</th><th>最悪</th><th>空間</th></tr>
+        <tr><td>挿入ソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>二分挿入ソート</td><td>O(n log n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>バブルソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>選択ソート</td><td>O(n^2)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>シェルソート</td><td>O(n log n)</td><td>O(n^1.3)</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>分布数えソート</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td></tr>
+        <tr><td>Python sorted()</td><td>O(n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td></tr>
+      </table>
+    </div>
+
+    <!-- 1.3 BFS vs DFS -->
+    <div class="concept-box">
+      <h4>1.3 グラフ探索: BFS と DFS</h4>
+      <p>迷路を解くなどの「経路探索」には、2つの基本的な方法があります。</p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">BFS vs DFS の探索パターン</text>
+
+          <!-- BFS Side -->
+          <rect x="20" y="40" width="310" height="340" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="175" y="65" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">BFS（幅優先探索）</text>
+          <text x="175" y="85" text-anchor="middle" fill="#888" font-size="11">キュー（FIFO）を使う</text>
+
+          <!-- BFS Grid -->
+          <rect x="55" y="100" width="40" height="40" rx="6" fill="#76B900"/><text x="75" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">1</text>
+          <rect x="105" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="125" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">2</text>
+          <rect x="155" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="175" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">3</text>
+          <rect x="205" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="225" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">4</text>
+          <rect x="255" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="275" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">5</text>
+
+          <rect x="55" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="75" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">3</text>
+          <rect x="105" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="125" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">5</text>
+          <rect x="155" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="175" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">6</text>
+          <rect x="205" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="225" y="175" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">7</text>
+          <rect x="255" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="275" y="175" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">8</text>
+
+          <text x="175" y="220" text-anchor="middle" fill="#E0E0E0" font-size="11">近い場所から順に広がる</text>
+          <rect x="40" y="240" width="280" height="50" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="175" y="260" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">最短経路を保証する</text>
+          <text x="175" y="278" text-anchor="middle" fill="#888" font-size="10">メモリ使用量: 多い</text>
+
+          <text x="175" y="315" text-anchor="middle" fill="#E0E0E0" font-size="11">キュー: [S] -> [近傍1, 近傍2]</text>
+          <text x="175" y="335" text-anchor="middle" fill="#E0E0E0" font-size="11">-> [近傍2, 近傍1の近傍]</text>
+          <text x="175" y="355" text-anchor="middle" fill="#E0E0E0" font-size="11">-> ...</text>
+
+          <!-- DFS Side -->
+          <rect x="370" y="40" width="310" height="340" rx="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+          <text x="525" y="65" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="13">DFS（深さ優先探索）</text>
+          <text x="525" y="85" text-anchor="middle" fill="#888" font-size="11">スタック（LIFO）を使う</text>
+
+          <!-- DFS Grid -->
+          <rect x="405" y="100" width="40" height="40" rx="6" fill="#76B900"/><text x="425" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">1</text>
+          <rect x="455" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="475" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">2</text>
+          <rect x="505" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="525" y="125" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">6</text>
+          <rect x="555" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="575" y="125" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">7</text>
+          <rect x="605" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="625" y="125" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">8</text>
+
+          <rect x="405" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="425" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">5</text>
+          <rect x="455" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="475" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">3</text>
+          <rect x="505" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="525" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">4</text>
+
+          <text x="525" y="220" text-anchor="middle" fill="#E0E0E0" font-size="11">深く深く進んでから戻る</text>
+          <rect x="390" y="240" width="280" height="50" rx="8" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+          <text x="525" y="260" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="12">最短経路とは限らない</text>
+          <text x="525" y="278" text-anchor="middle" fill="#888" font-size="10">メモリ使用量: 少ない</text>
+
+          <text x="525" y="315" text-anchor="middle" fill="#E0E0E0" font-size="11">スタック: [S] -> [近傍1]</text>
+          <text x="525" y="335" text-anchor="middle" fill="#E0E0E0" font-size="11">-> [近傍1の近傍] -> ...</text>
+          <text x="525" y="355" text-anchor="middle" fill="#E0E0E0" font-size="11">行き止まりで戻る</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 1.4 迷路の表現 -->
+    <div class="concept-box">
+      <h4>1.4 迷路の表現</h4>
+      <p>迷路を2次元リスト（グリッド）で表します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># 0 = 通路（通れる）</span>
+<span class="cmt"># 1 = 壁（通れない）</span>
+
+maze = [
+    [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>],
+    [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+    [<span class="num">0</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+]
+<span class="cmt"># スタート = (0, 0)  左上</span>
+<span class="cmt"># ゴール   = (4, 4)  右下</span></pre>
+      <div class="analogy">
+        迷路は「行と列の番号」で場所を表す地図のようなもの。0が通れる道、1が壁です。プレイヤーは上下左右の4方向に1マスずつ移動できます。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 例題 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <!-- 例題1 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>2次元グリッドで迷路を表現して表示する</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">create_maze</span>():
+    <span class="str">"""5x5の迷路を2次元リストで作成する"""</span>
+    maze = [
+        [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+        [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>],
+        [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+        [<span class="num">0</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+        [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+    ]
+    <span class="kw">return</span> maze
+
+<span class="kw">def</span> <span class="fn">display_maze</span>(maze, start, goal, path=<span class="kw">None</span>):
+    <span class="str">"""迷路を絵文字で表示する"""</span>
+    path_set = <span class="fn">set</span>(path) <span class="kw">if</span> path <span class="kw">else</span> <span class="fn">set</span>()
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze)):
+        line = <span class="str">""</span>
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze[<span class="num">0</span>])):
+            <span class="kw">if</span> (r, c) == start:
+                line += <span class="str">"\U0001f6b6"</span>     <span class="cmt"># 歩く人</span>
+            <span class="kw">elif</span> (r, c) == goal:
+                line += <span class="str">"\U0001f3c1"</span>     <span class="cmt"># チェッカーフラグ</span>
+            <span class="kw">elif</span> (r, c) <span class="kw">in</span> path_set:
+                line += <span class="str">"\U0001f43e"</span>     <span class="cmt"># 足跡</span>
+            <span class="kw">elif</span> maze[r][c] == <span class="num">1</span>:
+                line += <span class="str">"\U0001f7eb"</span>     <span class="cmt"># 壁</span>
+            <span class="kw">else</span>:
+                line += <span class="str">"\U0001f7e9"</span>     <span class="cmt"># 通路</span>
+        <span class="fn">print</span>(line)</pre>
+    </div>
+
+    <!-- 例題2 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>deque を使った BFS の基本実装</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">bfs_solve</span>(maze, start, goal):
+    <span class="str">"""BFSで迷路を解いて最短経路を返す"""</span>
+    rows = <span class="fn">len</span>(maze)
+    cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+    visited = []
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        visited.<span class="fn">append</span>([<span class="kw">False</span>] * cols)
+
+    parent = []
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        parent.<span class="fn">append</span>([<span class="kw">None</span>] * cols)
+
+    queue = <span class="fn">deque</span>()
+    queue.<span class="fn">append</span>(start)
+    visited[start[<span class="num">0</span>]][start[<span class="num">1</span>]] = <span class="kw">True</span>
+
+    explored_count = <span class="num">0</span>
+    directions = [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]  <span class="cmt"># 上下左右</span>
+
+    <span class="kw">while</span> queue:
+        x, y = queue.<span class="fn">popleft</span>()  <span class="cmt"># FIFO: キューの先頭を取り出す</span>
+        explored_count += <span class="num">1</span>
+
+        <span class="kw">if</span> (x, y) == goal:
+            path = []
+            pos = goal
+            <span class="kw">while</span> pos <span class="kw">is not</span> <span class="kw">None</span>:
+                path.<span class="fn">append</span>(pos)
+                pos = parent[pos[<span class="num">0</span>]][pos[<span class="num">1</span>]]
+            path.<span class="fn">reverse</span>()
+            <span class="kw">return</span> path, explored_count
+
+        <span class="kw">for</span> dx, dy <span class="kw">in</span> directions:
+            nx, ny = x + dx, y + dy
+            <span class="kw">if</span> <span class="num">0</span> <= nx < rows <span class="kw">and</span> <span class="num">0</span> <= ny < cols:
+                <span class="kw">if</span> maze[nx][ny] == <span class="num">0</span> <span class="kw">and not</span> visited[nx][ny]:
+                    visited[nx][ny] = <span class="kw">True</span>
+                    parent[nx][ny] = (x, y)
+                    queue.<span class="fn">append</span>((nx, ny))
+
+    <span class="kw">return</span> <span class="kw">None</span>, explored_count</pre>
+    </div>
+
+    <!-- 例題3 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>経路復元とパス表示</h3>
+      </div>
+      <p>BFSでゴールに到達した後、<code>parent</code>マップを使ってゴールからスタートへ逆順にたどり、経路を復元します。各ステップの移動方向（上下左右）も表示します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># --- 経路をステップごとに表示する ---</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(path)):
+    <span class="kw">if</span> i == <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f"  ステップ0: スタート {path[i]}"</span>)
+    <span class="kw">else</span>:
+        prev = path[i - <span class="num">1</span>]
+        curr = path[i]
+        dx = curr[<span class="num">0</span>] - prev[<span class="num">0</span>]
+        dy = curr[<span class="num">1</span>] - prev[<span class="num">1</span>]
+        direction = {(-<span class="num">1</span>,<span class="num">0</span>):<span class="str">"上"</span>, (<span class="num">1</span>,<span class="num">0</span>):<span class="str">"下"</span>, (<span class="num">0</span>,-<span class="num">1</span>):<span class="str">"左"</span>, (<span class="num">0</span>,<span class="num">1</span>):<span class="str">"右"</span>}[(dx,dy)]
+        <span class="fn">print</span>(<span class="str">f"  ステップ{i}: {prev} → {direction} → {curr}"</span>)</pre>
+    </div>
+
+    <!-- 例題4 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>DFS（スタック版）の基本実装</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">dfs_solve</span>(maze, start, goal):
+    <span class="str">"""DFS（スタック版）で迷路を解く"""</span>
+    rows = <span class="fn">len</span>(maze)
+    cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+    visited = [[<span class="kw">False</span>] * cols <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(rows)]
+    parent = [[<span class="kw">None</span>] * cols <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(rows)]
+
+    stack = [start]  <span class="cmt"># リストをスタックとして使う</span>
+    visited[start[<span class="num">0</span>]][start[<span class="num">1</span>]] = <span class="kw">True</span>
+    explored_count = <span class="num">0</span>
+
+    directions = [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]
+
+    <span class="kw">while</span> stack:
+        x, y = stack.<span class="fn">pop</span>()  <span class="cmt"># LIFO: スタックの末尾を取り出す</span>
+        explored_count += <span class="num">1</span>
+
+        <span class="kw">if</span> (x, y) == goal:
+            path = []
+            pos = goal
+            <span class="kw">while</span> pos <span class="kw">is not</span> <span class="kw">None</span>:
+                path.<span class="fn">append</span>(pos)
+                pos = parent[pos[<span class="num">0</span>]][pos[<span class="num">1</span>]]
+            path.<span class="fn">reverse</span>()
+            <span class="kw">return</span> path, explored_count
+
+        <span class="kw">for</span> dx, dy <span class="kw">in</span> directions:
+            nx, ny = x + dx, y + dy
+            <span class="kw">if</span> <span class="num">0</span> <= nx < rows <span class="kw">and</span> <span class="num">0</span> <= ny < cols:
+                <span class="kw">if</span> maze[nx][ny] == <span class="num">0</span> <span class="kw">and not</span> visited[nx][ny]:
+                    visited[nx][ny] = <span class="kw">True</span>
+                    parent[nx][ny] = (x, y)
+                    stack.<span class="fn">append</span>((nx, ny))  <span class="cmt"># スタックに追加</span>
+
+    <span class="kw">return</span> <span class="kw">None</span>, explored_count</pre>
+      <ul class="point-list" style="margin-top:1rem">
+        <li>BFS: <code>queue.popleft()</code> (FIFO) → 近い順に探索 → <strong>最短経路を保証</strong></li>
+        <li>DFS: <code>stack.pop()</code> (LIFO) → 深く進んでから戻る → <strong>最短とは限らない</strong></li>
+      </ul>
+    </div>
+
+    <!-- 例題5 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>大きな迷路でBFS vs DFS のベンチマーク</h3>
+      </div>
+      <p>100x100のランダム迷路を生成し、BFS と DFS の経路長・探索マス数・実行時間を比較します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> random
+<span class="kw">import</span> time
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+random.<span class="fn">seed</span>(<span class="num">42</span>)
+size = <span class="num">100</span>
+maze = generate_maze(size, <span class="num">0.3</span>)
+ensure_path(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>, size-<span class="num">1</span>))
+
+<span class="cmt"># --- BFS ---</span>
+start_time = time.<span class="fn">time</span>()
+bfs_path, bfs_explored = bfs_benchmark(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>,size-<span class="num">1</span>))
+bfs_time = time.<span class="fn">time</span>() - start_time
+
+<span class="cmt"># --- DFS ---</span>
+start_time = time.<span class="fn">time</span>()
+dfs_path, dfs_explored = dfs_benchmark(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>,size-<span class="num">1</span>))
+dfs_time = time.<span class="fn">time</span>() - start_time
+
+<span class="fn">print</span>(<span class="str">f"{'指標':>10} {'BFS':>10} {'DFS':>10}"</span>)
+<span class="fn">print</span>(<span class="str">f"{'経路長':>10} {len(bfs_path):>10} {len(dfs_path):>10}"</span>)
+<span class="fn">print</span>(<span class="str">f"{'探索マス':>10} {bfs_explored:>10} {dfs_explored:>10}"</span>)
+<span class="fn">print</span>(<span class="str">f"{'時間(秒)':>10} {bfs_time:>10.4f} {dfs_time:>10.4f}"</span>)</pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ── 第12回 アルゴリズムの効率比較
+  </div>
+</footer>
+
+</body>
+</html>

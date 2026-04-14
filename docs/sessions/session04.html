@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回: 二分探索 | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(147,213,0,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-example   { background: #1a2e0a; color: #76B900; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(118, 185, 0, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FF5252; }
+pre .op { color: #4FC3F7; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(118, 185, 0, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a3a1a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '\25B8';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ DIAGRAMS (SVG) ============ */
+.diagram-container {
+  display: flex; justify-content: center;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.diagram-container svg {
+  max-width: 100%; height: auto;
+  background: #1A1A1A;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #444;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .section-num { width: 36px; height: 36px; font-size: 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第4回: 二分探索</h1>
+    <p>ソート済みデータを半分ずつ絞り込む高速な探索法 ── O(log n) の威力を体感する</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #4A7A00;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#999999;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#FFB800">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. EXPLANATION ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>説明: 二分探索とは</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>辞書引きのたとえ</h4>
+      <div class="analogy">
+        国語辞典で「もも」を調べるとき、1ページ目から順に探しますか? いいえ。真ん中あたりを開いて「さ行」だった → 「も」はもっと後ろ → 後半を開く…。この「半分に絞り込む」作業を繰り返すのが<strong>二分探索</strong>です。
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>二分探索の条件</h4>
+      <p><strong>重要:</strong> 二分探索は<strong>ソート済み（整列済み）のデータ</strong>にしか使えません。</p>
+      <pre><span class="code-label">例</span>
+使える:   [<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>, <span class="num">11</span>, <span class="num">13</span>]  <span class="cmt">← ソート済み</span>
+使えない: [<span class="num">3</span>, <span class="num">7</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">4</span>]          <span class="cmt">← バラバラ</span></pre>
+    </div>
+
+    <div class="concept-box">
+      <h4>アルゴリズムの手順</h4>
+      <ul class="point-list">
+        <li><code>left = 0</code>（先頭）、<code>right = n-1</code>（末尾）に設定</li>
+        <li><code>mid = (left + right) // 2</code> で中央を計算</li>
+        <li><code>data[mid]</code> と <code>target</code> を比較:
+          <br>&nbsp;&nbsp;一致 → 発見! &nbsp;&nbsp;小さい → 右半分へ &nbsp;&nbsp;大きい → 左半分へ</li>
+        <li><code>left > right</code> になったら「見つからない」</li>
+      </ul>
+
+      <!-- Binary Search Step Diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 720 360" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="360" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">二分探索: data=[1,3,5,7,9,11,13], target=11</text>
+
+          <!-- Step 1 -->
+          <text x="30" y="65" fill="#76B900" font-weight="700" font-size="12">Step 1</text>
+          <rect x="100" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="122" y="68" text-anchor="middle" fill="#aaa" font-size="11">1</text>
+          <rect x="152" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="174" y="68" text-anchor="middle" fill="#aaa" font-size="11">3</text>
+          <rect x="204" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="226" y="68" text-anchor="middle" fill="#aaa" font-size="11">5</text>
+          <rect x="256" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#FFB800" stroke-width="2.5"/>
+          <text x="278" y="68" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="11">7</text>
+          <rect x="308" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="330" y="68" text-anchor="middle" fill="#aaa" font-size="11">9</text>
+          <rect x="360" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="382" y="68" text-anchor="middle" fill="#aaa" font-size="11">11</text>
+          <rect x="412" y="48" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="434" y="68" text-anchor="middle" fill="#aaa" font-size="11">13</text>
+          <!-- Markers -->
+          <text x="122" y="95" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700">L</text>
+          <text x="278" y="95" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">M</text>
+          <text x="434" y="95" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700">R</text>
+          <text x="530" y="68" fill="#888" font-size="10">7 &lt; 11 → 右半分へ</text>
+
+          <!-- Step 2 -->
+          <text x="30" y="145" fill="#76B900" font-weight="700" font-size="12">Step 2</text>
+          <rect x="100" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#333" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="122" y="148" text-anchor="middle" fill="#444" font-size="11">1</text>
+          <rect x="152" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#333" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="174" y="148" text-anchor="middle" fill="#444" font-size="11">3</text>
+          <rect x="204" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#333" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="226" y="148" text-anchor="middle" fill="#444" font-size="11">5</text>
+          <rect x="256" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#333" stroke-width="1" stroke-dasharray="3 2"/>
+          <text x="278" y="148" text-anchor="middle" fill="#444" font-size="11">7</text>
+          <rect x="308" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="330" y="148" text-anchor="middle" fill="#aaa" font-size="11">9</text>
+          <rect x="360" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#FFB800" stroke-width="2.5"/>
+          <text x="382" y="148" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="11">11</text>
+          <rect x="412" y="128" width="44" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="434" y="148" text-anchor="middle" fill="#aaa" font-size="11">13</text>
+          <text x="330" y="175" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700">L</text>
+          <text x="382" y="175" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">M</text>
+          <text x="434" y="175" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700">R</text>
+          <text x="530" y="148" fill="#76B900" font-size="10" font-weight="700">11 == 11 発見!</text>
+
+          <!-- Result -->
+          <rect x="150" y="210" width="420" height="40" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="360" y="235" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">たった2回の比較で発見! (逐次探索なら6回)</text>
+
+          <!-- O(log n) comparison -->
+          <text x="360" y="285" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の比較: O(n) vs O(log n)</text>
+
+          <rect x="60" y="300" width="280" height="44" rx="8" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+          <text x="200" y="318" text-anchor="middle" fill="#FF5252" font-weight="600" font-size="11">逐次探索 O(n)</text>
+          <text x="200" y="336" text-anchor="middle" fill="#aaa" font-size="10">100万件 → 最悪 1,000,000回</text>
+
+          <rect x="380" y="300" width="280" height="44" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="520" y="318" text-anchor="middle" fill="#76B900" font-weight="600" font-size="11">二分探索 O(log n)</text>
+          <text x="520" y="336" text-anchor="middle" fill="#aaa" font-size="10">100万件 → 最悪 たった20回!</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- O(log n) table -->
+    <div class="concept-box">
+      <h4>計算量 O(log n) とは</h4>
+      <p>二分探索は毎回データを<strong>半分</strong>に絞り込みます。</p>
+      <table>
+        <tr><th>データ数 (n)</th><th>最大比較回数 (log2 n)</th></tr>
+        <tr><td>10</td><td>4回</td></tr>
+        <tr><td>100</td><td>7回</td></tr>
+        <tr><td>1,000</td><td>10回</td></tr>
+        <tr><td>100,000</td><td>17回</td></tr>
+        <tr><td>1,000,000</td><td>20回</td></tr>
+      </table>
+      <p style="margin-top:0.75rem"><strong>100万件のデータから、たった20回の比較で見つけられる</strong> ── 逐次探索の50,000倍速い!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. EXAMPLES ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <!-- Example 1: Sorted list basics -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>ソート済みリストの基本</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+numbers = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">3</span>, <span class="num">7</span>, <span class="num">4</span>, <span class="num">6</span>]
+<span class="fn">print</span>(<span class="str">f"元のリスト: {numbers}"</span>)
+
+sorted_numbers = <span class="fn">sorted</span>(numbers)
+<span class="fn">print</span>(<span class="str">f"ソート後:   {sorted_numbers}"</span>)
+
+<span class="cmt"># ソート済みか判定する関数</span>
+<span class="kw">def</span> <span class="fn">is_sorted</span>(data):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data) - <span class="num">1</span>):
+        <span class="kw">if</span> data[i] > data[i + <span class="num">1</span>]:
+            <span class="kw">return</span> <span class="num">False</span>
+    <span class="kw">return</span> <span class="num">True</span>
+
+<span class="fn">print</span>(<span class="str">f"元はソート済み？: {is_sorted(numbers)}"</span>)       <span class="cmt"># False</span>
+<span class="fn">print</span>(<span class="str">f"ソート後はソート済み？: {is_sorted(sorted_numbers)}"</span>)  <span class="cmt"># True</span></pre>
+    </div>
+
+    <!-- Example 2: Binary search with trace -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>二分探索のステップ表示</h3>
+      </div>
+      <p>各ステップで left, right, mid の変化を追跡します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">binary_search_trace</span>(data, target):
+    <span class="str">"""二分探索を実行し、各ステップの状態を表示する"""</span>
+    left = <span class="num">0</span>
+    right = <span class="fn">len</span>(data) - <span class="num">1</span>
+    step = <span class="num">0</span>
+
+    <span class="fn">print</span>(<span class="str">f"探索対象: {data}"</span>)
+    <span class="fn">print</span>(<span class="str">f"target: {target}"</span>)
+
+    <span class="kw">while</span> left <span class="op">&lt;=</span> right:
+        step += <span class="num">1</span>
+        mid = (left + right) // <span class="num">2</span>
+
+        <span class="fn">print</span>(<span class="str">f"ステップ{step}: left={left}, right={right}, mid={mid}, data[{mid}]={data[mid]}"</span>)
+
+        <span class="kw">if</span> data[mid] == target:
+            <span class="fn">print</span>(<span class="str">f"  → 発見! インデックス{mid}"</span>)
+            <span class="kw">return</span> mid
+        <span class="kw">elif</span> data[mid] <span class="op">&lt;</span> target:
+            <span class="fn">print</span>(<span class="str">f"  → {data[mid]} < {target} なので右半分へ"</span>)
+            left = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="fn">print</span>(<span class="str">f"  → {data[mid]} > {target} なので左半分へ"</span>)
+            right = mid - <span class="num">1</span>
+
+    <span class="fn">print</span>(<span class="str">f"  → 見つかりませんでした（{step}回比較）"</span>)
+    <span class="kw">return</span> <span class="num">-1</span>
+
+<span class="cmt"># --- テスト ---</span>
+data = [<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>, <span class="num">11</span>, <span class="num">13</span>]
+<span class="fn">binary_search_trace</span>(data, <span class="num">11</span>)
+<span class="fn">binary_search_trace</span>(data, <span class="num">6</span>)  <span class="cmt"># 存在しない値</span></pre>
+    </div>
+
+    <!-- Example 3: Comparison count -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>逐次探索と二分探索の比較回数</h3>
+      </div>
+      <p>同じデータで逐次探索と二分探索の比較回数を比べます。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">linear_search_count</span>(data, target):
+    count = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        count += <span class="num">1</span>
+        <span class="kw">if</span> data[i] == target:
+            <span class="kw">return</span> (i, count)
+    <span class="kw">return</span> (<span class="num">-1</span>, count)
+
+<span class="kw">def</span> <span class="fn">binary_search_count</span>(data, target):
+    left, right, count = <span class="num">0</span>, <span class="fn">len</span>(data) - <span class="num">1</span>, <span class="num">0</span>
+    <span class="kw">while</span> left <span class="op">&lt;=</span> right:
+        count += <span class="num">1</span>
+        mid = (left + right) // <span class="num">2</span>
+        <span class="kw">if</span> data[mid] == target:
+            <span class="kw">return</span> (mid, count)
+        <span class="kw">elif</span> data[mid] <span class="op">&lt;</span> target:
+            left = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            right = mid - <span class="num">1</span>
+    <span class="kw">return</span> (<span class="num">-1</span>, count)
+
+<span class="cmt"># --- 20個のソート済みデータで比較 ---</span>
+data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, <span class="num">21</span>))
+<span class="fn">print</span>(<span class="str">f"{'target':>6}  {'逐次':>8}  {'二分':>8}  {'差':>6}"</span>)
+<span class="kw">for</span> target <span class="kw">in</span> [<span class="num">1</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>, <span class="num">25</span>]:
+    _, cnt_l = <span class="fn">linear_search_count</span>(data, target)
+    _, cnt_b = <span class="fn">binary_search_count</span>(data, target)
+    <span class="fn">print</span>(<span class="str">f"{target:>6}  {cnt_l:>5}回  {cnt_b:>5}回  {cnt_l-cnt_b:>+5}回"</span>)</pre>
+    </div>
+
+    <!-- Example 4: bisect module -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>bisect モジュールの活用</h3>
+      </div>
+      <p>Python標準ライブラリの <code>bisect</code> モジュールで二分探索を使います。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> bisect
+
+data = [<span class="num">2</span>, <span class="num">5</span>, <span class="num">8</span>, <span class="num">12</span>, <span class="num">16</span>, <span class="num">23</span>, <span class="num">38</span>, <span class="num">42</span>, <span class="num">56</span>, <span class="num">72</span>, <span class="num">91</span>, <span class="num">100</span>]
+
+<span class="cmt"># --- 存在する値を探す ---</span>
+target = <span class="num">23</span>
+pos = bisect.<span class="fn">bisect_left</span>(data, target)
+<span class="kw">if</span> pos <span class="op">&lt;</span> <span class="fn">len</span>(data) <span class="kw">and</span> data[pos] == target:
+    <span class="fn">print</span>(<span class="str">f"data[{pos}] = {target} → 存在する!"</span>)
+
+<span class="cmt"># --- 重複ありのデータ ---</span>
+data_dup = [<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>]
+left_pos = bisect.<span class="fn">bisect_left</span>(data_dup, <span class="num">5</span>)   <span class="cmt"># 最初の5の位置 → 2</span>
+right_pos = bisect.<span class="fn">bisect_right</span>(data_dup, <span class="num">5</span>)  <span class="cmt"># 最後の5の次 → 5</span>
+<span class="fn">print</span>(<span class="str">f"5の個数: {right_pos - left_pos}個"</span>)    <span class="cmt"># 3個</span></pre>
+    </div>
+
+    <!-- Example 5: Benchmark -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>ベンチマーク（性能比較）</h3>
+      </div>
+      <p>10万件のデータで逐次探索と二分探索の実行時間を比較します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> time, random
+
+n = <span class="num">100000</span>
+data = <span class="fn">list</span>(<span class="fn">range</span>(n))
+targets = [random.<span class="fn">randint</span>(<span class="num">0</span>, n-<span class="num">1</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">500</span>)]
+
+<span class="cmt"># 二分探索の計測</span>
+start = time.<span class="fn">perf_counter</span>()
+<span class="kw">for</span> t <span class="kw">in</span> targets:
+    <span class="fn">binary_search</span>(data, t)
+time_binary = time.<span class="fn">perf_counter</span>() - start
+
+<span class="cmt"># 逐次探索の計測</span>
+start = time.<span class="fn">perf_counter</span>()
+<span class="kw">for</span> t <span class="kw">in</span> targets:
+    <span class="fn">linear_search</span>(data, t)
+time_linear = time.<span class="fn">perf_counter</span>() - start
+
+<span class="fn">print</span>(<span class="str">f"二分探索: {time_binary:.4f}秒"</span>)
+<span class="fn">print</span>(<span class="str">f"逐次探索: {time_linear:.4f}秒"</span>)
+<span class="fn">print</span>(<span class="str">f"二分探索は約 {time_linear/time_binary:,.0f}倍 速い!"</span>)</pre>
+
+      <!-- Benchmark visualization -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 600 180" width="600" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="300" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">実行時間の比較 (N=100,000)</text>
+
+          <!-- Linear bar -->
+          <text x="110" y="65" text-anchor="end" fill="#FF5252" font-size="11" font-weight="600">逐次探索</text>
+          <rect x="120" y="50" width="420" height="24" rx="5" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5" opacity="0.7"/>
+          <text x="550" y="67" fill="#aaa" font-size="10">数秒</text>
+
+          <!-- Binary bar -->
+          <text x="110" y="110" text-anchor="end" fill="#76B900" font-size="11" font-weight="600">二分探索</text>
+          <rect x="120" y="95" width="4" height="24" rx="2" fill="#76B900" opacity="0.9"/>
+          <text x="135" y="112" fill="#aaa" font-size="10">0.00x秒</text>
+
+          <!-- Ratio -->
+          <rect x="160" y="140" width="280" height="28" rx="6" fill="#1A1A1A"/>
+          <text x="300" y="159" text-anchor="middle" fill="#76B900" font-weight="600" font-size="11">二分探索は数千倍〜数万倍速い</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ─ 2026年度前期 ─ 第4回
+  </div>
+</footer>
+
+</body>
+</html>

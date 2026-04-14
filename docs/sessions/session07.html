@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7回: ハッシュ法（2） | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(147,213,0,0.2), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: rgba(118,185,0,0.15); font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; } pre .fn { color: #93D500; } pre .str { color: #FFB800; } pre .cmt { color: #616161; font-style: italic; } pre .num { color: #fab387; } pre .op { color: #4FC3F7; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #a6adc8; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '▸'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第7回: ハッシュ法（2）</h1>
+    <p>ハッシュテーブルと衝突解決 ── 線形探索法・チェイン法で衝突に対処する</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#93D500;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#FFB800">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. EXPLANATION ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>説明</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.1 ハッシュテーブルとは</h4>
+      <p>ハッシュテーブルは<strong>配列（スロット）</strong>と<strong>ハッシュ関数</strong>の組み合わせです。</p>
+      <pre><span class="code-label">概念</span>
+キー <span class="str">"apple"</span>  → ハッシュ関数 → インデックス <span class="num">0</span> → テーブル[<span class="num">0</span>] に格納
+キー <span class="str">"banana"</span> → ハッシュ関数 → インデックス <span class="num">9</span> → テーブル[<span class="num">9</span>] に格納</pre>
+      <ul class="point-list">
+        <li>キーからハッシュ関数でインデックスを計算し、そのインデックスにデータを格納する</li>
+        <li>検索・格納が平均 O(1) で行える高速なデータ構造</li>
+      </ul>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.2 衝突（Collision）とは</h4>
+      <p>異なるキーが<strong>同じインデックス</strong>に格納されようとすること。</p>
+      <ul class="point-list">
+        <li>テーブルサイズは有限（例: 10 スロット）</li>
+        <li>格納するキーは無限に存在しうる</li>
+        <li><strong>鳩の巣原理</strong>: 11個のデータを10個のスロットに入れたら、必ずどこかが重複する</li>
+      </ul>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.3 線形探索法（Linear Probing）</h4>
+      <div class="analogy">
+        駐車場を想像してください。目的の番号の駐車場が埋まっていたら、<strong>隣の空いている場所</strong>に停めます。探すときも同じルートで探します。
+      </div>
+      <p>衝突が起きたら<strong>次のスロット</strong>を試す。それも埋まっていたら<strong>さらに次</strong>へ。</p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">線形探索法（Linear Probing）</text>
+
+          <!-- Table slots -->
+          <rect x="50" y="50" width="75" height="40" rx="6" fill="#76B900"/><text x="87" y="75" text-anchor="middle" fill="white" font-weight="600" font-size="10">[0] apple</text>
+          <rect x="130" y="50" width="75" height="40" rx="6" fill="#76B900"/><text x="167" y="75" text-anchor="middle" fill="white" font-weight="600" font-size="10">[1] pleap</text>
+          <rect x="210" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="247" y="75" text-anchor="middle" fill="#666" font-size="10">[2] ---</text>
+          <rect x="290" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="327" y="75" text-anchor="middle" fill="#666" font-size="10">[3] ---</text>
+          <rect x="370" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="407" y="75" text-anchor="middle" fill="#666" font-size="10">[4] ---</text>
+          <rect x="450" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="487" y="75" text-anchor="middle" fill="#666" font-size="10">[5] ---</text>
+
+          <!-- Probing demonstration -->
+          <text x="87" y="120" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="11">Step 1</text>
+          <text x="87" y="140" text-anchor="middle" fill="#888" font-size="10">"pleap" → [0]</text>
+          <text x="87" y="155" text-anchor="middle" fill="#FF5252" font-size="10">既に使用中!</text>
+
+          <path d="M87 160 Q87 180 167 180 L167 90" stroke="#FFB800" stroke-width="2" fill="none" stroke-dasharray="5 3" marker-end="url(#arr-lp)"/>
+
+          <text x="167" y="210" text-anchor="middle" fill="#76B900" font-weight="700" font-size="11">Step 2</text>
+          <text x="167" y="230" text-anchor="middle" fill="#888" font-size="10">[1] が空き!</text>
+          <text x="167" y="245" text-anchor="middle" fill="#76B900" font-size="10">ここに格納</text>
+
+          <!-- Legend -->
+          <rect x="400" y="130" width="250" height="100" rx="10" fill="#1A1A1A" stroke="#333"/>
+          <text x="525" y="155" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">線形探索法のルール</text>
+          <text x="415" y="175" fill="#E0E0E0" font-size="11">1. ハッシュ値のスロットを確認</text>
+          <text x="415" y="195" fill="#E0E0E0" font-size="11">2. 使用中なら次のスロットへ</text>
+          <text x="415" y="215" fill="#E0E0E0" font-size="11">3. 空きスロットが見つかるまで繰返す</text>
+
+          <defs><marker id="arr-lp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/></marker></defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.4 チェイン法（Chaining）</h4>
+      <p>各スロットにリストを持たせ、衝突したデータをリストに追加する方法。</p>
+      <pre><span class="code-label">概念</span>
+テーブル[<span class="num">3</span>] → [(<span class="str">"apple"</span>, <span class="num">100</span>), (<span class="str">"pleap"</span>, <span class="num">999</span>)]
+テーブル[<span class="num">9</span>] → [(<span class="str">"banana"</span>, <span class="num">80</span>)]</pre>
+
+      <table>
+        <tr><th>比較</th><th>線形探索法</th><th>チェイン法</th></tr>
+        <tr><td>衝突時</td><td>空きスロットを探す</td><td>リストに追加</td></tr>
+        <tr><td>テーブル満杯時</td><td>性能低下</td><td>格納可能</td></tr>
+        <tr><td>メモリ</td><td>配列のみ</td><td>リストの追加メモリ</td></tr>
+      </table>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 220" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">チェイン法（Chaining）</text>
+
+          <!-- Slots -->
+          <rect x="50" y="50" width="60" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="80" y="72" text-anchor="middle" fill="white" font-weight="700" font-size="11">[0]</text>
+          <rect x="50" y="90" width="60" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="80" y="112" text-anchor="middle" fill="white" font-weight="700" font-size="11">[1]</text>
+          <rect x="50" y="130" width="60" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="80" y="152" text-anchor="middle" fill="white" font-weight="700" font-size="11">[2]</text>
+          <rect x="50" y="170" width="60" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="80" y="192" text-anchor="middle" fill="white" font-weight="700" font-size="11">[3]</text>
+
+          <!-- Chain from [0] -->
+          <line x1="110" y1="67" x2="140" y2="67" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
+          <rect x="145" y="50" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="72" text-anchor="middle" fill="white" font-size="10">apple: 100</text>
+          <line x1="235" y1="67" x2="260" y2="67" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
+          <rect x="265" y="50" width="90" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="310" y="72" text-anchor="middle" fill="white" font-size="10">pleap: 999</text>
+
+          <!-- Chain from [1] -->
+          <line x1="110" y1="107" x2="140" y2="107" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
+          <rect x="145" y="90" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="112" text-anchor="middle" fill="white" font-size="10">cherry: 150</text>
+
+          <!-- Empty [2] -->
+          <text x="130" y="152" fill="#666" font-size="11">null</text>
+
+          <!-- Chain from [3] -->
+          <line x1="110" y1="187" x2="140" y2="187" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
+          <rect x="145" y="170" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="192" text-anchor="middle" fill="white" font-size="10">banana: 80</text>
+
+          <text x="500" y="80" fill="#888" font-size="12">各スロットがリストを</text>
+          <text x="500" y="100" fill="#888" font-size="12">保持しているので</text>
+          <text x="500" y="120" fill="#76B900" font-weight="700" font-size="12">衝突してもリストに追加</text>
+
+          <defs><marker id="arr-ch" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker></defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.5 Python の dict</h4>
+      <p>Python の <code>dict</code> は内部的にハッシュテーブルを使っています。<code>hash()</code> 組み込み関数でハッシュ値を確認できます。</p>
+      <pre><span class="code-label">Python</span>
+<span class="fn">print</span>(<span class="fn">hash</span>(<span class="str">"apple"</span>))   <span class="cmt"># Pythonが計算するハッシュ値</span>
+<span class="fn">print</span>(<span class="fn">hash</span>(<span class="str">"banana"</span>))  <span class="cmt"># 毎回同じ値（決定性）</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. EXAMPLES ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>配列をテーブルとして使う</h3>
+      </div>
+      <p>サイズ10の配列を作成し、ハッシュ関数でインデックスを計算してデータを格納します。</p>
+      <pre><span class="code-label">Python</span>
+table_size = <span class="num">10</span>
+table = [<span class="num">None</span>] * table_size  <span class="cmt"># 全スロットをNoneで初期化</span>
+
+<span class="kw">def</span> <span class="fn">hash_function</span>(key, size):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> char <span class="kw">in</span> key:
+        total = total + <span class="fn">ord</span>(char)
+    <span class="kw">return</span> total % size
+
+key = <span class="str">"apple"</span>
+value = <span class="num">100</span>
+index = <span class="fn">hash_function</span>(key, table_size)
+<span class="fn">print</span>(<span class="str">f"'{key}' のハッシュ値: {index}"</span>)
+
+table[index] = (key, value)
+<span class="fn">print</span>(<span class="str">f"テーブル[{index}] に ('{key}', {value}) を格納しました"</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>ハッシュテーブルへのデータ挿入</h3>
+      </div>
+      <p>複数のデータをハッシュテーブルに挿入し、テーブルの状態を確認します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">insert_item</span>(table, key, value):
+    size = <span class="fn">len</span>(table)
+    index = <span class="fn">hash_function</span>(key, size)
+    <span class="fn">print</span>(<span class="str">f"  '{key}' → インデックス {index}"</span>, end=<span class="str">""</span>)
+    <span class="kw">if</span> table[index] <span class="kw">is</span> <span class="num">None</span>:
+        table[index] = (key, value)
+        <span class="fn">print</span>(<span class="str">f" → 格納完了"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f" → 既にデータあり: {table[index]}"</span>)
+
+table = [<span class="num">None</span>] * <span class="num">10</span>
+<span class="fn">insert_item</span>(table, <span class="str">"apple"</span>, <span class="num">100</span>)
+<span class="fn">insert_item</span>(table, <span class="str">"banana"</span>, <span class="num">80</span>)
+<span class="fn">insert_item</span>(table, <span class="str">"cherry"</span>, <span class="num">150</span>)
+<span class="fn">insert_item</span>(table, <span class="str">"date"</span>, <span class="num">200</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>衝突の発生を確認する</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+keys = [<span class="str">"apple"</span>, <span class="str">"pleap"</span>, <span class="str">"banana"</span>, <span class="str">"ananab"</span>, <span class="str">"cherry"</span>]
+table_size = <span class="num">10</span>
+
+<span class="fn">print</span>(<span class="str">"=== 各キーのハッシュ値 ==="</span>)
+<span class="kw">for</span> key <span class="kw">in</span> keys:
+    index = <span class="fn">hash_function</span>(key, table_size)
+    <span class="fn">print</span>(<span class="str">f"  '{key}' → インデックス {index}"</span>)
+
+<span class="cmt"># "apple" と "pleap" は同じ文字の組み合わせ → 同じハッシュ値 → 衝突!</span></pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>線形探索法で格納と検索</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">insert_with_probing</span>(table, key, value):
+    size = <span class="fn">len</span>(table)
+    index = <span class="fn">hash_function</span>(key, size)
+    original_index = index
+    probe_count = <span class="num">0</span>
+    <span class="kw">while</span> table[index] <span class="kw">is not</span> <span class="num">None</span>:
+        <span class="kw">if</span> table[index][<span class="num">0</span>] == key:
+            <span class="kw">break</span>
+        probe_count += <span class="num">1</span>
+        index = (index + <span class="num">1</span>) % size
+        <span class="kw">if</span> index == original_index:
+            <span class="fn">print</span>(<span class="str">"テーブルが満杯です"</span>)
+            <span class="kw">return</span> -<span class="num">1</span>
+    table[index] = (key, value)
+    <span class="fn">print</span>(<span class="str">f"  insert '{key}': 初期={original_index}, 探索{probe_count}回 → [{index}]"</span>)
+
+<span class="kw">def</span> <span class="fn">search_with_probing</span>(table, key):
+    size = <span class="fn">len</span>(table)
+    index = <span class="fn">hash_function</span>(key, size)
+    start_index = index
+    probe_count = <span class="num">0</span>
+    <span class="kw">while</span> table[index] <span class="kw">is not</span> <span class="num">None</span>:
+        probe_count += <span class="num">1</span>
+        <span class="kw">if</span> table[index][<span class="num">0</span>] == key:
+            <span class="fn">print</span>(<span class="str">f"  search '{key}': [{index}]で発見, 探索{probe_count}回"</span>)
+            <span class="kw">return</span> table[index][<span class="num">1</span>]
+        index = (index + <span class="num">1</span>) % size
+        <span class="kw">if</span> index == start_index:
+            <span class="kw">break</span>
+    <span class="fn">print</span>(<span class="str">f"  search '{key}': 見つかりません"</span>)
+    <span class="kw">return</span> <span class="num">None</span>
+
+table = [<span class="num">None</span>] * <span class="num">10</span>
+<span class="fn">insert_with_probing</span>(table, <span class="str">"apple"</span>, <span class="num">100</span>)
+<span class="fn">insert_with_probing</span>(table, <span class="str">"pleap"</span>, <span class="num">999</span>)  <span class="cmt"># appleと衝突</span>
+<span class="fn">search_with_probing</span>(table, <span class="str">"apple"</span>)
+<span class="fn">search_with_probing</span>(table, <span class="str">"pleap"</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>HashTable クラスの作成</h3>
+      </div>
+      <p>insert / search / delete / display メソッドを持つクラスを作成します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">class</span> <span class="fn">HashTable</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, size=<span class="num">10</span>):
+        self.size = size
+        self.table = [<span class="num">None</span>] * size
+        self.count = <span class="num">0</span>
+
+    <span class="kw">def</span> <span class="fn">_hash</span>(self, key):
+        total = <span class="num">0</span>
+        <span class="kw">for</span> char <span class="kw">in</span> key:
+            total += <span class="fn">ord</span>(char)
+        <span class="kw">return</span> total % self.size
+
+    <span class="kw">def</span> <span class="fn">insert</span>(self, key, value):
+        index = self.<span class="fn">_hash</span>(key)
+        original = index
+        <span class="kw">while</span> self.table[index] <span class="kw">is not</span> <span class="num">None</span>:
+            <span class="kw">if</span> self.table[index][<span class="num">0</span>] == key:
+                <span class="kw">break</span>
+            index = (index + <span class="num">1</span>) % self.size
+            <span class="kw">if</span> index == original:
+                <span class="kw">return</span> -<span class="num">1</span>
+        self.table[index] = (key, value)
+        self.count += <span class="num">1</span>
+
+    <span class="kw">def</span> <span class="fn">search</span>(self, key):
+        index = self.<span class="fn">_hash</span>(key)
+        start = index
+        <span class="kw">while</span> self.table[index] <span class="kw">is not</span> <span class="num">None</span>:
+            <span class="kw">if</span> self.table[index][<span class="num">0</span>] == key:
+                <span class="kw">return</span> self.table[index][<span class="num">1</span>]
+            index = (index + <span class="num">1</span>) % self.size
+            <span class="kw">if</span> index == start: <span class="kw">break</span>
+        <span class="kw">return</span> <span class="num">None</span>
+
+    <span class="kw">def</span> <span class="fn">delete</span>(self, key):
+        index = self.<span class="fn">_hash</span>(key)
+        start = index
+        <span class="kw">while</span> self.table[index] <span class="kw">is not</span> <span class="num">None</span>:
+            <span class="kw">if</span> self.table[index][<span class="num">0</span>] == key:
+                self.table[index] = <span class="num">None</span>
+                self.count -= <span class="num">1</span>
+                <span class="kw">return</span> <span class="num">True</span>
+            index = (index + <span class="num">1</span>) % self.size
+            <span class="kw">if</span> index == start: <span class="kw">break</span>
+        <span class="kw">return</span> <span class="num">False</span>
+
+<span class="cmt"># --- テスト ---</span>
+ht = <span class="fn">HashTable</span>(<span class="num">10</span>)
+ht.<span class="fn">insert</span>(<span class="str">"apple"</span>, <span class="num">100</span>)
+ht.<span class="fn">insert</span>(<span class="str">"banana"</span>, <span class="num">80</span>)
+<span class="fn">print</span>(ht.<span class="fn">search</span>(<span class="str">"apple"</span>))   <span class="cmt"># → 100</span>
+ht.<span class="fn">delete</span>(<span class="str">"apple"</span>)
+<span class="fn">print</span>(ht.<span class="fn">search</span>(<span class="str">"apple"</span>))   <span class="cmt"># → None</span></pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ─ 2026年度前期 ─ 第7回
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第10回: 度数分布法（1） | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(147,213,0,0.2), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: rgba(118,185,0,0.15); font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; } pre .fn { color: #93D500; } pre .str { color: #FFB800; } pre .cmt { color: #616161; font-style: italic; } pre .num { color: #fab387; } pre .op { color: #4FC3F7; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #a6adc8; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '▸'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第10回: 度数分布法（1）</h1>
+    <p>比較を使わないソート ── 分布数えソート（Counting Sort）で O(n+k) を実現する</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#93D500;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#FFB800">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. EXPLANATION ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>説明</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.1 これまでのソートとの違い</h4>
+      <p>これまで学んだソートアルゴリズム（挿入ソート、バブルソート）は<strong>要素同士を比較</strong>して順序を決めていました。比較ベースのソートの下限は O(n log n) です。</p>
+      <p style="margin-top:0.5rem">分布数えソート（Counting Sort）は<strong>比較を一切使いません</strong>。代わりに、<strong>各値が何回出現するかを数える</strong>ことでソートします。</p>
+
+      <table>
+        <tr><th>方式</th><th>アプローチ</th><th>計算量</th></tr>
+        <tr><td>比較ベース</td><td>「AとBはどちらが大きい？」を繰り返す</td><td>最速でも O(n log n)</td></tr>
+        <tr><td>分布数えソート</td><td>「値0は何個？値1は何個？...」と数えて並べ直す</td><td>O(n + k)</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.2 分布数えソートの3ステップ</h4>
+
+      <div class="analogy">
+        テストの答案用紙を点数別に仕分けする作業を想像してください。
+        まず点数ごとの山を作り（度数を数える）、次に「60点以下は何人？」と累計を出し（累積度数）、最後に答案を正しい順番に並べる（配置）。
+      </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">分布数えソートの3ステップ</text>
+
+          <!-- Step 1: Count -->
+          <rect x="30" y="45" width="640" height="95" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="50" y="68" fill="#76B900" font-weight="700" font-size="13">Step 1: 度数を数える（Count）</text>
+          <text x="50" y="90" fill="#E0E0E0" font-size="11">入力: [4, 2, 2, 8, 3, 3, 1]</text>
+          <text x="50" y="110" fill="#E0E0E0" font-size="11">度数:  index: 0  1  2  3  4  5  6  7  8</text>
+          <text x="50" y="128" fill="#FFB800" font-weight="600" font-size="11">count: [0, 1, 2, 2, 1, 0, 0, 0, 1]   ← 各値の出現回数</text>
+
+          <!-- Step 2: Cumulative -->
+          <rect x="30" y="155" width="640" height="95" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="50" y="178" fill="#76B900" font-weight="700" font-size="13">Step 2: 累積度数を計算する（Cumulative Count）</text>
+          <text x="50" y="200" fill="#E0E0E0" font-size="11">度数:   [0, 1, 2, 2, 1, 0, 0, 0, 1]</text>
+          <text x="50" y="220" fill="#FFB800" font-weight="600" font-size="11">累積:   [0, 1, 3, 5, 6, 6, 6, 6, 7]</text>
+          <text x="50" y="240" fill="#888" font-size="10">意味: 「値3以下の要素は5個ある」→ 値3は出力の4番目と5番目に入る</text>
+
+          <!-- Step 3: Place -->
+          <rect x="30" y="265" width="640" height="115" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="50" y="288" fill="#76B900" font-weight="700" font-size="13">Step 3: 要素を正しい位置に配置する（Place）</text>
+          <text x="50" y="310" fill="#E0E0E0" font-size="11">元の配列を末尾から走査し、累積度数で出力位置を決定</text>
+          <text x="50" y="330" fill="#888" font-size="10">arr[6]=1 → cumulative[1]=1 → output[0]=1</text>
+          <text x="50" y="345" fill="#888" font-size="10">arr[5]=3 → cumulative[3]=5 → output[4]=3</text>
+          <text x="50" y="360" fill="#888" font-size="10">...繰り返す...</text>
+          <text x="50" y="375" fill="#76B900" font-weight="600" font-size="11">出力: [1, 2, 2, 3, 3, 4, 8]</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.3 なぜ末尾から処理するのか？</h4>
+      <p>末尾から処理すると、<strong>同じ値の要素の元の順序が保たれます</strong>（安定ソート）。これは次回（第11回）で詳しく学びます。</p>
+    </div>
+
+    <div class="concept-box">
+      <h4>1.4 計算量</h4>
+      <table>
+        <tr><th>操作</th><th>計算量</th></tr>
+        <tr><td>度数を数える</td><td>O(n)</td></tr>
+        <tr><td>累積度数を計算</td><td>O(k)</td></tr>
+        <tr><td>要素を配置</td><td>O(n)</td></tr>
+        <tr><td><strong>合計</strong></td><td><strong>O(n + k)</strong></td></tr>
+      </table>
+      <ul class="point-list">
+        <li>n: 要素数</li>
+        <li>k: 値の範囲（最大値 - 最小値 + 1）</li>
+        <li>k が小さければ（例: テストの点数 0~100）、非常に高速</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. EXAMPLES ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>リスト内の各値の出現回数を数える</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">count_occurrences</span>(data):
+    max_val = <span class="fn">max</span>(data)
+    count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)  <span class="cmt"># 度数配列を0で初期化</span>
+
+    <span class="kw">for</span> value <span class="kw">in</span> data:
+        count[value] += <span class="num">1</span>  <span class="cmt"># 該当する値のカウントを増やす</span>
+
+    <span class="kw">return</span> count
+
+data = [<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">2</span>, <span class="num">6</span>, <span class="num">5</span>, <span class="num">3</span>]
+frequency = <span class="fn">count_occurrences</span>(data)
+
+<span class="fn">print</span>(<span class="str">f"入力データ: {data}"</span>)
+<span class="fn">print</span>(<span class="str">f"度数配列:   {frequency}"</span>)
+<span class="kw">for</span> i, cnt <span class="kw">in</span> <span class="fn">enumerate</span>(frequency):
+    <span class="kw">if</span> cnt > <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f"  値 {i}: {cnt} 回"</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>度数配列から累積度数配列を作る</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">build_cumulative</span>(count):
+    cumulative = count[:]  <span class="cmt"># 度数配列をコピー</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(cumulative)):
+        cumulative[i] = cumulative[i] + cumulative[i - <span class="num">1</span>]
+    <span class="kw">return</span> cumulative
+
+data = [<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">2</span>, <span class="num">6</span>, <span class="num">5</span>, <span class="num">3</span>]
+max_val = <span class="fn">max</span>(data)
+count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)
+<span class="kw">for</span> value <span class="kw">in</span> data:
+    count[value] += <span class="num">1</span>
+
+cumulative = <span class="fn">build_cumulative</span>(count)
+
+<span class="fn">print</span>(<span class="str">f"度数配列: {count}"</span>)
+<span class="fn">print</span>(<span class="str">f"累積度数: {cumulative}"</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(cumulative)):
+    <span class="kw">if</span> count[i] > <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f"  値 {i} 以下の要素数: {cumulative[i]}"</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>基本的な分布数えソート</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">counting_sort_basic</span>(data):
+    <span class="kw">if</span> <span class="fn">len</span>(data) <= <span class="num">1</span>:
+        <span class="kw">return</span> data[:]
+
+    max_val = <span class="fn">max</span>(data)
+
+    <span class="cmt"># Step 1: 度数を数える</span>
+    count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)
+    <span class="kw">for</span> value <span class="kw">in</span> data:
+        count[value] += <span class="num">1</span>
+
+    <span class="cmt"># Step 2: 累積度数を計算する</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)):
+        count[i] += count[i - <span class="num">1</span>]
+
+    <span class="cmt"># Step 3: 出力配列に配置する（末尾から = 安定ソート）</span>
+    output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
+        value = data[i]
+        position = count[value] - <span class="num">1</span>  <span class="cmt"># 配置位置（0始まり）</span>
+        output[position] = value
+        count[value] -= <span class="num">1</span>
+
+    <span class="kw">return</span> output
+
+data = [<span class="num">4</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">8</span>, <span class="num">3</span>, <span class="num">3</span>, <span class="num">1</span>]
+result = <span class="fn">counting_sort_basic</span>(data)
+<span class="fn">print</span>(<span class="str">f"入力: {data}"</span>)
+<span class="fn">print</span>(<span class="str">f"出力: {result}"</span>)  <span class="cmt"># → [1, 2, 2, 3, 3, 4, 8]</span>
+
+<span class="kw">assert</span> result == <span class="fn">sorted</span>(data)
+<span class="fn">print</span>(<span class="str">"検証OK: sorted() と同じ結果"</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>テストの点数をソートして統計を出す</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> random
+
+random.<span class="fn">seed</span>(<span class="num">42</span>)  <span class="cmt"># 再現性のためシード固定</span>
+num_students = <span class="num">100</span>
+scores = [random.<span class="fn">randint</span>(<span class="num">0</span>, <span class="num">100</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(num_students)]
+
+<span class="cmt"># 分布数えソートで並べ替え</span>
+sorted_scores = <span class="fn">counting_sort_basic</span>(scores)
+
+total = <span class="fn">sum</span>(sorted_scores)
+average = total / num_students
+<span class="fn">print</span>(<span class="str">f"平均点: {average:.1f}"</span>)
+<span class="fn">print</span>(<span class="str">f"最低点: {sorted_scores[0]}"</span>)
+<span class="fn">print</span>(<span class="str">f"最高点: {sorted_scores[-1]}"</span>)</pre>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>分布数えソートと挿入ソートの速度比較</h3>
+      </div>
+      <p>値の範囲が 0~100 のとき、分布数えソートは挿入ソートに比べて圧倒的に高速です。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> time, random
+
+<span class="kw">def</span> <span class="fn">counting_sort</span>(data, max_val):
+    count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)
+    <span class="kw">for</span> v <span class="kw">in</span> data: count[v] += <span class="num">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)): count[i] += count[i-<span class="num">1</span>]
+    output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)-<span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
+        output[count[data[i]]-<span class="num">1</span>] = data[i]
+        count[data[i]] -= <span class="num">1</span>
+    <span class="kw">return</span> output
+
+<span class="kw">def</span> <span class="fn">insertion_sort</span>(data):
+    arr = data[:]
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(arr)):
+        key = arr[i]; j = i - <span class="num">1</span>
+        <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> arr[j] > key:
+            arr[j+<span class="num">1</span>] = arr[j]; j -= <span class="num">1</span>
+        arr[j+<span class="num">1</span>] = key
+    <span class="kw">return</span> arr
+
+random.<span class="fn">seed</span>(<span class="num">42</span>)
+sizes = [<span class="num">1000</span>, <span class="num">5000</span>, <span class="num">10000</span>]
+max_val = <span class="num">100</span>
+
+<span class="fn">print</span>(<span class="str">f"{'サイズ':>8} {'分布数え':>14} {'挿入ソート':>12} {'速度比':>8}"</span>)
+<span class="kw">for</span> size <span class="kw">in</span> sizes:
+    data = [random.<span class="fn">randint</span>(<span class="num">0</span>, max_val) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(size)]
+
+    start = time.<span class="fn">time</span>()
+    <span class="fn">counting_sort</span>(data, max_val)
+    ct = time.<span class="fn">time</span>() - start
+
+    start = time.<span class="fn">time</span>()
+    <span class="fn">insertion_sort</span>(data)
+    it = time.<span class="fn">time</span>() - start
+
+    ratio = it / ct <span class="kw">if</span> ct > <span class="num">0</span> <span class="kw">else</span> <span class="num">0</span>
+    <span class="fn">print</span>(<span class="str">f"{size:>8} {ct:>13.4f}s {it:>11.4f}s {ratio:>7.1f}x"</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 220" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の比較</text>
+
+          <!-- Counting sort bar -->
+          <text x="40" y="75" fill="#E0E0E0" font-size="12">分布数えソート</text>
+          <text x="40" y="92" fill="#888" font-size="10">O(n + k)</text>
+          <rect x="200" y="60" width="80" height="36" rx="6" fill="#76B900"/>
+          <text x="240" y="83" text-anchor="middle" fill="white" font-weight="700" font-size="12">高速</text>
+
+          <!-- Insertion sort bar -->
+          <text x="40" y="135" fill="#E0E0E0" font-size="12">挿入ソート</text>
+          <text x="40" y="152" fill="#888" font-size="10">O(n^2)</text>
+          <rect x="200" y="120" width="400" height="36" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+          <text x="400" y="143" text-anchor="middle" fill="white" font-weight="700" font-size="12">遅い（n が大きいとき）</text>
+
+          <!-- Note -->
+          <text x="350" y="190" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12">k が小さいとき、分布数えソートは圧倒的に速い</text>
+          <text x="350" y="210" text-anchor="middle" fill="#888" font-size="11">ただし k が非常に大きい場合はメモリを大量に使う</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ─ 2026年度前期 ─ 第10回
+  </div>
+</footer>
+
+</body>
+</html>

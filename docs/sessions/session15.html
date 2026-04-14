@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第15回: まとめ | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第15回: まとめ</h1>
+    <p>全14回の学習内容を振り返り、アルゴリズムの特徴・計算量・適用場面を体系的に整理する</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#f59e0b">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. アルゴリズム総整理 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>アルゴリズム総整理</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>この授業で学んだアルゴリズム一覧</h4>
+      <table>
+        <tr><th>アルゴリズム</th><th>計算量（平均）</th><th>用途</th><th>学んだ回</th></tr>
+        <tr><td>逐次探索</td><td>O(n)</td><td>未整列データからの検索</td><td>第3回</td></tr>
+        <tr><td>二分探索</td><td>O(log n)</td><td>ソート済みデータからの検索</td><td>第4回</td></tr>
+        <tr><td>ハッシュ探索</td><td>O(1)</td><td>キーから値を即座に取得</td><td>第6-7回</td></tr>
+        <tr><td>挿入ソート</td><td>O(n^2)</td><td>小規模・ほぼ整列データのソート</td><td>第8-9回</td></tr>
+        <tr><td>バブルソート</td><td>O(n^2)</td><td>教育目的・小規模データのソート</td><td>第9回</td></tr>
+        <tr><td>カウントソート</td><td>O(n+k)</td><td>限定範囲の整数ソート</td><td>第10-11回</td></tr>
+        <tr><td>BFS（幅優先探索）</td><td>O(V+E)</td><td>最短経路・迷路探索</td><td>第12回</td></tr>
+        <tr><td>DFS（深さ優先探索）</td><td>O(V+E)</td><td>全探索・連結判定</td><td>第12回</td></tr>
+      </table>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 700 420" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+        <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">アルゴリズム選択フローチャート</text>
+
+        <!-- Root -->
+        <rect x="250" y="40" width="200" height="40" rx="10" fill="#1A1A1A" stroke="#444444" stroke-width="1.5"/>
+        <text x="350" y="65" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">何をしたい？</text>
+
+        <!-- Branch: 探索 -->
+        <line x1="300" y1="80" x2="180" y2="110" stroke="#76B900" stroke-width="2"/>
+        <rect x="80" y="110" width="200" height="36" rx="8" fill="#76B900"/>
+        <text x="180" y="133" text-anchor="middle" fill="white" font-weight="700" font-size="12">探索（データを見つける）</text>
+
+        <!-- Branch: ソート -->
+        <line x1="400" y1="80" x2="520" y2="110" stroke="#76B900" stroke-width="2"/>
+        <rect x="420" y="110" width="200" height="36" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="520" y="133" text-anchor="middle" fill="white" font-weight="700" font-size="12">ソート（並べ替える）</text>
+
+        <!-- Search sub-branches -->
+        <line x1="130" y1="146" x2="80" y2="175" stroke="#888" stroke-width="1.5"/>
+        <rect x="10" y="175" width="140" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="80" y="196" text-anchor="middle" fill="#76B900" font-size="10" font-weight="600">ソート済み？</text>
+
+        <line x1="80" y1="207" x2="40" y2="230" stroke="#76B900" stroke-width="1.5"/>
+        <text x="25" y="225" fill="#76B900" font-size="9" font-weight="700">Yes</text>
+        <rect x="0" y="232" width="80" height="28" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="40" y="250" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">二分探索</text>
+        <text x="40" y="270" text-anchor="middle" fill="#888" font-size="9">O(log n)</text>
+
+        <line x1="80" y1="207" x2="120" y2="230" stroke="#76B900" stroke-width="1.5"/>
+        <text x="130" y="225" fill="#FF5252" font-size="9" font-weight="700">No</text>
+        <rect x="85" y="232" width="80" height="28" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+        <text x="125" y="250" text-anchor="middle" fill="#FF5252" font-size="10" font-weight="700">逐次探索</text>
+        <text x="125" y="270" text-anchor="middle" fill="#888" font-size="9">O(n)</text>
+
+        <line x1="230" y1="146" x2="250" y2="175" stroke="#888" stroke-width="1.5"/>
+        <rect x="185" y="175" width="130" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="250" y="196" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="600">キー→値？</text>
+
+        <line x1="250" y1="207" x2="250" y2="232" stroke="#76B900" stroke-width="1.5"/>
+        <rect x="195" y="232" width="110" height="28" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="250" y="250" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">ハッシュ探索</text>
+        <text x="250" y="270" text-anchor="middle" fill="#888" font-size="9">O(1)</text>
+
+        <!-- Graph search -->
+        <line x1="350" y1="80" x2="350" y2="110" stroke="#888" stroke-width="1.5"/>
+        <rect x="310" y="295" width="100" height="32" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+        <text x="360" y="316" text-anchor="middle" fill="#FF5252" font-size="10" font-weight="600">経路探索？</text>
+
+        <line x1="130" y1="146" x2="360" y2="295" stroke="#888" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <line x1="340" y1="327" x2="310" y2="350" stroke="#888" stroke-width="1.5"/>
+        <rect x="250" y="350" width="120" height="28" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="310" y="369" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">BFS（最短経路）</text>
+        <text x="310" y="389" text-anchor="middle" fill="#888" font-size="9">O(V+E)</text>
+
+        <line x1="380" y1="327" x2="410" y2="350" stroke="#888" stroke-width="1.5"/>
+        <rect x="370" y="350" width="120" height="28" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+        <text x="430" y="369" text-anchor="middle" fill="#FF5252" font-size="10" font-weight="700">DFS（全探索）</text>
+        <text x="430" y="389" text-anchor="middle" fill="#888" font-size="9">O(V+E)</text>
+
+        <!-- Sort sub-branches -->
+        <line x1="490" y1="146" x2="460" y2="175" stroke="#888" stroke-width="1.5"/>
+        <rect x="390" y="175" width="140" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="460" y="196" text-anchor="middle" fill="#76B900" font-size="10" font-weight="600">値の範囲が限定？</text>
+
+        <line x1="460" y1="207" x2="430" y2="232" stroke="#76B900" stroke-width="1.5"/>
+        <text x="415" y="225" fill="#76B900" font-size="9" font-weight="700">Yes</text>
+        <rect x="370" y="232" width="120" height="28" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="430" y="250" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">カウントソート</text>
+        <text x="430" y="270" text-anchor="middle" fill="#888" font-size="9">O(n+k)</text>
+
+        <line x1="550" y1="146" x2="600" y2="175" stroke="#888" stroke-width="1.5"/>
+        <rect x="540" y="175" width="140" height="32" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="610" y="196" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="600">ほぼ整列？小規模？</text>
+
+        <line x1="610" y1="207" x2="610" y2="232" stroke="#76B900" stroke-width="1.5"/>
+        <rect x="550" y="232" width="120" height="28" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="610" y="250" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700">挿入ソート</text>
+        <text x="610" y="270" text-anchor="middle" fill="#888" font-size="9">O(n^2) / O(n)</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 例題 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <!-- 例題1 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>コードからアルゴリズムを特定する</h3>
+      </div>
+      <p>コードの特徴的なパターンから、どのアルゴリズムかを判定します。</p>
+      <div class="concept-box">
+        <h4>アルゴリズム特定のキーワード</h4>
+        <table>
+          <tr><th>キーワード</th><th>アルゴリズム</th></tr>
+          <tr><td><code>low, high, mid</code></td><td>二分探索</td></tr>
+          <tr><td><code>deque, popleft, queue</code></td><td>BFS（幅優先探索）</td></tr>
+          <tr><td><code>stack, pop (LIFO)</code></td><td>DFS（深さ優先探索）</td></tr>
+          <tr><td><code>key = arr[i], j = i-1</code></td><td>挿入ソート</td></tr>
+          <tr><td><code>arr[j], arr[j+1]</code> の交換</td><td>バブルソート</td></tr>
+          <tr><td><code>count配列, 範囲k</code></td><td>カウントソート</td></tr>
+          <tr><td><code>dict, hash, キー検索</code></td><td>ハッシュ探索</td></tr>
+          <tr><td><code>for i in range(len(data))</code></td><td>逐次探索</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 例題2 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>計算量を求める</h3>
+      </div>
+      <p>コードのループ構造から計算量をO記法で求めます。</p>
+      <div class="concept-box">
+        <h4>計算量のパターン</h4>
+        <table>
+          <tr><th>パターン</th><th>計算量</th><th>コード例</th></tr>
+          <tr><td>ループなし</td><td><strong>O(1)</strong></td><td><code>value = data[0]</code></td></tr>
+          <tr><td>1重ループ</td><td><strong>O(n)</strong></td><td><code>for i in range(n): ...</code></td></tr>
+          <tr><td>2重ループ</td><td><strong>O(n^2)</strong></td><td><code>for i: for j: ...</code></td></tr>
+          <tr><td>半分にする</td><td><strong>O(log n)</strong></td><td><code>while n > 1: n //= 2</code></td></tr>
+        </table>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># --- 実測による確認 ---</span>
+sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span class="num">4000</span>, <span class="num">8000</span>]
+
+<span class="kw">for</span> n <span class="kw">in</span> sizes:
+    data = <span class="fn">list</span>(<span class="fn">range</span>(n))
+
+    <span class="cmt"># O(n) の処理</span>
+    start_time = time.<span class="fn">perf_counter</span>()
+    total = <span class="num">0</span>
+    <span class="kw">for</span> val <span class="kw">in</span> data:
+        total += val
+    time_n = time.<span class="fn">perf_counter</span>() - start_time
+
+    <span class="cmt"># O(n^2) の処理</span>
+    start_time = time.<span class="fn">perf_counter</span>()
+    count = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            count += <span class="num">1</span>
+    time_n2 = time.<span class="fn">perf_counter</span>() - start_time
+
+<span class="cmt"># nが2倍 → O(n)は約2倍、O(n^2)は約4倍になる</span></pre>
+    </div>
+
+    <!-- 例題3 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>場面に最適なアルゴリズムを選ぶ</h3>
+      </div>
+      <table>
+        <tr><th>問題</th><th>最適なアルゴリズム</th><th>理由</th></tr>
+        <tr><td>1000人のソート済み名簿から名前を探す</td><td style="color:#76B900;font-weight:700">二分探索 O(log n)</td><td>最大10回の比較で見つかる</td></tr>
+        <tr><td>ユーザーIDから情報を即座に取得する</td><td style="color:#4FC3F7;font-weight:700">ハッシュ探索 O(1)</td><td>キー→値はハッシュが最速</td></tr>
+        <tr><td>10万人の点数(0-100)をソートする</td><td style="color:#93D500;font-weight:700">カウントソート O(n+k)</td><td>整数+範囲限定で最速</td></tr>
+        <tr><td>迷路の最短経路を求める</td><td style="color:#76B900;font-weight:700">BFS O(V+E)</td><td>最短経路を保証する唯一の方法</td></tr>
+      </table>
+    </div>
+
+    <!-- 例題4 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>同じ問題を2つのアルゴリズムで解く</h3>
+      </div>
+      <p>「リスト内の重複要素を見つける」問題を2通りで解き、性能を比較します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">find_duplicates_bruteforce</span>(data):
+    <span class="str">"""総当たり版 O(n^2)"""</span>
+    duplicates = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i + <span class="num">1</span>, <span class="fn">len</span>(data)):
+            <span class="kw">if</span> data[i] == data[j] <span class="kw">and</span> data[i] <span class="kw">not in</span> duplicates:
+                duplicates.<span class="fn">append</span>(data[i])
+    <span class="kw">return</span> duplicates
+
+<span class="kw">def</span> <span class="fn">find_duplicates_hashset</span>(data):
+    <span class="str">"""ハッシュセット版 O(n)"""</span>
+    seen = <span class="fn">set</span>()
+    duplicates = <span class="fn">set</span>()
+    <span class="kw">for</span> item <span class="kw">in</span> data:
+        <span class="kw">if</span> item <span class="kw">in</span> seen:
+            duplicates.<span class="fn">add</span>(item)
+        <span class="kw">else</span>:
+            seen.<span class="fn">add</span>(item)
+    <span class="kw">return</span> <span class="fn">list</span>(duplicates)</pre>
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>速度比較結果</h4>
+        <table>
+          <tr><th>データ数</th><th>総当たり O(n^2)</th><th>ハッシュ O(n)</th><th>速度比</th></tr>
+          <tr><td>500</td><td>0.023秒</td><td>0.000042秒</td><td>548倍</td></tr>
+          <tr><td>1,000</td><td>0.089秒</td><td>0.000081秒</td><td>1,099倍</td></tr>
+          <tr><td>2,000</td><td>0.356秒</td><td>0.000163秒</td><td>2,184倍</td></tr>
+          <tr><td>5,000</td><td>2.234秒</td><td>0.000412秒</td><td>5,422倍</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 例題5 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>実世界の問題にアルゴリズムを適用する</h3>
+      </div>
+      <p>「図書館の蔵書検索システム」を設計・実装する例です。</p>
+      <table>
+        <tr><th>機能</th><th>使うアルゴリズム</th><th>計算量</th><th>理由</th></tr>
+        <tr><td>ID検索</td><td>ハッシュ探索（辞書）</td><td>O(1)</td><td>キーから値を即座に取得</td></tr>
+        <tr><td>著者検索</td><td>ハッシュ探索（辞書）</td><td>O(1)</td><td>著者名→書籍リストの対応</td></tr>
+        <tr><td>出版年順一覧</td><td>挿入ソート</td><td>O(n^2)</td><td>蔵書数が少なければ十分</td></tr>
+      </table>
+      <pre><span class="code-label">Python</span>
+books = [
+    {<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"title"</span>: <span class="str">"Python入門"</span>, <span class="str">"author"</span>: <span class="str">"田中太郎"</span>, <span class="str">"year"</span>: <span class="num">2024</span>},
+    {<span class="str">"id"</span>: <span class="num">2</span>, <span class="str">"title"</span>: <span class="str">"アルゴリズム基礎"</span>, <span class="str">"author"</span>: <span class="str">"鈴木花子"</span>, <span class="str">"year"</span>: <span class="num">2023</span>},
+    <span class="cmt"># ...</span>
+]
+
+<span class="cmt"># ハッシュテーブルでID検索用インデックスを作る</span>
+id_index = {}
+<span class="kw">for</span> book <span class="kw">in</span> books:
+    id_index[book[<span class="str">"id"</span>]] = book  <span class="cmt"># O(1) で検索可能に</span>
+
+<span class="cmt"># 著者名で検索用インデックスを作る</span>
+author_index = {}
+<span class="kw">for</span> book <span class="kw">in</span> books:
+    author = book[<span class="str">"author"</span>]
+    <span class="kw">if</span> author <span class="kw">not in</span> author_index:
+        author_index[author] = []
+    author_index[author].<span class="fn">append</span>(book)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 計算量まとめ ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">3</div>
+      <h2>計算量まとめ</h2>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+        <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の速度ランキング（速い順）</text>
+
+        <!-- Speed ranking bars -->
+        <rect x="30" y="50" width="60" height="30" rx="6" fill="#76B900"/>
+        <text x="100" y="70" fill="#76B900" font-size="12" font-weight="700">O(1)</text>
+        <text x="200" y="70" fill="#E0E0E0" font-size="11">ハッシュ探索、配列アクセス</text>
+
+        <rect x="30" y="90" width="100" height="30" rx="6" fill="#76B900"/>
+        <text x="140" y="110" fill="#76B900" font-size="12" font-weight="700">O(log n)</text>
+        <text x="250" y="110" fill="#E0E0E0" font-size="11">二分探索</text>
+
+        <rect x="30" y="130" width="180" height="30" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="220" y="150" fill="#E0E0E0" font-size="12" font-weight="700">O(n)</text>
+        <text x="270" y="150" fill="#E0E0E0" font-size="11">逐次探索、カウントソート</text>
+
+        <rect x="30" y="170" width="280" height="30" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="320" y="190" fill="#76B900" font-size="12" font-weight="700">O(n log n)</text>
+        <text x="420" y="190" fill="#E0E0E0" font-size="11">Python sorted()（Timsort）</text>
+
+        <rect x="30" y="210" width="450" height="30" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+        <text x="490" y="230" fill="#FF5252" font-size="12" font-weight="700">O(n^2)</text>
+        <text x="560" y="230" fill="#E0E0E0" font-size="11">挿入・バブルソート</text>
+
+        <rect x="30" y="250" width="640" height="30" rx="6" fill="#666"/>
+        <text x="90" y="270" fill="white" font-size="12" font-weight="700">O(2^n)</text>
+        <text x="200" y="270" fill="#E0E0E0" font-size="11">全組み合わせ探索（指数時間）</text>
+
+        <!-- Labels -->
+        <text x="350" y="310" text-anchor="middle" fill="#888" font-size="11">バーが短いほど速い（n=10,000の場合のイメージ）</text>
+      </svg>
+    </div>
+
+    <div class="concept-box">
+      <h4>ソートアルゴリズム比較表</h4>
+      <table>
+        <tr><th>アルゴリズム</th><th>最良</th><th>平均</th><th>最悪</th><th>空間</th><th>安定</th><th>特徴</th></tr>
+        <tr><td>挿入ソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td><td style="color:#76B900">安定</td><td>ほぼ整列時に高速</td></tr>
+        <tr><td>バブルソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td><td style="color:#76B900">安定</td><td>教育目的向き</td></tr>
+        <tr><td>選択ソート</td><td>O(n^2)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td><td style="color:#FF5252">不安定</td><td>常に同じ速度</td></tr>
+        <tr><td>カウントソート</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td style="color:#76B900">安定</td><td>整数限定、範囲が重要</td></tr>
+        <tr><td>基数ソート</td><td>O(d(n+k))</td><td>O(d(n+k))</td><td>O(d(n+k))</td><td>O(n+k)</td><td style="color:#76B900">安定</td><td>桁数が少ないとき高速</td></tr>
+        <tr><td>Timsort</td><td>O(n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td style="color:#76B900">安定</td><td>Python標準 sorted()</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. 後期への橋渡し ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FF5252">4</div>
+      <h2>後期（アルゴリズム論及び演習II）への橋渡し</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>後期で学ぶ予定のトピック</h4>
+      <table>
+        <tr><th>トピック</th><th>概要</th><th>前期の基礎</th></tr>
+        <tr><td>クイックソート</td><td>分割統治法による高速ソート O(n log n)</td><td>ソートの基本概念</td></tr>
+        <tr><td>マージソート</td><td>安定な分割統治ソート O(n log n)</td><td>安定ソートの重要性</td></tr>
+        <tr><td>ヒープソート</td><td>ヒープデータ構造によるソート</td><td>選択ソートの発展</td></tr>
+        <tr><td>グラフアルゴリズム</td><td>ダイクストラ法、最小全域木</td><td>BFS・DFSの基礎</td></tr>
+        <tr><td>動的計画法</td><td>部分問題の解を再利用する手法</td><td>探索の効率化</td></tr>
+        <tr><td>木構造</td><td>二分探索木、AVL木</td><td>二分探索の概念</td></tr>
+      </table>
+    </div>
+
+    <div class="analogy">
+      前期で学んだことは「料理の基本」のようなもの。包丁の使い方（探索）、火加減の調整（ソート）、レシピの読み方（計算量の理解）。後期ではこれらを組み合わせて、もっと複雑な料理（アルゴリズム）に挑戦します。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ── 第15回 まとめ
+  </div>
+</footer>
+
+</body>
+</html>

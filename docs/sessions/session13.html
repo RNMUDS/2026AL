@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第13回: 実践的な課題（1） | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第13回: 実践的な課題（1）</h1>
+    <p>BFS・状態管理・frozensetを組み合わせて、アイテム収集迷路ゲームの最短経路を求める</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#f59e0b">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ テーマ説明 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>アイテム収集迷路ゲーム</h2>
+    </div>
+
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      この回では、これまで学んだアルゴリズムを組み合わせて、<strong>迷路の中でアイテムを全て集めてゴールする最短経路</strong>を求めるプログラムを段階的に作ります。
+    </p>
+
+    <div class="concept-box">
+      <h4>基本の考え方</h4>
+      <p>普通のBFSでは「位置」だけを状態として記録しますが、アイテム収集では<strong>「位置 + 集めたアイテムの組み合わせ」</strong>を状態として管理する必要があります。同じ位置でも、集めたアイテムが違えば<strong>別の状態</strong>として扱います。</p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">通常BFS vs アイテム収集BFS の状態</text>
+
+          <!-- Normal BFS -->
+          <rect x="20" y="40" width="310" height="100" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="175" y="65" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="13">通常のBFS</text>
+          <text x="175" y="90" text-anchor="middle" fill="#E0E0E0" font-size="11">状態 = 位置 のみ</text>
+          <text x="175" y="115" text-anchor="middle" fill="#888" font-size="11">(0,0), (0,1), (1,0), ...</text>
+          <text x="175" y="132" text-anchor="middle" fill="#888" font-size="10">各マスは1回だけ訪問</text>
+
+          <!-- Item BFS -->
+          <rect x="370" y="40" width="310" height="100" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="525" y="65" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">アイテム収集BFS</text>
+          <text x="525" y="90" text-anchor="middle" fill="#E0E0E0" font-size="11">状態 = (位置, 集めたアイテム集合)</text>
+          <text x="525" y="115" text-anchor="middle" fill="#888" font-size="11">((0,0), {}), ((0,0), {A}), ...</text>
+          <text x="525" y="132" text-anchor="middle" fill="#888" font-size="10">同じマスでもアイテム違い = 別状態</text>
+
+          <!-- Used tools -->
+          <text x="350" y="175" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">使うデータ構造</text>
+
+          <rect x="40" y="190" width="140" height="35" rx="8" fill="#76B900"/>
+          <text x="110" y="213" text-anchor="middle" fill="white" font-weight="700" font-size="11">BFS + deque</text>
+
+          <rect x="200" y="190" width="140" height="35" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="270" y="213" text-anchor="middle" fill="white" font-weight="700" font-size="11">frozenset</text>
+
+          <rect x="360" y="190" width="140" height="35" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="430" y="213" text-anchor="middle" fill="white" font-weight="700" font-size="11">dict（親マップ）</text>
+
+          <rect x="520" y="190" width="140" height="35" rx="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="590" y="213" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="11">set（訪問済み）</text>
+
+          <text x="110" y="245" text-anchor="middle" fill="#888" font-size="10">最短経路の保証</text>
+          <text x="270" y="245" text-anchor="middle" fill="#888" font-size="10">アイテム集合の管理</text>
+          <text x="430" y="245" text-anchor="middle" fill="#888" font-size="10">経路復元</text>
+          <text x="590" y="245" text-anchor="middle" fill="#888" font-size="10">重複探索防止</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="analogy">
+      スーパーで買い物をするとき、買い物リストの商品を全て集めてからレジに行くのと似ています。最短ルートで全商品を集めてレジ（ゴール）に行きたい。同じ通路にいても、カゴの中身が違えば「別の状態」です。
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 例題 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題（段階的に構築）</h2>
+    </div>
+
+    <!-- 例題1 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>迷路の表示</h3>
+      </div>
+      <p>迷路を2次元リストで定義し、絵文字で見やすく表示します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">display_maze</span>(maze):
+    <span class="str">"""迷路を絵文字で表示する関数"""</span>
+    rows = <span class="fn">len</span>(maze)
+    cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        line = <span class="str">""</span>
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            <span class="kw">if</span> maze[r][c] == <span class="num">1</span>:
+                line += <span class="str">"\U0001f7eb"</span>  <span class="cmt"># 壁</span>
+            <span class="kw">else</span>:
+                line += <span class="str">"\U0001f7e9"</span>  <span class="cmt"># 通路</span>
+        <span class="fn">print</span>(line)
+
+maze = [
+    [<span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="num">0</span>],
+    [<span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+    [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>],
+    [<span class="num">0</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="num">0</span>],
+    [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+]
+display_maze(maze)</pre>
+    </div>
+
+    <!-- 例題2 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>BFSで最短経路を求める</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">find_shortest_path</span>(maze, start, goal):
+    <span class="str">"""BFSで最短経路を求める関数"""</span>
+    rows = <span class="fn">len</span>(maze)
+    cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+    directions = [(-<span class="num">1</span>,<span class="num">0</span>), (<span class="num">1</span>,<span class="num">0</span>), (<span class="num">0</span>,-<span class="num">1</span>), (<span class="num">0</span>,<span class="num">1</span>)]
+
+    queue = <span class="fn">deque</span>([start])
+    visited = {start}
+    parent = {start: <span class="kw">None</span>}
+
+    <span class="kw">while</span> queue:
+        current = queue.<span class="fn">popleft</span>()
+        <span class="kw">if</span> current == goal:
+            path = []
+            node = current
+            <span class="kw">while</span> node <span class="kw">is not</span> <span class="kw">None</span>:
+                path.<span class="fn">append</span>(node)
+                node = parent[node]
+            <span class="kw">return</span> path[::-<span class="num">1</span>]
+
+        row, col = current
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> directions:
+            nr, nc = row + dr, col + dc
+            next_pos = (nr, nc)
+            <span class="kw">if</span> (<span class="num">0</span> <= nr < rows <span class="kw">and</span> <span class="num">0</span> <= nc < cols
+                    <span class="kw">and</span> maze[nr][nc] == <span class="num">0</span> <span class="kw">and</span> next_pos <span class="kw">not in</span> visited):
+                visited.<span class="fn">add</span>(next_pos)
+                queue.<span class="fn">append</span>(next_pos)
+                parent[next_pos] = current
+    <span class="kw">return</span> <span class="kw">None</span></pre>
+    </div>
+
+    <!-- 例題3 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>迷路にアイテムを配置する</h3>
+      </div>
+      <p>迷路の通路にアイテムを配置し、プレイヤーがアイテムの上を通ったら取得します。最短経路（アイテム無視）で拾えるアイテムと拾えないアイテムを確認します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">check_item_pickup</span>(path, items):
+    <span class="str">"""経路上で拾えるアイテムを調べる関数"""</span>
+    collected = []
+    <span class="kw">for</span> pos <span class="kw">in</span> path:
+        <span class="kw">if</span> pos <span class="kw">in</span> items <span class="kw">and</span> pos <span class="kw">not in</span> collected:
+            collected.<span class="fn">append</span>(pos)
+            <span class="fn">print</span>(<span class="str">f"  位置{pos}でアイテムを拾った！"</span>)
+    <span class="kw">return</span> collected
+
+items = [(<span class="num">0</span>, <span class="num">4</span>), (<span class="num">2</span>, <span class="num">0</span>), (<span class="num">4</span>, <span class="num">2</span>)]
+path = find_shortest_path(maze, (<span class="num">0</span>,<span class="num">0</span>), (<span class="num">4</span>,<span class="num">4</span>))
+collected = check_item_pickup(path, items)
+<span class="fn">print</span>(<span class="str">f"取得数: {len(collected)}/{len(items)}個"</span>)
+<span class="cmt"># → 全アイテムを集めるには経路を変える必要がある！</span></pre>
+    </div>
+
+    <!-- 例題4 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>frozensetで状態を管理する</h3>
+      </div>
+      <p><code>frozenset</code>を使い、「位置 + 集めたアイテム」を1つの状態として管理する方法を学びます。</p>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># setは辞書のキーに使えないが、frozensetは使える</span>
+state_a = ((<span class="num">0</span>, <span class="num">0</span>), <span class="fn">frozenset</span>())              <span class="cmt"># アイテム0個</span>
+state_b = ((<span class="num">0</span>, <span class="num">0</span>), <span class="fn">frozenset</span>({(<span class="num">2</span>, <span class="num">0</span>)}))       <span class="cmt"># アイテム1個</span>
+state_c = ((<span class="num">0</span>, <span class="num">0</span>), <span class="fn">frozenset</span>({(<span class="num">2</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">4</span>)}))  <span class="cmt"># アイテム2個</span>
+
+visited = {}
+visited[state_a] = <span class="kw">True</span>  <span class="cmt"># 同じ位置でも</span>
+visited[state_b] = <span class="kw">True</span>  <span class="cmt"># 別の状態として</span>
+visited[state_c] = <span class="kw">True</span>  <span class="cmt"># 管理できる！</span>
+
+<span class="cmt"># アイテム追加の操作</span>
+collected = <span class="fn">frozenset</span>()
+collected = collected | {(<span class="num">2</span>, <span class="num">0</span>)}  <span class="cmt"># 1個取得: frozenset({(2, 0)})</span>
+collected = collected | {(<span class="num">0</span>, <span class="num">4</span>)}  <span class="cmt"># 2個取得: frozenset({(2, 0), (0, 4)})</span></pre>
+
+      <div class="analogy" style="border-left-color:#93D500">
+        <span style="display:block;font-weight:700;font-size:0.8rem;color:#93D500;margin-bottom:0.3rem">frozenset のポイント</span>
+        <code>set</code> は変更できるので辞書のキーに使えない。<code>frozenset</code> は変更不可なのでキーに使える。アイテムの「持ち物セット」を管理するのに最適。
+      </div>
+    </div>
+
+    <!-- 例題5 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>全アイテム収集BFS（完全版）</h3>
+      </div>
+      <p>位置とアイテム収集状態を組み合わせたBFSで、全アイテムを集めてゴールする最短経路を求めます。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">solve_item_maze</span>(maze, start, goal, items):
+    <span class="str">"""全アイテムを集めてゴールする最短経路を求める関数"""</span>
+    rows = <span class="fn">len</span>(maze)
+    cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+    directions = [(-<span class="num">1</span>,<span class="num">0</span>), (<span class="num">1</span>,<span class="num">0</span>), (<span class="num">0</span>,-<span class="num">1</span>), (<span class="num">0</span>,<span class="num">1</span>)]
+    all_items = <span class="fn">frozenset</span>(items)
+
+    <span class="cmt"># --- 初期状態: (位置, 空のアイテム集合) ---</span>
+    initial_state = (start, <span class="fn">frozenset</span>())
+    queue = <span class="fn">deque</span>([initial_state])
+    visited = {initial_state}
+    parent = {initial_state: <span class="kw">None</span>}
+
+    <span class="kw">while</span> queue:
+        current_pos, collected = queue.<span class="fn">popleft</span>()
+
+        <span class="cmt"># --- ゴール判定: 位置がゴール AND 全アイテム収集済み ---</span>
+        <span class="kw">if</span> current_pos == goal <span class="kw">and</span> collected == all_items:
+            path = []
+            state = (current_pos, collected)
+            <span class="kw">while</span> state <span class="kw">is not</span> <span class="kw">None</span>:
+                path.<span class="fn">append</span>(state)
+                state = parent[state]
+            <span class="kw">return</span> path[::-<span class="num">1</span>]
+
+        <span class="cmt"># --- 4方向を探索 ---</span>
+        row, col = current_pos
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> directions:
+            nr, nc = row + dr, col + dc
+            next_pos = (nr, nc)
+
+            <span class="kw">if</span> (<span class="num">0</span> <= nr < rows <span class="kw">and</span> <span class="num">0</span> <= nc < cols
+                    <span class="kw">and</span> maze[nr][nc] == <span class="num">0</span>):
+                new_collected = collected
+                <span class="kw">if</span> next_pos <span class="kw">in</span> items:
+                    new_collected = collected | {next_pos}  <span class="cmt"># アイテム取得</span>
+
+                new_state = (next_pos, new_collected)
+                <span class="kw">if</span> new_state <span class="kw">not in</span> visited:
+                    visited.<span class="fn">add</span>(new_state)
+                    queue.<span class="fn">append</span>(new_state)
+                    parent[new_state] = (current_pos, collected)
+
+    <span class="kw">return</span> <span class="kw">None</span></pre>
+    </div>
+
+    <div class="concept-box">
+      <h4>実行結果のイメージ</h4>
+      <p>5x5の迷路でアイテム3個の場合、全アイテムを回収してゴールする最短経路は16歩。単純な最短経路（8歩）よりも長くなりますが、これが全アイテムを集める最短の方法です。</p>
+      <table>
+        <tr><th>方法</th><th>経路長</th><th>拾えたアイテム</th></tr>
+        <tr><td>通常BFS（アイテム無視）</td><td>8歩</td><td>1/3個</td></tr>
+        <tr><td>アイテム収集BFS</td><td>16歩</td><td>3/3個</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ── 第13回 実践的な課題（1）
+  </div>
+</footer>
+
+</body>
+</html>

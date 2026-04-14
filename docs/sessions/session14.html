@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第14回: 実践的な課題（2） | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第14回: 実践的な課題（2）</h1>
+    <p>コードレビューの4つの観点 ── 正しさ・可読性・効率性・拡張性 ── を学び、実践する</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
+      <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
+      <p style="font-size:0.95rem;margin-bottom:1rem">この回では、以下の項目をNotionの授業ノートに記述してください。</p>
+      <p style="font-size:0.95rem;margin-bottom:1rem"><strong style="color:#f59e0b">提出方法:</strong> NotionページをPDFに変換し、Manabaに提出</p>
+      <ul style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#cbd5e1">
+        <li>コード体験の観察記録</li>
+        <li>トレース演習</li>
+        <li>標準課題</li>
+        <li>発展課題（任意）</li>
+        <li>グループ口頭試問の記録（メンバー氏名・質疑内容・相互評価を含むこと）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ コードレビューとは ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>コードレビューとは</h2>
+    </div>
+
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      コードレビューとは、<strong>他の人が書いたコードを読んで改善点を見つける作業</strong>のこと。プロのソフトウェア開発では、ほぼ全てのコードがレビューを経てから本番環境に反映されます。
+    </p>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 700 260" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+        <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">レビューの4つの観点</text>
+
+        <!-- 正しさ -->
+        <rect x="20" y="45" width="150" height="90" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="95" y="70" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">正しさ</text>
+        <text x="95" y="90" text-anchor="middle" fill="#888" font-size="10">Correctness</text>
+        <text x="95" y="110" text-anchor="middle" fill="#E0E0E0" font-size="10">バグはないか？</text>
+        <text x="95" y="125" text-anchor="middle" fill="#E0E0E0" font-size="10">境界値は大丈夫？</text>
+
+        <!-- 可読性 -->
+        <rect x="190" y="45" width="150" height="90" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="265" y="70" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="13">可読性</text>
+        <text x="265" y="90" text-anchor="middle" fill="#888" font-size="10">Readability</text>
+        <text x="265" y="110" text-anchor="middle" fill="#E0E0E0" font-size="10">変数名は分かりやすい？</text>
+        <text x="265" y="125" text-anchor="middle" fill="#E0E0E0" font-size="10">コメントは適切？</text>
+
+        <!-- 効率性 -->
+        <rect x="360" y="45" width="150" height="90" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="435" y="70" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">効率性</text>
+        <text x="435" y="90" text-anchor="middle" fill="#888" font-size="10">Efficiency</text>
+        <text x="435" y="110" text-anchor="middle" fill="#E0E0E0" font-size="10">無駄なループは？</text>
+        <text x="435" y="125" text-anchor="middle" fill="#E0E0E0" font-size="10">適切なデータ構造？</text>
+
+        <!-- 拡張性 -->
+        <rect x="530" y="45" width="150" height="90" rx="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="605" y="70" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="13">拡張性</text>
+        <text x="605" y="90" text-anchor="middle" fill="#888" font-size="10">Extensibility</text>
+        <text x="605" y="110" text-anchor="middle" fill="#E0E0E0" font-size="10">マジックナンバーは？</text>
+        <text x="605" y="125" text-anchor="middle" fill="#E0E0E0" font-size="10">関数は1つの役割？</text>
+
+        <!-- 矢印で流れ -->
+        <rect x="100" y="170" width="500" height="40" rx="10" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="350" y="195" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12">まず正しさ → 次に可読性 → 効率性 → 最後に拡張性の順で確認</text>
+
+        <text x="350" y="240" text-anchor="middle" fill="#888" font-size="11">動かないコードの可読性を議論しても意味がない。正しさが最優先！</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 例題 ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+
+    <!-- 例題1 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>バグのあるコードを見つける（正しさ）</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># --- バグのあるコード ---</span>
+<span class="kw">def</span> <span class="fn">find_max_buggy</span>(numbers):
+    <span class="str">"""リストの最大値を返す関数（バグあり）"""</span>
+    maximum = numbers[<span class="num">0</span>]  <span class="cmt"># 空リストでエラー！</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(numbers)):
+        <span class="kw">if</span> numbers[i] > maximum:
+            maximum = numbers[i]
+    <span class="kw">return</span> maximum
+
+<span class="cmt"># --- 修正版 ---</span>
+<span class="kw">def</span> <span class="fn">find_max_fixed</span>(numbers):
+    <span class="str">"""リストの最大値を返す関数（修正版）"""</span>
+    <span class="kw">if not</span> numbers:  <span class="cmt"># 空リストチェックを追加</span>
+        <span class="fn">print</span>(<span class="str">"警告: 空のリストです"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    maximum = numbers[<span class="num">0</span>]
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(numbers)):  <span class="cmt"># 2番目から開始</span>
+        <span class="kw">if</span> numbers[i] > maximum:
+            maximum = numbers[i]
+    <span class="kw">return</span> maximum</pre>
+      <ul class="point-list" style="margin-top:1rem">
+        <li><strong>バグ1:</strong> 空リストが渡されると <code>numbers[0]</code> で IndexError</li>
+        <li><strong>修正:</strong> <code>if not numbers:</code> で空チェックを追加</li>
+        <li><strong>改善:</strong> ループを <code>range(1, ...)</code> にして無駄な比較を削除</li>
+      </ul>
+    </div>
+
+    <!-- 例題2 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>可読性の改善</h3>
+      </div>
+      <p>変数名やコメントを改善して、コードを読みやすくします。</p>
+      <table>
+        <tr><th>悪い例</th><th>良い例</th><th>理由</th></tr>
+        <tr><td><code>f(d, s, g)</code></td><td><code>find_shortest_path(maze, start, goal)</code></td><td>関数名・引数名で目的が明確</td></tr>
+        <tr><td><code>q, v, p, c</code></td><td><code>queue, visited, parent, current</code></td><td>英語の意味ある単語</td></tr>
+        <tr><td><code>n = (x+a, y+b)</code></td><td><code>next_pos = (row+dr, col+dc)</code></td><td>何を計算しているか一目で分かる</td></tr>
+        <tr><td>コメントなし</td><td>各行にコメント</td><td>後で読む人（未来の自分）のため</td></tr>
+      </table>
+    </div>
+
+    <!-- 例題3 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>効率性の改善（リスト vs セット）</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="fn">has_duplicate_slow</span>(data):
+    <span class="str">"""重複チェック（リスト版 = 遅い O(n^2)）"""</span>
+    seen = []  <span class="cmt"># リストの検索は O(n)</span>
+    <span class="kw">for</span> item <span class="kw">in</span> data:
+        <span class="kw">if</span> item <span class="kw">in</span> seen:  <span class="cmt"># O(n) の検索が n 回 → O(n^2)</span>
+            <span class="kw">return</span> <span class="kw">True</span>
+        seen.<span class="fn">append</span>(item)
+    <span class="kw">return</span> <span class="kw">False</span>
+
+<span class="kw">def</span> <span class="fn">has_duplicate_fast</span>(data):
+    <span class="str">"""重複チェック（セット版 = 速い O(n)）"""</span>
+    seen = <span class="fn">set</span>()  <span class="cmt"># セットの検索は O(1)</span>
+    <span class="kw">for</span> item <span class="kw">in</span> data:
+        <span class="kw">if</span> item <span class="kw">in</span> seen:  <span class="cmt"># O(1) の検索が n 回 → O(n)</span>
+            <span class="kw">return</span> <span class="kw">True</span>
+        seen.<span class="fn">add</span>(item)
+    <span class="kw">return</span> <span class="kw">False</span></pre>
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>速度差の実例</h4>
+        <table>
+          <tr><th>データ数</th><th>リスト版</th><th>セット版</th><th>速度差</th></tr>
+          <tr><td>1,000</td><td>0.0123秒</td><td>0.000089秒</td><td>138倍</td></tr>
+          <tr><td>5,000</td><td>0.3012秒</td><td>0.000411秒</td><td>733倍</td></tr>
+          <tr><td>10,000</td><td>1.2048秒</td><td>0.000823秒</td><td>1,464倍</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;color:#93D500;font-weight:600">データ構造の選択だけで1000倍以上の速度差が生まれる！</p>
+      </div>
+    </div>
+
+    <!-- 例題4 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>エラーハンドリングの追加</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">safe_divide</span>(numerator, denominator):
+    <span class="str">"""安全に割り算をする関数"""</span>
+    <span class="kw">try</span>:
+        result = numerator / denominator
+        <span class="kw">return</span> result
+    <span class="kw">except</span> <span class="fn">ZeroDivisionError</span>:
+        <span class="fn">print</span>(<span class="str">"  エラー: 0で割ることはできません"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">except</span> <span class="fn">TypeError</span>:
+        <span class="fn">print</span>(<span class="str">"  エラー: 数値でない値が渡されました"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">validate_maze_input</span>(maze, start, goal):
+    <span class="str">"""迷路の入力データを検証する関数"""</span>
+    errors = []
+    <span class="kw">if not</span> maze:
+        errors.<span class="fn">append</span>(<span class="str">"迷路が空です"</span>)
+        <span class="kw">return</span> errors
+    rows = <span class="fn">len</span>(maze)
+    cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+    sr, sc = start
+    <span class="kw">if not</span> (<span class="num">0</span> <= sr < rows <span class="kw">and</span> <span class="num">0</span> <= sc < cols):
+        errors.<span class="fn">append</span>(<span class="str">f"スタート{start}が範囲外です"</span>)
+    <span class="kw">elif</span> maze[sr][sc] != <span class="num">0</span>:
+        errors.<span class="fn">append</span>(<span class="str">f"スタート{start}が壁です"</span>)
+    <span class="kw">return</span> errors</pre>
+    </div>
+
+    <!-- 例題5 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 5</span>
+        <h3>既存コードに機能を追加する</h3>
+      </div>
+      <p>第13回の迷路BFSに「探索アニメーション表示」機能を追加します。探索過程で各ステップの隣接マス情報を表示し、BFSの動きを可視化します。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">bfs_with_trace</span>(maze, start, goal):
+    <span class="str">"""探索過程を表示するBFS関数"""</span>
+    directions = [(-<span class="num">1</span>,<span class="num">0</span>), (<span class="num">1</span>,<span class="num">0</span>), (<span class="num">0</span>,-<span class="num">1</span>), (<span class="num">0</span>,<span class="num">1</span>)]
+    direction_names = [<span class="str">"上"</span>, <span class="str">"下"</span>, <span class="str">"左"</span>, <span class="str">"右"</span>]
+    <span class="cmt"># ... BFS本体 ...</span>
+
+    <span class="cmt"># --- 探索過程を表示 ---</span>
+    neighbors_info = []
+    <span class="kw">for</span> i, (dr, dc) <span class="kw">in</span> <span class="fn">enumerate</span>(directions):
+        nr, nc = row + dr, col + dc
+        <span class="kw">if not</span> (<span class="num">0</span> <= nr < rows <span class="kw">and</span> <span class="num">0</span> <= nc < cols):
+            neighbors_info.<span class="fn">append</span>(<span class="str">f"{direction_names[i]}:範囲外"</span>)
+        <span class="kw">elif</span> maze[nr][nc] == <span class="num">1</span>:
+            neighbors_info.<span class="fn">append</span>(<span class="str">f"{direction_names[i]}:壁"</span>)
+        <span class="kw">elif</span> (nr,nc) <span class="kw">in</span> visited:
+            neighbors_info.<span class="fn">append</span>(<span class="str">f"{direction_names[i]}:訪問済"</span>)
+        <span class="kw">else</span>:
+            neighbors_info.<span class="fn">append</span>(<span class="str">f"{direction_names[i]}:→{(nr,nc)}"</span>)
+
+    <span class="fn">print</span>(<span class="str">f"ステップ{step}: {current} [{', '.join(neighbors_info)}]"</span>)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ チェックリストまとめ ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">3</div>
+      <h2>コードレビューチェックリスト</h2>
+    </div>
+
+    <div class="concept-box">
+      <h4>レビュー時に確認すること</h4>
+      <table>
+        <tr><th>観点</th><th>チェック項目</th><th>具体例</th></tr>
+        <tr><td style="color:#76B900;font-weight:700">正しさ</td><td>空リスト・0・負数のケースは？</td><td><code>if not numbers: return None</code></td></tr>
+        <tr><td style="color:#76B900;font-weight:700">正しさ</td><td>ゼロ除算は起きない？</td><td><code>try/except ZeroDivisionError</code></td></tr>
+        <tr><td style="color:#4FC3F7;font-weight:700">可読性</td><td>変数名は意味ある英語か？</td><td><code>q</code> → <code>queue</code></td></tr>
+        <tr><td style="color:#4FC3F7;font-weight:700">可読性</td><td>関数は1つの役割に集中？</td><td>ソート・統計・表示を分割</td></tr>
+        <tr><td style="color:#93D500;font-weight:700">効率性</td><td>検索に適切なデータ構造？</td><td><code>list</code> → <code>set</code>（O(n)→O(1)）</td></tr>
+        <tr><td style="color:#93D500;font-weight:700">効率性</td><td>ソート済みデータに逐次探索？</td><td>逐次探索 → 二分探索</td></tr>
+        <tr><td style="color:#FFB800;font-weight:700">拡張性</td><td>マジックナンバーは？</td><td><code>100</code> → <code>MAX_SCORE</code></td></tr>
+        <tr><td style="color:#FFB800;font-weight:700">拡張性</td><td>関数は50行以内？</td><td>大きい関数は分割する</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ── 第14回 実践的な課題（2）
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回: ガイダンス + 数当てゲーム | アルゴリズム論及び演習I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #111111;
+  color: #e0e0e0;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+
+/* ============ HEADER ============ */
+.hero {
+  background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a);
+  color: white;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(147,213,0,0.2), transparent 50%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+
+/* ============ SUBMISSION BOX ============ */
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ TAGS ============ */
+.tag {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tag-example   { background: #1a2e0a; color: #76B900; }
+.tag-trace     { background: #2e1a0a; color: #FFB800; }
+.tag-code-exp  { background: #0a1a2e; color: #4FC3F7; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+
+/* ============ SECTION HEADERS ============ */
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-num {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: #141414;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 1px solid #2a2a2a;
+}
+.card-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #222;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example   { border-left: 4px solid #76B900; }
+.card.trace     { border-left: 4px solid #93D500; }
+.card.code-exp  { border-left: 4px solid #4A7A00; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.card.group     { border-left: 4px solid #4FC3F7; }
+
+/* ============ NOTION CALLOUT ============ */
+.notion-submit {
+  background: #1a2e0a;
+  border: 1px solid #76B900;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  display: flex; align-items: flex-start; gap: 0.5rem;
+}
+.notion-submit::before { content: '📝'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+
+/* ============ TABLES ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+th {
+  background: rgba(118, 185, 0, 0.15);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  color: #76B900;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid #222;
+}
+tr:nth-child(even) td { background: #111; }
+.blank-cell {
+  background: #1a2e0a !important;
+  border: 1px dashed #4A7A00;
+  min-width: 100px;
+}
+
+/* ============ CODE ============ */
+pre {
+  background: #0A0A0A;
+  color: #E0E0E0;
+  border-radius: 12px;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.75rem, 1.3vw, 0.88rem);
+  line-height: 1.7;
+  margin: 1rem 0;
+  position: relative;
+}
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #FF5252; }
+pre .op { color: #4FC3F7; }
+.code-label {
+  position: absolute; top: 0; right: 0;
+  background: rgba(255,255,255,0.08);
+  color: #999999;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0 12px 0 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* ============ EXPLANATION BLOCKS ============ */
+.concept-box {
+  background: rgba(118, 185, 0, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid #2a3a1a;
+}
+.concept-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
+}
+.analogy {
+  background: #1a1a0a;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0.75rem 0;
+  border-left: 3px solid #FFB800;
+  font-size: 0.95rem;
+}
+.analogy::before {
+  content: '💡 日常の例';
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #FFB800;
+  margin-bottom: 0.3rem;
+}
+.point-list {
+  list-style: none;
+  padding: 0;
+}
+.point-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+.point-list li::before {
+  content: '▸';
+  position: absolute; left: 0;
+  color: #76B900;
+  font-weight: 700;
+}
+
+/* ============ DIAGRAMS (SVG) ============ */
+.diagram-container {
+  display: flex; justify-content: center;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.diagram-container svg {
+  max-width: 100%; height: auto;
+  background: #1A1A1A;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #444;
+}
+
+/* ============ ANSWERS (COLLAPSIBLE) ============ */
+details {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: #1a1a1a;
+  user-select: none;
+}
+details summary::marker { content: ''; }
+details summary::before {
+  content: '▶';
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #666;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details .answer-content { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: #0A0A0A;
+  color: #999999;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .submission-items { grid-template-columns: 1fr; }
+  .section-num { width: 36px; height: 36px; font-size: 0.95rem; }
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  details summary::before { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
+    <h1>第1回: ガイダンス + 数当てゲーム</h1>
+    <p>プログラムの3つの基本的な仕組み ── ランダム・条件分岐・繰り返し ── を数当てゲームで理解する</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>📋 Notionノート提出ガイド（この回の提出物: 計8項目）</h3>
+      <div class="submission-items">
+        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-trace">トレース演習</span>表を埋めて記述</div>
+        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-code-exp">コード体験</span>観察記録を記述</div>
+        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
+        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
+        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">口頭試問</span>グループ記録（氏名・質疑・評価）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. HOW TO TAKE THIS COURSE ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">0</div>
+      <h2>この授業の受け方</h2>
+    </div>
+
+    <!-- Course Flow Overview -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <h3>毎回の授業の流れ（90分）</h3>
+      </div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0">
+        <div style="flex:1;min-width:200px;background:#1A1A1A;border:2px solid #76B900;border-radius:10px;padding:1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:900;color:#76B900">0:00 - 0:20</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#E0E0E0;margin:0.5rem 0">講師の説明</div>
+          <div style="font-size:0.85rem;color:#999">HTMLスライドを画面に映しながら、今日のテーマを解説します。キーワードと考え方を押さえましょう。</div>
+        </div>
+        <div style="flex:2;min-width:300px;background:#1A1A1A;border:2px solid #76B900;border-radius:10px;padding:1rem;text-align:center">
+          <div style="font-size:2rem;font-weight:900;color:#76B900">0:20 - 1:30</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#E0E0E0;margin:0.5rem 0">演習（個人 + グループ）</div>
+          <div style="font-size:0.85rem;color:#999">Notionのワークシートを上から順番に進めます。<br>コードを動かし、表を埋め、考えを言葉にして記録します。<br>最後にグループで口頭試問を行います。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two Web Pages -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <h3>授業で使う2つのWebページ</h3>
+      </div>
+      <p style="margin-bottom:1rem;font-size:0.95rem">どちらも<strong>Webブラウザ</strong>で開きます。専用アプリのインストールは不要です。</p>
+      <table>
+        <tr><th style="width:20%">Webページ</th><th style="width:35%">役割</th><th>使い方</th></tr>
+        <tr>
+          <td><strong style="color:#76B900">授業スライド</strong><br><span style="font-size:0.8rem;color:#888">（HTMLページ）</span></td>
+          <td>説明資料（図・コード例）</td>
+          <td>ブラウザで開いて<strong>読むだけ</strong>。講師の説明を聞くとき、復習するときに使う。</td>
+        </tr>
+        <tr>
+          <td><strong style="color:#76B900">Notion</strong><br><span style="font-size:0.8rem;color:#888">（notion.so）</span></td>
+          <td>ワークシート + 提出ノート</td>
+          <td>ブラウザで開いて<strong>直接書き込む</strong>。演習の回答・観察記録・口頭試問の記録をここに入力する。</td>
+        </tr>
+      </table>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>まとめ:</strong> どちらもWebブラウザで開く。スライドは「読む」ページ、Notionは「書く」ページ。提出するのはNotionの方だけです。
+      </div>
+    </div>
+
+    <!-- Workflow Diagram -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <h3>授業中の作業フロー</h3>
+      </div>
+      <div style="background:#1A1A1A;border-radius:10px;padding:1.5rem;margin:0.5rem 0">
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.9rem">
+          <span style="background:#76B900;color:white;padding:0.3rem 0.8rem;border-radius:6px;font-weight:700">1. HTMLスライドで説明を聞く</span>
+          <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #76B900;font-weight:700">2. Notionを開く</span>
+          <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #76B900;font-weight:700">3. コードをコピペして実行</span>
+          <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #76B900;font-weight:700">4. 結果を観察してNotionに記録</span>
+          <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #76B900;font-weight:700">5. 課題に回答</span>
+          <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+          <span style="background:#1a2e0a;color:#76B900;padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #76B900;font-weight:700">6. グループ口頭試問</span>
+          <span style="color:#76B900;font-size:1.2rem">&rarr;</span>
+          <span style="background:#FFB800;color:#111;padding:0.3rem 0.8rem;border-radius:6px;font-weight:700">7. PDF変換 &rarr; Manaba提出</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.2rem">Notionの使い方</h3>
+
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      Notionは<strong>Webブラウザ上</strong>で動くノートツールです。アプリのインストールは不要です。<br>
+      ブラウザで開いて、そのまま文章を書いたり表を編集したりできます。
+    </p>
+
+    <!-- Step 1: Access -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 1</span>
+        <h3>Notionをブラウザで開く</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>Webブラウザ（Chrome推奨）のURLバーに <a href="https://www.notion.so" target="_blank" style="color:#76B900;font-weight:600">notion.so</a> と入力して開く</li>
+        <li>大学のメールアドレスでログインする（初回はアカウント作成が必要）</li>
+        <li>ログイン後、左サイドバーに自分のワークスペースが表示される</li>
+      </ol>
+    </div>
+
+    <!-- Step 2: Create Page -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 2</span>
+        <h3>授業ノートのページを作成する</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>左サイドバーの下部にある <strong>「+ 新規ページ」</strong> をクリック</li>
+        <li>タイトルに <strong>「第1回: ガイダンス + 数当てゲーム」</strong> と入力</li>
+        <li>タイトルの下の空白部分をクリックすると、本文を書き始められる</li>
+      </ol>
+    </div>
+
+    <!-- Step 3: Basic Operations -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 3</span>
+        <h3>基本操作を覚える</h3>
+      </div>
+      <table>
+        <tr><th style="width:30%">やりたいこと</th><th>操作方法</th></tr>
+        <tr><td><strong>見出し</strong>を作る</td><td>行の先頭に <code>##</code> + スペースを入力 → 自動で見出しになる</td></tr>
+        <tr><td><strong>箇条書き</strong>を作る</td><td>行の先頭に <code>-</code> + スペースを入力</td></tr>
+        <tr><td><strong>番号付きリスト</strong></td><td>行の先頭に <code>1.</code> + スペースを入力</td></tr>
+        <tr><td><strong>太字</strong>にする</td><td>テキストを選択して <kbd>Ctrl+B</kbd>（Macは<kbd>Cmd+B</kbd>）</td></tr>
+        <tr><td><strong>コードブロック</strong></td><td>行の先頭に <code>```</code> を入力 → Enterを押す</td></tr>
+        <tr><td><strong>表（テーブル）</strong></td><td>行の先頭に <code>/table</code> と入力 → 「テーブル」を選択</td></tr>
+        <tr><td><strong>画像</strong>を貼る</td><td>画像ファイルを直接ドラッグ＆ドロップ</td></tr>
+        <tr><td><strong>音声</strong>を添付</td><td>行の先頭に <code>/audio</code> と入力 → ファイルをアップロード</td></tr>
+      </table>
+    </div>
+
+    <!-- VS Code Guide -->
+    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.2rem">Visual Studio Code でコードを実行する</h3>
+
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      この授業では、Pythonのコードを<strong>Visual Studio Code（VS Code）</strong>で作成・実行します。
+    </p>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 1</span>
+        <h3>VS Code を開き、ファイルを作成する</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>デスクトップまたはスタートメニューから <strong>Visual Studio Code</strong> を起動する</li>
+        <li>メニューから <strong>「ファイル」→「新しいファイル」</strong> を選択する</li>
+        <li>右下の言語モードを <strong>「Python」</strong> に変更する（クリックして選択）</li>
+        <li><strong>「ファイル」→「名前を付けて保存」</strong> で、ファイル名を <code>game.py</code> などとして保存する</li>
+      </ol>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:0.8rem;font-size:0.85rem;color:#93D500">
+        <strong>ファイル名のルール:</strong> 半角英数字で、拡張子は必ず <code>.py</code> にする。日本語やスペースは使わない。
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 2</span>
+        <h3>コードを書く（コピペする）</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>Notionのワークシートにあるコードを <strong>全文コピー</strong> する（Ctrl+C / Cmd+C）</li>
+        <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+        <li>ファイルを <strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+      </ol>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 3</span>
+        <h3>コードを実行する</h3>
+      </div>
+      <p style="margin-bottom:0.8rem">2つの方法があります。どちらでもOKです。</p>
+      <table>
+        <tr><th style="width:30%">方法</th><th>手順</th></tr>
+        <tr>
+          <td><strong>方法A: 再生ボタン</strong></td>
+          <td>VS Code 右上の <strong>▷（再生ボタン）</strong> をクリックする。下部のターミナルに結果が表示される。</td>
+        </tr>
+        <tr>
+          <td><strong>方法B: ターミナル</strong></td>
+          <td>VS Code のターミナル（下部パネル）に <code>python game.py</code> と入力して Enter を押す。</td>
+        </tr>
+      </table>
+      <div style="background:#0A0A0A;border:1px solid #333;border-radius:8px;padding:1rem;margin-top:0.8rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#E0E0E0">
+        <span style="color:#888">$</span> <span style="color:#76B900">python</span> game.py<br>
+        <span style="color:#999">1〜50の数を予想してください: </span><span style="color:#FFB800">25</span><br>
+        <span style="color:#E0E0E0">もっと大きい数です</span><br>
+        <span style="color:#999">1〜50の数を予想してください: </span><span style="color:#FFB800">40</span><br>
+        <span style="color:#E0E0E0">もっと小さい数です</span><br>
+        <span style="color:#999">1〜50の数を予想してください: </span><span style="color:#FFB800">33</span><br>
+        <span style="color:#76B900">正解！ 答えは 33 でした！</span><br>
+        <span style="color:#76B900">3回で当たりました</span>
+      </div>
+    </div>
+
+    <!-- Step 4: How to Write Notes -->
+    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.2rem">Notionの使い方（続き）</h3>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 4</span>
+        <h3>授業ノートの書き方テンプレート</h3>
+      </div>
+      <p>Notionのテンプレートにはすべての記入欄が用意されています。上から順に埋めていけば提出物が完成します。</p>
+      <div style="background:#111;border:1px solid #333;border-radius:10px;padding:1rem 1.2rem;margin:0.75rem 0;font-size:0.9rem;font-family:'JetBrains Mono',monospace;line-height:1.8">
+        <span style="color:#76B900;font-weight:700"># 第1回: ガイダンス + 数当てゲーム</span><br>
+        <span style="color:#888">名前: ○○ ○○ ｜ 学籍番号: xxxxxxxx</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 1. トレース演習1: 自分で表を埋める</span><br>
+        <span style="color:#888">（答え=23 の表を埋める）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 2. トレース演習2: コードの出力を予測する</span><br>
+        <span style="color:#888">（3ケースの予測と実行結果を記入）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 3. コード体験1: 数当てゲームを遊ぶ</span><br>
+        <span style="color:#888">（何回で当てたか・戦略・2回目の比較）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 4. コード体験2: 回数制限を観察する</span><br>
+        <span style="color:#888">（5回で当てられたか・max_tries変更・戦略）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 5. 標準課題1: ゲームの流れを言葉で説明する</span><br>
+        <span style="color:#888">（穴埋め ①〜⑦ を埋める）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 6. 標準課題2: コードの動きを予測する</span><br>
+        <span style="color:#888">（予測・実行結果・合っていたか・理由）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 7. 発展課題: 効率のいい当て方を考える</span><br>
+        <span style="color:#888">（戦略説明・最大回数・音声添付）</span><br><br>
+        <span style="color:#76B900;font-weight:700">## 8. グループ口頭試問</span><br>
+        <span style="color:#888">（質問3つの回答者・要点・評価・記録者）</span>
+      </div>
+    </div>
+
+    <!-- Step 5: Submit -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Step 5</span>
+        <h3>提出方法（PDF変換 → Manaba）</h3>
+      </div>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2">
+        <li>Notionページの右上 <strong>「...」</strong> メニューをクリック</li>
+        <li><strong>「エクスポート」</strong> を選択</li>
+        <li>フォーマットを <strong>「PDF」</strong> に設定し、エクスポートする</li>
+        <li>ダウンロードされたPDFファイルを <strong>Manabaの課題提出欄</strong> にアップロードする</li>
+      </ol>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 1. EXPLANATION ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>説明</h2>
+    </div>
+
+    <p style="font-size:1.05rem; margin-bottom:1.5rem">
+      数当てゲームを題材に、プログラムの<strong>3つの基本的な仕組み</strong>を理解します。<br>
+      コードを書くことが目的ではなく、<strong>仕組みを言葉と図で説明できるようになること</strong>がゴールです。
+    </p>
+
+    <!-- 1.1 Random -->
+    <div class="concept-box">
+      <h4>1.1 ランダム ── サイコロを振るイメージ</h4>
+      <div class="analogy">
+        サイコロを振ると、1〜6のどれかが<strong>ランダム</strong>に出ます。
+        どの目が出るかは、振る前には分かりません。
+      </div>
+      <p>プログラムでも同じことができます。「1〜100の中からランダムに1つ選ぶ」と指示すると、毎回違う数が返ってきます。</p>
+      <p style="margin-top:0.5rem"><strong>数当てゲームでの役割:</strong> コンピュータが「答え」をランダムに決める部分に使います。</p>
+    </div>
+
+    <!-- 1.2 Condition -->
+    <div class="concept-box">
+      <h4>1.2 条件分岐 ── 信号機のイメージ</h4>
+      <div class="analogy">
+        信号が<strong>青</strong>なら渡る。<strong>赤</strong>なら止まる。<strong>黄</strong>なら注意する。<br>
+        「条件によって、やることが変わる」のが条件分岐です。
+      </div>
+      <p>数当てゲームでは、プレイヤーの予想と答えを比較して<strong>3つのパターン</strong>に分岐します。</p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <!-- Input box -->
+          <rect x="220" y="15" width="260" height="52" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5" />
+          <text x="350" y="38" text-anchor="middle" fill="white" font-weight="700" font-size="14">プレイヤーの予想: 50</text>
+          <text x="350" y="55" text-anchor="middle" fill="white" font-size="11" opacity="0.8">答え: 42</text>
+
+          <!-- Arrows down (始点をボックス内に修正) -->
+          <line x1="270" y1="67" x2="120" y2="110" stroke="#76B900" stroke-width="2.5" marker-end="url(#arr-g)"/>
+          <line x1="350" y1="67" x2="350" y2="110" stroke="#76B900" stroke-width="2.5" marker-end="url(#arr-r)"/>
+          <line x1="430" y1="67" x2="580" y2="110" stroke="#76B900" stroke-width="2.5" marker-end="url(#arr-b)"/>
+
+          <!-- Branch boxes -->
+          <rect x="30" y="110" width="180" height="46" rx="10" fill="#76B900" />
+          <text x="120" y="138" text-anchor="middle" fill="white" font-weight="700" font-size="13">予想 = 答え</text>
+
+          <rect x="260" y="110" width="180" height="46" rx="10" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5" />
+          <text x="350" y="138" text-anchor="middle" fill="white" font-weight="700" font-size="13">予想 &gt; 答え</text>
+
+          <rect x="490" y="110" width="180" height="46" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5" />
+          <text x="580" y="138" text-anchor="middle" fill="white" font-weight="700" font-size="13">予想 &lt; 答え</text>
+
+          <!-- Result boxes -->
+          <rect x="30" y="180" width="180" height="44" rx="10" fill="#76B900"/>          <text x="120" y="207" text-anchor="middle" fill="#e0e0e0" font-weight="700" font-size="13">「正解！」</text>
+
+          <rect x="260" y="180" width="180" height="44" rx="10" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+          <text x="350" y="207" text-anchor="middle" fill="#e0e0e0" font-weight="700" font-size="12">「もっと小さい数です」</text>
+
+          <rect x="490" y="180" width="180" height="44" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="580" y="207" text-anchor="middle" fill="#e0e0e0" font-weight="700" font-size="12">「もっと大きい数です」</text>
+
+          <!-- Example -->
+          <text x="120" y="248" text-anchor="middle" fill="#888" font-size="11">50 = 42? → NO</text>
+          <text x="350" y="248" text-anchor="middle" fill="#888" font-size="11">50 &gt; 42? → YES ✓</text>
+          <text x="580" y="248" text-anchor="middle" fill="#888" font-size="11">50 &lt; 42? → NO</text>
+
+          <!-- Highlight -->
+          <rect x="200" y="270" width="300" height="36" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="350" y="293" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12">→ この場合「もっと小さい数です」が表示される</text>
+
+          <defs>
+            <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="arr-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="arr-b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 1.3 Loop -->
+    <div class="concept-box">
+      <h4>1.3 繰り返し ── 自動販売機のイメージ</h4>
+      <div class="analogy">
+        自動販売機にお金を入れる。足りない → もう一度入れる。<br>
+        <strong>足りたら</strong> → 商品が出てくる。「条件が満たされるまで繰り返す」のがループです。
+      </div>
+      <p>数当てゲームでは、<strong>正解するまで</strong>何度でも予想を繰り返します。</p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 600 310" width="560" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <!-- Loop circle (dashed) -->
+          <ellipse cx="250" cy="175" rx="175" ry="125" fill="none" stroke="#333333" stroke-width="2.5" stroke-dasharray="8 4" opacity="0.4"/>
+
+          <!-- Steps: 正しい論理順序で時計回り配置 -->
+          <!-- 上: 条件チェック -->
+          <rect x="170" y="30" width="160" height="44" rx="10" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+          <text x="250" y="57" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">正解した？</text>
+
+          <!-- 右: 予想を入力 -->
+          <rect x="355" y="100" width="130" height="40" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="420" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">予想を入力</text>
+
+          <!-- 下: 比較する（予想と答えを比較） -->
+          <rect x="185" y="240" width="130" height="40" rx="10" fill="#76B900"/>
+          <text x="250" y="265" text-anchor="middle" fill="white" font-weight="700" font-size="12">比較する</text>
+
+          <!-- 左: ヒントを表示 -->
+          <rect x="55" y="100" width="140" height="40" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="125" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">ヒントを表示</text>
+
+          <!-- 時計回り矢印: 正解した？→ 予想を入力 → 比較する → ヒントを表示 → 正解した？ -->
+          <!-- ① 正解した？ の右端 → 予想を入力 の上端 -->
+          <path d="M330 55 Q390 55 390 100" stroke="#76B900" stroke-width="2.5" fill="none" marker-end="url(#arr-p)"/>
+          <!-- ② 予想を入力 の下端 → 比較する の右端 -->
+          <path d="M420 140 Q420 260 315 260" stroke="#76B900" stroke-width="2.5" fill="none" marker-end="url(#arr-p)"/>
+          <!-- ③ 比較する の左端 → ヒントを表示 の下端 -->
+          <path d="M185 260 Q125 260 125 140" stroke="#76B900" stroke-width="2.5" fill="none" marker-end="url(#arr-p)"/>
+          <!-- ④ ヒントを表示 の上端 → 正解した？ の左端 -->
+          <path d="M125 100 Q125 52 170 52" stroke="#76B900" stroke-width="2.5" fill="none" marker-end="url(#arr-p)"/>
+
+          <!-- 脱出矢印: YES → 正解！終了 -->
+          <line x1="330" y1="40" x2="470" y2="40" stroke="#76B900" stroke-width="3" marker-end="url(#arr-exit)"/>
+          <rect x="470" y="18" width="110" height="44" rx="10" fill="#76B900"/>          <text x="525" y="45" text-anchor="middle" fill="white" font-weight="800" font-size="13">正解！終了</text>
+
+          <!-- ラベル -->
+          <text x="400" y="28" text-anchor="middle" fill="#76B900" font-weight="700" font-size="11">YES</text>
+          <text x="148" y="78" text-anchor="middle" fill="#76B900" font-weight="700" font-size="11">NO → 続ける</text>
+
+          <!-- 順序番号 -->
+          <circle cx="370" cy="72" r="10" fill="#76B900"/><text x="370" y="76" text-anchor="middle" fill="white" font-size="9" font-weight="700">1</text>
+          <circle cx="430" cy="170" r="10" fill="#76B900"/><text x="430" y="174" text-anchor="middle" fill="white" font-size="9" font-weight="700">2</text>
+          <circle cx="155" cy="200" r="10" fill="#76B900"/><text x="155" y="204" text-anchor="middle" fill="white" font-size="9" font-weight="700">3</text>
+          <circle cx="130" cy="72" r="10" fill="#76B900"/><text x="130" y="76" text-anchor="middle" fill="white" font-size="9" font-weight="700">4</text>
+
+          <defs>
+            <marker id="arr-p" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="arr-exit" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 1.4 Game Overview -->
+    <div class="concept-box">
+      <h4>1.4 数当てゲームの全体像</h4>
+      <p>3つの仕組みを組み合わせると、ゲームの全体フローになります。</p>
+      <div class="diagram-container">
+        <svg viewBox="-30 0 600 460" width="520" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <!-- Step 1: ランダムに決める -->
+          <rect x="130" y="10" width="270" height="44" rx="12" fill="#76B900"/>
+          <text x="265" y="37" text-anchor="middle" fill="white" font-weight="700" font-size="13">① ランダムに答えを決める</text>
+          <text x="265" y="68" text-anchor="middle" fill="#888" font-size="10" font-style="italic">例: 1〜100の中から「42」を選ぶ</text>
+
+          <line x1="265" y1="72" x2="265" y2="90" stroke="#76B900" stroke-width="2" marker-end="url(#fd)"/>
+
+          <!-- Step 2: 入力（ループの戻り先） -->
+          <rect x="130" y="90" width="270" height="44" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2.5" stroke-dasharray="6 3"/>
+          <text x="265" y="117" text-anchor="middle" fill="white" font-weight="700" font-size="13">② プレイヤーが数を入力</text>
+
+          <line x1="265" y1="134" x2="265" y2="162" stroke="#76B900" stroke-width="2" marker-end="url(#fd)"/>
+
+          <!-- Diamond: 予想 = 答え？ -->
+          <polygon points="265,162 370,210 265,258 160,210" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="265" y="214" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">③ 予想 = 答え？</text>
+
+          <!-- YES → 正解！ -->
+          <line x1="370" y1="210" x2="445" y2="210" stroke="#76B900" stroke-width="2.5" marker-end="url(#fy)"/>
+          <text x="405" y="200" fill="#76B900" font-weight="700" font-size="11">YES</text>
+          <rect x="445" y="190" width="75" height="40" rx="10" fill="#76B900"/>          <text x="482" y="215" text-anchor="middle" fill="white" font-weight="800" font-size="12">正解！</text>
+
+          <!-- NO ↓ -->
+          <line x1="265" y1="258" x2="265" y2="288" stroke="#76B900" stroke-width="2" marker-end="url(#fd)"/>
+          <text x="280" y="278" fill="#FF5252" font-weight="700" font-size="11">NO</text>
+
+          <!-- Diamond: 予想 > 答え？ -->
+          <polygon points="265,288 360,328 265,368 170,328" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="265" y="332" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="11">④ 予想 &gt; 答え？</text>
+
+          <!-- YES ← 「小さい数です」(矢印は④から左へ、ボックスは矢印の下に配置) -->
+          <line x1="170" y1="328" x2="85" y2="328" stroke="#76B900" stroke-width="2" marker-end="url(#fl)"/>
+          <text x="125" y="318" fill="#76B900" font-weight="700" font-size="10">YES</text>
+          <rect x="15" y="345" width="135" height="32" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="82" y="366" text-anchor="middle" fill="white" font-weight="600" font-size="11">「小さい数です」</text>
+
+          <!-- NO → 「大きい数です」(矢印は④から右へ、ボックスは矢印の下に配置) -->
+          <line x1="360" y1="328" x2="445" y2="328" stroke="#76B900" stroke-width="2" marker-end="url(#fr)"/>
+          <text x="405" y="318" fill="#FF5252" font-weight="700" font-size="10">NO</text>
+          <rect x="380" y="345" width="135" height="32" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="447" y="366" text-anchor="middle" fill="white" font-weight="600" font-size="11">「大きい数です」</text>
+
+          <!-- ループバック矢印: 左ヒントから②へ（ボックスの外側を通る） -->
+          <path d="M15 365 L-15 365 L-15 112 L130 112" stroke="#76B900" stroke-width="2.5" fill="none" marker-end="url(#fp)" stroke-dasharray="6 3"/>
+
+          <!-- ループバック矢印: 右ヒントから②へ（ボックスの外側を通る） -->
+          <path d="M515 365 L545 365 L545 112 L400 112" stroke="#76B900" stroke-width="2.5" fill="none" marker-end="url(#fp)" stroke-dasharray="6 3"/>
+
+          <!-- ループバックラベル -->
+          <text x="-15" y="240" fill="#76B900" font-weight="700" font-size="10" transform="rotate(-90,-15,240)">②に戻る</text>
+          <text x="545" y="240" fill="#76B900" font-weight="700" font-size="10" transform="rotate(90,545,240)">②に戻る</text>
+
+          <!-- 凡例 -->
+          <rect x="50" y="420" width="14" height="14" rx="3" fill="#76B900"/>
+          <text x="70" y="432" fill="#aaa" font-size="10">ランダム</text>
+          <rect x="140" y="420" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#FFB800" stroke-width="0.5"/>
+          <text x="160" y="432" fill="#aaa" font-size="10">条件分岐</text>
+          <rect x="230" y="420" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="250" y="432" fill="#aaa" font-size="10">ヒント</text>
+          <line x1="305" y1="427" x2="340" y2="427" stroke="#76B900" stroke-width="2" stroke-dasharray="4 2"/>
+          <text x="345" y="432" fill="#aaa" font-size="10">②に戻るループ</text>
+
+          <defs>
+            <marker id="fd" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="fy" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="fl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="fr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="fp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. EXAMPLES & TRACE ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">2</div>
+      <h2>例題とトレース演習</h2>
+    </div>
+
+    <!-- Example 1 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題</span>
+        <h3>ゲームの流れを追う</h3>
+      </div>
+      <p>コンピュータの答えが <strong>7</strong> のとき、プレイヤーが 5 → 9 → 7 と予想した場合を追ってみましょう。</p>
+      <table>
+        <tr><th>回数</th><th>プレイヤーの予想</th><th>答え(7)との比較</th><th>表示されるヒント</th><th>ゲーム継続？</th></tr>
+        <tr><td>1</td><td>5</td><td>5 &lt; 7</td><td>もっと大きい数です</td><td>はい</td></tr>
+        <tr><td>2</td><td>9</td><td>9 &gt; 7</td><td>もっと小さい数です</td><td>はい</td></tr>
+        <tr><td>3</td><td>7</td><td>7 = 7</td><td>正解！</td><td>いいえ（終了）</td></tr>
+      </table>
+      <ul class="point-list">
+        <li>毎回「予想と答えの大小関係」を確認する</li>
+        <li>ヒントを手がかりに次の予想を決める</li>
+        <li>「=」になった瞬間にゲームが終わる</li>
+      </ul>
+    </div>
+
+    <!-- Trace 1 -->
+    <div class="card trace">
+      <div class="card-header">
+        <span class="tag tag-trace">トレース演習</span>
+        <h3>トレース演習 1</h3>
+      </div>
+      <p><strong>問題:</strong> コンピュータの答えが <strong>23</strong> のとき、以下の予想をした場合の表を完成させなさい。</p>
+      <p style="color:#76B900;font-weight:600;margin:0.5rem 0">予想の順番: 30 → 15 → 25 → 20 → 23</p>
+      <table>
+        <tr><th>回数</th><th>予想</th><th>答え(23)との比較</th><th>ヒント</th><th>ゲーム継続？</th></tr>
+        <tr><td>1</td><td>30</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr>
+        <tr><td>2</td><td>15</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr>
+        <tr><td>3</td><td>25</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr>
+        <tr><td>4</td><td>20</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr>
+        <tr><td>5</td><td>23</td><td class="blank-cell"></td><td class="blank-cell"></td><td class="blank-cell"></td></tr>
+      </table>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> Notionのワークシートに同じ表があります。そちらの空欄を埋めてください。</div></div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題</span>
+        <h3>コードの出力を予測する</h3>
+      </div>
+      <p>以下のコードは「答え=10、予想=15」のときに何が起こるかを示しています。</p>
+      <pre><span class="code-label">Python</span>
+<span class="cmt"># 答えと予想の値</span>
+answer = <span class="num">10</span>
+guess = <span class="num">15</span>
+
+<span class="kw">if</span> guess == answer:
+    <span class="fn">print</span>(<span class="str">"正解！"</span>)
+<span class="kw">elif</span> guess > answer:
+    <span class="fn">print</span>(<span class="str">"もっと小さい数です"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"もっと大きい数です"</span>)</pre>
+      <ul class="point-list">
+        <li><code>guess == answer</code> → 15 == 10 → <strong>NO</strong>（スキップ）</li>
+        <li><code>guess > answer</code> → 15 > 10 → <strong>YES</strong>（実行される）</li>
+        <li>結果: <strong>「もっと小さい数です」</strong> が表示される</li>
+      </ul>
+    </div>
+
+    <!-- Trace 2 -->
+    <div class="card trace">
+      <div class="card-header">
+        <span class="tag tag-trace">トレース演習</span>
+        <h3>トレース演習 2</h3>
+      </div>
+      <p><strong>問題:</strong> <code>answer = 20</code> のとき、以下の3つのケースで何が表示されるか予測しなさい。</p>
+      <table>
+        <tr><th>ケース</th><th>guess の値</th><th>表示される文字列（あなたの予測）</th></tr>
+        <tr><td>A</td><td>25</td><td class="blank-cell"></td></tr>
+        <tr><td>B</td><td>20</td><td class="blank-cell"></td></tr>
+        <tr><td>C</td><td>12</td><td class="blank-cell"></td></tr>
+      </table>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> Notionのワークシートに同じ表があります。そちらに予測を記入し、実行結果も記録してください。</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 3. CODE EXPERIENCE ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#93D500">3</div>
+      <h2>コード体験</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">以下のコードは先生が用意したものです。<strong>自分では1文字も書かなくてOK。</strong>コピーして実行し、結果を<strong>観察</strong>してください。</p>
+
+    <!-- Code Exp 1 -->
+    <div class="card code-exp">
+      <div class="card-header">
+        <span class="tag tag-code-exp">コード体験</span>
+        <h3>数当てゲームを遊ぶ</h3>
+      </div>
+      <p>以下のコードをコピーして実行し、実際にゲームを遊んでください。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> random
+
+<span class="cmt"># コンピュータが1〜50の中からランダムに答えを決める</span>
+answer = random.<span class="fn">randint</span>(<span class="num">1</span>, <span class="num">50</span>)
+
+<span class="cmt"># 試行回数を記録する変数</span>
+count = <span class="num">0</span>
+
+<span class="cmt"># 正解するまで繰り返す</span>
+<span class="kw">while</span> <span class="num">True</span>:
+    guess = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"1〜50の数を予想してください: "</span>))
+    count = count + <span class="num">1</span>
+
+    <span class="kw">if</span> guess == answer:
+        <span class="fn">print</span>(<span class="str">f"正解！ 答えは {answer} でした！"</span>)
+        <span class="fn">print</span>(<span class="str">f"{count}回で当たりました"</span>)
+        <span class="kw">break</span>
+    <span class="kw">elif</span> guess > answer:
+        <span class="fn">print</span>(<span class="str">"もっと小さい数です"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"もっと大きい数です"</span>)</pre>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> ①何回で正解できたか ②どんな戦略で予想したか ③もう一度遊んで1回目より早く当てられたか。その理由は？</div></div>
+    </div>
+
+    <!-- Code Exp 2 -->
+    <div class="card code-exp">
+      <div class="card-header">
+        <span class="tag tag-code-exp">コード体験</span>
+        <h3>回数制限を観察する</h3>
+      </div>
+      <p>以下は<strong>5回まで</strong>しか予想できないバージョンです。</p>
+      <pre><span class="code-label">Python</span>
+<span class="kw">import</span> random
+
+answer = random.<span class="fn">randint</span>(<span class="num">1</span>, <span class="num">30</span>)
+max_tries = <span class="num">5</span>
+
+<span class="fn">print</span>(<span class="str">f"1〜30の数を当ててください（{max_tries}回以内）"</span>)
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(max_tries):
+    remaining = max_tries - i
+    <span class="fn">print</span>(<span class="str">f"（残り{remaining}回）"</span>)
+
+    guess = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"予想: "</span>))
+
+    <span class="kw">if</span> guess == answer:
+        <span class="fn">print</span>(<span class="str">f"正解！ {i+1}回目で当たりました！"</span>)
+        <span class="kw">break</span>
+    <span class="kw">elif</span> guess > answer:
+        <span class="fn">print</span>(<span class="str">"もっと小さい数です"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"もっと大きい数です"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"残念！ 答えは {answer} でした"</span>)</pre>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> ①5回以内に当てられたか ②<code>max_tries = 3</code>に変えて難しくなったか ③回数制限があるとき効率のいい戦略は？</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 4. STANDARD TASKS ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">4</div>
+      <h2>標準課題</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>ゲームの流れを言葉で説明する</h3>
+      </div>
+      <p>コード体験1の数当てゲームが「何をしているか」を、以下の空欄を埋めて説明しなさい。</p>
+      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">
+① コンピュータが＿＿から＿＿の範囲でランダムに答えを決める
+② プレイヤーが＿＿＿＿を入力する
+③ 入力した数と答えを＿＿＿＿する
+④ 同じなら＿＿＿＿と表示してゲーム終了
+⑤ 入力が大きければ＿＿＿＿と表示
+⑥ 入力が小さければ＿＿＿＿と表示
+⑦ ②に戻って＿＿＿＿する</pre>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> Notionのワークシートに同じ穴埋め問題があります。そちらに回答を記入してください。</div></div>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>コードの動きを予測する</h3>
+      </div>
+      <p>以下のコードを<strong>実行せずに</strong>出力を予測しなさい。予測を書いた後に実行して確かめなさい。</p>
+      <pre><span class="code-label">Python</span>
+answer = <span class="num">10</span>
+guess = <span class="num">15</span>
+
+<span class="kw">if</span> guess == answer:
+    <span class="fn">print</span>(<span class="str">"正解！"</span>)
+<span class="kw">elif</span> guess > answer:
+    <span class="fn">print</span>(<span class="str">"もっと小さい数です"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"もっと大きい数です"</span>)
+
+<span class="fn">print</span>(<span class="str">"判定終了"</span>)</pre>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> ①あなたの予測 ②実行結果 ③予測は合っていたか ④合っていなかった場合、なぜ間違えたか</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ADVANCED TASK ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">5</div>
+      <h2>発展課題</h2>
+    </div>
+
+    <div class="card advanced">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>「効率のいい当て方」を考える</h3>
+      </div>
+      <p>コンピュータの答えが 1〜100 のどれかです。<br>あなたは最大何回予想すれば<strong>必ず</strong>正解にたどり着けますか？</p>
+      <div class="analogy" style="border-left-color:#FFB800">
+        <span style="display:block;font-weight:700;font-size:0.8rem;color:#FFB800;margin-bottom:0.3rem">💡 ヒント</span>
+        まず真ん中の50を予想すると、「大きい」か「小さい」で半分に絞れます。これを繰り返すと…？<br>
+        （この考え方は第4回の「二分探索」で詳しく学びます）
+      </div>
+      <p style="margin-top:1rem;color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分の言葉で考えてください。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> ①自分の戦略を言葉と図で説明 ②最大何回かかるか理由とともに回答 ③音声（1〜2分）で戦略と理由を説明して添付</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. GROUP Q&A ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">6</div>
+      <h2>グループ質問カード</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">3人グループで以下の質問を出し合い、記録シートに結果を記入してください。<br>役割は毎ラウンド交代します（出題者→回答者→記録者）。</p>
+
+    <div class="card group">
+      <div class="card-header">
+        <span class="tag tag-group">出力予測 ①</span>
+        <h3>if-else の基本</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+x = <span class="num">10</span>
+<span class="kw">if</span> x > <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="str">"A"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"B"</span>)</pre>
+      <p>→ 何が表示されますか？</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header">
+        <span class="tag tag-group">出力予測 ②</span>
+        <h3>if が2つある場合</h3>
+      </div>
+      <pre><span class="code-label">Python</span>
+x = <span class="num">10</span>
+<span class="kw">if</span> x > <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="str">"A"</span>)
+<span class="kw">if</span> x > <span class="num">8</span>:
+    <span class="fn">print</span>(<span class="str">"B"</span>)</pre>
+      <p>→ 何が表示されますか？ ①との<strong>違い</strong>は何ですか？</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header">
+        <span class="tag tag-group">理由説明 ①</span>
+        <h3>ループの停止</h3>
+      </div>
+      <p>→ 数当てゲームで <code>while True:</code> と書いて無限ループにしていますが、なぜゲームは永遠に続かないのですか？</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header">
+        <span class="tag tag-group">理由説明 ②</span>
+        <h3>範囲と回数の関係</h3>
+      </div>
+      <p>→ 「1〜100」と「1〜10」では、どちらが早く当たりますか？ 理由も説明してください。</p>
+    </div>
+
+    <div class="card group">
+      <div class="card-header">
+        <span class="tag tag-group">改造</span>
+        <h3>回数制限の追加</h3>
+      </div>
+      <p>→ 回数制限（5回まで）を加えるとしたら、プログラムのどの部分をどう変えますか？<br>コードを書かなくていいので、<strong>考え方を口頭で説明</strong>してください。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. ANSWERS ============ -->
+<section style="background:#0A0A0A">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">7</div>
+      <h2>解答例</h2>
+    </div>
+
+    <details>
+      <summary><span class="tag tag-trace" style="font-size:0.7rem">トレース</span> トレース演習 1 解答</summary>
+      <div class="answer-content">
+        <table>
+          <tr><th>回数</th><th>予想</th><th>答え(23)との比較</th><th>ヒント</th><th>ゲーム継続？</th></tr>
+          <tr><td>1</td><td>30</td><td>30 &gt; 23</td><td>もっと小さい数です</td><td>はい</td></tr>
+          <tr><td>2</td><td>15</td><td>15 &lt; 23</td><td>もっと大きい数です</td><td>はい</td></tr>
+          <tr><td>3</td><td>25</td><td>25 &gt; 23</td><td>もっと小さい数です</td><td>はい</td></tr>
+          <tr><td>4</td><td>20</td><td>20 &lt; 23</td><td>もっと大きい数です</td><td>はい</td></tr>
+          <tr><td>5</td><td>23</td><td>23 = 23</td><td>正解！</td><td>いいえ（終了）</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-trace" style="font-size:0.7rem">トレース</span> トレース演習 2 解答</summary>
+      <div class="answer-content">
+        <table>
+          <tr><th>ケース</th><th>guess の値</th><th>表示される文字列</th></tr>
+          <tr><td>A</td><td>25</td><td>もっと小さい数です</td></tr>
+          <tr><td>B</td><td>20</td><td>正解！</td></tr>
+          <tr><td>C</td><td>12</td><td>もっと大きい数です</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-standard" style="font-size:0.7rem">標準</span> 標準課題 1 解答</summary>
+      <div class="answer-content">
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">
+① コンピュータが 1 から 50 の範囲でランダムに答えを決める
+② プレイヤーが 予想の数 を入力する
+③ 入力した数と答えを 比較 する
+④ 同じなら 「正解！」 と表示してゲーム終了
+⑤ 入力が大きければ 「もっと小さい数です」 と表示
+⑥ 入力が小さければ 「もっと大きい数です」 と表示
+⑦ ②に戻って 繰り返し する</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-standard" style="font-size:0.7rem">標準</span> 標準課題 2 解答</summary>
+      <div class="answer-content">
+        <ul class="point-list">
+          <li><strong>予測:</strong>「もっと小さい数です」と「判定終了」の2行が表示される</li>
+          <li><code>guess(15)</code> は <code>answer(10)</code> と等しくないので <code>if</code> は通らない</li>
+          <li><code>guess(15) > answer(10)</code> なので <code>elif</code> の条件が成立</li>
+          <li>「もっと小さい数です」が表示される</li>
+          <li><code>print("判定終了")</code> は if文の外にあるので必ず実行される</li>
+        </ul>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習I ─ 2026年度前期 ─ 第1回
+  </div>
+</footer>
+
+</body>
+</html>
