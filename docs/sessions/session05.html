@@ -158,6 +158,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -786,11 +787,25 @@ results.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<sp
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>insortの動作を追跡する</h3>
+        <h3>bisect＋insortコードのトレース</h3>
       </div>
-      <p>空のリストに <code>[7, 3, 11, 1, 9]</code> を順に <code>insort</code> で挿入するとき、各ステップ後のリストの状態を書きなさい。</p>
-      
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、ループの各ステップで <code>sorted_list</code> と <code>pos</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL05-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL05-3.py</span>
+<span class="kw">from</span> bisect <span class="kw">import</span> bisect_left, insort
+
+values = [<span class="num">7</span>, <span class="num">3</span>, <span class="num">11</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">3</span>]
+sorted_list = []
+
+<span class="kw">for</span> v <span class="kw">in</span> values:
+    pos = <span class="fn">bisect_left</span>(sorted_list, v)
+    <span class="fn">print</span>(<span class="str">f"v={v}: pos={pos}, "</span>, end=<span class="str">""</span>)
+    <span class="fn">insort</span>(sorted_list, v)
+    <span class="fn">print</span>(<span class="str">f"list={sorted_list}"</span>)
+
+<span class="fn">print</span>(<span class="str">f"最終: {sorted_list}"</span>)
+<span class="fn">print</span>(<span class="str">f"3の個数: {bisect_left(sorted_list, 4) - bisect_left(sorted_list, 3)}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> <code>bisect_left</code> は「ソート済みリストのどの位置に挿入すべきか」を返します。各ステップで sorted_list の中身を書き出して追いましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>
@@ -808,10 +823,29 @@ results.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<sp
         <span class="tag tag-advanced">発展課題</span>
         <h3>ジャンプ探索と指数探索の比較</h3>
       </div>
-      <p>ジャンプ探索(O(sqrt(n)))と二分探索(O(log n))の性能差について、データサイズ n=100, 10000, 1000000 の場合のおおよその比較回数を計算し、どのような場面でジャンプ探索が有利になりうるか考察しなさい。</p>
-      
-      <p style="margin-top:1rem;color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分の言葉で考えてください。</p>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>ジャンプ探索と二分探索の性能を実際に比較するプログラムを作成しなさい。データサイズ n=100, 10000, 1000000 の場合の比較回数を計測し、結果を出力すること。</p>
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1.5rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（2点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td><code>AL05-4.py</code> として作成し、コード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する<br>
+            <span style="color:#999;font-size:0.85rem">スマホの録音アプリで録音 → Notionに <code>/audio</code> で添付</span></td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること:</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>ジャンプ探索と二分探索をそれぞれどう実装したか</li>
+          <li>データサイズごとの比較回数の結果と、O(sqrt(n)) vs O(log n) の違い</li>
+          <li>どのような場面でジャンプ探索が有利になりうるか</li>
+        </ul>
+      </div>
+      <p style="color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分で考えて作ってください。</p>
     </div>
   </div>
 </section>

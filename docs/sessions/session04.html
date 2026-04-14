@@ -158,6 +158,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -663,17 +664,31 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>逐次探索と二分探索の比較回数を比べる</h3>
+        <h3>二分探索コードのトレース</h3>
       </div>
-      <p>以下のデータで各ターゲットの逐次探索と二分探索の比較回数を予測しなさい。</p>
-      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">data = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]  (10個)</pre>
-      <table style="margin:0.5rem 0">
-        <tr><th>target</th><th>逐次探索</th><th>二分探索</th></tr>
-        <tr><td>1（先頭）</td><td></td><td></td></tr>
-        <tr><td>19（末尾）</td><td></td><td></td></tr>
-        <tr><td>20（不在）</td><td></td><td></td></tr>
-      </table>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、whileループの各ステップで <code>left</code>, <code>right</code>, <code>mid</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL04-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL04-3.py</span>
+data = [<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>, <span class="num">11</span>, <span class="num">13</span>, <span class="num">15</span>, <span class="num">17</span>, <span class="num">19</span>]
+target = <span class="num">13</span>
+left = <span class="num">0</span>
+right = <span class="fn">len</span>(data) - <span class="num">1</span>
+count = <span class="num">0</span>
+
+<span class="kw">while</span> left <= right:
+    mid = (left + right) // <span class="num">2</span>
+    count += <span class="num">1</span>
+    <span class="fn">print</span>(<span class="str">f"</span>{count}<span class="str">回目: left={left}, right={right}, mid={mid}, data[mid]={data[mid]}"</span>)
+    <span class="kw">if</span> data[mid] == target:
+        <span class="fn">print</span>(<span class="str">f"発見！ インデックス={mid}, 比較回数={count}"</span>)
+        <span class="kw">break</span>
+    <span class="kw">elif</span> data[mid] < target:
+        left = mid + <span class="num">1</span>
+    <span class="kw">else</span>:
+        right = mid - <span class="num">1</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"見つからない。比較回数={count}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 各ステップで left, right, mid の値を表に書き出すと追いやすいです。data[mid] と target の大小関係で left と right のどちらが変わるかに注目。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>
@@ -691,10 +706,29 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
         <span class="tag tag-advanced">発展課題</span>
         <h3>二分探索の応用: 条件を満たす最小値を見つける</h3>
       </div>
-      <p>「N個の荷物を最大k個のトラックに積むとき、1台あたりの最大積載量の最小値を求める」問題を二分探索で解く方針を考察しなさい。</p>
-      
-      <p style="margin-top:1rem;color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分の言葉で考えてください。</p>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>「N個の荷物を最大k個のトラックに積むとき、1台あたりの最大積載量の最小値を求める」問題を二分探索で解くプログラムを作成しなさい。</p>
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1.5rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（2点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td><code>AL04-4.py</code> として作成し、コード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する<br>
+            <span style="color:#999;font-size:0.85rem">スマホの録音アプリで録音 → Notionに <code>/audio</code> で添付</span></td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること:</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>二分探索をこの問題にどう適用したか（何を探索範囲にしたか）</li>
+          <li>「積載量の最小値」を求めるために、判定条件をどう設計したか</li>
+          <li>通常の二分探索との違いや、応用で気づいたこと</li>
+        </ul>
+      </div>
+      <p style="color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分で考えて作ってください。</p>
     </div>
   </div>
 </section>

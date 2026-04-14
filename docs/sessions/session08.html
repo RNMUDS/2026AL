@@ -50,7 +50,8 @@ table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.
 th { background: rgba(118,185,0,0.15); font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
 td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
 tr:nth-child(even) td { background: #111; }
-pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
 pre .kw { color: #76B900; } pre .fn { color: #93D500; } pre .str { color: #FFB800; } pre .cmt { color: #616161; font-style: italic; } pre .num { color: #fab387; } pre .op { color: #4FC3F7; }
 .code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #a6adc8; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
 .concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
@@ -406,11 +407,26 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>最良ケースと最悪ケースの比較回数</h3>
+        <h3>挿入ソートコードのトレース</h3>
       </div>
-      <p>要素数6の場合、挿入ソートの比較回数が最小・最大になるデータの例と、その比較回数を答えなさい。</p>
-      
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、各パスで <code>data</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL08-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL08-3.py</span>
+data = [<span class="num">5</span>, <span class="num">2</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">4</span>]
+comparisons = <span class="num">0</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(data)):
+    key = data[i]
+    j = i - <span class="num">1</span>
+    <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> data[j] > key:
+        data[j + <span class="num">1</span>] = data[j]
+        j -= <span class="num">1</span>
+        comparisons += <span class="num">1</span>
+    data[j + <span class="num">1</span>] = key
+    <span class="fn">print</span>(<span class="str">f"パス{i}: key={key} → {data}"</span>)
+
+<span class="fn">print</span>(<span class="str">f"比較回数: {comparisons}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 各パスで key（挿入する値）がどこまで左に移動するかを追います。while 条件の「data[j] > key」が偽になる位置が挿入先です。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>

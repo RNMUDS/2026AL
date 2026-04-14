@@ -159,6 +159,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -756,20 +757,26 @@ loaded = []
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>辞書を使った集計プログラムの出力を予測する</h3>
+        <h3>リスト＋辞書＋ループのトレース</h3>
       </div>
-      <p>以下のコードを<strong>実行せずに</strong>出力を予測しなさい。予測後に実行して確認すること。</p>
-      <pre><span class="code-label">Python</span>
-words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
-count = {}
-<span class="kw">for</span> w <span class="kw">in</span> words:
-    <span class="kw">if</span> w <span class="kw">in</span> count:
-        count[w] = count[w] + <span class="num">1</span>
+      <p>以下のコードを<strong>実行せずに</strong>、ループの各ステップで <code>scores</code> と <code>result</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL02-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL02-3.py</span>
+students = [(<span class="str">"田中"</span>, <span class="num">80</span>), (<span class="str">"鈴木"</span>, <span class="num">65</span>), (<span class="str">"佐藤"</span>, <span class="num">90</span>), (<span class="str">"山田"</span>, <span class="num">70</span>)]
+scores = {}
+result = []
+
+<span class="kw">for</span> name, point <span class="kw">in</span> students:
+    <span class="kw">if</span> point >= <span class="num">75</span>:
+        scores[name] = <span class="str">"合格"</span>
+        result.<span class="fn">append</span>(name)
     <span class="kw">else</span>:
-        count[w] = <span class="num">1</span>
-<span class="fn">print</span>(count)
-<span class="fn">print</span>(<span class="fn">sorted</span>(count.items(), key=<span class="kw">lambda</span> x: x[<span class="num">1</span>], reverse=<span class="num">True</span>))</pre>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+        scores[name] = <span class="str">"不合格"</span>
+
+<span class="fn">print</span>(<span class="str">"scores ="</span>, scores)
+<span class="fn">print</span>(<span class="str">"合格者:"</span>, result)
+<span class="fn">print</span>(<span class="str">"合格者数:"</span>, <span class="fn">len</span>(result))</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> ループの各回で (name, point) がどの値になるか、1行ずつ追いましょう。scores 辞書と result リストの両方を更新していることに注意。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>
@@ -787,15 +794,35 @@ count = {}
         <span class="tag tag-advanced">発展課題</span>
         <h3>データ構造の変換と応用</h3>
       </div>
-      <p>以下のCSVデータ（文字列）を読み込み、「科目ごとの平均点」を辞書で計算するプログラムを設計しなさい（コードを書かなくてOK、処理手順を日本語で書くこと）。</p>
+      <p>以下のCSVデータ（文字列）を読み込み、「科目ごとの平均点」を辞書で計算するプログラムを作成しなさい。</p>
       <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">名前,科目,点数
 田中,数学,85
 鈴木,英語,92
 田中,英語,78
 鈴木,数学,88
 佐藤,数学,76</pre>
-      <p style="margin-top:1rem;color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分の言葉で考えてください。</p>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1.5rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（2点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td><code>AL02-4.py</code> として作成し、コード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する<br>
+            <span style="color:#999;font-size:0.85rem">スマホの録音アプリで録音 → Notionに <code>/audio</code> で添付</span></td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること:</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>CSVデータをどのデータ構造（リスト・辞書など）で管理したか</li>
+          <li>科目ごとの平均点をどのように計算したか（処理の流れ）</li>
+          <li>データ構造の選び方で工夫した点や気づいたこと</li>
+        </ul>
+      </div>
+      <p style="color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分で考えて作ってください。</p>
     </div>
   </div>
 </section>

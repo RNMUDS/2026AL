@@ -144,6 +144,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -719,18 +720,36 @@ dfs_time = time.<span class="fn">time</span>() - start_time
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>計算量の比較表を完成させる</h3>
+        <h3>BFSコードのトレース</h3>
       </div>
-      <p>以下のアルゴリズムの計算量を埋めなさい。</p>
-      <table style="margin:0.5rem 0">
-        <tr><th>アルゴリズム</th><th>最良</th><th>平均</th><th>最悪</th></tr>
-        <tr><td>逐次探索</td><td></td><td></td><td></td></tr>
-        <tr><td>二分探索</td><td></td><td></td><td></td></tr>
-        <tr><td>挿入ソート</td><td></td><td></td><td></td></tr>
-        <tr><td>分布数えソート</td><td colspan="3"></td></tr>
-        <tr><td>BFS</td><td colspan="3"></td></tr>
-      </table>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、キューの変化と出力を予測しなさい。<br>予測を書いた後に、<code>AL12-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL12-3.py</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+graph = {
+    <span class="str">"A"</span>: [<span class="str">"B"</span>, <span class="str">"C"</span>],
+    <span class="str">"B"</span>: [<span class="str">"A"</span>, <span class="str">"D"</span>],
+    <span class="str">"C"</span>: [<span class="str">"A"</span>, <span class="str">"D"</span>, <span class="str">"E"</span>],
+    <span class="str">"D"</span>: [<span class="str">"B"</span>, <span class="str">"C"</span>],
+    <span class="str">"E"</span>: [<span class="str">"C"</span>]
+}
+
+visited = []
+queue = <span class="fn">deque</span>([<span class="str">"A"</span>])
+
+<span class="kw">while</span> queue:
+    node = queue.<span class="fn">popleft</span>()
+    <span class="kw">if</span> node <span class="kw">in</span> visited:
+        <span class="kw">continue</span>
+    visited.<span class="fn">append</span>(node)
+    <span class="fn">print</span>(<span class="str">f"訪問: {node}, キュー: {list(queue)}"</span>)
+    <span class="kw">for</span> neighbor <span class="kw">in</span> graph[node]:
+        <span class="kw">if</span> neighbor <span class="kw">not in</span> visited:
+            queue.<span class="fn">append</span>(neighbor)
+
+<span class="fn">print</span>(<span class="str">f"訪問順: {visited}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> BFS はキュー（先入れ先出し）を使います。各ステップで「キューから取り出す → 訪問済みに追加 → 未訪問の隣接ノードをキューに追加」を追いましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>

@@ -159,6 +159,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -681,16 +682,28 @@ previous_time = <span class="num">None</span>
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>逐次探索の比較回数を予測する</h3>
+        <h3>逐次探索コードのトレース</h3>
       </div>
-      <p>同じデータ <code>[15, 3, 27, 8, 42, 11, 36, 19, 5, 22]</code> で以下の各ターゲットの比較回数を<strong>実行せずに</strong>予測しなさい。</p>
-      <table style="margin:0.5rem 0">
-        <tr><th>target</th><th>予測（比較回数）</th><th>理由</th></tr>
-        <tr><td>15</td><td></td><td></td></tr>
-        <tr><td>22</td><td></td><td></td></tr>
-        <tr><td>100</td><td></td><td></td></tr>
-      </table>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、ループの各ステップと最終出力を予測しなさい。<br>予測を書いた後に、<code>AL03-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL03-3.py</span>
+data = [<span class="num">15</span>, <span class="num">3</span>, <span class="num">27</span>, <span class="num">8</span>, <span class="num">42</span>, <span class="num">11</span>, <span class="num">36</span>, <span class="num">19</span>, <span class="num">5</span>, <span class="num">22</span>]
+targets = [<span class="num">8</span>, <span class="num">100</span>, <span class="num">15</span>]
+total = <span class="num">0</span>
+
+<span class="kw">for</span> t <span class="kw">in</span> targets:
+    count = <span class="num">0</span>
+    found = <span class="num">False</span>
+    <span class="kw">for</span> d <span class="kw">in</span> data:
+        count += <span class="num">1</span>
+        <span class="kw">if</span> d == t:
+            found = <span class="num">True</span>
+            <span class="kw">break</span>
+    total += count
+    <span class="fn">print</span>(<span class="str">f"target={t}: </span>{count}<span class="str">回, found={found}"</span>)
+
+<span class="fn">print</span>(<span class="str">f"合計比較回数: </span>{total}<span class="str">"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 各 target について、data のどの位置で見つかるか（または見つからないか）を考え、そのときの count を数えましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>
@@ -708,10 +721,29 @@ previous_time = <span class="num">None</span>
         <span class="tag tag-advanced">発展課題</span>
         <h3>逐次探索の最適化を考える</h3>
       </div>
-      <p>逐次探索では、よく検索される要素がリストの先頭にあると比較回数が少なくなります。「一度見つけた要素を先頭に移動する」方法（Move-to-Front法）の利点と欠点を考察しなさい。</p>
-      
-      <p style="margin-top:1rem;color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分の言葉で考えてください。</p>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>逐次探索では、よく検索される要素がリストの先頭にあると比較回数が少なくなります。「一度見つけた要素を先頭に移動する」方法（Move-to-Front法）を実装し、通常の逐次探索と比較回数を比べるプログラムを作成しなさい。</p>
+      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1.5rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（2点セット）</p>
+        <table>
+          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">1. コード</strong></td>
+            <td><code>AL03-4.py</code> として作成し、コード全体をNotionノートに貼り付ける</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">2. 音声説明</strong></td>
+            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する<br>
+            <span style="color:#999;font-size:0.85rem">スマホの録音アプリで録音 → Notionに <code>/audio</code> で添付</span></td>
+          </tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること:</strong></p>
+        <ul class="point-list" style="margin-top:0.3rem">
+          <li>Move-to-Front法をどのように実装したか</li>
+          <li>通常の逐次探索と比べて比較回数がどう変わったか</li>
+          <li>Move-to-Front法の利点と欠点として何が分かったか</li>
+        </ul>
+      </div>
+      <p style="color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分で考えて作ってください。</p>
     </div>
   </div>
 </section>

@@ -50,7 +50,8 @@ table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.
 th { background: rgba(118,185,0,0.15); font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
 td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
 tr:nth-child(even) td { background: #111; }
-pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
 pre .kw { color: #76B900; } pre .fn { color: #93D500; } pre .str { color: #FFB800; } pre .cmt { color: #616161; font-style: italic; } pre .num { color: #fab387; } pre .op { color: #4FC3F7; }
 .code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #a6adc8; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
 .concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
@@ -441,11 +442,32 @@ max_val = <span class="num">100</span>
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>分布数えソートの出力を予測する</h3>
+        <h3>分布数えソートコードのトレース</h3>
       </div>
-      <p>上で計算した累積度数配列を使って、<code>data = [2, 5, 3, 0, 2, 3, 0, 3]</code> をソートした結果を予測しなさい。</p>
-      
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、各ステップで <code>freq</code> と <code>output</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL10-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL10-3.py</span>
+data = [<span class="num">2</span>, <span class="num">5</span>, <span class="num">3</span>, <span class="num">0</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">0</span>, <span class="num">3</span>]
+MAX_VAL = <span class="num">6</span>
+
+<span class="cmt"># Step 1: 度数配列</span>
+freq = [<span class="num">0</span>] * MAX_VAL
+<span class="kw">for</span> d <span class="kw">in</span> data:
+    freq[d] += <span class="num">1</span>
+<span class="fn">print</span>(<span class="str">f"度数: {freq}"</span>)
+
+<span class="cmt"># Step 2: 累積度数</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, MAX_VAL):
+    freq[i] += freq[i - <span class="num">1</span>]
+<span class="fn">print</span>(<span class="str">f"累積: {freq}"</span>)
+
+<span class="cmt"># Step 3: 配置（末尾から）</span>
+output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
+<span class="kw">for</span> d <span class="kw">in</span> <span class="fn">reversed</span>(data):
+    freq[d] -= <span class="num">1</span>
+    output[freq[d]] = d
+<span class="fn">print</span>(<span class="str">f"結果: {output}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> Step 1 で各値の出現回数を数え、Step 2 で累積し、Step 3 では末尾から配置します。freq の変化を1つずつ追いましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>

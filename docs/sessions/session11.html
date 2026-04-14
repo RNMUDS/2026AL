@@ -163,6 +163,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -740,11 +741,28 @@ sorted_result = radix_sort(test_data)
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>CSV読み書きの処理手順を説明する</h3>
+        <h3>安定ソートコードのトレース</h3>
       </div>
-      <p>以下のデータをCSVファイルに書き込み、読み込み直して点数順にソートする処理手順を日本語で書きなさい。</p>
-      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">students = [("田中", 85), ("鈴木", 92), ("佐藤", 78)]</pre>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、ソート結果と出力を予測しなさい。特に「安定性」により同じ点数の要素の順序がどうなるかに注目すること。<br>予測を書いた後に、<code>AL11-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL11-3.py</span>
+students = [
+    (<span class="str">"鈴木"</span>, <span class="num">80</span>), (<span class="str">"田中"</span>, <span class="num">95</span>), (<span class="str">"佐藤"</span>, <span class="num">80</span>),
+    (<span class="str">"山田"</span>, <span class="num">92</span>), (<span class="str">"高橋"</span>, <span class="num">80</span>)
+]
+
+<span class="cmt"># sorted は安定ソート</span>
+result = <span class="fn">sorted</span>(students, key=<span class="kw">lambda</span> x: x[<span class="num">1</span>])
+<span class="kw">for</span> name, score <span class="kw">in</span> result:
+    <span class="fn">print</span>(<span class="str">f"{name}: {score}"</span>)
+
+<span class="fn">print</span>(<span class="str">"---"</span>)
+
+<span class="cmt"># 降順</span>
+result2 = <span class="fn">sorted</span>(students, key=<span class="kw">lambda</span> x: x[<span class="num">1</span>], reverse=<span class="num">True</span>)
+<span class="fn">print</span>(<span class="str">f"1位: {result2[0][0]} ({result2[0][1]}点)"</span>)
+<span class="fn">print</span>(<span class="str">f"最下位: {result2[-1][0]} ({result2[-1][1]}点)"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> Pythonの <code>sorted</code> は安定ソートなので、同じ点数の要素は元の順序が保たれます。80点の3人の並び順に注目しましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>

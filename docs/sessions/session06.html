@@ -162,6 +162,7 @@ pre {
   padding: clamp(0.8rem, 2vw, 1.4rem);
   overflow-x: auto;
   font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none;
   font-size: clamp(0.75rem, 1.3vw, 0.88rem);
   line-height: 1.7;
   margin: 1rem 0;
@@ -710,11 +711,28 @@ slots = {}
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>衝突が起きるケースを見つける</h3>
+        <h3>ハッシュテーブル挿入コードのトレース</h3>
       </div>
-      <p>テーブルサイズ7の場合、以下の名前のうち同じハッシュ値になるペアを見つけなさい（ハッシュ関数: <code>ord(name[0]) % 7</code>）。</p>
-      <p>名前リスト: Alice, George, Nancy, Tom, Zoe</p>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、ループの各ステップで <code>table</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL06-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL06-3.py</span>
+SIZE = <span class="num">7</span>
+table = [<span class="num">None</span>] * SIZE
+names = [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Nancy"</span>, <span class="str">"Tom"</span>]
+collisions = <span class="num">0</span>
+
+<span class="kw">for</span> name <span class="kw">in</span> names:
+    h = <span class="fn">ord</span>(name[<span class="num">0</span>]) % SIZE
+    <span class="kw">if</span> table[h] <span class="kw">is</span> <span class="num">None</span>:
+        table[h] = name
+        <span class="fn">print</span>(<span class="str">f"{name}: hash={h} → 格納"</span>)
+    <span class="kw">else</span>:
+        collisions += <span class="num">1</span>
+        <span class="fn">print</span>(<span class="str">f"{name}: hash={h} → 衝突！({table[h]}が既にある)"</span>)
+
+<span class="fn">print</span>(<span class="str">f"テーブル: {table}"</span>)
+<span class="fn">print</span>(<span class="str">f"衝突回数: {collisions}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 各名前の先頭文字の <code>ord()</code> を計算し（A=65, B=66, N=78, T=84）、% 7 でハッシュ値を求めてから追いましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>
