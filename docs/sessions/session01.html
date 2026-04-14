@@ -1316,6 +1316,41 @@ count = <span class="num">0</span>
       </div>
     </details>
 
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL01-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">import random
+
+answer = random.randint(1, 100)
+low = 1
+high = 100
+count = 0
+
+while low <= high:
+    guess = (low + high) // 2
+    count += 1
+
+    if guess == answer:
+        print(f"正解！ 答えは {answer} でした")
+        print(f"{count}回で当たりました")
+        break
+    elif guess > answer:
+        print(f"{count}回目: {guess} → もっと小さい")
+        high = guess - 1
+    else:
+        print(f"{count}回目: {guess} → もっと大きい")
+        low = guess + 1</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li><code>low</code> と <code>high</code> で範囲を管理し、<code>(low + high) // 2</code> で中央値を計算している</li>
+          <li>予想が大きすぎれば <code>high</code> を下げ、小さすぎれば <code>low</code> を上げて範囲を半分に絞る</li>
+          <li>1〜100の範囲なら最大 <strong>7回</strong> で必ず当たる（2<sup>7</sup> = 128 &gt; 100 なので）</li>
+          <li>毎回半分に絞るので、範囲が N なら最大 log<sub>2</sub>(N) 回（切り上げ）で当たる</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>
