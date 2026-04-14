@@ -536,16 +536,47 @@ author_index = {}
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>場面に応じたアルゴリズムの選択</h3>
+        <h3>総合トレース：探索＋ソート＋辞書の組み合わせ</h3>
       </div>
-      <p>以下の場面でどのアルゴリズムを使うべきか、理由とともに答えなさい。</p>
-      <ol style="margin:0.5rem 0 0 1.2rem;line-height:2">
-        <li>辞書アプリで単語を高速に検索したい</li>
-        <li>テストの点数（0〜100点）を並べ替えたい</li>
-        <li>カーナビで最短経路を求めたい</li>
-        <li>ほぼ整列済みのデータを完全に整列させたい</li>
-      </ol>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>、各ステップの変数変化と最終出力を予測しなさい。<br>予測を書いた後に、<code>AL15-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL15-3.py</span>
+data = [<span class="num">4</span>, <span class="num">2</span>, <span class="num">7</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">3</span>, <span class="num">6</span>]
+
+<span class="cmt"># Step 1: 挿入ソート</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(data)):
+    key = data[i]
+    j = i - <span class="num">1</span>
+    <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> data[j] > key:
+        data[j + <span class="num">1</span>] = data[j]
+        j -= <span class="num">1</span>
+    data[j + <span class="num">1</span>] = key
+<span class="fn">print</span>(<span class="str">f"ソート後: {data}"</span>)
+
+<span class="cmt"># Step 2: 二分探索</span>
+target = <span class="num">5</span>
+left, right = <span class="num">0</span>, <span class="fn">len</span>(data) - <span class="num">1</span>
+count = <span class="num">0</span>
+<span class="kw">while</span> left <= right:
+    mid = (left + right) // <span class="num">2</span>
+    count += <span class="num">1</span>
+    <span class="kw">if</span> data[mid] == target:
+        <span class="kw">break</span>
+    <span class="kw">elif</span> data[mid] < target:
+        left = mid + <span class="num">1</span>
+    <span class="kw">else</span>:
+        right = mid - <span class="num">1</span>
+<span class="fn">print</span>(<span class="str">f"target={target}: index={mid}, 比較{count}回"</span>)
+
+<span class="cmt"># Step 3: 辞書で集計</span>
+groups = {}
+<span class="kw">for</span> d <span class="kw">in</span> data:
+    key = <span class="str">"偶数"</span> <span class="kw">if</span> d % <span class="num">2</span> == <span class="num">0</span> <span class="kw">else</span> <span class="str">"奇数"</span>
+    <span class="kw">if</span> key <span class="kw">not in</span> groups:
+        groups[key] = []
+    groups[key].<span class="fn">append</span>(d)
+<span class="fn">print</span>(<span class="str">f"分類: {groups}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 3つのステップを順番に追います。Step 1 のソート結果が Step 2 の入力になります。Step 3 は独立した処理です。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>

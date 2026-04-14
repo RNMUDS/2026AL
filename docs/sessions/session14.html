@@ -422,17 +422,33 @@ result = <span class="fn">average</span>([])
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 2</span>
-        <h3>コードの可読性と効率を改善する</h3>
+        <h3>バグのあるコードをトレースして問題を発見する</h3>
       </div>
-      <p>以下のコードの問題点を指摘し、改善案を示しなさい。</p>
-      <pre><span class="code-label">Python</span>
-<span class="kw">def</span> <span class="fn">f</span>(a):
-    r = []
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(a)):
-        <span class="kw">if</span> a[i] <span class="kw">not in</span> r:
-            r.<span class="fn">append</span>(a[i])
-    <span class="kw">return</span> r</pre>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 自分のNotionノートに記録してください。</div></div>
+      <p>以下のコードを<strong>実行せずに</strong>トレースし、(1) 何が出力されるか、(2) どこにバグがあるかを答えなさい。<br>予測を書いた後に、<code>AL14-3.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL14-3.py</span>
+<span class="kw">def</span> <span class="fn">remove_duplicates</span>(data):
+    seen = <span class="fn">set</span>()
+    result = []
+    <span class="kw">for</span> item <span class="kw">in</span> data:
+        <span class="kw">if</span> item <span class="kw">not in</span> seen:
+            result.<span class="fn">append</span>(item)
+        seen.<span class="fn">add</span>(item)
+    <span class="kw">return</span> result
+
+<span class="kw">def</span> <span class="fn">average</span>(numbers):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> n <span class="kw">in</span> numbers:
+        total += n
+    <span class="kw">return</span> total / <span class="fn">len</span>(numbers)
+
+scores = [<span class="num">80</span>, <span class="num">90</span>, <span class="num">80</span>, <span class="num">70</span>, <span class="num">90</span>, <span class="num">60</span>]
+unique = <span class="fn">remove_duplicates</span>(scores)
+<span class="fn">print</span>(<span class="str">f"元データ: {scores}"</span>)
+<span class="fn">print</span>(<span class="str">f"重複除去: {unique}"</span>)
+<span class="fn">print</span>(<span class="str">f"平均: {average(unique)}"</span>)
+<span class="fn">print</span>(<span class="str">f"全体平均: {average(scores)}"</span>)</pre>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> <code>remove_duplicates</code> は正しく動作しますが、「重複を除去してから平均を取る」のは元の全体平均と同じでしょうか？ コードの論理的な問題を考えましょう。</p>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。</div></div>
     </div>
   </div>
 </section>
