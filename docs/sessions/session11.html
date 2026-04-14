@@ -824,7 +824,77 @@ result2 = <span class="fn">sorted</span>(students, key=<span class="kw">lambda</
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL11-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 基数ソートの仕組みを理解する =====
+
+def counting_sort_by_digit(data, exp):
+    """指定した桁（exp）で分布数えソートを行う（安定ソート）"""
+    n = len(data)
+    output = [0] * n
+    count = [0] * 10  # 0〜9の10種類
+
+    # 各要素の該当桁の値をカウント
+    for val in data:
+        digit = (val // exp) % 10
+        count[digit] += 1
+
+    # 累積和（安定性を保つため）
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # 後ろから走査して出力配列に配置（安定性を保つ）
+    for i in range(n - 1, -1, -1):
+        digit = (data[i] // exp) % 10
+        count[digit] -= 1
+        output[count[digit]] = data[i]
+
+    return output
+
+def radix_sort(data):
+    """基数ソート: 各桁ごとに分布数えソートを適用"""
+    if not data:
+        return data
+
+    max_val = max(data)
+    result = data[:]
+
+    exp = 1  # 1の位から開始
+    step = 1
+
+    while max_val // exp > 0:
+        print(f"--- 第{step}ステップ: {exp}の位でソート ---")
+        result = counting_sort_by_digit(result, exp)
+        print(f"  結果: {result}")
+        exp *= 10
+        step += 1
+
+    return result
+
+# --- テスト ---
+data = [170, 45, 75, 90, 802, 24, 2, 66]
+
+print("=== 基数ソート(Radix Sort) ===")
+print(f"ソート前: {data}")
+print()
+
+sorted_data = radix_sort(data)
+
+print()
+print(f"ソート後: {sorted_data}")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>基数ソートは「1の位 → 10の位 → 100の位」と下位桁から順にソートする方法</li>
+          <li>各桁のソートに分布数えソート（安定ソート）を使用し、前の桁のソート結果を壊さない</li>
+          <li>安定ソートでないと前の桁の順序が崩れるため、基数ソートは「安定ソートの組み合わせ」で成り立っている</li>
+          <li>計算量は O(d * (n + k)) で、d は最大桁数、k は基数（10進なら10）、比較を使わないソート</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

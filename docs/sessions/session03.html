@@ -765,7 +765,74 @@ total = <span class="num">0</span>
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL03-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 逐次探索の最適化（Move-to-Front法） =====
+
+import random
+
+# --- 通常の逐次探索 ---
+def linear_search(data, target):
+    """通常の逐次探索: 比較回数を返す"""
+    for i in range(len(data)):
+        if data[i] == target:
+            return i + 1  # 比較回数
+    return len(data)  # 見つからない場合
+
+# --- Move-to-Front法の逐次探索 ---
+def mtf_search(data, target):
+    """Move-to-Front法: 見つけた要素を先頭に移動し、比較回数を返す"""
+    for i in range(len(data)):
+        if data[i] == target:
+            # 見つけた要素を先頭に移動
+            found = data.pop(i)  # 取り出す
+            data.insert(0, found)  # 先頭に挿入
+            return i + 1  # 比較回数
+    return len(data)
+
+# --- テストデータの準備 ---
+n = 100  # リストのサイズ
+original = list(range(n))  # 0〜99のリスト
+
+# よく検索される要素（偏りのある検索パターン）
+# 0〜9を多めに検索する
+search_targets = []
+for _ in range(500):
+    if random.random() < 0.7:  # 70%の確率で0〜9を検索
+        search_targets.append(random.randint(0, 9))
+    else:
+        search_targets.append(random.randint(0, n - 1))
+
+# --- 通常の逐次探索で実験 ---
+data_normal = original[:]  # コピーを作成
+total_normal = 0
+for target in search_targets:
+    total_normal += linear_search(data_normal, target)
+
+# --- Move-to-Front法で実験 ---
+data_mtf = original[:]  # コピーを作成
+total_mtf = 0
+for target in search_targets:
+    total_mtf += mtf_search(data_mtf, target)
+
+# --- 結果の表示 ---
+print(f"検索回数: {len(search_targets)}回")
+print(f"通常の逐次探索: 合計比較回数 = {total_normal}")
+print(f"Move-to-Front法: 合計比較回数 = {total_mtf}")
+print(f"比較回数の削減率: {(1 - total_mtf / total_normal) * 100:.1f}%")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>Move-to-Front法は「見つけた要素を先頭に移動する」ことで、頻繁に検索される要素が前方に集まる仕組み</li>
+          <li>検索パターンに偏りがある場合、通常の逐次探索より比較回数が大幅に減少する</li>
+          <li>検索パターンが均一（偏りがない）場合は効果が薄い、または逆効果になることもある</li>
+          <li>要素の移動コスト（<code>pop</code> と <code>insert</code>）がかかるため、リストが大きいと移動自体に時間がかかる点がデメリット</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

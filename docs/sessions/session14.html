@@ -510,7 +510,130 @@ unique = <span class="fn">remove_duplicates</span>(scores)
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL14-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: レビューチェックリストを作成する =====
+# Pythonコードを入力すると品質チェックを行うツール
+
+def check_line_length(lines, max_length=80):
+    """チェック1: 1行が長すぎないか"""
+    issues = []
+    for i, line in enumerate(lines, 1):
+        if len(line) > max_length:
+            issues.append(f"  行{i}: {len(line)}文字（{max_length}文字以下推奨）")
+    return len(issues) == 0, issues
+
+def check_function_length(lines, max_lines=30):
+    """チェック2: 関数が長すぎないか"""
+    issues = []
+    func_start = None
+    func_name = ""
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith("def "):
+            if func_start is not None:
+                length = i - func_start
+                if length > max_lines:
+                    issues.append(f"  {func_name}: {length}行（{max_lines}行以下推奨）")
+            func_start = i
+            func_name = stripped.split("(")[0].replace("def ", "")
+    return len(issues) == 0, issues
+
+def check_comments(lines):
+    """チェック3: コメントが含まれているか"""
+    comment_count = sum(1 for line in lines if "#" in line)
+    ratio = comment_count / max(len(lines), 1) * 100
+    passed = ratio >= 10  # 10%以上にコメントがあればOK
+    info = [f"  コメント行: {comment_count}/{len(lines)}行 ({ratio:.0f}%)"]
+    return passed, info
+
+def check_variable_names(lines):
+    """チェック4: 1文字変数が多用されていないか"""
+    import re
+    issues = []
+    single_vars = set()
+    for i, line in enumerate(lines, 1):
+        # 代入文の左辺をチェック（簡易版）
+        match = re.match(r"\s*([a-zA-Z_]\w*)\s*=", line)
+        if match:
+            var = match.group(1)
+            if len(var) == 1 and var not in ("i", "j", "k", "n", "x", "y"):
+                single_vars.add(var)
+    passed = len(single_vars) <= 2
+    if not passed:
+        issues.append(f"  1文字変数: {single_vars}")
+    return passed, issues
+
+def check_magic_numbers(lines):
+    """チェック5: マジックナンバー（意味不明な数値）がないか"""
+    import re
+    issues = []
+    allowed = {"0", "1", "2", "10", "100", "-1"}
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("#") or stripped.startswith("print"):
+            continue
+        numbers = re.findall(r"\b(\d+)\b", stripped)
+        for num in numbers:
+            if num not in allowed and "range" not in stripped:
+                issues.append(f"  行{i}: 数値 {num} に名前をつけると読みやすくなります")
+    return len(issues) == 0, issues
+
+# --- メイン処理 ---
+# テスト用のコード（チェック対象）
+sample_code = '''import random
+a = 5
+b = 10
+data = [random.randint(0, 999) for _ in range(50)]
+def very_long_function():
+    result = 0
+    for i in range(len(data)):
+        if data[i] > 500:
+            result += data[i]
+    return result
+# 合計を計算
+total = very_long_function()
+print(f"結果: {total}")
+'''
+
+lines = sample_code.strip().split("\n")
+
+print("=== Python コードレビューツール ===")
+print(f"対象コード: {len(lines)}行")
+print()
+
+checks = [
+    ("1行の長さ（80文字以下）", check_line_length),
+    ("関数の長さ（30行以下）", check_function_length),
+    ("コメントの存在（10%以上）", check_comments),
+    ("変数名の適切さ", check_variable_names),
+    ("マジックナンバーの有無", check_magic_numbers),
+]
+
+pass_count = 0
+for name, func in checks:
+    passed, details = func(lines)
+    status = "PASS" if passed else "FAIL"
+    pass_count += 1 if passed else 0
+    print(f"[{status}] {name}")
+    for d in details:
+        print(d)
+
+print()
+print(f"結果: {pass_count}/{len(checks)} 項目合格")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>5つ以上のチェック項目を選定し、それぞれの重要性を説明できる</li>
+          <li>文字列操作（<code>split</code>, <code>strip</code>, <code>startswith</code>）や正規表現を使ってコードを解析している</li>
+          <li>今学期の内容（効率の良いアルゴリズム選択、適切なデータ構造の使用など）がチェック項目に反映されている</li>
+          <li>自動チェックの限界（全てを機械的に判定できるわけではない）も理解している</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

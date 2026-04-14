@@ -529,7 +529,102 @@ output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL10-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 分布数えソートと比較ソートの使い分け =====
+
+import time
+import random
+
+# --- 分布数えソート ---
+def counting_sort(data):
+    """分布数えソート: 値の範囲が必要"""
+    if not data:
+        return [], 0
+    operations = 0
+
+    min_val = min(data)
+    max_val = max(data)
+    range_size = max_val - min_val + 1
+
+    # カウント配列を作成
+    count = [0] * range_size
+    for val in data:
+        count[val - min_val] += 1
+        operations += 1
+
+    # 結果を構築
+    result = []
+    for i in range(range_size):
+        operations += 1
+        result.extend([i + min_val] * count[i])
+
+    return result, operations
+
+# --- 挿入ソート ---
+def insertion_sort(data):
+    """挿入ソート: 比較ベース"""
+    arr = data[:]
+    operations = 0
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            operations += 1
+            arr[j + 1] = arr[j]
+            j -= 1
+        if j >= 0:
+            operations += 1
+        arr[j + 1] = key
+    return arr, operations
+
+# --- 実験 ---
+test_cases = [
+    ("値の範囲が狭い(0〜10, 1000件)",
+     [random.randint(0, 10) for _ in range(1000)]),
+    ("値の範囲が広い(0〜1000000, 100件)",
+     [random.randint(0, 1000000) for _ in range(100)]),
+    ("データ量が少ない(0〜100, 20件)",
+     [random.randint(0, 100) for _ in range(20)]),
+    ("データ量が多い(0〜100, 5000件)",
+     [random.randint(0, 100) for _ in range(5000)]),
+]
+
+print("=== 分布数えソート vs 挿入ソート ===")
+print(f"{'テストケース':>30} | {'分布数え(時間)':>14} | {'分布数え(回数)':>14} | {'挿入(時間)':>12} | {'挿入(回数)':>12}")
+print("-" * 95)
+
+for name, data in test_cases:
+    # 分布数えソート
+    start = time.time()
+    _, cs_ops = counting_sort(data)
+    cs_time = time.time() - start
+
+    # 挿入ソート
+    start = time.time()
+    _, is_ops = insertion_sort(data)
+    is_time = time.time() - start
+
+    print(f"{name:>30} | {cs_time:>12.6f}s | {cs_ops:>14,} | {is_time:>10.6f}s | {is_ops:>12,}")
+
+print()
+print("--- まとめ ---")
+print("分布数えソートが有利: 値の範囲が狭く、データ量が多い場合")
+print("挿入ソートが有利: データ量が少ない場合、値の範囲が広い場合")
+print("分布数えソートの制約: 値の範囲分のメモリが必要（範囲が広いと非効率）")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>分布数えソートの計算量は O(n + k)（k は値の範囲）で、値の範囲が狭いほど高速</li>
+          <li>値の範囲が広い場合、カウント配列のサイズが巨大になりメモリを浪費する</li>
+          <li>データ量が少ない場合は挿入ソートの方がオーバーヘッドが少なく有利になることがある</li>
+          <li>分布数えソートは比較を行わない「非比較ソート」であり、使える条件が限定的（整数、範囲が既知）</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

@@ -844,7 +844,60 @@ result = []
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL02-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: データ構造の変換と応用 =====
+# CSVデータから科目ごとの平均点を辞書で計算する
+
+# --- CSVデータ（文字列） ---
+csv_data = """名前,科目,点数
+田中,数学,85
+鈴木,英語,92
+田中,英語,78
+鈴木,数学,88
+佐藤,数学,76"""
+
+# --- CSVを1行ずつ処理 ---
+lines = csv_data.strip().split("\n")  # 改行で分割
+header = lines[0]  # 1行目はヘッダー（使わない）
+
+# 科目ごとの点数を集めるための辞書
+# キー: 科目名, 値: 点数のリスト
+scores = {}
+
+for line in lines[1:]:  # 2行目以降を処理
+    parts = line.split(",")  # カンマで分割
+    name = parts[0]          # 名前
+    subject = parts[1]       # 科目
+    score = int(parts[2])    # 点数（整数に変換）
+
+    # 科目がまだ辞書にない場合、空リストを作成
+    if subject not in scores:
+        scores[subject] = []
+
+    # 点数をリストに追加
+    scores[subject].append(score)
+
+# --- 科目ごとの平均点を計算 ---
+print("=== 科目ごとの平均点 ===")
+for subject, score_list in scores.items():
+    total = sum(score_list)          # 合計
+    count = len(score_list)          # 人数
+    average = total / count          # 平均
+    print(f"{subject}: {average:.1f}点（{count}人）")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>CSVデータを <code>split(",")</code> で分割して各フィールド（名前・科目・点数）を取り出している</li>
+          <li>辞書のキーに「科目名」、値に「点数のリスト」を使って、科目ごとにデータを整理している</li>
+          <li><code>sum()</code> と <code>len()</code> を使って平均を計算する流れが説明できる</li>
+          <li>辞書を使うことで、科目が増えても自動的に対応できる柔軟な設計になっている</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

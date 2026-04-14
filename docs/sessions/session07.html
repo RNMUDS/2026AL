@@ -568,7 +568,93 @@ table = [<span class="num">14</span>, <span class="num">21</span>, <span class="
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL07-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: ハッシュテーブルの負荷率と性能 =====
+
+import random
+
+class HashTable:
+    """線形探索法（オープンアドレス法）のハッシュテーブル"""
+
+    def __init__(self, size):
+        self.size = size
+        self.table = [None] * size
+
+    def _hash(self, key):
+        """多項式ハッシュ関数"""
+        h = 0
+        for c in str(key):
+            h = h * 31 + ord(c)
+        return h % self.size
+
+    def insert(self, key):
+        """データを挿入"""
+        index = self._hash(key)
+        for i in range(self.size):
+            pos = (index + i) % self.size
+            if self.table[pos] is None:
+                self.table[pos] = key
+                return
+        print("テーブルが満杯です")
+
+    def search(self, key):
+        """データを検索し、比較回数を返す"""
+        index = self._hash(key)
+        for i in range(self.size):
+            pos = (index + i) % self.size
+            if self.table[pos] is None:
+                return i + 1  # 見つからない
+            if self.table[pos] == key:
+                return i + 1  # 見つかった（比較回数）
+        return self.size  # テーブル全体を探索
+
+def experiment(load_factor, table_size=1000):
+    """指定された負荷率で実験"""
+    ht = HashTable(table_size)
+    n = int(table_size * load_factor)  # 格納するデータ数
+
+    # ランダムなデータを格納
+    keys = [f"key_{random.randint(0, 100000)}" for _ in range(n)]
+    for key in keys:
+        ht.insert(key)
+
+    # 格納したデータを全て検索して平均比較回数を計算
+    total_count = 0
+    for key in keys:
+        total_count += ht.search(key)
+
+    avg_count = total_count / len(keys)
+    return avg_count, n
+
+# --- 実験実行 ---
+print("=== ハッシュテーブルの負荷率と平均検索回数 ===")
+print(f"{'負荷率':>8} | {'データ数':>8} | {'平均検索回数':>12}")
+print("-" * 38)
+
+for lf in [0.5, 0.75, 0.9]:
+    avg, n = experiment(lf)
+    print(f"{lf:>8.2f} | {n:>8} | {avg:>12.2f}")
+
+print()
+print("理論値（線形探索法）:")
+print("  負荷率 a のとき、平均検索回数 ≒ 1/(1-a)")
+for lf in [0.5, 0.75, 0.9]:
+    theory = 1 / (1 - lf)
+    print(f"  a={lf}: 約 {theory:.2f} 回")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>負荷率（Load Factor）= データ数 / テーブルサイズ であり、テーブルの埋まり具合を表す</li>
+          <li>負荷率が高くなると衝突が増え、線形探索法ではクラスタリング（連続した塊）が発生して検索回数が増加する</li>
+          <li>負荷率 0.5 では平均約2回、0.75 では約4回、0.9 では約10回と急激に増加する</li>
+          <li>実用では負荷率 0.7〜0.75 程度を上限とし、それを超えたらテーブルを拡張（リハッシュ）するのが一般的</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

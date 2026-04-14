@@ -527,7 +527,122 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL13-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 複数アイテムの最適収集順序 =====
+
+from collections import deque
+
+# --- 迷路の定義 ---
+maze = [
+    "S . . . .",
+    ". # # . .",
+    ". . 1 . #",
+    "# . # . .",
+    ". 2 . 3 G",
+]
+
+# 迷路をパースする
+def parse_maze(maze_lines):
+    grid = []
+    start = None
+    goal = None
+    items = {}
+    for r, line in enumerate(maze_lines):
+        row = line.split()
+        grid.append(row)
+        for c, cell in enumerate(row):
+            if cell == "S":
+                start = (r, c)
+            elif cell == "G":
+                goal = (r, c)
+            elif cell.isdigit():
+                items[int(cell)] = (r, c)
+    return grid, start, goal, items
+
+grid, start, goal, items = parse_maze(maze)
+rows = len(grid)
+cols = len(grid[0])
+num_items = len(items)
+
+print(f"迷路サイズ: {rows}x{cols}")
+print(f"アイテム数: {num_items}")
+print(f"アイテム位置: {items}")
+print()
+
+# --- BFSで全アイテム収集 + ゴール到達 ---
+# 状態: (行, 列, 収集済みアイテムのビットマスク)
+# ビットマスク: アイテム1=bit0, アイテム2=bit1, アイテム3=bit2
+# 全収集 = (1 << num_items) - 1 = 0b111 = 7
+
+all_collected = (1 << num_items) - 1
+
+def bfs_collect(grid, start, goal, items):
+    """BFSで全アイテム収集して最短でゴールする経路を探す"""
+    # 初期状態
+    init_state = (start[0], start[1], 0)  # (行, 列, 収集ビット)
+    queue = deque([(init_state, [start])])  # (状態, 経路)
+    visited = {init_state}
+    max_queue = 0
+    states_explored = 0
+
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # 上下左右
+
+    while queue:
+        max_queue = max(max_queue, len(queue))
+        (r, c, collected), path = queue.popleft()
+        states_explored += 1
+
+        # ゴール判定: 全アイテム収集済み かつ ゴール地点
+        if (r, c) == goal and collected == all_collected:
+            return path, states_explored, max_queue
+
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != "#":
+                new_collected = collected
+                # アイテムがある場合、収集
+                for item_id, (ir, ic) in items.items():
+                    if (nr, nc) == (ir, ic):
+                        new_collected = collected | (1 << (item_id - 1))
+
+                new_state = (nr, nc, new_collected)
+                if new_state not in visited:
+                    visited.add(new_state)
+                    queue.append((new_state, path + [(nr, nc)]))
+
+    return None, states_explored, max_queue
+
+path, explored, max_q = bfs_collect(grid, start, goal, items)
+
+if path:
+    print(f"最短経路の長さ: {len(path) - 1}歩")
+    print(f"経路: {path}")
+    print(f"探索した状態数: {explored}")
+    print(f"キュー最大サイズ: {max_q}")
+    print(f"可能な状態数の上限: {rows} x {cols} x {2**num_items} = {rows * cols * (2**num_items)}")
+else:
+    print("経路が見つかりませんでした")
+
+# --- アイテム数と状態数の関係 ---
+print()
+print("--- アイテム数と状態空間の増加 ---")
+for n in range(1, 6):
+    states = rows * cols * (2 ** n)
+    print(f"  アイテム{n}個: 最大 {states:,} 状態")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>状態を (位置, 収集済みアイテム集合) で表現し、ビットマスクで収集状態を管理している</li>
+          <li>アイテムが n 個の場合、状態数は「マスの数 x 2^n」に膨らむ（指数的増加）</li>
+          <li>BFSは全状態を探索するため、アイテム数が増えるとメモリと時間が急激に増加する</li>
+          <li>現実的にはアイテム10〜15個程度が上限（2^15 = 32768）で、それ以上は別のアルゴリズムが必要</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

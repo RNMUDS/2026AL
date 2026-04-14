@@ -867,7 +867,94 @@ sorted_list = []
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL05-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: ジャンプ探索と二分探索の比較 =====
+
+import math
+import random
+
+# --- ジャンプ探索（比較回数を計測） ---
+def jump_search(data, target):
+    """ジャンプ探索: (見つかったか, 比較回数) を返す"""
+    n = len(data)
+    step = int(math.sqrt(n))  # ジャンプ幅 = sqrt(n)
+    count = 0  # 比較回数
+
+    # ステップ1: ブロック単位でジャンプ
+    prev = 0
+    while prev < n and data[min(prev + step, n) - 1] < target:
+        count += 1
+        prev += step
+        if prev >= n:
+            return False, count
+
+    # ステップ2: ブロック内を逐次探索
+    for i in range(prev, min(prev + step, n)):
+        count += 1
+        if data[i] == target:
+            return True, count
+
+    return False, count
+
+# --- 二分探索（比較回数を計測） ---
+def binary_search(data, target):
+    """二分探索: (見つかったか, 比較回数) を返す"""
+    low = 0
+    high = len(data) - 1
+    count = 0
+
+    while low <= high:
+        mid = (low + high) // 2
+        count += 1
+        if data[mid] == target:
+            return True, count
+        elif data[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    return False, count
+
+# --- 実験 ---
+sizes = [100, 10000, 1000000]
+trials = 100  # 各サイズで何回探索するか
+
+print(f"{'データサイズ':>12} | {'ジャンプ探索':>12} | {'二分探索':>10} | {'理論値 sqrt(n)':>14} | {'理論値 log2(n)':>14}")
+print("-" * 75)
+
+for n in sizes:
+    data = list(range(n))  # 0〜n-1のソート済みリスト
+
+    total_jump = 0
+    total_binary = 0
+
+    for _ in range(trials):
+        target = random.randint(0, n - 1)
+        _, jcount = jump_search(data, target)
+        _, bcount = binary_search(data, target)
+        total_jump += jcount
+        total_binary += bcount
+
+    avg_jump = total_jump / trials
+    avg_binary = total_binary / trials
+    theory_jump = math.sqrt(n)
+    theory_binary = math.log2(n)
+
+    print(f"{n:>12,} | {avg_jump:>12.1f} | {avg_binary:>10.1f} | {theory_jump:>14.1f} | {theory_binary:>14.1f}")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>ジャンプ探索は sqrt(n) 幅でブロックを飛ばし、該当ブロック内で逐次探索する2段階の方法</li>
+          <li>二分探索 O(log n) はジャンプ探索 O(sqrt(n)) より常に比較回数が少ない（n が大きいほど差が開く）</li>
+          <li>データサイズが大きくなると差が顕著になる（例: n=1,000,000 で sqrt(n)=1000 vs log2(n)=20）</li>
+          <li>ジャンプ探索は実装が単純で、リンクリストのように「前方にしか進めない」データ構造で有利になる場合がある</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

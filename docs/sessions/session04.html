@@ -750,7 +750,75 @@ count = <span class="num">0</span>
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL04-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 二分探索の応用 =====
+# N個の荷物をk台のトラックに積むとき、最大積載量の最小値を求める
+
+def can_load(weights, k, max_capacity):
+    """max_capacityの積載量でk台のトラックに積めるか判定"""
+    trucks = 1       # 現在使っているトラックの台数
+    current = 0      # 現在のトラックの積載量
+
+    for w in weights:
+        if current + w > max_capacity:
+            # 今のトラックに載せきれない → 新しいトラック
+            trucks += 1
+            current = w
+            if trucks > k:
+                return False  # トラックが足りない
+        else:
+            current += w
+
+    return True  # k台以内で全部積めた
+
+def find_min_capacity(weights, k):
+    """二分探索で最大積載量の最小値を求める"""
+    # 探索範囲: 最小 = 最大の荷物1つ, 最大 = 全荷物の合計
+    low = max(weights)     # 少なくとも最大の荷物は1台に載る必要がある
+    high = sum(weights)    # 全部1台に載せる場合
+
+    while low < high:
+        mid = (low + high) // 2
+        if can_load(weights, k, mid):
+            high = mid      # 積めた → もっと小さい値を試す
+        else:
+            low = mid + 1   # 積めない → もっと大きい値が必要
+
+    return low
+
+# --- テスト ---
+weights = [7, 2, 5, 10, 8]  # 荷物の重さリスト
+k = 2                         # トラックの台数
+
+result = find_min_capacity(weights, k)
+print(f"荷物: {weights}")
+print(f"トラック台数: {k}")
+print(f"最大積載量の最小値: {result}")
+
+# --- 検証: いくつかのパターンで試す ---
+test_cases = [
+    ([1, 2, 3, 4, 5], 2),
+    ([10, 20, 30], 3),
+    ([5, 5, 5, 5], 2),
+]
+
+for w, t in test_cases:
+    r = find_min_capacity(w, t)
+    print(f"荷物{w}, {t}台 → 最大積載量の最小値: {r}")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>探索対象が「値（配列のインデックス）」ではなく「積載量（答えそのもの）」であり、二分探索を「答えの候補」に対して行っている</li>
+          <li>判定関数 <code>can_load</code> で「この積載量なら積めるか？」を O(n) で判定し、二分探索と組み合わせている</li>
+          <li>探索範囲の下限は <code>max(weights)</code>（最大の荷物が必ず載る必要がある）、上限は <code>sum(weights)</code>（1台で全部運ぶ場合）</li>
+          <li>通常の二分探索は「ある値を見つける」問題だが、この応用は「条件を満たす最小値を見つける」問題である点が異なる</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

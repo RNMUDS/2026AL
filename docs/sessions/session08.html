@@ -488,7 +488,84 @@ comparisons = <span class="num">0</span>
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL08-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 挿入ソートの安定性を確認する =====
+
+def insertion_sort_by_value(data):
+    """タプルの数値（2番目の要素）で挿入ソートする
+    安定ソート: 同じ値の要素の元の順序を保つ"""
+    result = data[:]  # コピーを作成（元データを変更しない）
+
+    for i in range(1, len(result)):
+        key = result[i]         # 挿入する要素
+        j = i - 1
+
+        # key の数値が result[j] の数値より小さい間、後ろにずらす
+        # 「&gt;」で比較 → 同じ値の場合は移動しない → 安定
+        while j >= 0 and result[j][1] > key[1]:
+            result[j + 1] = result[j]
+            j -= 1
+
+        result[j + 1] = key
+
+    return result
+
+# --- テストデータ ---
+data = [("A", 3), ("B", 1), ("C", 3), ("D", 2)]
+
+print("=== 挿入ソートの安定性確認 ===")
+print(f"ソート前: {data}")
+
+sorted_data = insertion_sort_by_value(data)
+print(f"ソート後: {sorted_data}")
+
+# --- 安定性の確認 ---
+print()
+print("--- 安定性のチェック ---")
+# 同じ値(3)を持つ要素: A と C
+# 元の順序: A が先、C が後
+# 安定ソートなら: ソート後も A が C の前にある
+same_value_elements = [(name, val) for name, val in sorted_data if val == 3]
+print(f"値が3の要素の順序: {same_value_elements}")
+
+if same_value_elements[0][0] == "A" and same_value_elements[1][0] == "C":
+    print("→ 元の順序（A→C）が保たれている = 安定ソート!")
+else:
+    print("→ 元の順序が変わっている = 不安定ソート")
+
+# --- 不安定ソートとの比較（選択ソート） ---
+print()
+print("--- 参考: 選択ソート（不安定）の場合 ---")
+
+def selection_sort_by_value(data):
+    """選択ソート（不安定）"""
+    result = data[:]
+    for i in range(len(result)):
+        min_idx = i
+        for j in range(i + 1, len(result)):
+            if result[j][1] < result[min_idx][1]:
+                min_idx = j
+        result[i], result[min_idx] = result[min_idx], result[i]
+    return result
+
+sorted_selection = selection_sort_by_value(data)
+print(f"選択ソート結果: {sorted_selection}")
+same_sel = [(name, val) for name, val in sorted_selection if val == 3]
+print(f"値が3の要素の順序: {same_sel}")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>安定ソートとは「同じキー値を持つ要素の元の相対的な順序がソート後も保たれる」こと</li>
+          <li>挿入ソートで <code>&gt;</code>（厳密な大小）を使って比較すると、同じ値の場合は移動しないため安定になる</li>
+          <li><code>&gt;=</code> に変えると同じ値でも移動が起き、安定性が崩れることを理解している</li>
+          <li>安定ソートが重要な場面（例: 名前でソート済みのデータを成績でソートし直す場合、同じ成績の人は名前順を保ちたい）が説明できる</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

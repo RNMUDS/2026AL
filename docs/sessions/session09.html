@@ -531,7 +531,123 @@ pass_num = <span class="num">0</span>
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL09-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: ソートアルゴリズムの選択基準 =====
+
+import random
+import bisect
+
+# --- 挿入ソート（比較回数・交換回数を計測） ---
+def insertion_sort(data):
+    arr = data[:]
+    comparisons = 0
+    swaps = 0
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0:
+            comparisons += 1
+            if arr[j] > key:
+                arr[j + 1] = arr[j]
+                swaps += 1
+                j -= 1
+            else:
+                break
+        arr[j + 1] = key
+    return arr, comparisons, swaps
+
+# --- 二分挿入ソート（比較回数・交換回数を計測） ---
+def binary_insertion_sort(data):
+    arr = data[:]
+    comparisons = 0
+    swaps = 0
+    for i in range(1, len(arr)):
+        key = arr[i]
+        # 二分探索で挿入位置を決定
+        lo, hi = 0, i
+        while lo < hi:
+            comparisons += 1
+            mid = (lo + hi) // 2
+            if arr[mid] > key:
+                hi = mid
+            else:
+                lo = mid + 1
+        # 要素をずらす
+        for j in range(i, lo, -1):
+            arr[j] = arr[j - 1]
+            swaps += 1
+        arr[lo] = key
+    return arr, comparisons, swaps
+
+# --- バブルソート（比較回数・交換回数を計測） ---
+def bubble_sort(data):
+    arr = data[:]
+    comparisons = 0
+    swaps = 0
+    n = len(arr)
+    for i in range(n - 1):
+        swapped = False
+        for j in range(n - 1 - i):
+            comparisons += 1
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swaps += 1
+                swapped = True
+        if not swapped:
+            break
+    return arr, comparisons, swaps
+
+# --- テストデータ生成 ---
+def nearly_sorted(n):
+    """ほぼソート済みデータ（数個だけランダムに入れ替え）"""
+    data = list(range(n))
+    for _ in range(n // 20):  # 5%の要素を入れ替え
+        i, j = random.sample(range(n), 2)
+        data[i], data[j] = data[j], data[i]
+    return data
+
+def random_data(n):
+    """完全にランダムなデータ"""
+    return [random.randint(0, n * 10) for _ in range(n)]
+
+def streaming_data(n):
+    """リアルタイム到着（ランダム順）"""
+    return [random.randint(0, n * 10) for _ in range(n)]
+
+# --- 実験実行 ---
+scenarios = [
+    ("1. ほぼソート済み(100件)", nearly_sorted(100)),
+    ("2. 完全ランダム(1000件)", random_data(1000)),
+    ("3. リアルタイム到着(100件)", streaming_data(100)),
+]
+
+algorithms = [
+    ("挿入ソート", insertion_sort),
+    ("二分挿入ソート", binary_insertion_sort),
+    ("バブルソート", bubble_sort),
+]
+
+for scenario_name, data in scenarios:
+    print(f"\n=== {scenario_name} ===")
+    print(f"{'アルゴリズム':>14} | {'比較回数':>10} | {'交換回数':>10}")
+    print("-" * 42)
+    for algo_name, algo_func in algorithms:
+        _, comp, swap = algo_func(data)
+        print(f"{algo_name:>14} | {comp:>10,} | {swap:>10,}")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>ほぼソート済みデータでは挿入ソートが最も少ない比較・交換回数になる（ほぼ O(n)）</li>
+          <li>二分挿入ソートは比較回数を O(n log n) に削減するが、要素の移動回数は挿入ソートと同じ</li>
+          <li>バブルソートは全ての場面で比較回数が多く、特にランダムデータでは最も遅い</li>
+          <li>データの特性（ほぼ整列済みか、ランダムか、少量か）によって最適なアルゴリズムが変わることを実験で確認できた</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

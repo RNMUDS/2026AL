@@ -794,7 +794,80 @@ collisions = <span class="num">0</span>
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL06-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: より良いハッシュ関数の設計 =====
+# 先頭1文字ハッシュ vs 多項式ハッシュの衝突回数を比較
+
+# --- ハッシュ関数1: 先頭1文字だけを使う ---
+def hash_first_char(key, table_size):
+    """先頭1文字のASCIIコードでハッシュ値を計算"""
+    return ord(key[0]) % table_size
+
+# --- ハッシュ関数2: 多項式ハッシュ（文字列全体を使う） ---
+def hash_polynomial(key, table_size):
+    """多項式ハッシュ: 各文字に位置の重みをつけて計算"""
+    hash_value = 0
+    base = 31  # 素数を基数にする
+    for char in key:
+        hash_value = hash_value * base + ord(char)
+    return hash_value % table_size
+
+# --- 衝突回数を数える関数 ---
+def count_collisions(keys, hash_func, table_size):
+    """ハッシュ関数の衝突回数を計測"""
+    table = [0] * table_size  # 各スロットの使用回数
+
+    for key in keys:
+        index = hash_func(key, table_size)
+        table[index] += 1
+
+    # 衝突 = 同じスロットに2つ以上入った分
+    collisions = sum(count - 1 for count in table if count > 1)
+    return collisions, table
+
+# --- テストデータ ---
+keys = [
+    "apple", "application", "appetizer", "approach", "april",
+    "banana", "berry", "blueberry", "blackberry",
+    "cherry", "cranberry", "coconut",
+    "date", "dragonfruit",
+    "elderberry", "fig", "grape", "honeydew",
+    "kiwi", "lemon"
+]
+
+table_size = 10
+
+# --- 実験 ---
+col1, table1 = count_collisions(keys, hash_first_char, table_size)
+col2, table2 = count_collisions(keys, hash_polynomial, table_size)
+
+print(f"テストデータ: {len(keys)}個の文字列")
+print(f"テーブルサイズ: {table_size}")
+print()
+print(f"【先頭1文字ハッシュ】 衝突回数: {col1}")
+print(f"  スロット使用状況: {table1}")
+print()
+print(f"【多項式ハッシュ】   衝突回数: {col2}")
+print(f"  スロット使用状況: {table2}")
+print()
+if col1 > col2:
+    print("→ 多項式ハッシュの方が衝突が少なく、分布が均一")
+else:
+    print("→ 先頭1文字ハッシュの方が衝突が少ない（このデータでは）")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>先頭1文字ハッシュは同じ頭文字の文字列が全て同じスロットに入るため、衝突が多くなりやすい</li>
+          <li>多項式ハッシュは文字列全体を使い、各文字の位置に重み（基数のべき乗）をつけて計算するため分布が均一になる</li>
+          <li>衝突回数の計測方法（同じスロットに2つ以上入った分をカウント）を説明できる</li>
+          <li>良いハッシュ関数の条件は「入力の全体を使う」「出力が均一に分布する」「計算が高速」であること</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

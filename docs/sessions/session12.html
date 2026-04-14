@@ -811,7 +811,104 @@ queue = <span class="fn">deque</span>([<span class="str">"A"</span>])
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL12-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: DFSとBFSの実用比較 =====
+
+from collections import deque
+
+# --- グラフの定義（隣接リスト） ---
+graph = {
+    "A": ["B", "C", "D"],
+    "B": ["A", "E", "F"],
+    "C": ["A", "G"],
+    "D": ["A", "H"],
+    "E": ["B"],
+    "F": ["B", "I", "J"],
+    "G": ["C"],
+    "H": ["D"],
+    "I": ["F"],
+    "J": ["F"],
+}
+
+# --- DFS（スタック使用） ---
+def dfs(graph, start):
+    """深さ優先探索: 訪問順序とスタック最大サイズを返す"""
+    visited = []
+    stack = [start]
+    seen = set()
+    max_stack_size = 0
+
+    while stack:
+        max_stack_size = max(max_stack_size, len(stack))
+        node = stack.pop()  # スタックから取り出す（後入先出）
+
+        if node not in seen:
+            seen.add(node)
+            visited.append(node)
+
+            # 隣接ノードをスタックに追加（逆順で追加すると辞書順に探索）
+            for neighbor in reversed(graph.get(node, [])):
+                if neighbor not in seen:
+                    stack.append(neighbor)
+
+    return visited, max_stack_size
+
+# --- BFS（キュー使用） ---
+def bfs(graph, start):
+    """幅優先探索: 訪問順序とキュー最大サイズを返す"""
+    visited = []
+    queue = deque([start])
+    seen = {start}
+    max_queue_size = 0
+
+    while queue:
+        max_queue_size = max(max_queue_size, len(queue))
+        node = queue.popleft()  # キューから取り出す（先入先出）
+        visited.append(node)
+
+        for neighbor in graph.get(node, []):
+            if neighbor not in seen:
+                seen.add(neighbor)
+                queue.append(neighbor)
+
+    return visited, max_queue_size
+
+# --- 実験 ---
+start_node = "A"
+
+dfs_order, dfs_max = dfs(graph, start_node)
+bfs_order, bfs_max = bfs(graph, start_node)
+
+print("=== DFS vs BFS 比較 ===")
+print(f"グラフのノード数: {len(graph)}")
+print(f"開始ノード: {start_node}")
+print()
+print(f"【DFS（深さ優先探索）】")
+print(f"  訪問順序: {' → '.join(dfs_order)}")
+print(f"  スタック最大サイズ: {dfs_max}")
+print()
+print(f"【BFS（幅優先探索）】")
+print(f"  訪問順序: {' → '.join(bfs_order)}")
+print(f"  キュー最大サイズ: {bfs_max}")
+print()
+print("--- 特徴の比較 ---")
+print("DFS: 深く潜ってから戻る → 経路探索・迷路解法に適する")
+print("BFS: 近い所から順に探す → 最短経路の発見に適する")
+print(f"メモリ: DFS={dfs_max}, BFS={bfs_max} （グラフの形状に依存）")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>DFSはスタック（後入先出）、BFSはキュー（先入先出）を使うという基本的な違い</li>
+          <li>DFSは深く潜ってから戻るため「経路探索」や「全探索」に向き、BFSは近い所から順に探すため「最短経路」に向く</li>
+          <li>メモリ使用量はグラフの形状に依存し、幅の広いグラフではBFSのキューが大きくなり、深いグラフではDFSのスタックが大きくなる</li>
+          <li>BFSは重みなしグラフで最短経路を保証するが、DFSは保証しない</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>

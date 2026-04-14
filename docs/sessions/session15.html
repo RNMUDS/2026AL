@@ -638,7 +638,99 @@ groups = {}
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
     <div id="answers-content">
-      <p style="color:#888;font-style:italic">（標準課題・発展課題の解答は準備中です）</p>
+
+    <details>
+      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
+      <div class="answer-content">
+        <p><strong>模範コード（AL15-4.py）:</strong></p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 学期の振り返りデモ =====
+# 例: 二分探索のデモプログラム
+# （学生は自分が最も印象に残ったアルゴリズムを選んでください）
+
+import random
+import time
+
+def demo_binary_search():
+    """二分探索の動作を視覚的にデモする"""
+    # ソート済みデータを準備
+    data = sorted(random.sample(range(1, 1000), 50))
+    target = random.choice(data)  # 必ず見つかる値を選ぶ
+
+    print("=" * 60)
+    print("  二分探索デモ: 50個のソート済みデータから値を探す")
+    print("=" * 60)
+    print(f"\nデータ（先頭10個）: {data[:10]} ...")
+    print(f"探す値: {target}")
+    print()
+
+    low = 0
+    high = len(data) - 1
+    step = 0
+
+    while low <= high:
+        step += 1
+        mid = (low + high) // 2
+
+        # 現在の探索範囲を表示
+        range_str = ""
+        for i in range(len(data)):
+            if i == mid:
+                range_str += f"[{data[i]}]"  # 中央値
+            elif low <= i <= high:
+                range_str += f" {data[i]} "  # 探索範囲内
+            else:
+                range_str += " .. "  # 範囲外
+
+        print(f"ステップ{step}: 範囲=[{data[low]}〜{data[high]}]"
+              f"({high - low + 1}個), 中央値={data[mid]}", end="")
+
+        if data[mid] == target:
+            print(f" → 発見! インデックス={mid}")
+            break
+        elif data[mid] < target:
+            print(f" → {data[mid]} < {target} なので右半分へ")
+            low = mid + 1
+        else:
+            print(f" → {data[mid]} > {target} なので左半分へ")
+            high = mid - 1
+
+    print(f"\n合計 {step} ステップで発見（最大 log2(50) ≒ 6 ステップ）")
+
+    # 逐次探索との比較
+    print("\n--- 逐次探索との比較 ---")
+    linear_count = 0
+    for val in data:
+        linear_count += 1
+        if val == target:
+            break
+    print(f"逐次探索: {linear_count}回の比較が必要")
+    print(f"二分探索: {step}回の比較で済んだ")
+    print(f"→ 二分探索は {linear_count / step:.1f}倍 高速!")
+
+# --- デモ実行 ---
+demo_binary_search()
+
+print()
+print("=" * 60)
+print("  なぜ二分探索が印象に残ったか")
+print("=" * 60)
+print("""
+1. 「半分に絞る」というシンプルなアイデアで劇的に速くなる
+2. 辞書を引くとき、電話帳を探すときなど日常でも使っている
+3. 第4回で学んだ応用（トラック積載問題）では
+   「答えの候補を二分探索する」という発想の転換が面白かった
+4. Pythonのbisectモジュールとして標準ライブラリにもなっている
+""")</pre>
+        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
+        <ul class="point-list">
+          <li>選んだアルゴリズムの動作が実行結果で明確に分かるデモになっている</li>
+          <li>なぜそのアルゴリズムが印象に残ったかを自分の言葉で説明できる</li>
+          <li>そのアルゴリズムの計算量や特徴を正しく理解して説明できる</li>
+          <li>実社会での応用例（検索エンジン、データベース、ナビゲーションなど）が挙げられる</li>
+        </ul>
+      </div>
+    </details>
+
     </div>
   </div>
 </section>
