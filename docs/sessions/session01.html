@@ -328,6 +328,24 @@ footer {
   .section-num { width: 36px; height: 36px; font-size: 0.95rem; }
 }
 
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -1232,6 +1250,26 @@ x = <span class="num">10</span>
 </footer>
 
 <script src="answer-gate.js"></script>
+<script>
+// コピーボタンを全 <pre> に追加
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var code = pre.textContent.replace(/^(Python|JavaScript)\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
 
 </body>
 </html>
