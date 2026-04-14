@@ -105,8 +105,25 @@ section + section { border-top: 1px solid #222; }
   vertical-align: middle;
 }
 .tag-example   { background: #1a2e0a; color: #76B900; }
-.tag-code-exp  { background: #0a1a2e; color: #4FC3F7; }
 .tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+.tag-code-exp  { background: #0a1a2e; color: #4FC3F7; }
 
 /* ============ TABLES ============ */
 table {
@@ -660,6 +677,150 @@ loaded = []
 <span class="cmt"># [('田中', 85), ('鈴木', 92), ('佐藤', 78)]</span></pre>
     </div>
 
+  </div>
+</section>
+
+
+<!-- ============ 3. GROUP ORAL EXAM ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4A7A00">3</div>
+      <h2>グループ口頭試問</h2>
+    </div>
+    <p style="margin-bottom:1rem">3〜4人のグループを組んで、以下の2フェーズで進めてください。</p>
+
+    <div class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header">
+        <span class="tag tag-group">Phase 1</span>
+        <h3>質問を考える（個人・5分）</h3>
+      </div>
+      <p>今日学んだ内容（データ構造（リスト・辞書・セット・タプル））をもとに、<strong>グループメンバーに出す質問を2つ</strong>考えてください。</p>
+      <p style="margin-top:0.5rem;color:#999;font-size:0.9rem">以下の質問例を参考に、自分なりの質問を考えましょう。そのまま使ってもOKです。</p>
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">質問の切り口（参考）</p>
+        <table>
+          <tr><th style="width:25%">カテゴリ</th><th>質問例</th></tr>
+          <tr><td><strong style="color:#76B900">出力予測</strong></td><td>「<code>d = {"a": 1, "b": 2}; print(d["c"])</code> を実行するとどうなる？ <code>d.get("c", 0)</code> との違いは？」</td></tr>
+          <tr><td><strong style="color:#FFB800">理由説明</strong></td><td>「リストとタプルはどちらも順序ありだが、なぜタプルは変更できないようにしているのか？ どんな場面で便利？」</td></tr>
+          <tr><td><strong style="color:#FF5252">改造提案</strong></td><td>「辞書を使って文字の出現回数を数えるコードを、セット(set)を使って『重複のない文字一覧』を取得するコードに改造するにはどうする？」</td></tr>
+        </table>
+      </div>
+      <div class="notion-submit"><div><strong>回答欄:</strong> あなたが考えた質問を2つ書いてください。</div></div>
+      <textarea style="width:100%;min-height:100px;background:#0A0A0A;color:#E0E0E0;border:1px solid #333;border-radius:8px;padding:0.8rem;font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;resize:vertical" placeholder="質問1:&#10;&#10;質問2:"></textarea>
+    </div>
+
+    <div class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header">
+        <span class="tag tag-group">Phase 2</span>
+        <h3>口頭試問（グループ・10分）</h3>
+      </div>
+      <p>1人ずつ順番に自分の質問をメンバーに出し、回答を聞いて記録してください。</p>
+      <table style="margin:1rem 0">
+        <tr><th style="width:20%">役割</th><th>やること</th></tr>
+        <tr><td><strong>出題者</strong></td><td>自分で考えた質問を口頭で出す</td></tr>
+        <tr><td><strong>回答者</strong></td><td>コードやノートを見ずに口頭で回答する</td></tr>
+        <tr><td><strong>記録者</strong></td><td>回答の要点と評価を下の欄に記録する</td></tr>
+      </table>
+      <div class="notion-submit"><div><strong>回答欄:</strong> 以下に記録してください。</div></div>
+      <textarea style="width:100%;min-height:180px;background:#0A0A0A;color:#E0E0E0;border:1px solid #333;border-radius:8px;padding:0.8rem;font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;resize:vertical" placeholder="【グループメンバー】&#10;氏名1:　　　氏名2:　　　氏名3:&#10;&#10;【質問と回答の記録】&#10;出題者:　　質問内容:&#10;回答者:　　回答の要点:　　評価(A/B/C):&#10;&#10;出題者:　　質問内容:&#10;回答者:　　回答の要点:　　評価(A/B/C):&#10;&#10;（全員分記録してください）&#10;&#10;評価基準: A=正確に説明できた / B=おおむね正しいが一部不正確 / C=説明が不十分"></textarea>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。データ構造の特徴（順序・重複・変更可否）を口頭で説明する練習をしておくと、標準課題がスムーズに解けるはずです。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 4. STANDARD TASKS ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">4</div>
+      <h2>標準課題</h2>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>データ構造の使い分けを説明する</h3>
+      </div>
+      <p>以下の4つの場面について、最も適切なデータ構造（リスト・辞書・セット・タプル）を選び、その理由を説明しなさい。</p>
+      <ol style="margin:0.5rem 0 0 1.2rem;line-height:2">
+        <li>学生の名前と成績を管理したい</li>
+        <li>買い物で買うものの順番を記録したい</li>
+        <li>アンケートの回答から重複を除いた一覧を作りたい</li>
+        <li>GPS座標（緯度, 経度）のペアを保存したい</li>
+      </ol>
+      <div class="notion-submit"><div><strong>回答欄:</strong> 以下に回答を記入してください。</div></div>
+      <textarea style="width:100%;min-height:150px;background:#0A0A0A;color:#E0E0E0;border:1px solid #333;border-radius:8px;padding:0.8rem;font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;resize:vertical" placeholder="1. 学生の名前と成績 → 使うべきデータ構造:　　理由:
+
+2. 買い物リスト → 使うべきデータ構造:　　理由:
+
+3. 重複除去 → 使うべきデータ構造:　　理由:
+
+4. GPS座標 → 使うべきデータ構造:　　理由:"></textarea>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>辞書を使った集計プログラムの出力を予測する</h3>
+      </div>
+      <p>以下のコードを<strong>実行せずに</strong>出力を予測しなさい。予測後に実行して確認すること。</p>
+      <pre><span class="code-label">Python</span>
+words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
+count = {}
+<span class="kw">for</span> w <span class="kw">in</span> words:
+    <span class="kw">if</span> w <span class="kw">in</span> count:
+        count[w] = count[w] + <span class="num">1</span>
+    <span class="kw">else</span>:
+        count[w] = <span class="num">1</span>
+<span class="fn">print</span>(count)
+<span class="fn">print</span>(<span class="fn">sorted</span>(count.items(), key=<span class="kw">lambda</span> x: x[<span class="num">1</span>], reverse=<span class="num">True</span>))</pre>
+      <div class="notion-submit"><div><strong>回答欄:</strong> 以下に回答を記入してください。</div></div>
+      <textarea style="width:100%;min-height:150px;background:#0A0A0A;color:#E0E0E0;border:1px solid #333;border-radius:8px;padding:0.8rem;font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;resize:vertical" placeholder="① 1つ目のprintの出力予測:
+
+② 2つ目のprintの出力予測:
+
+③ 実行結果:
+
+④ 予測と違った場合、なぜ間違えたか:"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ADVANCED TASK ============ -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">5</div>
+      <h2>発展課題</h2>
+    </div>
+
+    <div class="card advanced">
+      <div class="card-header">
+        <span class="tag tag-advanced">発展課題</span>
+        <h3>データ構造の変換と応用</h3>
+      </div>
+      <p>以下のCSVデータ（文字列）を読み込み、「科目ごとの平均点」を辞書で計算するプログラムを設計しなさい（コードを書かなくてOK、処理手順を日本語で書くこと）。</p>
+      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">名前,科目,点数
+田中,数学,85
+鈴木,英語,92
+田中,英語,78
+鈴木,数学,88
+佐藤,数学,76</pre>
+      <p style="margin-top:1rem;color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分の言葉で考えてください。</p>
+      <div class="notion-submit"><div><strong>回答欄:</strong> 以下に回答を記入してください。</div></div>
+      <textarea style="width:100%;min-height:150px;background:#0A0A0A;color:#E0E0E0;border:1px solid #333;border-radius:8px;padding:0.8rem;font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;resize:vertical" placeholder="処理手順:
+① まず...
+② 次に...
+③ 最後に...
+
+期待される出力（辞書の形）:
+
+※ 音声ファイル（1〜2分）はManabaに別途添付してください"></textarea>
+    </div>
   </div>
 </section>
 
