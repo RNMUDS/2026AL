@@ -1318,75 +1318,7 @@ count = <span class="num">0</span>
     <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
-    <div id="answers-content">
-
-    <details>
-      <summary><span class="tag tag-standard" style="font-size:0.7rem">標準</span> 標準課題 1 解答</summary>
-      <div class="answer-content">
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">
-① コンピュータが 1 から 50 の範囲でランダムに答えを決める
-② プレイヤーが 予想の数 を入力する
-③ 入力した数と答えを 比較 する
-④ 同じなら 「正解！」 と表示してゲーム終了
-⑤ 入力が大きければ 「もっと小さい数です」 と表示
-⑥ 入力が小さければ 「もっと大きい数です」 と表示
-⑦ ②に戻って 繰り返し する</pre>
-      </div>
-    </details>
-
-    <details>
-      <summary><span class="tag tag-standard" style="font-size:0.7rem">標準</span> 標準課題 2 解答</summary>
-      <div class="answer-content">
-        <p><strong>ループのトレース:</strong></p>
-        <table>
-          <tr><th>回数</th><th>guess（実行前）</th><th>条件</th><th>変化</th><th>guess（実行後）</th></tr>
-          <tr><td>1</td><td>50</td><td>50 &gt; 30 → 真</td><td>-10</td><td>40</td></tr>
-          <tr><td>2</td><td>40</td><td>40 &gt; 30 → 真</td><td>-10</td><td>30</td></tr>
-        </table>
-        <p style="margin-top:0.5rem">2回目の実行後に <code>guess = 30 = answer</code> なので <code>while guess != answer</code> が偽になりループ終了。</p>
-        <p><strong>出力:</strong></p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">1回目: guess = 40
-2回目: guess = 30
-2回で到達！</pre>
-      </div>
-    </details>
-
-    <details>
-      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
-      <div class="answer-content">
-        <p><strong>模範コード（AL01-4.py）:</strong></p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">import random
-
-answer = random.randint(1, 100)
-low = 1
-high = 100
-count = 0
-
-while low <= high:
-    guess = (low + high) // 2
-    count += 1
-
-    if guess == answer:
-        print(f"正解！ 答えは {answer} でした")
-        print(f"{count}回で当たりました")
-        break
-    elif guess > answer:
-        print(f"{count}回目: {guess} → もっと小さい")
-        high = guess - 1
-    else:
-        print(f"{count}回目: {guess} → もっと大きい")
-        low = guess + 1</pre>
-        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
-        <ul class="point-list">
-          <li><code>low</code> と <code>high</code> で範囲を管理し、<code>(low + high) // 2</code> で中央値を計算している</li>
-          <li>予想が大きすぎれば <code>high</code> を下げ、小さすぎれば <code>low</code> を上げて範囲を半分に絞る</li>
-          <li>1〜100の範囲なら最大 <strong>7回</strong> で必ず当たる（2<sup>7</sup> = 128 &gt; 100 なので）</li>
-          <li>毎回半分に絞るので、範囲が N なら最大 log<sub>2</sub>(N) 回（切り上げ）で当たる</li>
-        </ul>
-      </div>
-    </details>
-
-    </div>
+    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 

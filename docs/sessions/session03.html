@@ -764,76 +764,7 @@ total = <span class="num">0</span>
     <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
-    <div id="answers-content">
-
-    <details>
-      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
-      <div class="answer-content">
-        <p><strong>模範コード（AL03-4.py）:</strong></p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 逐次探索の最適化（Move-to-Front法） =====
-
-import random
-
-# --- 通常の逐次探索 ---
-def linear_search(data, target):
-    """通常の逐次探索: 比較回数を返す"""
-    for i in range(len(data)):
-        if data[i] == target:
-            return i + 1  # 比較回数
-    return len(data)  # 見つからない場合
-
-# --- Move-to-Front法の逐次探索 ---
-def mtf_search(data, target):
-    """Move-to-Front法: 見つけた要素を先頭に移動し、比較回数を返す"""
-    for i in range(len(data)):
-        if data[i] == target:
-            # 見つけた要素を先頭に移動
-            found = data.pop(i)  # 取り出す
-            data.insert(0, found)  # 先頭に挿入
-            return i + 1  # 比較回数
-    return len(data)
-
-# --- テストデータの準備 ---
-n = 100  # リストのサイズ
-original = list(range(n))  # 0〜99のリスト
-
-# よく検索される要素（偏りのある検索パターン）
-# 0〜9を多めに検索する
-search_targets = []
-for _ in range(500):
-    if random.random() < 0.7:  # 70%の確率で0〜9を検索
-        search_targets.append(random.randint(0, 9))
-    else:
-        search_targets.append(random.randint(0, n - 1))
-
-# --- 通常の逐次探索で実験 ---
-data_normal = original[:]  # コピーを作成
-total_normal = 0
-for target in search_targets:
-    total_normal += linear_search(data_normal, target)
-
-# --- Move-to-Front法で実験 ---
-data_mtf = original[:]  # コピーを作成
-total_mtf = 0
-for target in search_targets:
-    total_mtf += mtf_search(data_mtf, target)
-
-# --- 結果の表示 ---
-print(f"検索回数: {len(search_targets)}回")
-print(f"通常の逐次探索: 合計比較回数 = {total_normal}")
-print(f"Move-to-Front法: 合計比較回数 = {total_mtf}")
-print(f"比較回数の削減率: {(1 - total_mtf / total_normal) * 100:.1f}%")</pre>
-        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
-        <ul class="point-list">
-          <li>Move-to-Front法は「見つけた要素を先頭に移動する」ことで、頻繁に検索される要素が前方に集まる仕組み</li>
-          <li>検索パターンに偏りがある場合、通常の逐次探索より比較回数が大幅に減少する</li>
-          <li>検索パターンが均一（偏りがない）場合は効果が薄い、または逆効果になることもある</li>
-          <li>要素の移動コスト（<code>pop</code> と <code>insert</code>）がかかるため、リストが大きいと移動自体に時間がかかる点がデメリット</li>
-        </ul>
-      </div>
-    </details>
-
-    </div>
+    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 

@@ -749,77 +749,7 @@ count = <span class="num">0</span>
     <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
       🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
     </p>
-    <div id="answers-content">
-
-    <details>
-      <summary><span class="tag tag-advanced" style="font-size:0.7rem">発展</span> 発展課題 解答例</summary>
-      <div class="answer-content">
-        <p><strong>模範コード（AL04-4.py）:</strong></p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333"># ===== 発展課題: 二分探索の応用 =====
-# N個の荷物をk台のトラックに積むとき、最大積載量の最小値を求める
-
-def can_load(weights, k, max_capacity):
-    """max_capacityの積載量でk台のトラックに積めるか判定"""
-    trucks = 1       # 現在使っているトラックの台数
-    current = 0      # 現在のトラックの積載量
-
-    for w in weights:
-        if current + w > max_capacity:
-            # 今のトラックに載せきれない → 新しいトラック
-            trucks += 1
-            current = w
-            if trucks > k:
-                return False  # トラックが足りない
-        else:
-            current += w
-
-    return True  # k台以内で全部積めた
-
-def find_min_capacity(weights, k):
-    """二分探索で最大積載量の最小値を求める"""
-    # 探索範囲: 最小 = 最大の荷物1つ, 最大 = 全荷物の合計
-    low = max(weights)     # 少なくとも最大の荷物は1台に載る必要がある
-    high = sum(weights)    # 全部1台に載せる場合
-
-    while low < high:
-        mid = (low + high) // 2
-        if can_load(weights, k, mid):
-            high = mid      # 積めた → もっと小さい値を試す
-        else:
-            low = mid + 1   # 積めない → もっと大きい値が必要
-
-    return low
-
-# --- テスト ---
-weights = [7, 2, 5, 10, 8]  # 荷物の重さリスト
-k = 2                         # トラックの台数
-
-result = find_min_capacity(weights, k)
-print(f"荷物: {weights}")
-print(f"トラック台数: {k}")
-print(f"最大積載量の最小値: {result}")
-
-# --- 検証: いくつかのパターンで試す ---
-test_cases = [
-    ([1, 2, 3, 4, 5], 2),
-    ([10, 20, 30], 3),
-    ([5, 5, 5, 5], 2),
-]
-
-for w, t in test_cases:
-    r = find_min_capacity(w, t)
-    print(f"荷物{w}, {t}台 → 最大積載量の最小値: {r}")</pre>
-        <p style="margin-top:1rem"><strong>評価ポイント（これが説明できていればOK）:</strong></p>
-        <ul class="point-list">
-          <li>探索対象が「値（配列のインデックス）」ではなく「積載量（答えそのもの）」であり、二分探索を「答えの候補」に対して行っている</li>
-          <li>判定関数 <code>can_load</code> で「この積載量なら積めるか？」を O(n) で判定し、二分探索と組み合わせている</li>
-          <li>探索範囲の下限は <code>max(weights)</code>（最大の荷物が必ず載る必要がある）、上限は <code>sum(weights)</code>（1台で全部運ぶ場合）</li>
-          <li>通常の二分探索は「ある値を見つける」問題だが、この応用は「条件を満たす最小値を見つける」問題である点が異なる</li>
-        </ul>
-      </div>
-    </details>
-
-    </div>
+    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
