@@ -1404,7 +1404,7 @@ document.querySelectorAll('pre').forEach(function(pre) {
   btn.className = 'copy-btn';
   btn.textContent = 'コピー';
   btn.addEventListener('click', function() {
-    var code = pre.textContent.replace(/^(Python|JavaScript)\n/, '');
+    var clone = pre.cloneNode(true); var btns = clone.querySelectorAll(".copy-btn"); btns.forEach(function(b){b.remove();}); var labels = clone.querySelectorAll(".code-label"); labels.forEach(function(l){l.remove();}); var code = clone.textContent.trim().replace(/^(Python|JavaScript)\n/, '');
     navigator.clipboard.writeText(code).then(function() {
       btn.textContent = 'コピーしました';
       btn.classList.add('copied');
