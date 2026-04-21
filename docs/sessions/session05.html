@@ -247,6 +247,24 @@ footer {
   font-size: 0.85rem;
 }
 
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 640px) {
   .section-num { width: 36px; height: 36px; font-size: 0.95rem; }
@@ -254,9 +272,53 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
 </style>
 </head>
 <body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">説明</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-group-disc" class="nav-advanced">議論</a>
+  <a href="#sec-standard" class="nav-assignment">標準</a>
+  <a href="#sec-advanced" class="nav-advanced">発展</a>
+  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
 
 <!-- ============ HERO ============ -->
 <header class="hero">
@@ -268,7 +330,7 @@ footer {
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div style="background:#1A1A1A;border:2px solid #4A7A00;border-radius:12px;padding:1.5rem 2rem">
       <h3 style="color:#999999;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
@@ -286,7 +348,7 @@ footer {
 </section>
 
 <!-- ============ 1. EXPLANATION ============ -->
-<section>
+<section id="sec-explanation">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
@@ -421,11 +483,61 @@ footer {
 </section>
 
 <!-- ============ 2. EXAMPLES ============ -->
-<section>
+<section id="sec-examples">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">2</div>
       <h2>例題</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">各例題のコードを実際に実行し、「やってみよう」に取り組んでください。まず作業フォルダを準備します。</p>
+
+    <!-- VS Code Setup Guide -->
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 1: 作業フォルダを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>デスクトップに<strong>「AL」</strong>という名前のフォルダを作る（まだ作っていない場合）</li>
+          <li>そのフォルダの中に<strong>「No05」</strong>という名前のフォルダを作る</li>
+        </ol>
+        <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:0.6rem 1rem;margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#888">
+          デスクトップ/<br>
+          └── AL/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No01/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 第1回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No02/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 第2回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No03/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 第3回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No04/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 第4回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No05/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 今回はここに保存</span>
+        </div>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 2: VS Code でフォルダを開く</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選択</li>
+          <li>さっき作った <strong>AL/No05</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">→ 左側のエクスプローラーに「No05」フォルダの中身が表示されます（最初は空っぽ）。</p>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 3: 新しいファイルを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>左側エクスプローラーの「No05」の横にある <strong>新しいファイル アイコン</strong>をクリック</li>
+          <li>ファイル名に <strong><code>AL05-ex1.py</code></strong> と入力して Enter</li>
+          <li>例題のコードブロック右上の<strong>「コピー」ボタン</strong>をクリック</li>
+          <li>VS Code の編集画面に<strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">例題ごとに <code>AL05-ex1.py</code>, <code>AL05-ex2.py</code>, ... と新しいファイルを作って保存してください。</p>
+      </div>
     </div>
 
     <!-- Example 1: bisect_left vs bisect_right -->
@@ -455,6 +567,13 @@ left_pos = bisect.<span class="fn">bisect_left</span>(data_dup, target)   <span 
 right_pos = bisect.<span class="fn">bisect_right</span>(data_dup, target)  <span class="cmt"># 5（最後の5の次）</span>
 <span class="fn">print</span>(<span class="str">f"5の個数: {right_pos - left_pos}個"</span>)         <span class="cmt"># 3個</span>
 <span class="fn">print</span>(<span class="str">f"5のスライス: {data_dup[left_pos:right_pos]}"</span>) <span class="cmt"># [5, 5, 5]</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>data_dup</code> で <code>bisect_left(data_dup, 4)</code> と <code>bisect_right(data_dup, 4)</code> を試してみよう。存在しない値のとき left と right は同じになる？</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.3rem">→ 存在しない値の場合、個数 = right - left = 0 になることを確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> bisect_left/right(data_dup, 4) の返り値と、個数の計算結果を記録してください。</div></div>
+      </div>
     </div>
 
     <!-- Example 2: insort -->
@@ -477,6 +596,13 @@ values = [<span class="num">7</span>, <span class="num">3</span>, <span class="n
 
 <span class="fn">print</span>(<span class="str">f"\n最終結果: {sorted_list}"</span>)
 <span class="cmt"># [1, 2, 3, 5, 7, 8, 9, 11, 13]  ← ソート済み!</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>values</code> の末尾に <code>5</code> を追加して <code>[7, 3, 11, 1, 9, 5, 13, 2, 8, 5]</code> にして実行してみよう。</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.3rem">→ 5 が2つ並ぶ位置はどこ？ insort は重複値をどう扱うか確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 5 を追加した後の最終リストと、5 が挿入された位置を記録してください。</div></div>
+      </div>
 
       <!-- insort visualization -->
       <div class="diagram-container">
@@ -560,6 +686,13 @@ values = [<span class="num">7</span>, <span class="num">3</span>, <span class="n
 data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">0</span>, <span class="num">100</span>, <span class="num">3</span>))  <span class="cmt"># [0, 3, 6, 9, ..., 99]</span>
 result = <span class="fn">jump_search</span>(data, <span class="num">42</span>)
 <span class="fn">print</span>(<span class="str">f"  結果: インデックス{result}"</span>)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>jump_search(data, 99)</code> を試してみよう。ジャンプとブロック内探索の出力を観察しよう。</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.3rem">→ ジャンプは何回行われた？ ブロック内探索の範囲は？</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> target=99 でのジャンプ回数とブロック内探索の範囲を記録してください。</div></div>
+      </div>
 
       <!-- Jump Search diagram -->
       <div class="diagram-container">
@@ -652,6 +785,13 @@ result = <span class="fn">jump_search</span>(data, <span class="num">42</span>)
 data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">0</span>, <span class="num">200</span>, <span class="num">2</span>))  <span class="cmt"># [0, 2, 4, ..., 198]</span>
 result = <span class="fn">exponential_search</span>(data, <span class="num">42</span>)
 <span class="fn">print</span>(<span class="str">f"  結果: インデックス{result}"</span>)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>exponential_search(data, 2)</code> を試してみよう。先頭付近の値を探すとき、bound はどこまで広がる？</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.3rem">→ 指数探索は先頭付近の値を探すのが得意。bound の広がり方を確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> target=2 のときの bound の変化と二分探索の範囲を記録してください。</div></div>
+      </div>
     </div>
 
     <!-- Example 5: Performance comparison -->
@@ -704,14 +844,20 @@ results = []
 results.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<span class="num">1</span>])
 <span class="kw">for</span> rank, (name, elapsed) <span class="kw">in</span> <span class="fn">enumerate</span>(results, <span class="num">1</span>):
     <span class="fn">print</span>(<span class="str">f"  {rank}位: {name:<18} {elapsed:.4f}秒"</span>)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>n = 100000</code> を <code>n = 1000000</code>（100万件）に変えて実行してみよう。順位は変わる？</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.3rem">→ Bisect Search が Binary Search より速い理由（C言語実装）を考えてみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 100万件での各アルゴリズムの実行時間と順位を記録してください。</div></div>
+      </div>
     </div>
 
   </div>
 </section>
 
-
 <!-- ============ 3. GROUP ORAL EXAM ============ -->
-<section>
+<section id="sec-group-disc">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
@@ -744,7 +890,7 @@ results.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<sp
 </section>
 
 <!-- ============ 4. STANDARD TASKS ============ -->
-<section>
+<section id="sec-standard">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">4</div>
@@ -811,7 +957,7 @@ sorted_list = []
 </section>
 
 <!-- ============ 5. ADVANCED TASK ============ -->
-<section>
+<section id="sec-advanced">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">5</div>
@@ -850,6 +996,90 @@ sorted_list = []
   </div>
 </section>
 
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# AL1 第5回
+
+名前:
+学籍番号:
+
+---
+
+## 例題 やってみよう
+### 例題1: bisect_left/right(data_dup, 4) の結果
+（回答を記入）
+
+### 例題2: 5を追加した後の最終リスト
+（回答を記入）
+
+### 例題3: target=99 のジャンプ回数と範囲
+（回答を記入）
+
+### 例題4: target=2 の bound の変化
+（回答を記入）
+
+### 例題5: 100万件での実行時間と順位
+（回答を記入）
+
+---
+
+## 標準課題 1: bisect_left と bisect_right の出力を予測する
+（回答を記入）
+
+---
+
+## 標準課題 2: bisect＋insortコードのトレース
+### Q1.
+（各ステップの pos と sorted_list の変化のトレース）
+
+### Q2.
+（最終出力の予測（最終リストと3の個数））
+
+### Q3.
+（実行結果（予測と合っていたか））
+
+---
+
+## グループ口頭試問
+**グループメンバー:**
+
+| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
+|--------|-------------|--------|------|------|
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+
+---
+
+## 発展課題: ジャンプ探索と指数探索の比較
+### コード
+（AL05-?.py のコードを貼り付け）
+### 音声説明
+（1〜2分の音声ファイルを添付）
+</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ ANSWERS ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-05-27T14:40">
   <div class="container">
@@ -858,15 +1088,8 @@ sorted_list = []
       <h2>解答例</h2>
     </div>
 
-    <!-- 常に公開: トレース演習・コード体験 -->
-    <p style="color:#888;font-style:italic">（トレース演習・コード体験の解答は準備中です）</p>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
-    <!-- 日時制御: 標準課題・発展課題の解答 -->
-    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.1rem">標準課題・発展課題の解答</h3>
-    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
-      🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
-    </p>
-    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
@@ -877,5 +1100,30 @@ sorted_list = []
 </footer>
 
 <script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
 </body>
 </html>

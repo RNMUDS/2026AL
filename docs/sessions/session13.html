@@ -71,9 +71,71 @@ pre .op { color: #89dceb; }
 footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
 @media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
 </style>
 </head>
 <body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">説明</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-group-disc" class="nav-advanced">議論</a>
+  <a href="#sec-standard" class="nav-assignment">標準</a>
+  <a href="#sec-advanced" class="nav-advanced">発展</a>
+  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
 
 <header class="hero">
   <div class="container">
@@ -84,7 +146,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
       <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
@@ -102,7 +164,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ テーマ説明 ============ -->
-<section>
+<section id="sec-explanation">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
@@ -165,11 +227,129 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 2. 例題 ============ -->
-<section>
+<section id="sec-examples">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題（段階的に構築）</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">各例題のコードを実際に実行し、「🖐 やってみよう」に取り組んでください。まず作業フォルダを準備します。</p>
+
+    <!-- VS Code Setup Guide -->
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 1: 作業フォルダを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>デスクトップに<strong>「AL」</strong>という名前のフォルダを作る（まだ作っていない場合）</li>
+          <li>そのフォルダの中に<strong>「No13」</strong>という名前のフォルダを作る</li>
+        </ol>
+        <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:0.6rem 1rem;margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#888">
+          デスクトップ/<br>
+          └── AL/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No12/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No13/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 今回はここに保存</span>
+        </div>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 2: VS Code でフォルダを開く</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選択</li>
+          <li>さっき作った <strong>AL/No13</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">→ 左側のエクスプローラーに「No13」フォルダの中身が表示されます（最初は空っぽ）。</p>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 3: 新しいファイルを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>左側エクスプローラーの「No13」の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名に <strong><code>AL13-ex1.py</code></strong> と入力して Enter</li>
+          <li>例題のコードブロック右上の<strong>「コピー」ボタン</strong>をクリック</li>
+          <li>VS Code の編集画面に<strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">例題ごとにファイルを分けましょう: <code>AL13-ex1.py</code>, <code>AL13-ex2.py</code>, <code>AL13-ex3.py</code>, ...</p>
+      </div>
+    </div>
+
+    <!-- キーワード解説 -->
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>この回のキーワード</h4>
+      <table>
+        <tr><th>用語</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">状態空間探索</strong></td><td>「今どこにいて、何を持っているか」という<strong>状態</strong>の全パターンを探索する方法。迷路の位置だけでなく、収集済みアイテムも状態に含める。</td></tr>
+        <tr><td><strong style="color:#76B900">frozenset</strong></td><td>変更不可（イミュータブル）な集合。通常の <code>set</code> は辞書のキーに使えないが、<code>frozenset</code> はキーに使える。アイテムの「持ち物セット」管理に最適。</td></tr>
+        <tr><td><strong style="color:#76B900">最短経路</strong></td><td>BFSは近い順に探索するため、最初にゴールに到達した経路が最短。アイテム収集BFSでは「全アイテム取得 AND ゴール到達」が最短の条件。</td></tr>
+      </table>
+    </div>
+
+    <!-- SVG Diagram: Maze with items - BFS state -->
+    <div class="diagram-container" style="margin-bottom:1.5rem">
+      <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+        <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">アイテム収集BFSの状態遷移</text>
+
+        <!-- Grid maze -->
+        <rect x="30" y="45" width="240" height="240" rx="12" fill="#1A1A1A" stroke="#333" stroke-width="1.5"/>
+        <text x="150" y="68" text-anchor="middle" fill="#888" font-size="11">5x5 迷路</text>
+
+        <!-- Maze cells (simplified) -->
+        <rect x="45" y="80" width="40" height="40" rx="4" fill="#76B900"/><text x="65" y="105" text-anchor="middle" fill="white" font-weight="700" font-size="11">S</text>
+        <rect x="90" y="80" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="135" y="80" width="40" height="40" rx="4" fill="#444"/>
+        <rect x="180" y="80" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+
+        <rect x="45" y="125" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="90" y="125" width="40" height="40" rx="4" fill="#444"/>
+        <rect x="135" y="125" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="180" y="125" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+
+        <rect x="45" y="170" width="40" height="40" rx="4" fill="#FFB800"/><text x="65" y="195" text-anchor="middle" fill="#111" font-weight="700" font-size="11">A</text>
+        <rect x="90" y="170" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="135" y="170" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="180" y="170" width="40" height="40" rx="4" fill="#FFB800"/><text x="200" y="195" text-anchor="middle" fill="#111" font-weight="700" font-size="11">B</text>
+
+        <rect x="45" y="215" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="90" y="215" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="135" y="215" width="40" height="40" rx="4" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <rect x="180" y="215" width="40" height="40" rx="4" fill="#FF5252"/><text x="200" y="240" text-anchor="middle" fill="white" font-weight="700" font-size="11">G</text>
+
+        <!-- Arrow -->
+        <line x1="280" y1="160" x2="320" y2="160" stroke="#76B900" stroke-width="2" marker-end="url(#arrowG13)"/>
+        <defs><marker id="arrowG13" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#76B900"/></marker></defs>
+
+        <!-- State boxes -->
+        <rect x="330" y="45" width="350" height="250" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="505" y="68" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">状態 = (位置, 収集済みアイテム)</text>
+
+        <rect x="345" y="82" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
+        <text x="425" y="101" text-anchor="middle" fill="#E0E0E0" font-size="10">((0,0), {})</text>
+        <text x="520" y="101" fill="#888" font-size="9">スタート、アイテム0個</text>
+
+        <rect x="345" y="118" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="425" y="137" text-anchor="middle" fill="#FFB800" font-size="10">((2,0), {A})</text>
+        <text x="520" y="137" fill="#888" font-size="9">アイテムA取得!</text>
+
+        <rect x="345" y="154" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="425" y="173" text-anchor="middle" fill="#FFB800" font-size="10">((2,3), {A,B})</text>
+        <text x="520" y="173" fill="#888" font-size="9">アイテムB取得!</text>
+
+        <rect x="345" y="190" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="425" y="209" text-anchor="middle" fill="#76B900" font-size="10">((3,3), {A,B})</text>
+        <text x="520" y="209" fill="#76B900" font-size="9">ゴール + 全アイテム!</text>
+
+        <text x="505" y="245" text-anchor="middle" fill="#888" font-size="10">同じマスでもアイテムが違えば</text>
+        <text x="505" y="260" text-anchor="middle" fill="#888" font-size="10">別の状態として探索する</text>
+        <text x="505" y="280" text-anchor="middle" fill="#FF5252" font-size="10">((2,0), {}) ≠ ((2,0), {A})</text>
+      </svg>
     </div>
 
     <!-- 例題1 -->
@@ -201,6 +381,12 @@ maze = [
     [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
 ]
 display_maze(maze)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">コードを <code>AL13-ex1.py</code> として保存・実行し、迷路が絵文字で表示されることを確認しよう。壁の位置を1つ変えたらどうなる？</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 迷路の表示結果を貼り付けてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題2 -->
@@ -242,6 +428,12 @@ display_maze(maze)</pre>
                 queue.<span class="fn">append</span>(next_pos)
                 parent[next_pos] = current
     <span class="kw">return</span> <span class="kw">None</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">例題1の迷路で <code>find_shortest_path(maze, (0,0), (4,4))</code> を実行し、最短経路の長さ（歩数）を確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 最短経路と歩数を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題3 -->
@@ -266,6 +458,12 @@ path = find_shortest_path(maze, (<span class="num">0</span>,<span class="num">0<
 collected = check_item_pickup(path, items)
 <span class="fn">print</span>(<span class="str">f"取得数: {len(collected)}/{len(items)}個"</span>)
 <span class="cmt"># → 全アイテムを集めるには経路を変える必要がある！</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">最短経路で拾えるアイテムと拾えないアイテムを確認しよう。なぜ全部拾えないのか考えてみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 拾えたアイテムの位置と、拾えなかったアイテムの位置を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題4 -->
@@ -294,6 +492,12 @@ collected = collected | {(<span class="num">0</span>, <span class="num">4</span>
       <div class="analogy" style="border-left-color:#93D500">
         <span style="display:block;font-weight:700;font-size:0.8rem;color:#93D500;margin-bottom:0.3rem">frozenset のポイント</span>
         <code>set</code> は変更できるので辞書のキーに使えない。<code>frozenset</code> は変更不可なのでキーに使える。アイテムの「持ち物セット」を管理するのに最適。
+      </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">コードを実行して、<code>state_a</code>, <code>state_b</code>, <code>state_c</code> がそれぞれ辞書のキーとして使えることを確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> <code>frozenset</code> と <code>set</code> の違いを自分の言葉で1行で書いてください。</div></div>
       </div>
     </div>
 
@@ -351,6 +555,12 @@ collected = collected | {(<span class="num">0</span>, <span class="num">4</span>
                     parent[new_state] = (current_pos, collected)
 
     <span class="kw">return</span> <span class="kw">None</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">例題1〜5を全て組み合わせて実行し、通常BFSとアイテム収集BFSの経路長の違いを確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 通常BFS（アイテム無視）とアイテム収集BFSの経路長の比較結果を書いてください。</div></div>
+      </div>
     </div>
 
     <div class="concept-box">
@@ -365,9 +575,8 @@ collected = collected | {(<span class="num">0</span>, <span class="num">4</span>
   </div>
 </section>
 
-
 <!-- ============ 3. GROUP ORAL EXAM ============ -->
-<section>
+<section id="sec-group-disc">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
@@ -400,7 +609,7 @@ collected = collected | {(<span class="num">0</span>, <span class="num">4</span>
 </section>
 
 <!-- ============ 4. STANDARD TASKS ============ -->
-<section>
+<section id="sec-standard">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">4</div>
@@ -471,7 +680,7 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
 </section>
 
 <!-- ============ 5. ADVANCED TASK ============ -->
-<section>
+<section id="sec-advanced">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">5</div>
@@ -510,6 +719,90 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
   </div>
 </section>
 
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# AL1 第13回
+
+名前:
+学籍番号:
+
+---
+
+## 例題 やってみよう
+### 例題1: 迷路の表示結果
+（回答を記入）
+
+### 例題2: 最短経路と歩数
+（回答を記入）
+
+### 例題3: 拾えたアイテムと拾えなかったアイテムの位置
+（回答を記入）
+
+### 例題4: frozenset と set の違い
+（回答を記入）
+
+### 例題5: 通常BFS vs アイテム収集BFS の経路長の比較
+（回答を記入）
+
+---
+
+## 標準課題 1: 状態空間の設計を説明する
+（回答を記入）
+
+---
+
+## 標準課題 2: 迷路BFSコードのトレース
+### Q1.
+（キューの変化と状態 (row, col, has_item) のトレース）
+
+### Q2.
+（ゴール到達時の歩数の予測）
+
+### Q3.
+（実行結果（予測と合っていたか））
+
+---
+
+## グループ口頭試問
+**グループメンバー:**
+
+| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
+|--------|-------------|--------|------|------|
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+
+---
+
+## 発展課題: 複数アイテムの最適収集順序
+### コード
+（AL13-?.py のコードを貼り付け）
+### 音声説明
+（1〜2分の音声ファイルを添付）
+</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ ANSWERS ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-07-22T14:40">
   <div class="container">
@@ -518,15 +811,8 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
       <h2>解答例</h2>
     </div>
 
-    <!-- 常に公開: トレース演習・コード体験 -->
-    <p style="color:#888;font-style:italic">（トレース演習・コード体験の解答は準備中です）</p>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
-    <!-- 日時制御: 標準課題・発展課題の解答 -->
-    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.1rem">標準課題・発展課題の解答</h3>
-    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
-      🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
-    </p>
-    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
@@ -537,5 +823,30 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
 </footer>
 
 <script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
 </body>
 </html>

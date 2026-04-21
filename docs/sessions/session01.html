@@ -352,9 +352,55 @@ pre { position: relative; }
   html { scroll-behavior: auto; }
   details summary::before { transition: none; }
 }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
 </style>
 </head>
 <body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-guidance">ガイダンス</a>
+  <a href="#sec-explanation">説明</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-code-exp">体験</a>
+  <a href="#sec-group-exam" class="nav-advanced">試問</a>
+  <a href="#sec-standard" class="nav-assignment">標準</a>
+  <a href="#sec-advanced" class="nav-advanced">発展</a>
+  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
 
 <!-- ============ HERO ============ -->
 <header class="hero">
@@ -366,7 +412,7 @@ pre { position: relative; }
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計8項目）</h3>
@@ -385,7 +431,7 @@ pre { position: relative; }
 </section>
 
 <!-- ============ 0. GUIDANCE & HOW TO ============ -->
-<section>
+<section id="sec-guidance">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">0</div>
@@ -676,7 +722,7 @@ pre { position: relative; }
 </section>
 
 <!-- ============ 1. EXPLANATION ============ -->
-<section>
+<section id="sec-explanation">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
@@ -902,7 +948,7 @@ pre { position: relative; }
 </section>
 
 <!-- ============ 2. EXAMPLES & TRACE ============ -->
-<section>
+<section id="sec-examples">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">2</div>
@@ -993,13 +1039,13 @@ guess = <span class="num">15</span>
 </section>
 
 <!-- ============ 3. CODE EXPERIENCE ============ -->
-<section>
+<section id="sec-code-exp">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#93D500">3</div>
       <h2>コード体験</h2>
     </div>
-    <p style="margin-bottom:1.5rem">以下のコードは先生が用意したものです。<strong>自分では1文字も書かなくてOK。</strong>コピーして実行し、結果を<strong>観察</strong>してください。</p>
+    <p style="margin-bottom:1.5rem"><strong>自分でコードを書く必要はありません。</strong>用意されたコードをコピーして実行し、結果を<strong>観察</strong>してください。</p>
 
     <!-- Code Exp 1 -->
     <div class="card code-exp">
@@ -1082,7 +1128,7 @@ max_tries = <span class="num">5</span>
 </section>
 
 <!-- ============ 4. GROUP ORAL EXAM ============ -->
-<section>
+<section id="sec-group-exam">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">4</div>
@@ -1124,7 +1170,7 @@ max_tries = <span class="num">5</span>
       <table style="margin:1rem 0">
         <tr><th style="width:20%">役割</th><th>やること</th></tr>
         <tr><td><strong>出題者</strong></td><td>自分で考えた質問を口頭で出す</td></tr>
-        <tr><td><strong>回答者</strong></td><td>コードやノートを見ずに口頭で回答する</td></tr>
+        <tr><td><strong>回答者</strong></td><td>口頭で回答したり、画面を見せて確認してもらう</td></tr>
         <tr><td><strong>記録者</strong></td><td>回答の要点と評価を下の表に記録する</td></tr>
       </table>
       <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の内容を自分のNotionノートに記録してください。</div></div>
@@ -1154,7 +1200,7 @@ max_tries = <span class="num">5</span>
 </section>
 
 <!-- ============ 5. STANDARD TASKS ============ -->
-<section>
+<section id="sec-standard">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">5</div>
@@ -1211,7 +1257,7 @@ count = <span class="num">0</span>
 </section>
 
 <!-- ============ 6. ADVANCED TASK ============ -->
-<section>
+<section id="sec-advanced">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">6</div>
@@ -1257,6 +1303,108 @@ count = <span class="num">0</span>
   </div>
 </section>
 
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# AL1 第1回
+
+名前:
+学籍番号:
+
+---
+
+## トレース演習 1: 数当てゲームのトレース
+（表の空欄を埋める）
+
+## トレース演習 2: 条件分岐の出力予測
+（各ケースの予測と実行結果）
+
+---
+
+## コード体験 1: 数当てゲームを遊ぶ（AL01-1.py）
+### Q1.
+（何回で正解できたか）
+
+### Q2.
+（どんな戦略で予想したか）
+
+### Q3.
+（2回目も遊んで、早く当てられたか。その理由）
+
+---
+
+## コード体験 2: 回数制限を観察する（AL01-2.py）
+### Q1.
+（5回以内に当てられたか）
+
+### Q2.
+（max_tries = 3 に変えたら難しくなったか）
+
+### Q3.
+（回数制限があるときの効率のいい戦略は何か）
+
+---
+
+## グループ口頭試問
+### 自分が考えた質問
+（コード体験のコードを元にした質問を1つ記入）
+
+### グループメンバー:
+
+### 口頭試問の記録
+| ラウンド | 出題者 | 回答者 | 質問（概要） | 回答の要点 | 評価 |
+|---------|--------|--------|-------------|-----------|------|
+| 1       |        |        |             |           | A/B/C |
+| 2       |        |        |             |           | A/B/C |
+| 3       |        |        |             |           | A/B/C |
+
+---
+
+## 標準課題 1: ゲームの流れを言葉で説明する
+（穴埋めの回答を記入）
+
+---
+
+## 標準課題 2: 繰り返し＋条件分岐のトレース
+### Q1.
+（ループが何回まわるかの予測）
+
+### Q2.
+（最終的に何が表示されるかの予測）
+
+### Q3.
+（実行結果（予測と合っていたか））
+
+---
+
+## 発展課題: 「効率のいい当て方」を自動化する
+### コード
+（AL01-4.py のコードを貼り付け）
+### 音声説明
+（1〜2分の音声ファイルを添付）
+</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ 7. ANSWERS ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-04-22T14:40">
   <div class="container">
@@ -1264,61 +1412,9 @@ count = <span class="num">0</span>
       <div class="section-num" style="background:#616161">📝</div>
       <h2>解答例</h2>
     </div>
-    <!-- 常に公開: トレース演習・コード体験 -->
-    <details>
-      <summary><span class="tag tag-trace" style="font-size:0.7rem">トレース</span> トレース演習 1 解答</summary>
-      <div class="answer-content">
-        <table>
-          <tr><th>回数</th><th>予想</th><th>答え(23)との比較</th><th>ヒント</th><th>ゲーム継続？</th></tr>
-          <tr><td>1</td><td>30</td><td>30 &gt; 23</td><td>もっと小さい数です</td><td>はい</td></tr>
-          <tr><td>2</td><td>15</td><td>15 &lt; 23</td><td>もっと大きい数です</td><td>はい</td></tr>
-          <tr><td>3</td><td>25</td><td>25 &gt; 23</td><td>もっと小さい数です</td><td>はい</td></tr>
-          <tr><td>4</td><td>20</td><td>20 &lt; 23</td><td>もっと大きい数です</td><td>はい</td></tr>
-          <tr><td>5</td><td>23</td><td>23 = 23</td><td>正解！</td><td>いいえ（終了）</td></tr>
-        </table>
-      </div>
-    </details>
 
-    <details>
-      <summary><span class="tag tag-trace" style="font-size:0.7rem">トレース</span> トレース演習 2 解答</summary>
-      <div class="answer-content">
-        <table>
-          <tr><th>ケース</th><th>guess の値</th><th>表示される文字列</th></tr>
-          <tr><td>A</td><td>25</td><td>もっと小さい数です</td></tr>
-          <tr><td>B</td><td>20</td><td>正解！</td></tr>
-          <tr><td>C</td><td>12</td><td>もっと大きい数です</td></tr>
-        </table>
-      </div>
-    </details>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
-    <details>
-      <summary><span class="tag tag-code-exp" style="font-size:0.7rem">体験</span> コード体験 1 解答（記録例）</summary>
-      <div class="answer-content">
-        <ul class="point-list">
-          <li><strong>Q1. 何回で正解できたか:</strong> 6回で正解できた（答えは33だった）</li>
-          <li><strong>Q2. どんな戦略で予想したか:</strong> 最初に真ん中の25を予想し、「もっと大きい数です」と出たので範囲を25〜50に絞った。次に38を予想し「もっと小さい数です」と出たので25〜38に絞った。このように毎回範囲の真ん中あたりを予想して半分に絞っていった。</li>
-          <li><strong>Q3. 2回目は早く当てられたか:</strong> 2回目は4回で当てられた。1回目で「真ん中を選ぶと早く絞れる」と気づいたので、2回目は最初から一貫してこの戦略を使ったため。</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary><span class="tag tag-code-exp" style="font-size:0.7rem">体験</span> コード体験 2 解答（記録例）</summary>
-      <div class="answer-content">
-        <ul class="point-list">
-          <li><strong>Q1. 5回以内に当てられたか:</strong> 当てられた（4回目で正解）。1〜30の範囲なので5回あれば十分だった。</li>
-          <li><strong>Q2. max_tries = 3 に変えて難しくなったか:</strong> かなり難しくなった。3回では1〜30の範囲を絞りきれないことがあり、2回やって1回は失敗した。</li>
-          <li><strong>Q3. 回数制限があるときの効率のいい戦略:</strong> 毎回残りの範囲の真ん中を選ぶのが最も効率的。こうすると1回の予想で候補を半分に減らせる。1〜30なら、15→8か23→…のように絞ると5回以内にほぼ確実に当てられる。</li>
-        </ul>
-      </div>
-    </details>
-
-    <!-- 日時制御: 標準課題・発展課題の解答 -->
-    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.1rem">標準課題・発展課題の解答</h3>
-    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
-      🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
-    </p>
-    <div id="answers-encrypted" data-cipher="EZo86F35gUxchnuZH8IAV0rMCAs5adcVKMSCwyK/n79Q2jTR/TSmUrpl8BEK/Sv+q4sqXvn1sGKASgL2xR+3LeSCJkQ4bC+Tw3NbTC3qKOqxgofB/8vKyt5/vSiPhVEfEKVjfjCWEMu/avnpGeIa+pHoJkwb3uky/aBOcBP9ZFpIZaOcHV5LNC2LN/zZKXXHqRVia4W1xwGiqaQXUKS5Y79JauyvieL0R/36lEyotd/jI7atPkwpm1Yn4HlEUvmdwxnqKGZD0UH4fz7gCtYtEdPYrjlCCOz7ATu5w+X+OdH76iMH/GjgyS5dRiYxFtrWU0PvS7vgUp3Jz+Pgq57Zu1Lp6ZUmNwhMbtlTxIrJ7Y2FzX71JD1YnPKGYuGB0iqVuhluV9BkuJZWJEhePsQsb/OUeydP9uFjypi99TwBbf4g0a+PfjWmy+HNj18JhLPyDpvP1pFSK7GwE191aEn9sPEwJoNyw6t3FsK4AMGbjwmScI7/ziKwIPh/ieVZV8bx9h9CpUVWz/7iCmUGvrZb02lLmt1Fmuy/AyTwoGeUUAnpGaEpMZi8aN1iMud8ovux7oXAMgfQqQDe9+NSnH8/Ja/InTxHt90vH5ZZqfRa7fmHhfK91RZn7pMYtF3n2ZQirbPfJHbr0ucEUJJYumWRFZUAKOt6enBcth5Pyk6WRvpdlZOdZeWy20pk6qLZxwDA/WyVP8aClBDrbRjhKIXoequxSZV9vLLDNcG155jZAFlMXJRGQZHdjVdIL7DPWYz8Y6Ro2hfodPW2TZX5DjbqQ9yiVE2hBKw7pCVjyIqMJzPj8gQknOl7Ki4BisR3FwMA1RFYAjrToVXTXs6UyGaluntobCWwP0oIgzviYMMbXQEgmCRYkDFF9LYyuOvgaccMB3crrnX+ceC4oOdfYlNE19VM510HhOs5SEL9zmjZujJDeaTOpAHR9eOROywbv4cN+mIFoBn3O5zgbOZX9Xhs4VwCOc5Bev8o+OYgQ9v5fxxymIjaQRMXZg/J63CQRDVsoI9gLw/zfos8u93+XKkx2sWAZkEnageT7OYk1tyRIedpmFRZAo3bsSupaum+dq96SNTXKfhyY2E3HN4lpG7f7KbVxH/XKysWlVNQflHmdUZZRbW9jE/w/ydpDeYURO0vwRDQ9P4MIj47P2IxY5JRPVoVfzippPfYekPgXiKKsRvj1qNMjAAgDqEtEtpN2Wkwvyl+tk9xfy2gwB9zyhUNAW2jFsCOsq5tn3cOkl5/EmwYAnq/qgFc3k2FJS3D4QVBbG9MHYd/dkLKOa0eFu+ksGtheDWj15eWQG4rOvARkE4/NAl0ZVJ8jfOysKYn4eUN0sYR7+vS0qw2vdnTiKkjlhVkcL17law2NO6OAMPi4kenDGQM9eHSdRmvImSvIJMReANrlkPULbKnTNtuAoEOfZE4NGKwZnWX7kQJmLRrQNk0YAjWwP0lKtra4xP2M5BPh47RsF1vwOU7h72vip2mZR7gefs+ikrximje4C8ct8ho/7i0A/GPwVzy4FQeoChlInuMsDbBrDftrVWKlAMK8nv7tJ0h5qpB5oucI7gn+Aqju5Q7aWgVs1nIYmiBTNr/LrHiQKxfyGfQmyAUJ7Y0t9FWqXVw16Y5EoDEr2U2jE77KWXDbGRZuCcNL9DgbMsd27yBGqxPr6i5sad/KAeb+7cpN0RPUPNxHK8Brjfgb2mo2mkJdaLvInf1uEuPJfH0tG0t7US9R8jQsVjK9NiawPFtUKt6r5B2mzDes5stqerF0thcZ/QCKdJDRoVMi+Jbr0bhMDpmb/jSeVlMsneQUJSoutH1l5meT4PR3PACVZ6Tddv2B/Ga3AS9VgqIePcenFhx0Av79Nd+cZlxPf6TYX5Zvkzyg++qormVs9P13+8/6ne2+Yifw1KV8+w3zBtQDsQ08XhH2mIh0yTUrAfazfLL9r/gQ4nGlKAT/uS+6RXzrLGfPZ9h7Yv2XBpn/6g+cwbKkm0yOxo6IycVXzK0bHgLQ+e7Gxh6tcnmMURSqPNdiU9ciDxTQRTBEt1VrDt+QWdc4XggJ/2mjwTcTdM0pUMtN/tz3jl4Q8PdVVROuK2bwGxwtg9hEXe39WacAyejS5q2Co71n3IwLtKPgD+v6/ZT3q3t+rWAIbscCl+E5dKO5hjNAstBNH33vIWVYDSA0sPc/8CCwcuM2pUdS6D8hdjNgYjpAmCDLoh+uubidX3E1FtXgaZDC5136u3rmLLKr9vLy3H9/aEXD5Yaf+0g1rHt65oKBJSe1NzZYlCntGAhqnHvWLiHujvSNZu3m+MWhTgGJ3YL9TXtE/W+mTV/FA2It0HZJyK13a7XlwhiiLQKC6OjORZGWF3pMo1SdiG/rzKVFeaOhjh1rUP8u6Af2Ev8/n+RwYjif3itp6Mmw/qkA1GFUonjOSycFhyVIS5nN/saVSSb6QGxXKK0Xp8a2bYVYtJvXaFHwQBSLFtFyCM6cQmPCNqDm087llChizICT48MnSjbGsosIdOhyna+j7Dwg1YW402O34hCLj4i1CJxJ/HBZb6YRGVZ0G9MErS8ZBVvbqi72P4D8zYNoot9aBUn+UtWTu66eYzTYRxwxqizfubKejyLjJazmKexhBnQvUtMuk/p/WCePCBsqq4UBAzyENFFEcWrVYw/nLzwTnxInf1alJ6OCNDamPPAwD3jsk514a+dtzHSaxJ5/lPT3CS2wUFk/xNHt7kB0KmQ6xuwCZMyQxo/sHrX6ksj+OQ6RnGoqtgmOPBYqfQ+uSIIL1BnLgSGTblcdOhjWTk4WZ7yaYNvKH+kfM4xHl6F12Qdf7hFOln21Spgm+aZFUd6hVmXHYbxxYCCTiNoUEBaMlWPZS0SXfc6PIJ1SGRXvVWfO4Gsqxi7buM9DrTgBOP5W+7Mc+OPVrNBlNho9/ac2g9rlOvB0p9SuwnAeif4dEJ9+CZoHOPuT4zvzyIvSYTFJB2A/vrgy4535GPeH52nIpPi9vYcDWOM/a0i6JqLdAwu8LFKNO828hb0jMyK68/qhI+kn7nNfyHgWDQbUMYKyZAG6nYYGEhc0aA+HSWpWehK6KvPUlKnJuOJBHfEt07J11n1UMoaMSOk1YDk3fDCpKBlchJQIMVD8ZmywhnWgEGpHQ5zm0muL7zkjeAlhCOBnuZ3WO17TWjde8ko4y3JKvGwW9wHS1sU/9ZwB0d5ihjKkXOAB+L8M3v1WLoJb+9jAniFIphVm7PEKtS/zuLTZibSfb9JnQFWXb5H5HuK/+YVGAvvGLQ91fu4PlxGxsBiBiHfbTEuo+Rq5HGEuJKWvA6jNTB1Woa8d/DXHOqAjtIXQ99xmQxAbZK07BTva06GPaxTy9QcJNvlBOk806a6rtYpzpfZOiwvLzFVQlLfE/CWRw+4tHl+3V7xOZ1CZEfWfSb/5DWs+gIzTwfT46mIJzKAQyJM6729QBcvivigQuxb6AdKpoVNGOIdYGCFbLn1RnrXZaIFxeR/XRQEW8vNIhY6Bd9wQWk1aA5pEMlUOElbkyNNcSGGCIdh1d1mje3MGR6XvfW3YpPhmoewqt/fCCaIZkCIK5Nosf9si/yaYaPKEK0DtDj3O0VJpkHuk2QPux6KvViAroqwSQ9SrKbUPt+3oMtRIZ3m3c2frnCquU0YlmCc6BL7EjM7MWbabw+P89JTd8FDBDGlVyfGoDiFykMyDDtkdZFt1MLjl2G4GMJzaQD7WECP01V8Sm3+geCmMfvQT+XmB/JMkSwu3TuAIIcpdOeev+0WGlV4gjkBcTfStcrChWXEebMH2OkpkCx85+TwVN6qy6MsLRugtuqS+Xz/jo4T2MS3VvNYiLXaHQ8Gx3rTeB53pX6FSvEeT4G54ldKf2OVnqHUc5E4ZbTiNBT8rD0Us0WaAlYg6NjCJiXjIgyJrPVAEmRWO5I2z3zJdHNI2Mok2s53si+IA9rCH/gM7TxAVXsO+7+44gJ+lzaGdGrErg2nZ1XKSby5fqcXagnU9N1k3a4i5sfKH7Xqwrm6RUrLpqarMNCvrhiMCcO1Xi04qqDcrDwpEZN1bFa+I7UuZpror6/Rk9gA9w0xK8QjRoXraXiMzj2i0P4I6kA6gbnmEMtLycSdfs+nIbHN7fmJzrPSIqVYZAUWzvjJlulcPLwFyr7c5WhkURMJ3Aqp0dPgJN6zib8nr0Kj3Br+iAondVe8LmWA8NpeJQ+QYCOl4ZVIsdzLexlzS9X9D0ChzkHHNLR6rYnL4CEwRoMVAzo0y6JNx2WK4nBTWLwI0R9ljLipNZdeyDr0hdpy3BYOSUSQb0fmI2REGYad5nuo6PtR10iQBKik5peYpLhkYpUlXiUnNqlZ"></div>
   </div>
 </section>
 

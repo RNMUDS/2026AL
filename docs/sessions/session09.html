@@ -66,9 +66,71 @@ pre .kw { color: #76B900; } pre .fn { color: #93D500; } pre .str { color: #FFB80
 footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
 @media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
 </style>
 </head>
 <body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">説明</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-group-disc" class="nav-advanced">議論</a>
+  <a href="#sec-standard" class="nav-assignment">標準</a>
+  <a href="#sec-advanced" class="nav-advanced">発展</a>
+  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
 
 <header class="hero">
   <div class="container">
@@ -79,7 +141,7 @@ footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: cente
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div style="background:#1A1A1A;border:2px solid #333;border-radius:12px;padding:1.5rem 2rem">
       <h3 style="color:#93D500;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
@@ -97,7 +159,7 @@ footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 1. EXPLANATION ============ -->
-<section>
+<section id="sec-explanation">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
@@ -211,11 +273,100 @@ footer { background: #0A0A0A; color: #a6adc8; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 2. EXAMPLES ============ -->
-<section>
+<section id="sec-examples">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">各例題のコードを実際に実行し、「🖐 やってみよう」に取り組んでください。まず作業フォルダを準備します。</p>
+
+    <!-- VS Code Setup Guide -->
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 1: 作業フォルダを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>デスクトップに<strong>「AL」</strong>という名前のフォルダを作る（まだ作っていない場合）</li>
+          <li>そのフォルダの中に<strong>「No09」</strong>という名前のフォルダを作る</li>
+        </ol>
+        <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:0.6rem 1rem;margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#888">
+          デスクトップ/<br>
+          └── AL/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No08/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No09/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 今回はここに保存</span>
+        </div>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 2: VS Code でフォルダを開く</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選択</li>
+          <li>さっき作った <strong>AL/No09</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">→ 左側のエクスプローラーに「No09」フォルダの中身が表示されます（最初は空っぽ）。</p>
+      </div>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;font-size:0.85rem;color:#93D500">
+        <strong>ファイル名のルール:</strong> 例題ごとにファイルを分けます。以下の名前で保存してください。
+        <table style="margin-top:0.5rem;font-size:0.85rem">
+          <tr><td>例題 1</td><td><code>AL09-ex1.py</code></td><td style="color:#888">bisect</td></tr>
+          <tr><td>例題 2</td><td><code>AL09-ex2.py</code></td><td style="color:#888">二分挿入ソート</td></tr>
+          <tr><td>例題 3</td><td><code>AL09-ex3.py</code></td><td style="color:#888">バブルソート</td></tr>
+          <tr><td>例題 4</td><td><code>AL09-ex4.py</code></td><td style="color:#888">比較</td></tr>
+          <tr><td>例題 5</td><td><code>AL09-ex5.py</code></td><td style="color:#888">パターン分析</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ KEYWORD EXPLANATIONS ============ -->
+    <div class="concept-box" style="margin-bottom:2rem">
+      <h4>キーワード解説</h4>
+      <table>
+        <tr><th style="width:25%">用語</th><th>説明</th></tr>
+        <tr><td><strong>バブルソート</strong></td><td>隣接する2つの要素を比較・交換し、小さい値を先頭に「浮かび上がらせる」ソート。単純だが O(n<sup>2</sup>) と遅い。</td></tr>
+        <tr><td><strong>早期終了</strong></td><td>あるパスで1回も交換が起きなければ、すでにソート済みなのでループを打ち切る最適化。最良ケースは O(n)。</td></tr>
+        <tr><td><strong>比較回数</strong></td><td>ソート中に「AとBはどちらが大きい？」と比較した合計回数。アルゴリズムの効率を測る指標。</td></tr>
+      </table>
+    </div>
+
+    <!-- ============ BUBBLE SORT COMPARISON DIAGRAM ============ -->
+    <div class="diagram-container" style="margin-bottom:2rem">
+      <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+        <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">バブルソート: 隣接要素の比較と交換</text>
+
+        <!-- Before -->
+        <text x="30" y="65" fill="#888" font-weight="700" font-size="12">比較前:</text>
+        <rect x="120" y="47" width="50" height="34" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/><text x="145" y="69" text-anchor="middle" fill="white" font-weight="700" font-size="13">5</text>
+        <rect x="180" y="47" width="50" height="34" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/><text x="205" y="69" text-anchor="middle" fill="white" font-weight="700" font-size="13">3</text>
+        <rect x="240" y="47" width="50" height="34" rx="6" fill="#1A1A1A" stroke="#555" stroke-width="1"/><text x="265" y="69" text-anchor="middle" fill="#888" font-weight="700" font-size="13">8</text>
+        <rect x="300" y="47" width="50" height="34" rx="6" fill="#1A1A1A" stroke="#555" stroke-width="1"/><text x="325" y="69" text-anchor="middle" fill="#888" font-weight="700" font-size="13">1</text>
+
+        <!-- Arrow -->
+        <text x="155" y="100" fill="#FF5252" font-size="11" font-weight="600">5 > 3?</text>
+        <text x="230" y="100" fill="#76B900" font-size="11" font-weight="600">YES → 交換!</text>
+        <line x1="145" y1="107" x2="145" y2="125" stroke="#FF5252" stroke-width="1.5"/>
+        <line x1="205" y1="107" x2="205" y2="125" stroke="#FF5252" stroke-width="1.5"/>
+        <path d="M 145 115 C 145 130, 205 130, 205 115" fill="none" stroke="#FF5252" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+        <!-- After swap -->
+        <text x="30" y="155" fill="#888" font-weight="700" font-size="12">交換後:</text>
+        <rect x="120" y="137" width="50" height="34" rx="6" fill="#76B900"/><text x="145" y="159" text-anchor="middle" fill="white" font-weight="700" font-size="13">3</text>
+        <rect x="180" y="137" width="50" height="34" rx="6" fill="#76B900"/><text x="205" y="159" text-anchor="middle" fill="white" font-weight="700" font-size="13">5</text>
+        <rect x="240" y="137" width="50" height="34" rx="6" fill="#1A1A1A" stroke="#555" stroke-width="1"/><text x="265" y="159" text-anchor="middle" fill="#888" font-weight="700" font-size="13">8</text>
+        <rect x="300" y="137" width="50" height="34" rx="6" fill="#1A1A1A" stroke="#555" stroke-width="1"/><text x="325" y="159" text-anchor="middle" fill="#888" font-weight="700" font-size="13">1</text>
+
+        <!-- Key point -->
+        <rect x="80" y="195" width="540" height="65" rx="10" fill="#1A1A1A" stroke="#333" stroke-width="1"/>
+        <text x="350" y="218" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">ポイント: 隣り合う要素だけを比較・交換する</text>
+        <text x="350" y="240" text-anchor="middle" fill="#888" font-size="11">1パスで最も大きい（または小さい）要素が端に移動する → 泡が浮かぶように見える</text>
+      </svg>
     </div>
 
     <div class="card example">
@@ -240,6 +391,12 @@ right_pos = bisect.<span class="fn">bisect_right</span>(list_with_dup, <span cla
 demo = [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>]
 bisect.<span class="fn">insort_left</span>(demo, <span class="num">25</span>)
 <span class="fn">print</span>(<span class="str">f"挿入後: {demo}"</span>)  <span class="cmt"># → [10, 20, 25, 30, 40, 50]</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">上のコードを実行した後、<code>bisect.bisect_left([10, 20, 30, 30, 30, 40], 30)</code> と <code>bisect.bisect_right([10, 20, 30, 30, 30, 40], 30)</code> の結果を予想してから確認してみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> <code>bisect_left</code> と <code>bisect_right</code> の違いを自分の言葉で書いてください。</div></div>
+      </div>
     </div>
 
     <div class="card example">
@@ -264,6 +421,12 @@ bisect.<span class="fn">insort_left</span>(demo, <span class="num">25</span>)
 
 test = [<span class="num">38</span>, <span class="num">27</span>, <span class="num">43</span>, <span class="num">3</span>, <span class="num">9</span>, <span class="num">82</span>, <span class="num">10</span>]
 <span class="fn">binary_insertion_sort</span>(test[:])</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">入力を <code>[1, 2, 3, 4, 5]</code>（ソート済み）に変えて実行し、各ステップの挿入位置がどう変化するか確認してみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> ソート済みデータの場合、挿入位置がどうなるかと、なぜそうなるかを書いてください。</div></div>
+      </div>
     </div>
 
     <div class="card example">
@@ -295,6 +458,12 @@ test = [<span class="num">38</span>, <span class="num">27</span>, <span class="n
     <span class="fn">print</span>(<span class="str">f"比較回数: {comparison_count}, 交換回数: {swap_count}"</span>)
 
 <span class="fn">bubble_sort</span>([<span class="num">5</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">2</span>])</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">入力を <code>[1, 2, 3, 4, 5]</code>（ソート済み）に変えて実行し、早期終了が発動するか確認してみよう。比較回数と交換回数に注目。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> ソート済みデータの場合、何パスで終了し、比較回数・交換回数はいくつだったか記録してください。</div></div>
+      </div>
     </div>
 
     <div class="card example">
@@ -342,6 +511,12 @@ bub_time = time.<span class="fn">time</span>() - start
 
 <span class="fn">print</span>(<span class="str">f"挿入ソート:  比較{ins_comps}回, {ins_time:.4f}秒"</span>)
 <span class="fn">print</span>(<span class="str">f"バブルソート: 比較{bub_comps}回, {bub_time:.4f}秒"</span>)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>data_size</code> を <code>5000</code> に変えて実行し、比較回数と実行時間がどう変化するか確認してみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> サイズ2000と5000での比較回数の増加割合を計算し、O(n<sup>2</sup>) の理論値と比べてみてください。</div></div>
+      </div>
     </div>
 
     <div class="card example">
@@ -366,13 +541,18 @@ reversed_data = <span class="fn">list</span>(<span class="fn">range</span>(<span
 <span class="cmt"># 各パターンで比較回数を測定</span>
 <span class="cmt"># → ほぼ整列済みでは挿入ソートが最も高速</span>
 <span class="cmt"># → 逆順は挿入ソート・バブルソートの最悪ケース</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">3パターンそれぞれで <code>insertion_sort_count</code> と <code>bubble_sort_count</code> を実行し、結果を比較してみよう。どのパターンで差が最も大きいか？</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 3パターンの比較結果と、「ほぼ整列済み」で挿入ソートが有利な理由を書いてください。</div></div>
+      </div>
     </div>
   </div>
 </section>
 
-
 <!-- ============ 3. GROUP ORAL EXAM ============ -->
-<section>
+<section id="sec-group-disc">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
@@ -405,7 +585,7 @@ reversed_data = <span class="fn">list</span>(<span class="fn">range</span>(<span
 </section>
 
 <!-- ============ 4. STANDARD TASKS ============ -->
-<section>
+<section id="sec-standard">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">4</div>
@@ -470,7 +650,7 @@ pass_num = <span class="num">0</span>
 </section>
 
 <!-- ============ 5. ADVANCED TASK ============ -->
-<section>
+<section id="sec-advanced">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">5</div>
@@ -514,6 +694,89 @@ pass_num = <span class="num">0</span>
   </div>
 </section>
 
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# AL1 第9回
+
+名前:
+学籍番号:
+
+---
+
+## 例題 1: bisect で挿入位置を見つける
+bisect_left と bisect_right の違い:
+
+## 例題 2: 二分挿入ソートの実装
+ソート済みデータの挿入位置の特徴:
+
+## 例題 3: バブルソートの基本
+ソート済みデータでの早期終了の結果:
+
+## 例題 4: 挿入ソートとバブルソートの比較
+サイズ変更時の比較回数の増加割合:
+
+## 例題 5: データパターン別の性能分析
+3パターンの比較結果と考察:
+
+---
+
+## 標準課題 1: バブルソートのトレースを手で追う
+（回答を記入）
+
+---
+
+## 標準課題 2: バブルソートコードのトレース
+### Q1.
+（各パスの data の変化と交換の有無のトレース）
+
+### Q2.
+（総交換回数とパス数の予測（早期終了するか））
+
+### Q3.
+（実行結果（予測と合っていたか））
+
+---
+
+## グループ口頭試問
+**グループメンバー:**
+
+| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
+|--------|-------------|--------|------|------|
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+
+---
+
+## 発展課題: ソートアルゴリズムの選択基準
+### コード
+（AL09-?.py のコードを貼り付け）
+### 音声説明
+（1〜2分の音声ファイルを添付）
+</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ ANSWERS ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-06-24T14:40">
   <div class="container">
@@ -522,15 +785,8 @@ pass_num = <span class="num">0</span>
       <h2>解答例</h2>
     </div>
 
-    <!-- 常に公開: トレース演習・コード体験 -->
-    <p style="color:#888;font-style:italic">（トレース演習・コード体験の解答は準備中です）</p>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
-    <!-- 日時制御: 標準課題・発展課題の解答 -->
-    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.1rem">標準課題・発展課題の解答</h3>
-    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
-      🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
-    </p>
-    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
@@ -541,5 +797,30 @@ pass_num = <span class="num">0</span>
 </footer>
 
 <script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
 </body>
 </html>

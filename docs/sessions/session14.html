@@ -71,9 +71,72 @@ pre .op { color: #89dceb; }
 footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
 @media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
 </style>
 </head>
 <body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">説明</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-checklist">チェック</a>
+  <a href="#sec-group-disc" class="nav-advanced">議論</a>
+  <a href="#sec-standard" class="nav-assignment">標準</a>
+  <a href="#sec-advanced" class="nav-advanced">発展</a>
+  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
 
 <header class="hero">
   <div class="container">
@@ -84,7 +147,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
       <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
@@ -102,7 +165,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ コードレビューとは ============ -->
-<section>
+<section id="sec-explanation">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
@@ -156,11 +219,70 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 2. 例題 ============ -->
-<section>
+<section id="sec-examples">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">各例題のコードを実際に実行し、「🖐 やってみよう」に取り組んでください。まず作業フォルダを準備します。</p>
+
+    <!-- VS Code Setup Guide -->
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 1: 作業フォルダを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>デスクトップに<strong>「AL」</strong>という名前のフォルダを作る（まだ作っていない場合）</li>
+          <li>そのフォルダの中に<strong>「No14」</strong>という名前のフォルダを作る</li>
+        </ol>
+        <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:0.6rem 1rem;margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#888">
+          デスクトップ/<br>
+          └── AL/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No13/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No14/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 今回はここに保存</span>
+        </div>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 2: VS Code でフォルダを開く</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選択</li>
+          <li>さっき作った <strong>AL/No14</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">→ 左側のエクスプローラーに「No14」フォルダの中身が表示されます（最初は空っぽ）。</p>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 3: 新しいファイルを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>左側エクスプローラーの「No14」の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名に <strong><code>AL14-ex1.py</code></strong> と入力して Enter</li>
+          <li>例題のコードブロック右上の<strong>「コピー」ボタン</strong>をクリック</li>
+          <li>VS Code の編集画面に<strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">例題ごとにファイルを分けましょう: <code>AL14-ex1.py</code>, <code>AL14-ex2.py</code>, <code>AL14-ex3.py</code>, ...</p>
+      </div>
+    </div>
+
+    <!-- キーワード解説 -->
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>この回のキーワード</h4>
+      <table>
+        <tr><th>用語</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">コードレビュー</strong></td><td>他の人が書いたコードを読んで改善点を見つける作業。プロの開発現場では全てのコードがレビューを経てからリリースされる。</td></tr>
+        <tr><td><strong style="color:#76B900">可読性（Readability）</strong></td><td>コードの読みやすさ。変数名が意味を持つか、コメントが適切か、関数が1つの役割に集中しているかが重要。</td></tr>
+        <tr><td><strong style="color:#76B900">エラーハンドリング</strong></td><td>プログラムが予期せぬ入力やエラーに遭遇したとき、クラッシュせずに適切に対応すること。<code>try/except</code> や入力値チェックで実現する。</td></tr>
+        <tr><td><strong style="color:#76B900">境界値テスト</strong></td><td>空リスト、0、負数、巨大な数など「特殊なケース」でコードが正しく動くか確認すること。バグの多くは境界値で発生する。</td></tr>
+      </table>
     </div>
 
     <!-- 例題1 -->
@@ -195,6 +317,12 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
         <li><strong>修正:</strong> <code>if not numbers:</code> で空チェックを追加</li>
         <li><strong>改善:</strong> ループを <code>range(1, ...)</code> にして無駄な比較を削除</li>
       </ul>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">バグ版 <code>find_max_buggy([])</code> を実行してエラーを確認し、修正版で同じ呼び出しが正しく動くことを確かめよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> バグ版で出たエラーメッセージと、修正版の出力結果を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題2 -->
@@ -211,6 +339,12 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
         <tr><td><code>n = (x+a, y+b)</code></td><td><code>next_pos = (row+dr, col+dc)</code></td><td>何を計算しているか一目で分かる</td></tr>
         <tr><td>コメントなし</td><td>各行にコメント</td><td>後で読む人（未来の自分）のため</td></tr>
       </table>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">自分が過去に書いたコード（例: 第12回のBFS）を開いて、変数名が分かりやすいか確認してみよう。改善できる箇所はある？</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 自分のコードで変数名を改善できる箇所を1つ挙げて、改善前と改善後を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題3 -->
@@ -249,6 +383,12 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
         </table>
         <p style="margin-top:0.5rem;color:#93D500;font-weight:600">データ構造の選択だけで1000倍以上の速度差が生まれる！</p>
       </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">リスト版とセット版の両方を <code>data = list(range(5000))</code> で実行し、実行時間を比較してみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> リスト版とセット版の実行時間と、速度差（何倍か）を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題4 -->
@@ -284,6 +424,12 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
     <span class="kw">elif</span> maze[sr][sc] != <span class="num">0</span>:
         errors.<span class="fn">append</span>(<span class="str">f"スタート{start}が壁です"</span>)
     <span class="kw">return</span> errors</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>safe_divide(10, 0)</code> と <code>safe_divide(10, "abc")</code> を実行して、エラーが適切に処理されることを確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 各エラーケースの出力結果を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題5 -->
@@ -314,12 +460,18 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
             neighbors_info.<span class="fn">append</span>(<span class="str">f"{direction_names[i]}:→{(nr,nc)}"</span>)
 
     <span class="fn">print</span>(<span class="str">f"ステップ{step}: {current} [{', '.join(neighbors_info)}]"</span>)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">第12回のBFSコードにこのトレース表示を追加して実行し、各ステップで何が起きているか確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 最初の3ステップの出力を書いてください。</div></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ============ チェックリストまとめ ============ -->
-<section>
+<section id="sec-checklist">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
@@ -343,9 +495,8 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
   </div>
 </section>
 
-
 <!-- ============ 4. GROUP ORAL EXAM ============ -->
-<section>
+<section id="sec-group-disc">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">4</div>
@@ -378,7 +529,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 5. STANDARD TASKS ============ -->
-<section>
+<section id="sec-standard">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">5</div>
@@ -454,7 +605,7 @@ unique = <span class="fn">remove_duplicates</span>(scores)
 </section>
 
 <!-- ============ 6. ADVANCED TASK ============ -->
-<section>
+<section id="sec-advanced">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">6</div>
@@ -493,6 +644,90 @@ unique = <span class="fn">remove_duplicates</span>(scores)
   </div>
 </section>
 
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# AL1 第14回
+
+名前:
+学籍番号:
+
+---
+
+## 例題 やってみよう
+### 例題1: バグ版のエラーメッセージと修正版の出力結果
+（回答を記入）
+
+### 例題2: 変数名を改善できる箇所（改善前と改善後）
+（回答を記入）
+
+### 例題3: リスト版 vs セット版の実行時間と速度差
+（回答を記入）
+
+### 例題4: 各エラーケースの出力結果
+（回答を記入）
+
+### 例題5: 最初の3ステップの出力
+（回答を記入）
+
+---
+
+## 標準課題 1: バグを発見して修正する
+（回答を記入）
+
+---
+
+## 標準課題 2: バグのあるコードをトレースして問題を発見する
+### Q1.
+（各 print 文の出力の予測）
+
+### Q2.
+（コードのバグ（論理的な問題）は何か）
+
+### Q3.
+（実行結果（予測と合っていたか））
+
+---
+
+## グループ口頭試問
+**グループメンバー:**
+
+| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
+|--------|-------------|--------|------|------|
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+
+---
+
+## 発展課題: レビューチェックリストを作成する
+### コード
+（AL14-?.py のコードを貼り付け）
+### 音声説明
+（1〜2分の音声ファイルを添付）
+</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ ANSWERS ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-07-29T14:40">
   <div class="container">
@@ -501,15 +736,8 @@ unique = <span class="fn">remove_duplicates</span>(scores)
       <h2>解答例</h2>
     </div>
 
-    <!-- 常に公開: トレース演習・コード体験 -->
-    <p style="color:#888;font-style:italic">（トレース演習・コード体験の解答は準備中です）</p>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
-    <!-- 日時制御: 標準課題・発展課題の解答 -->
-    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.1rem">標準課題・発展課題の解答</h3>
-    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
-      🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
-    </p>
-    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
@@ -520,5 +748,30 @@ unique = <span class="fn">remove_duplicates</span>(scores)
 </footer>
 
 <script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
 </body>
 </html>

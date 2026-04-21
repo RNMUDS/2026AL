@@ -71,9 +71,73 @@ pre .op { color: #89dceb; }
 footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
 @media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
 </style>
 </head>
 <body>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-summary">総整理</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-complexity">計算量</a>
+  <a href="#sec-next-semester">後期</a>
+  <a href="#sec-group-disc" class="nav-advanced">議論</a>
+  <a href="#sec-standard" class="nav-assignment">標準</a>
+  <a href="#sec-advanced" class="nav-advanced">発展</a>
+  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-answers">解答</a>
+</nav>
 
 <header class="hero">
   <div class="container">
@@ -84,7 +148,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </header>
 
 <!-- ============ SUBMISSION GUIDE ============ -->
-<section style="padding-top:2rem;padding-bottom:0">
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div style="background:#1A1A1A;border:2px solid #333333;border-radius:12px;padding:1.5rem 2rem">
       <h3 style="color:#94a3b8;font-size:1rem;margin-bottom:1rem">Notionノート提出ガイド</h3>
@@ -102,7 +166,7 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 1. アルゴリズム総整理 ============ -->
-<section>
+<section id="sec-summary">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">1</div>
@@ -210,11 +274,116 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 </section>
 
 <!-- ============ 2. 例題 ============ -->
-<section>
+<section id="sec-examples">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">各例題のコードを実際に実行し、「🖐 やってみよう」に取り組んでください。まず作業フォルダを準備します。</p>
+
+    <!-- VS Code Setup Guide -->
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 1: 作業フォルダを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>デスクトップに<strong>「AL」</strong>という名前のフォルダを作る（まだ作っていない場合）</li>
+          <li>そのフォルダの中に<strong>「No15」</strong>という名前のフォルダを作る</li>
+        </ol>
+        <div style="background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:0.6rem 1rem;margin-top:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#888">
+          デスクトップ/<br>
+          └── AL/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No14/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No15/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 今回はここに保存</span>
+        </div>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 2: VS Code でフォルダを開く</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選択</li>
+          <li>さっき作った <strong>AL/No15</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">→ 左側のエクスプローラーに「No15」フォルダの中身が表示されます（最初は空っぽ）。</p>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1.2rem">
+        <p style="color:#e0e0e0;font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">Step 3: 新しいファイルを作る</p>
+        <ol style="padding-left:1.5rem;font-size:0.9rem;line-height:2;color:#ccc">
+          <li>左側エクスプローラーの「No15」の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名に <strong><code>AL15-ex1.py</code></strong> と入力して Enter</li>
+          <li>例題のコードブロック右上の<strong>「コピー」ボタン</strong>をクリック</li>
+          <li>VS Code の編集画面に<strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">例題ごとにファイルを分けましょう: <code>AL15-ex1.py</code>, <code>AL15-ex2.py</code>, <code>AL15-ex3.py</code>, ...</p>
+      </div>
+    </div>
+
+    <!-- キーワード解説 -->
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>この回のキーワード</h4>
+      <table>
+        <tr><th>用語</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">計算量の比較</strong></td><td>Big O 記法でアルゴリズムの効率を比較する方法。O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n^2) &lt; O(2^n)。データが大きいほど差が顕著になる。</td></tr>
+        <tr><td><strong style="color:#76B900">アルゴリズムの選び方</strong></td><td>問題の特性（データ量、ソート済みか、値の範囲など）に応じて最適なアルゴリズムを選ぶ。万能なアルゴリズムは存在しない。</td></tr>
+        <tr><td><strong style="color:#76B900">データ構造の選択</strong></td><td>リスト、セット、辞書など、用途に応じたデータ構造を選ぶことで性能が劇的に変わる。検索が多いならセットや辞書が有利。</td></tr>
+      </table>
+    </div>
+
+    <!-- SVG Diagram: Algorithm Complexity Comparison -->
+    <div class="diagram-container" style="margin-bottom:1.5rem">
+      <svg viewBox="0 0 700 380" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+        <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の増加速度の比較（n が増えるとどうなるか）</text>
+
+        <!-- Axes -->
+        <line x1="80" y1="330" x2="650" y2="330" stroke="#555" stroke-width="2"/>
+        <line x1="80" y1="330" x2="80" y2="50" stroke="#555" stroke-width="2"/>
+        <text x="370" y="365" text-anchor="middle" fill="#888" font-size="12">データ量 n</text>
+        <text x="40" y="190" text-anchor="middle" fill="#888" font-size="12" transform="rotate(-90,40,190)">処理時間</text>
+
+        <!-- O(1) -->
+        <line x1="80" y1="310" x2="640" y2="310" stroke="#76B900" stroke-width="2.5"/>
+        <text x="645" y="314" fill="#76B900" font-size="11" font-weight="700">O(1)</text>
+        <rect x="80" y="298" width="120" height="18" rx="4" fill="#76B900" opacity="0.15"/>
+        <text x="140" y="310" text-anchor="middle" fill="#76B900" font-size="9">ハッシュ探索</text>
+
+        <!-- O(log n) -->
+        <path d="M80 310 Q200 280 300 260 Q450 240 640 230" stroke="#76B900" stroke-width="2.5" fill="none"/>
+        <text x="645" y="234" fill="#76B900" font-size="11" font-weight="700">O(log n)</text>
+        <text x="400" y="248" fill="#76B900" font-size="9">二分探索</text>
+
+        <!-- O(n) -->
+        <line x1="80" y1="310" x2="640" y2="170" stroke="#E0E0E0" stroke-width="2.5"/>
+        <text x="645" y="174" fill="#E0E0E0" font-size="11" font-weight="700">O(n)</text>
+        <text x="500" y="210" fill="#E0E0E0" font-size="9">逐次探索</text>
+
+        <!-- O(n log n) -->
+        <path d="M80 310 Q250 250 400 180 Q500 140 640 100" stroke="#76B900" stroke-width="2.5" fill="none"/>
+        <text x="645" y="104" fill="#76B900" font-size="11" font-weight="700">O(n log n)</text>
+        <text x="520" y="128" fill="#76B900" font-size="9">Timsort</text>
+
+        <!-- O(n^2) -->
+        <path d="M80 310 Q200 300 300 260 Q400 190 500 90 Q520 70 540 55" stroke="#FF5252" stroke-width="2.5" fill="none"/>
+        <text x="545" y="50" fill="#FF5252" font-size="11" font-weight="700">O(n^2)</text>
+        <text x="440" y="160" fill="#FF5252" font-size="9">挿入/バブルソート</text>
+
+        <!-- Tick marks -->
+        <line x1="200" y1="330" x2="200" y2="335" stroke="#555" stroke-width="1.5"/>
+        <text x="200" y="350" text-anchor="middle" fill="#888" font-size="10">100</text>
+        <line x1="350" y1="330" x2="350" y2="335" stroke="#555" stroke-width="1.5"/>
+        <text x="350" y="350" text-anchor="middle" fill="#888" font-size="10">500</text>
+        <line x1="500" y1="330" x2="500" y2="335" stroke="#555" stroke-width="1.5"/>
+        <text x="500" y="350" text-anchor="middle" fill="#888" font-size="10">1000</text>
+      </svg>
     </div>
 
     <!-- 例題1 -->
@@ -237,6 +406,12 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
           <tr><td><code>dict, hash, キー検索</code></td><td>ハッシュ探索</td></tr>
           <tr><td><code>for i in range(len(data))</code></td><td>逐次探索</td></tr>
         </table>
+      </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">過去の授業で書いたコードを1つ開いて、上のキーワード表を見ながらどのアルゴリズムかを特定してみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 選んだコードのファイル名と、特定したアルゴリズム名・根拠となるキーワードを書いてください。</div></div>
       </div>
     </div>
 
@@ -280,6 +455,12 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
     time_n2 = time.<span class="fn">perf_counter</span>() - start_time
 
 <span class="cmt"># nが2倍 → O(n)は約2倍、O(n^2)は約4倍になる</span></pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">コードを実行して、nが2倍になるとO(n)は約2倍、O(n^2)は約4倍になることを確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 各サイズでの実行時間と、nが2倍になったときの増加倍率を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題3 -->
@@ -295,6 +476,12 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
         <tr><td>10万人の点数(0-100)をソートする</td><td style="color:#93D500;font-weight:700">カウントソート O(n+k)</td><td>整数+範囲限定で最速</td></tr>
         <tr><td>迷路の最短経路を求める</td><td style="color:#76B900;font-weight:700">BFS O(V+E)</td><td>最短経路を保証する唯一の方法</td></tr>
       </table>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">「SNSで友達の友達を探す」にはどのアルゴリズムが最適か、グループで話し合ってみよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 選んだアルゴリズムと理由を書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題4 -->
@@ -334,6 +521,12 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
           <tr><td>5,000</td><td>2.234秒</td><td>0.000412秒</td><td>5,422倍</td></tr>
         </table>
       </div>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">両方の関数を <code>data = list(range(2000)) + list(range(1000))</code> で実行し、速度差を体感しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 総当たり版とハッシュ版の実行時間を比較して書いてください。</div></div>
+      </div>
     </div>
 
     <!-- 例題5 -->
@@ -368,12 +561,18 @@ author_index = {}
     <span class="kw">if</span> author <span class="kw">not in</span> author_index:
         author_index[author] = []
     author_index[author].<span class="fn">append</span>(book)</pre>
+
+      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
+        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
+        <p style="color:#ccc;font-size:0.9rem">蔵書データを5冊に増やして、ID検索と著者検索がO(1)で動くことを確認しよう。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 追加した蔵書データと、検索結果を書いてください。</div></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ============ 3. 計算量まとめ ============ -->
-<section>
+<section id="sec-complexity">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
@@ -430,7 +629,7 @@ author_index = {}
 </section>
 
 <!-- ============ 4. 後期への橋渡し ============ -->
-<section>
+<section id="sec-next-semester">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FF5252">4</div>
@@ -456,9 +655,8 @@ author_index = {}
   </div>
 </section>
 
-
 <!-- ============ 5. GROUP ORAL EXAM ============ -->
-<section>
+<section id="sec-group-disc">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">5</div>
@@ -491,7 +689,7 @@ author_index = {}
 </section>
 
 <!-- ============ 6. STANDARD TASKS ============ -->
-<section>
+<section id="sec-standard">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">6</div>
@@ -582,7 +780,7 @@ groups = {}
 </section>
 
 <!-- ============ 7. ADVANCED TASK ============ -->
-<section>
+<section id="sec-advanced">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">7</div>
@@ -621,6 +819,90 @@ groups = {}
   </div>
 </section>
 
+<!-- ============ NOTION TEMPLATE ============ -->
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">N</div>
+      <h2>Notionテンプレート</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
+        <h3>課題ノートのテンプレート</h3>
+      </div>
+      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
+
+      <pre><span class="code-label">Notion テンプレート</span>
+# AL1 第15回
+
+名前:
+学籍番号:
+
+---
+
+## 例題 やってみよう
+### 例題1: 特定したアルゴリズム名と根拠のキーワード
+（回答を記入）
+
+### 例題2: 各サイズの実行時間とnが2倍時の増加倍率
+（回答を記入）
+
+### 例題3: 選んだアルゴリズムと理由
+（回答を記入）
+
+### 例題4: 総当たり版 vs ハッシュ版の実行時間の比較
+（回答を記入）
+
+### 例題5: 追加した蔵書データと検索結果
+（回答を記入）
+
+---
+
+## 標準課題 1: アルゴリズムの特徴を整理する
+（回答を記入）
+
+---
+
+## 標準課題 2: 総合トレース：探索＋ソート＋辞書の組み合わせ
+### Q1.
+（Step 1（挿入ソート）の結果の予測）
+
+### Q2.
+（Step 2（二分探索）と Step 3（辞書集計）の結果の予測）
+
+### Q3.
+（実行結果（予測と合っていたか））
+
+---
+
+## グループ口頭試問
+**グループメンバー:**
+
+| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
+|--------|-------------|--------|------|------|
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+
+---
+
+## 発展課題: 学期の振り返りと今後の展望
+### コード
+（AL15-?.py のコードを貼り付け）
+### 音声説明
+（1〜2分の音声ファイルを添付）
+</pre>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ ANSWERS ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-07-29T14:40">
   <div class="container">
@@ -629,15 +911,8 @@ groups = {}
       <h2>解答例</h2>
     </div>
 
-    <!-- 常に公開: トレース演習・コード体験 -->
-    <p style="color:#888;font-style:italic">（トレース演習・コード体験の解答は準備中です）</p>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
-    <!-- 日時制御: 標準課題・発展課題の解答 -->
-    <h3 style="color:#76B900;margin:2rem 0 1rem;font-size:1.1rem">標準課題・発展課題の解答</h3>
-    <p id="answers-locked" style="display:none;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:1.2rem;text-align:center;color:#999;font-size:0.95rem">
-      🔒 標準課題・発展課題の解答は次回の授業（<span id="release-date-display"></span>〜）に公開されます
-    </p>
-    <div id="answers-encrypted" data-cipher="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"></div>
   </div>
 </section>
 
@@ -648,5 +923,30 @@ groups = {}
 </footer>
 
 <script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
 </body>
 </html>
