@@ -46,16 +46,29 @@
   var cipherB64 = encDiv.getAttribute('data-cipher');
   if (!cipherB64) return;
 
-  // 公開日を過ぎていたら自動復号（パスワードはページには無いので、復号せず表示用テキストを出す）
-  // → 公開日以降はサーバ側で平文HTMLに差し替える運用を想定
-  //    または公開日以降用のパスワードを別途埋め込む
+  // 公開日以降: data-auto-key があれば自動復号、なければパスワード入力
+  var autoKey = section.getAttribute('data-auto-key');
   if (now >= releaseDate) {
-    // 公開日以降: パスワード入力欄を表示（ロックメッセージなし）
-    showPasswordOnly(function(password) {
-      return decryptContent(cipherB64, password);
-    }, function(html) {
-      encDiv.outerHTML = '<div id="answers-content">' + html + '</div>';
-    });
+    if (autoKey) {
+      decryptContent(cipherB64, autoKey).then(function(html) {
+        if (html) {
+          encDiv.outerHTML = '<div id="answers-content">' + html + '</div>';
+        } else {
+          // 自動復号失敗時はパスワード入力にフォールバック
+          showPasswordOnly(function(password) {
+            return decryptContent(cipherB64, password);
+          }, function(h) {
+            encDiv.outerHTML = '<div id="answers-content">' + h + '</div>';
+          });
+        }
+      });
+    } else {
+      showPasswordOnly(function(password) {
+        return decryptContent(cipherB64, password);
+      }, function(html) {
+        encDiv.outerHTML = '<div id="answers-content">' + html + '</div>';
+      });
+    }
     return;
   }
 
