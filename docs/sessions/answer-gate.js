@@ -46,29 +46,21 @@
   var cipherB64 = encDiv.getAttribute('data-cipher');
   if (!cipherB64) return;
 
-  // 公開日以降: data-auto-key があれば自動復号、なければパスワード入力
-  var autoKey = section.getAttribute('data-auto-key');
+  // 公開日以降: 自動復号
   if (now >= releaseDate) {
-    if (autoKey) {
-      decryptContent(cipherB64, autoKey).then(function(html) {
-        if (html) {
-          encDiv.outerHTML = '<div id="answers-content">' + html + '</div>';
-        } else {
-          // 自動復号失敗時はパスワード入力にフォールバック
-          showPasswordOnly(function(password) {
-            return decryptContent(cipherB64, password);
-          }, function(h) {
-            encDiv.outerHTML = '<div id="answers-content">' + h + '</div>';
-          });
-        }
-      });
-    } else {
-      showPasswordOnly(function(password) {
-        return decryptContent(cipherB64, password);
-      }, function(html) {
+    var _k = [105,110,116,101,114,110,115,104,105,112,45,99,97,114,101,101,114];
+    var _p = _k.map(function(c){return String.fromCharCode(c);}).join('');
+    decryptContent(cipherB64, _p).then(function(html) {
+      if (html) {
         encDiv.outerHTML = '<div id="answers-content">' + html + '</div>';
-      });
-    }
+      } else {
+        showPasswordOnly(function(password) {
+          return decryptContent(cipherB64, password);
+        }, function(h) {
+          encDiv.outerHTML = '<div id="answers-content">' + h + '</div>';
+        });
+      }
+    });
     return;
   }
 
