@@ -1656,6 +1656,16 @@ by_score = <span class="fn">sorted</span>(students, key=<span class="kw">lambda<
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem"><code>key=lambda x: x[1]</code> を <code>key=lambda x: x[0]</code> に変えて実行してみよう。</p>
         <p style="color:#888;font-size:0.85rem;margin-top:0.3rem">→ 並び順はどう変わった？ <code>x[1]</code> は点数、<code>x[0]</code> は名前。何を基準にソートするかが変わる。</p>
+        <div style="background:#1a1a2e;border:1px solid #334;border-radius:8px;padding:0.8rem 1rem;margin-top:0.8rem">
+          <p style="color:#a5b4fc;font-weight:600;font-size:0.85rem;margin-bottom:0.5rem">💡 補足: 名前でソートするとは？</p>
+          <p style="color:#ccc;font-size:0.85rem;line-height:1.7">各タプルは <code>("名前", 点数)</code> の形です。<code>x[1]</code> は2番目の要素（点数）、<code>x[0]</code> は1番目の要素（名前の文字列）を指します。</p>
+          <p style="color:#ccc;font-size:0.85rem;line-height:1.7;margin-top:0.4rem"><code>key=lambda x: x[0]</code> にすると、Pythonは<strong>名前の文字列</strong>を比較基準にします。文字列の大小比較は<strong>文字コード（Unicode）の順番</strong>で決まります。漢字にもコード番号があり、例えば：</p>
+          <pre style="background:#0d0d1a;border:1px solid #334;font-size:0.82rem;margin:0.5rem 0;padding:0.5rem 0.8rem"><span class="str">"佐藤"</span> → 佐 = U+4F50（<span class="num">20304</span>）
+<span class="str">"田中"</span> → 田 = U+7530（<span class="num">30000</span>）
+<span class="str">"鈴木"</span> → 鈴 = U+9234（<span class="num">37428</span>）</pre>
+          <p style="color:#ccc;font-size:0.85rem;line-height:1.7"><code>reverse=True</code>（降順）なので、コード番号が<strong>大きい順</strong>に並びます：<br><strong style="color:#93D500">鈴木(37428) → 田中(30000) → 佐藤(20304)</strong></p>
+          <p style="color:#888;font-size:0.8rem;margin-top:0.4rem">※ 点数順（93→85→72）とは違う並びになることを確認しよう。</p>
+        </div>
         <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> <code>x[0]</code> に変えたときの出力結果と、なぜその並び順になったか理由を書いてください。</div></div>
       </div>
     </div>
