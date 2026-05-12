@@ -123,6 +123,7 @@ section + section { border-top: 1px solid #222; }
 }
 .notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
 .notion-submit strong { color: #FFB800; }
+.tag-concept   { background: #1a2e0a; color: #76B900; }
 
 /* ============ TABLES ============ */
 table {
@@ -441,7 +442,7 @@ pre { position: relative; }
           <!-- Markers -->
           <text x="122" y="95" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700">L</text>
           <text x="278" y="95" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">M</text>
-          <text x="434" y="95" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700">R</text>
+          <text x="434" y="95" text-anchor="middle" fill="#4FC3F7" font-size="9" font-weight="700">R</text>
           <text x="530" y="68" fill="#888" font-size="10">7 &lt; 11 → 右半分へ</text>
 
           <!-- Step 2 -->
@@ -462,7 +463,7 @@ pre { position: relative; }
           <text x="434" y="148" text-anchor="middle" fill="#aaa" font-size="11">13</text>
           <text x="330" y="175" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700">L</text>
           <text x="382" y="175" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">M</text>
-          <text x="434" y="175" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700">R</text>
+          <text x="434" y="175" text-anchor="middle" fill="#4FC3F7" font-size="9" font-weight="700">R</text>
           <text x="530" y="148" fill="#76B900" font-size="10" font-weight="700">11 == 11 発見!</text>
 
           <!-- Result -->
@@ -472,8 +473,8 @@ pre { position: relative; }
           <!-- O(log n) comparison -->
           <text x="360" y="285" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の比較: O(n) vs O(log n)</text>
 
-          <rect x="60" y="300" width="280" height="44" rx="8" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
-          <text x="200" y="318" text-anchor="middle" fill="#FF5252" font-weight="600" font-size="11">逐次探索 O(n)</text>
+          <rect x="60" y="300" width="280" height="44" rx="8" fill="#1A1A1A" stroke="#888" stroke-width="1.5"/>
+          <text x="200" y="318" text-anchor="middle" fill="#aaa" font-weight="600" font-size="11">逐次探索 O(n)</text>
           <text x="200" y="336" text-anchor="middle" fill="#aaa" font-size="10">100万件 → 最悪 1,000,000回</text>
 
           <rect x="380" y="300" width="280" height="44" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
@@ -483,17 +484,261 @@ pre { position: relative; }
       </div>
     </div>
 
+    <!-- 1000件のデータでのアニメーション -->
+    <div class="concept-box">
+      <h4>1000件のデータから target を探す（動画でじっくり見てみよう）</h4>
+      <p><strong>1〜1000 の中から target = 625 を探します。</strong>毎回真ん中（M）を取り出して target と比較し、<strong>不要な側を半分まるごと捨てる</strong>のがポイントです。</p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 640 460" width="640" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono','Noto Sans JP',monospace;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+
+          <!-- Title -->
+          <text x="320" y="22" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14" font-family="'Noto Sans JP',sans-serif">1〜1000 から target = 625 を探す（二分探索の動作）</text>
+
+          <!-- Step counter -->
+          <text x="30" y="50" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">Step:</text>
+          <text x="80" y="50" fill="#FFB800" font-size="14" font-weight="900" opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>1</text>
+          <text x="80" y="50" fill="#FFB800" font-size="14" font-weight="900" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>2</text>
+          <text x="80" y="50" fill="#76B900" font-size="14" font-weight="900" opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>3 ── 発見！</text>
+
+          <!-- Remaining count -->
+          <text x="220" y="50" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">残り要素数:</text>
+          <text x="316" y="50" fill="#FFB800" font-size="14" font-weight="900" opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>1000</text>
+          <text x="316" y="50" fill="#FFB800" font-size="14" font-weight="900" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>500</text>
+          <text x="316" y="50" fill="#76B900" font-size="14" font-weight="900" opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>249</text>
+
+          <!-- M value label above bar (animated per step) -->
+          <g opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="320" y="72" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">data[499] = 500</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="460" y="72" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">data[749] = 750</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="390" y="72" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">data[624] = 625 ★</text>
+          </g>
+
+          <!-- Background bar (full range, dim) -->
+          <rect x="40" y="82" width="560" height="44" rx="6" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
+
+          <!-- Active range overlay (animated x and width) -->
+          <rect y="82" height="44" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2.5">
+            <animate attributeName="x" values="40;40;320;320;320;320" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <animate attributeName="width" values="560;560;280;280;140;140" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Discarded left label (Step 2+) -->
+          <text x="180" y="109" text-anchor="middle" fill="#666" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            ✕ 左側を捨てた
+          </text>
+
+          <!-- Discarded right label (Step 3) -->
+          <text x="530" y="109" text-anchor="middle" fill="#666" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            ✕ 右側を捨てた
+          </text>
+
+          <!-- L marker line (animated) -->
+          <line y1="76" y2="142" stroke="#76B900" stroke-width="3">
+            <animate attributeName="x1" values="40;40;320;320;320;320" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <animate attributeName="x2" values="40;40;320;320;320;320" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </line>
+          <text y="158" text-anchor="middle" fill="#76B900" font-size="12" font-weight="900">L<animate attributeName="x" values="40;40;320;320;320;320" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/></text>
+
+          <!-- R marker line (animated) -->
+          <line y1="76" y2="142" stroke="#4FC3F7" stroke-width="3">
+            <animate attributeName="x1" values="600;600;600;600;460;460" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <animate attributeName="x2" values="600;600;600;600;460;460" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </line>
+          <text y="158" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="900">R<animate attributeName="x" values="600;600;600;600;460;460" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/></text>
+
+          <!-- M marker line (animated) -->
+          <line y1="76" y2="142" stroke="#FFB800" stroke-width="3.5">
+            <animate attributeName="x1" values="320;320;460;460;390;390" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <animate attributeName="x2" values="320;320;460;460;390;390" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </line>
+          <text y="158" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="900">M<animate attributeName="x" values="320;320;460;460;390;390" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/></text>
+
+          <!-- ═══ 判断ロジックボックス ═══ -->
+          <rect x="20" y="178" width="600" height="106" rx="10" fill="#111" stroke="#333" stroke-width="1.5"/>
+
+          <!-- Step 1 text -->
+          <g opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="36" y="202" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">M = (0 + 999) // 2 = 499 を取り出して比較:</text>
+            <text x="36" y="230" fill="#FFB800" font-size="15" font-weight="700">data[499] = 500</text>
+            <text x="220" y="230" fill="#e0e0e0" font-size="17" font-weight="700">＜</text>
+            <text x="252" y="230" fill="#76B900" font-size="15" font-weight="700">target = 625</text>
+            <text x="36" y="256" fill="#aaa" font-size="13" font-family="'Noto Sans JP',sans-serif">→ target は M(499) より大きい → 右側にあるはず</text>
+            <text x="36" y="276" fill="#FFB800" font-size="14" font-weight="700" font-family="'Noto Sans JP',sans-serif">→ ✕ 左側 (0〜499 の 500 個) を全部捨てる！  left = 500 へ</text>
+          </g>
+
+          <!-- Step 2 text -->
+          <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="36" y="202" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">M = (500 + 999) // 2 = 749 を取り出して比較:</text>
+            <text x="36" y="230" fill="#FFB800" font-size="15" font-weight="700">data[749] = 750</text>
+            <text x="220" y="230" fill="#e0e0e0" font-size="17" font-weight="700">＞</text>
+            <text x="252" y="230" fill="#76B900" font-size="15" font-weight="700">target = 625</text>
+            <text x="36" y="256" fill="#aaa" font-size="13" font-family="'Noto Sans JP',sans-serif">→ target は M(749) より小さい → 左側にあるはず</text>
+            <text x="36" y="276" fill="#FFB800" font-size="14" font-weight="700" font-family="'Noto Sans JP',sans-serif">→ ✕ 右側 (750〜999 の 250 個) を全部捨てる！  right = 748 へ</text>
+          </g>
+
+          <!-- Step 3 text (FOUND) -->
+          <g opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="36" y="202" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">M = (500 + 748) // 2 = 624 を取り出して比較:</text>
+            <text x="36" y="230" fill="#76B900" font-size="15" font-weight="700">data[624] = 625</text>
+            <text x="220" y="230" fill="#e0e0e0" font-size="17" font-weight="700">＝</text>
+            <text x="252" y="230" fill="#76B900" font-size="15" font-weight="700">target = 625</text>
+            <text x="36" y="256" fill="#76B900" font-size="14" font-weight="700" font-family="'Noto Sans JP',sans-serif">→ 一致！ インデックス 624 で発見</text>
+            <text x="36" y="276" fill="#aaa" font-size="13" font-family="'Noto Sans JP',sans-serif">→ 1000 件のデータから、たった 3 回の比較で見つけた</text>
+          </g>
+
+          <!-- ═══ 変数の状態 ═══ -->
+          <rect x="20" y="296" width="600" height="44" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+          <text x="30" y="316" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">変数:</text>
+
+          <!-- L value -->
+          <text x="76" y="328" fill="#76B900" font-size="13" font-weight="700">L =</text>
+          <g opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="110" y="328" fill="#76B900" font-size="15" font-weight="900">0</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="110" y="328" fill="#76B900" font-size="15" font-weight="900">500</text>
+          </g>
+
+          <!-- R value -->
+          <text x="186" y="328" fill="#4FC3F7" font-size="13" font-weight="700">R =</text>
+          <g opacity="0"><animate attributeName="opacity" values="1;1;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="220" y="328" fill="#4FC3F7" font-size="15" font-weight="900">999</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="220" y="328" fill="#4FC3F7" font-size="15" font-weight="900">748</text>
+          </g>
+
+          <!-- M value -->
+          <text x="296" y="328" fill="#FFB800" font-size="13" font-weight="700">M =</text>
+          <g opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="330" y="328" fill="#FFB800" font-size="15" font-weight="900">499</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="330" y="328" fill="#FFB800" font-size="15" font-weight="900">749</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="330" y="328" fill="#FFB800" font-size="15" font-weight="900">624</text>
+          </g>
+
+          <!-- 範囲サイズ -->
+          <text x="408" y="328" fill="#aaa" font-size="12" font-family="'Noto Sans JP',sans-serif">R - L + 1 =</text>
+          <g opacity="0"><animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="498" y="328" fill="#aaa" font-size="13" font-weight="700">1000 要素</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="498" y="328" fill="#aaa" font-size="13" font-weight="700">500 要素</text>
+          </g>
+          <g opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+            <text x="498" y="328" fill="#76B900" font-size="13" font-weight="700">249 → 発見</text>
+          </g>
+
+          <!-- ═══ 進行ドット ═══ -->
+          <text x="30" y="372" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">進行:</text>
+
+          <circle cx="100" cy="370" r="14" fill="#141414" stroke="#555" stroke-width="1.5"/>
+          <circle cx="100" cy="370" r="14" fill="#FFB800" opacity="0">
+            <animate attributeName="opacity" values="0.7;0.7;0.15;0.15;0.15;0.15" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </circle>
+          <text x="100" y="374" text-anchor="middle" fill="#e0e0e0" font-size="13" font-weight="700">1</text>
+
+          <line x1="114" y1="370" x2="186" y2="370" stroke="#333" stroke-width="2"/>
+
+          <circle cx="200" cy="370" r="14" fill="#141414" stroke="#555" stroke-width="1.5"/>
+          <circle cx="200" cy="370" r="14" fill="#FFB800" opacity="0">
+            <animate attributeName="opacity" values="0.15;0.15;0.7;0.7;0.15;0.15" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </circle>
+          <text x="200" y="374" text-anchor="middle" fill="#e0e0e0" font-size="13" font-weight="700">2</text>
+
+          <line x1="214" y1="370" x2="286" y2="370" stroke="#333" stroke-width="2"/>
+
+          <circle cx="300" cy="370" r="14" fill="#141414" stroke="#555" stroke-width="1.5"/>
+          <circle cx="300" cy="370" r="14" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0.15;0.15;0.15;0.15;0.8;0.8" keyTimes="0;0.30;0.34;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+          </circle>
+          <text x="300" y="374" text-anchor="middle" fill="#e0e0e0" font-size="13" font-weight="700">3</text>
+
+          <text x="340" y="374" fill="#aaa" font-size="11" font-family="'Noto Sans JP',sans-serif">毎回、半分まるごと捨てる → 残り要素が半分以下に</text>
+
+          <!-- ═══ まとめ ═══ -->
+          <rect x="20" y="396" width="600" height="50" rx="8" fill="#0a1a0a" stroke="#76B900" stroke-width="1.5"/>
+          <text x="320" y="418" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">1000 → 500 → 249 → 1 と急速に絞り込まれる</text>
+          <text x="320" y="438" text-anchor="middle" fill="#aaa" font-size="12" font-family="'Noto Sans JP',sans-serif">最悪でも log₂(1000) ≒ 10 回で見つかる（逐次探索なら最悪 1000 回）</text>
+        </svg>
+      </div>
+
+      <p style="margin-top:1rem;font-size:0.95rem"><strong>ポイント:</strong> 比較は 1 回だけど、その結果<strong>残り半分（500個も！）をまとめて捨てる</strong>のが二分探索の威力。これを 3 回繰り返すと 1000 → 500 → 249 → 1 で、もう発見できる。</p>
+    </div>
+
     <!-- O(log n) table -->
     <div class="concept-box">
       <h4>計算量 O(log n) とは</h4>
-      <p>二分探索は毎回データを<strong>半分</strong>に絞り込みます。</p>
+      <p>二分探索は毎回データを<strong>半分</strong>に絞り込みます。下の図は、データを半分・半分・半分…と絞り込んでいく様子を視覚化したものです。</p>
+
+      <!-- 半分ずつ絞り込む視覚化 -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 640 360" width="640" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono','Noto Sans JP',monospace;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+
+          <text x="320" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14" font-family="'Noto Sans JP',sans-serif">「半分に絞り込む」を 10 回繰り返すと… 1024件 → 1件 になる</text>
+
+          <!-- ステップラベル列 -->
+          <text x="20" y="58" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 0</text>
+          <text x="20" y="88" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 1</text>
+          <text x="20" y="118" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 2</text>
+          <text x="20" y="148" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 3</text>
+          <text x="20" y="178" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 4</text>
+          <text x="20" y="208" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 5</text>
+          <text x="20" y="238" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 6</text>
+          <text x="20" y="268" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 7-8</text>
+          <text x="20" y="298" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">Step 9</text>
+          <text x="20" y="328" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">Step 10</text>
+
+          <!-- 残り要素のバー (左寄せ、各ステップで半分に) -->
+          <rect x="80" y="46" width="512" height="18" rx="3" fill="#76B900" opacity="0.85"/>
+          <text x="600" y="60" fill="#76B900" font-size="11" font-weight="700">1024件</text>
+
+          <rect x="80" y="76" width="256" height="18" rx="3" fill="#76B900" opacity="0.7"/>
+          <text x="345" y="90" fill="#76B900" font-size="11" font-weight="700">512件</text>
+
+          <rect x="80" y="106" width="128" height="18" rx="3" fill="#76B900" opacity="0.6"/>
+          <text x="218" y="120" fill="#76B900" font-size="11" font-weight="700">256件</text>
+
+          <rect x="80" y="136" width="64" height="18" rx="3" fill="#76B900" opacity="0.5"/>
+          <text x="154" y="150" fill="#76B900" font-size="11" font-weight="700">128件</text>
+
+          <rect x="80" y="166" width="32" height="18" rx="3" fill="#76B900" opacity="0.5"/>
+          <text x="122" y="180" fill="#76B900" font-size="11" font-weight="700">64件</text>
+
+          <rect x="80" y="196" width="16" height="18" rx="3" fill="#76B900" opacity="0.5"/>
+          <text x="108" y="210" fill="#76B900" font-size="11" font-weight="700">32件</text>
+
+          <rect x="80" y="226" width="8" height="18" rx="3" fill="#FFB800" opacity="0.6"/>
+          <text x="100" y="240" fill="#FFB800" font-size="11" font-weight="700">16件</text>
+
+          <rect x="80" y="256" width="4" height="18" rx="3" fill="#FFB800" opacity="0.7"/>
+          <text x="96" y="270" fill="#FFB800" font-size="11" font-weight="700">8件 → 4件</text>
+
+          <rect x="80" y="286" width="2" height="18" rx="3" fill="#FFB800" opacity="0.85"/>
+          <text x="94" y="300" fill="#FFB800" font-size="11" font-weight="700">2件</text>
+
+          <rect x="80" y="316" width="2" height="18" rx="3" fill="#76B900"/>
+          <text x="94" y="330" fill="#76B900" font-size="12" font-weight="900">1件 ── 発見！</text>
+        </svg>
+      </div>
+
       <table>
-        <tr><th>データ数 (n)</th><th>最大比較回数 (log2 n)</th></tr>
-        <tr><td>10</td><td>4回</td></tr>
-        <tr><td>100</td><td>7回</td></tr>
-        <tr><td>1,000</td><td>10回</td></tr>
-        <tr><td>100,000</td><td>17回</td></tr>
-        <tr><td>1,000,000</td><td>20回</td></tr>
+        <tr><th>データ数 (n)</th><th>最大比較回数 (log2 n)</th><th>身近な例</th></tr>
+        <tr><td>10</td><td>4回</td><td>クラスの人数</td></tr>
+        <tr><td>100</td><td>7回</td><td>1コマ授業の人数</td></tr>
+        <tr><td>1,000</td><td>10回</td><td>学部全員</td></tr>
+        <tr><td>100,000</td><td>17回</td><td>小さな町の人口</td></tr>
+        <tr><td>1,000,000</td><td>20回</td><td>大都市の人口</td></tr>
       </table>
       <p style="margin-top:0.75rem"><strong>100万件のデータから、たった20回の比較で見つけられる</strong> ── 逐次探索の50,000倍速い!</p>
     </div>
@@ -629,6 +874,266 @@ data = [<span class="num">1</span>, <span class="num">3</span>, <span class="num
 <span class="fn">binary_search_trace</span>(data, <span class="num">11</span>)
 <span class="fn">binary_search_trace</span>(data, <span class="num">6</span>)  <span class="cmt"># 存在しない値</span></pre>
 
+      <!-- 二分探索のステップ・アニメーション -->
+      <div style="margin-top:1.5rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.95rem;margin-bottom:0.8rem">処理の流れ: data = [1, 3, 5, 7, 9, 11, 13] から target = 11 を探す</p>
+        <div class="diagram-container">
+          <svg viewBox="0 0 600 480" width="600" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono','Noto Sans JP',monospace;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+
+            <!-- target label -->
+            <text x="20" y="28" fill="#888" font-size="12" font-family="'Noto Sans JP',sans-serif">target =</text>
+            <text x="90" y="28" fill="#FFB800" font-size="16" font-weight="900">11</text>
+
+            <!-- data label -->
+            <text x="20" y="68" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">data =</text>
+
+            <!-- ═══ Array cells (always visible) ═══ -->
+            <rect x="80" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="90" y="58" fill="#666" font-size="10">[0]</text>
+            <text x="110" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">1</text>
+
+            <rect x="146" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="156" y="58" fill="#666" font-size="10">[1]</text>
+            <text x="176" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">3</text>
+
+            <rect x="212" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="222" y="58" fill="#666" font-size="10">[2]</text>
+            <text x="242" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">5</text>
+
+            <rect x="278" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="288" y="58" fill="#666" font-size="10">[3]</text>
+            <text x="308" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">7</text>
+
+            <rect x="344" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="354" y="58" fill="#666" font-size="10">[4]</text>
+            <text x="374" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">9</text>
+
+            <rect x="410" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="420" y="58" fill="#666" font-size="10">[5]</text>
+            <text x="440" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">11</text>
+
+            <rect x="476" y="44" width="60" height="48" rx="6" fill="#141414" stroke="#444" stroke-width="2"/>
+            <text x="486" y="58" fill="#666" font-size="10">[6]</text>
+            <text x="506" y="78" text-anchor="middle" fill="#e0e0e0" font-size="22" font-weight="900">13</text>
+
+            <!-- ═══ Step 2 で範囲外になるセル ([0]-[3]) を暗くする ═══ -->
+            <rect x="80" y="44" width="60" height="48" rx="6" fill="#0A0A0A" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.7;0.7" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="146" y="44" width="60" height="48" rx="6" fill="#0A0A0A" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.7;0.7" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="212" y="44" width="60" height="48" rx="6" fill="#0A0A0A" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.7;0.7" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="278" y="44" width="60" height="48" rx="6" fill="#0A0A0A" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.7;0.7" dur="6s" repeatCount="indefinite"/>
+            </rect>
+
+            <!-- ═══ M (mid) セルの黄色枠（アニメーションで移動） ═══ -->
+            <rect y="44" width="60" height="48" rx="6" fill="none" stroke="#FFB800" stroke-width="3.5">
+              <animate attributeName="x" values="278;278;410;410" dur="6s" repeatCount="indefinite"/>
+            </rect>
+
+            <!-- ═══ 発見時の緑塗り ([5]に表示) ═══ -->
+            <rect x="410" y="44" width="60" height="48" rx="6" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.3;0.3" dur="6s" repeatCount="indefinite"/>
+            </rect>
+
+            <!-- ═══ L マーカー（アニメーション） ═══ -->
+            <text y="115" text-anchor="middle" fill="#76B900" font-size="15" font-weight="900" font-family="'Noto Sans JP',sans-serif">
+              L<animate attributeName="x" values="110;110;374;374" dur="6s" repeatCount="indefinite"/>
+            </text>
+
+            <!-- ═══ R マーカー（位置固定） ═══ -->
+            <text x="506" y="115" text-anchor="middle" fill="#4FC3F7" font-size="15" font-weight="900" font-family="'Noto Sans JP',sans-serif">R</text>
+
+            <!-- ═══ M マーカー（アニメーション） ═══ -->
+            <text y="115" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="900" font-family="'Noto Sans JP',sans-serif">
+              M<animate attributeName="x" values="308;308;440;440" dur="6s" repeatCount="indefinite"/>
+            </text>
+
+            <!-- ═══ 実行中のコード ═══ -->
+            <rect x="16" y="135" width="568" height="120" rx="10" fill="#111" stroke="#333" stroke-width="1.5"/>
+            <text x="30" y="155" fill="#666" font-size="11" font-family="'Noto Sans JP',sans-serif">実行中のコード:</text>
+
+            <!-- Step 1 -->
+            <g opacity="0"><animate attributeName="opacity" values="1;1;0;0" dur="6s" repeatCount="indefinite"/>
+              <text x="30" y="182" fill="#76B900" font-size="14" font-weight="700">mid = (left + right) // 2 = (0 + 6) // 2 = 3</text>
+              <text x="30" y="210" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">data[3] と target を比較 →</text>
+              <rect x="232" y="194" width="48" height="26" rx="6" fill="#1a1a1a" stroke="#888" stroke-width="1.5"/>
+              <text x="256" y="212" text-anchor="middle" fill="#ccc" font-size="17" font-weight="900">7</text>
+              <text x="290" y="212" fill="#e0e0e0" font-size="16" font-weight="700">&lt;</text>
+              <rect x="312" y="194" width="48" height="26" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+              <text x="336" y="212" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">11</text>
+              <text x="372" y="212" fill="#FFB800" font-size="14" font-weight="700" font-family="'Noto Sans JP',sans-serif">→ 右半分へ</text>
+              <text x="30" y="240" fill="#888" font-size="12" font-family="'Noto Sans JP',sans-serif">left = mid + 1 = 4 に更新（左半分は捨てる）</text>
+            </g>
+
+            <!-- Step 2 (FOUND) -->
+            <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" dur="6s" repeatCount="indefinite"/>
+              <text x="30" y="182" fill="#76B900" font-size="14" font-weight="700">mid = (left + right) // 2 = (4 + 6) // 2 = 5</text>
+              <text x="30" y="210" fill="#888" font-size="13" font-family="'Noto Sans JP',sans-serif">data[5] と target を比較 →</text>
+              <rect x="232" y="194" width="48" height="26" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+              <text x="256" y="212" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">11</text>
+              <text x="290" y="212" fill="#e0e0e0" font-size="16" font-weight="700">==</text>
+              <rect x="312" y="194" width="48" height="26" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+              <text x="336" y="212" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">11</text>
+              <text x="372" y="212" fill="#76B900" font-size="14" font-weight="900" font-family="'Noto Sans JP',sans-serif">→ 発見！</text>
+              <text x="30" y="240" fill="#76B900" font-size="12" font-weight="700" font-family="'Noto Sans JP',sans-serif">return mid (= 5) でループ終了</text>
+            </g>
+
+            <!-- ═══ 変数の状態 ═══ -->
+            <rect x="16" y="270" width="568" height="92" rx="10" fill="#111" stroke="#333" stroke-width="1.5"/>
+            <text x="30" y="290" fill="#666" font-size="11" font-family="'Noto Sans JP',sans-serif">変数の状態:</text>
+
+            <text x="36" y="322" fill="#76B900" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">L =</text>
+            <text x="166" y="322" fill="#4FC3F7" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">R =</text>
+            <text x="296" y="322" fill="#FFB800" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">M =</text>
+            <text x="416" y="322" fill="#aaa" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">step =</text>
+
+            <!-- Step 1 values -->
+            <g opacity="0"><animate attributeName="opacity" values="1;1;0;0" dur="6s" repeatCount="indefinite"/>
+              <rect x="72" y="307" width="44" height="24" rx="5" fill="#0a1a2e" stroke="#76B900" stroke-width="1.5"/>
+              <text x="94" y="325" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">0</text>
+              <rect x="202" y="307" width="44" height="24" rx="5" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
+              <text x="224" y="325" text-anchor="middle" fill="#4FC3F7" font-size="17" font-weight="900">6</text>
+              <rect x="332" y="307" width="44" height="24" rx="5" fill="#2e1a0a" stroke="#FFB800" stroke-width="1.5"/>
+              <text x="354" y="325" text-anchor="middle" fill="#FFB800" font-size="17" font-weight="900">3</text>
+              <rect x="466" y="307" width="44" height="24" rx="5" fill="#1a1a1a" stroke="#888" stroke-width="1.5"/>
+              <text x="488" y="325" text-anchor="middle" fill="#e0e0e0" font-size="17" font-weight="900">1</text>
+            </g>
+
+            <!-- Step 2 values -->
+            <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" dur="6s" repeatCount="indefinite"/>
+              <rect x="72" y="307" width="44" height="24" rx="5" fill="#0a1a2e" stroke="#76B900" stroke-width="1.5"/>
+              <text x="94" y="325" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">4</text>
+              <rect x="202" y="307" width="44" height="24" rx="5" fill="#0a1a2e" stroke="#4FC3F7" stroke-width="1.5"/>
+              <text x="224" y="325" text-anchor="middle" fill="#4FC3F7" font-size="17" font-weight="900">6</text>
+              <rect x="332" y="307" width="44" height="24" rx="5" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+              <text x="354" y="325" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">5</text>
+              <rect x="466" y="307" width="44" height="24" rx="5" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+              <text x="488" y="325" text-anchor="middle" fill="#76B900" font-size="17" font-weight="900">2</text>
+            </g>
+
+            <!-- ═══ 探索範囲のヒント ═══ -->
+            <text x="34" y="354" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">探索範囲:</text>
+            <g opacity="0"><animate attributeName="opacity" values="1;1;0;0" dur="6s" repeatCount="indefinite"/>
+              <text x="100" y="354" fill="#ccc" font-size="11" font-family="'Noto Sans JP',sans-serif">data[0]〜data[6]（全体）── 残り 7 要素</text>
+            </g>
+            <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" dur="6s" repeatCount="indefinite"/>
+              <text x="100" y="354" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">data[4]〜data[6]（右半分のみ）── 残り 3 要素 → 半分以下に！</text>
+            </g>
+
+            <!-- ═══ 進行ドット ═══ -->
+            <text x="30" y="392" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">進行:</text>
+
+            <circle cx="120" cy="388" r="14" fill="#141414" stroke="#555" stroke-width="1.5"/>
+            <circle cx="120" cy="388" r="14" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0.7;0.7;0.15;0.15" dur="6s" repeatCount="indefinite"/>
+            </circle>
+            <text x="120" y="393" text-anchor="middle" fill="#e0e0e0" font-size="13" font-weight="700">1</text>
+            <text x="120" y="414" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="600">7&lt;11</text>
+
+            <line x1="134" y1="388" x2="226" y2="388" stroke="#333" stroke-width="2"/>
+
+            <circle cx="240" cy="388" r="14" fill="#141414" stroke="#555" stroke-width="1.5"/>
+            <circle cx="240" cy="388" r="14" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0.15;0.15;0.8;0.8" dur="6s" repeatCount="indefinite"/>
+            </circle>
+            <text x="240" y="393" text-anchor="middle" fill="#e0e0e0" font-size="13" font-weight="700">2</text>
+            <text x="240" y="414" text-anchor="middle" fill="#76B900" font-size="9" font-weight="700">11==11!</text>
+
+            <text x="290" y="392" fill="#aaa" font-size="11" font-family="'Noto Sans JP',sans-serif">逐次探索なら 6 回必要 → 二分探索は</text>
+            <text x="498" y="392" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">2 回で発見！</text>
+
+            <!-- ═══ 結果ボックス ═══ -->
+            <rect x="16" y="436" width="568" height="36" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+            <text x="300" y="459" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">結果: インデックス 5 で発見 ── 毎回探索範囲が半分になる（これが O(log n) の威力）</text>
+          </svg>
+        </div>
+
+        <!-- フローチャート（単色・緑のみ） -->
+        <p style="color:#76B900;font-weight:700;font-size:0.95rem;margin:1.5rem 0 0.8rem">処理のフローチャート</p>
+        <div class="diagram-container">
+          <svg viewBox="0 0 640 520" width="640" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono','Noto Sans JP',monospace;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+
+            <!-- ═══ ループバック経路（背面・点線） ═══ -->
+            <!-- 左アクション → 上 → 中央 → ループ先頭 -->
+            <line x1="100" y1="346" x2="20" y2="346" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <line x1="20" y1="346" x2="20" y2="24" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <line x1="20" y1="24" x2="320" y2="24" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <!-- 右アクション → 上 → 中央 -->
+            <line x1="540" y1="346" x2="620" y2="346" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <line x1="620" y1="346" x2="620" y2="24" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <line x1="620" y1="24" x2="320" y2="24" stroke="#76B900" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <!-- 中央 → 下へ（ループ先頭に入る矢印） -->
+            <line x1="320" y1="24" x2="320" y2="56" stroke="#76B900" stroke-width="2" stroke-dasharray="5,4"/>
+            <polygon points="316,54 320,62 324,54" fill="#76B900"/>
+
+            <!-- ループバックラベル（中央上部、点線の上） -->
+            <text x="320" y="16" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">───── ループ先頭へ戻る ─────</text>
+
+            <!-- ═══ ループ開始 ═══ -->
+            <rect x="200" y="64" width="240" height="42" rx="21" fill="#0a1a0a" stroke="#76B900" stroke-width="2"/>
+            <text x="320" y="90" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">while left ≤ right（ループ）</text>
+
+            <!-- 矢印: ループ開始 → mid -->
+            <line x1="320" y1="106" x2="320" y2="134" stroke="#76B900" stroke-width="2.5"/>
+            <polygon points="316,132 320,140 324,132" fill="#76B900"/>
+
+            <!-- ═══ mid 計算 ═══ -->
+            <rect x="200" y="140" width="240" height="42" rx="8" fill="#141414" stroke="#76B900" stroke-width="2"/>
+            <text x="320" y="166" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">mid = (left + right) // 2</text>
+
+            <!-- 矢印: mid → ひし形 -->
+            <line x1="320" y1="182" x2="320" y2="210" stroke="#76B900" stroke-width="2.5"/>
+            <polygon points="316,208 320,216 324,208" fill="#76B900"/>
+
+            <!-- ═══ ひし形: data[mid] vs target ═══ -->
+            <polygon points="320,216 470,288 320,360 170,288" fill="#0a1a0a" stroke="#76B900" stroke-width="2.5"/>
+            <text x="320" y="284" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">data[mid]</text>
+            <text x="320" y="304" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">vs target</text>
+
+            <!-- ═══ 左ブランチ: > target → 左半分を残す (right = mid - 1) ═══ -->
+            <line x1="170" y1="288" x2="110" y2="288" stroke="#76B900" stroke-width="2"/>
+            <text x="140" y="280" text-anchor="middle" fill="#76B900" font-size="11" font-weight="900" font-family="'Noto Sans JP',sans-serif">&gt; target</text>
+            <line x1="110" y1="288" x2="110" y2="324" stroke="#76B900" stroke-width="2"/>
+            <polygon points="106,322 110,330 114,322" fill="#76B900"/>
+
+            <rect x="40" y="330" width="140" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="2"/>
+            <text x="110" y="352" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" font-family="'Noto Sans JP',sans-serif">右側は捨てる</text>
+            <text x="110" y="372" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">right = mid - 1</text>
+
+            <!-- ═══ 下ブランチ: == target → 発見 ═══ -->
+            <line x1="320" y1="360" x2="320" y2="392" stroke="#76B900" stroke-width="3"/>
+            <polygon points="315,390 320,400 325,390" fill="#76B900"/>
+            <text x="356" y="378" fill="#76B900" font-size="11" font-weight="900">== target</text>
+
+            <rect x="220" y="402" width="200" height="60" rx="10" fill="#0a1a0a" stroke="#76B900" stroke-width="3"/>
+            <text x="320" y="424" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" font-family="'Noto Sans JP',sans-serif">発見！</text>
+            <text x="320" y="446" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">return mid</text>
+
+            <!-- ═══ 右ブランチ: &lt; target → 右半分を残す (left = mid + 1) ═══ -->
+            <line x1="470" y1="288" x2="530" y2="288" stroke="#76B900" stroke-width="2"/>
+            <text x="500" y="280" text-anchor="middle" fill="#76B900" font-size="11" font-weight="900" font-family="'Noto Sans JP',sans-serif">&lt; target</text>
+            <line x1="530" y1="288" x2="530" y2="324" stroke="#76B900" stroke-width="2"/>
+            <polygon points="526,322 530,330 534,322" fill="#76B900"/>
+
+            <rect x="460" y="330" width="140" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="2"/>
+            <text x="530" y="352" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" font-family="'Noto Sans JP',sans-serif">左側は捨てる</text>
+            <text x="530" y="372" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">left = mid + 1</text>
+
+            <!-- ═══ ループ終了時の注記 ═══ -->
+            <text x="320" y="478" text-anchor="middle" fill="#888" font-size="11" font-family="'Noto Sans JP',sans-serif">※ left &gt; right になったら見つからない → return -1</text>
+
+            <!-- ═══ まとめ ═══ -->
+            <rect x="16" y="490" width="608" height="22" rx="6" fill="#0a1a0a" stroke="#76B900" stroke-width="1"/>
+            <text x="320" y="506" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">中央と比較 → 半分を捨てる → ループ ── 100万件でも最大20回（O(log n)）</text>
+          </svg>
+        </div>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem"><code>binary_search_trace(data, 1)</code> を追加して、先頭の値を探してみよう。ステップ数は何回？</p>
@@ -673,6 +1178,102 @@ data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="n
     _, cnt_l = <span class="fn">linear_search_count</span>(data, target)
     _, cnt_b = <span class="fn">binary_search_count</span>(data, target)
     <span class="fn">print</span>(<span class="str">f"{target:>6}  {cnt_l:>5}回  {cnt_b:>5}回  {cnt_l-cnt_b:>+5}回"</span>)</pre>
+
+      <!-- 経路の比較 -->
+      <div style="margin-top:1.5rem">
+        <p style="color:#76B900;font-weight:700;font-size:0.95rem;margin-bottom:0.8rem">探索経路の比較: data = [1, 2, ..., 20] から target = 20 を探す</p>
+        <div class="diagram-container">
+          <svg viewBox="0 0 660 360" width="660" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono','Noto Sans JP',monospace;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+
+            <defs>
+              <marker id="arwGray3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#888"/></marker>
+            </defs>
+
+            <text x="330" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14" font-family="'Noto Sans JP',sans-serif">同じデータ・同じターゲットでの探索経路の違い</text>
+
+            <!-- ═══ 逐次探索の経路 ═══ -->
+            <text x="30" y="56" fill="#aaa" font-weight="700" font-size="13" font-family="'Noto Sans JP',sans-serif">逐次探索 O(n): 1から順番に全部調べる</text>
+
+            <!-- 20 cells linear: cells 1-19 in gray, cell 20 in green (発見) -->
+            <g text-anchor="middle">
+              <rect x="30" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="44" y="92" fill="#888" font-size="11">1</text>
+              <rect x="60" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="74" y="92" fill="#888" font-size="11">2</text>
+              <rect x="90" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="104" y="92" fill="#888" font-size="11">3</text>
+              <rect x="120" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="134" y="92" fill="#888" font-size="11">4</text>
+              <rect x="150" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="164" y="92" fill="#888" font-size="11">5</text>
+              <rect x="180" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="194" y="92" fill="#888" font-size="11">6</text>
+              <rect x="210" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="224" y="92" fill="#888" font-size="11">7</text>
+              <rect x="240" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="254" y="92" fill="#888" font-size="11">8</text>
+              <rect x="270" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="284" y="92" fill="#888" font-size="11">9</text>
+              <rect x="300" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="314" y="92" fill="#888" font-size="11">10</text>
+              <rect x="330" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="344" y="92" fill="#888" font-size="11">11</text>
+              <rect x="360" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="374" y="92" fill="#888" font-size="11">12</text>
+              <rect x="390" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="404" y="92" fill="#888" font-size="11">13</text>
+              <rect x="420" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="434" y="92" fill="#888" font-size="11">14</text>
+              <rect x="450" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="464" y="92" fill="#888" font-size="11">15</text>
+              <rect x="480" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="494" y="92" fill="#888" font-size="11">16</text>
+              <rect x="510" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="524" y="92" fill="#888" font-size="11">17</text>
+              <rect x="540" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="554" y="92" fill="#888" font-size="11">18</text>
+              <rect x="570" y="70" width="28" height="32" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/><text x="584" y="92" fill="#888" font-size="11">19</text>
+              <rect x="600" y="70" width="28" height="32" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2.5"/><text x="614" y="92" fill="#76B900" font-weight="900" font-size="11">20</text>
+            </g>
+
+            <!-- スイープ矢印 -->
+            <line x1="44" y1="118" x2="608" y2="118" stroke="#888" stroke-width="2" marker-end="url(#arwGray3)"/>
+            <text x="330" y="140" text-anchor="middle" fill="#aaa" font-size="11" font-family="'Noto Sans JP',sans-serif">→ 20 回の比較が必要（1, 2, 3, ..., 20 すべて）</text>
+
+            <!-- ═══ 二分探索の経路 ═══ -->
+            <text x="30" y="178" fill="#76B900" font-weight="700" font-size="13" font-family="'Noto Sans JP',sans-serif">二分探索 O(log n): 中央から半分ずつ絞り込む</text>
+
+            <!-- ステップ番号（訪問セルの上） -->
+            <text x="314" y="188" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="900">①</text>
+            <text x="464" y="188" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="900">②</text>
+            <text x="554" y="188" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="900">③</text>
+            <text x="584" y="188" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="900">④</text>
+            <text x="614" y="188" text-anchor="middle" fill="#76B900" font-size="12" font-weight="900">⑤</text>
+
+            <!-- 20 cells binary: 1-9, 11-14, 16-17 dim; 10/15/18/19 highlighted; 20 FOUND -->
+            <g text-anchor="middle">
+              <rect x="30" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="44" y="216" fill="#444" font-size="11">1</text>
+              <rect x="60" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="74" y="216" fill="#444" font-size="11">2</text>
+              <rect x="90" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="104" y="216" fill="#444" font-size="11">3</text>
+              <rect x="120" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="134" y="216" fill="#444" font-size="11">4</text>
+              <rect x="150" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="164" y="216" fill="#444" font-size="11">5</text>
+              <rect x="180" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="194" y="216" fill="#444" font-size="11">6</text>
+              <rect x="210" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="224" y="216" fill="#444" font-size="11">7</text>
+              <rect x="240" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="254" y="216" fill="#444" font-size="11">8</text>
+              <rect x="270" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="284" y="216" fill="#444" font-size="11">9</text>
+              <rect x="300" y="194" width="28" height="32" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/><text x="314" y="216" fill="#FFB800" font-weight="900" font-size="11">10</text>
+              <rect x="330" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="344" y="216" fill="#444" font-size="11">11</text>
+              <rect x="360" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="374" y="216" fill="#444" font-size="11">12</text>
+              <rect x="390" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="404" y="216" fill="#444" font-size="11">13</text>
+              <rect x="420" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="434" y="216" fill="#444" font-size="11">14</text>
+              <rect x="450" y="194" width="28" height="32" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/><text x="464" y="216" fill="#FFB800" font-weight="900" font-size="11">15</text>
+              <rect x="480" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="494" y="216" fill="#444" font-size="11">16</text>
+              <rect x="510" y="194" width="28" height="32" rx="4" fill="#141414" stroke="#333" stroke-width="1"/><text x="524" y="216" fill="#444" font-size="11">17</text>
+              <rect x="540" y="194" width="28" height="32" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/><text x="554" y="216" fill="#FFB800" font-weight="900" font-size="11">18</text>
+              <rect x="570" y="194" width="28" height="32" rx="4" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/><text x="584" y="216" fill="#FFB800" font-weight="900" font-size="11">19</text>
+              <rect x="600" y="194" width="28" height="32" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2.5"/><text x="614" y="216" fill="#76B900" font-weight="900" font-size="11">20</text>
+            </g>
+
+            <!-- ジャンプ矢印（① → ② → ③ → ④ → ⑤） -->
+            <path d="M 314 232 Q 389 264 464 232" stroke="#FFB800" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+            <path d="M 464 232 Q 509 262 554 232" stroke="#FFB800" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+            <path d="M 554 232 Q 569 248 584 232" stroke="#FFB800" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+            <path d="M 584 232 Q 599 246 614 232" stroke="#FFB800" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+
+            <text x="330" y="278" text-anchor="middle" fill="#76B900" font-size="12" font-weight="600" font-family="'Noto Sans JP',sans-serif">→ たった 5 回で発見！ 15 個のセルは見もしない</text>
+
+            <!-- まとめボックス -->
+            <rect x="20" y="296" width="620" height="58" rx="10" fill="#111" stroke="#333" stroke-width="1.5"/>
+            <text x="40" y="318" fill="#76B900" font-size="13" font-weight="700" font-family="'Noto Sans JP',sans-serif">差: 20回 - 5回 = 15回</text>
+            <text x="200" y="318" fill="#aaa" font-size="12" font-family="'Noto Sans JP',sans-serif">データが増えるとさらに差は広がる:</text>
+            <text x="40" y="340" fill="#aaa" font-size="11" font-family="'Noto Sans JP',sans-serif">100件: 100 vs 7（差 93）</text>
+            <text x="220" y="340" fill="#aaa" font-size="11" font-family="'Noto Sans JP',sans-serif">1万件: 10,000 vs 14（差 9,986）</text>
+            <text x="430" y="340" fill="#76B900" font-size="11" font-weight="700" font-family="'Noto Sans JP',sans-serif">100万件: 1,000,000 vs 20</text>
+          </svg>
+        </div>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">やってみよう（1分）</p>
@@ -757,8 +1358,8 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
           <text x="300" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">実行時間の比較 (N=100,000)</text>
 
           <!-- Linear bar -->
-          <text x="110" y="65" text-anchor="end" fill="#FF5252" font-size="11" font-weight="600">逐次探索</text>
-          <rect x="120" y="50" width="420" height="24" rx="5" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5" opacity="0.7"/>
+          <text x="110" y="65" text-anchor="end" fill="#aaa" font-size="11" font-weight="600">逐次探索</text>
+          <rect x="120" y="50" width="420" height="24" rx="5" fill="#1A1A1A" stroke="#888" stroke-width="1.5" opacity="0.7"/>
           <text x="550" y="67" fill="#aaa" font-size="10">数秒</text>
 
           <!-- Binary bar -->
@@ -788,18 +1389,58 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
     <div class="card" style="border-left:4px solid #4FC3F7">
       <div class="card-header">
         <span class="tag tag-group">グループワーク</span>
-        <h3>質問し合って理解を深める（15分）</h3>
+        <h3>例題を使って質問し合う（15分）</h3>
       </div>
-      <p>以下の質問例を参考に、グループ内で互いに質問し合ってください。質問例をそのまま使ってもOKです。</p>
+      <p>今回の<strong>例題1〜5</strong>を題材にして、グループ内で互いに質問し合ってください。<br>以下の質問例をそのまま使ってもOKですし、自分で考えた質問でもOKです。</p>
+
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">質問の切り口（参考）</p>
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem">質問例（例題ごと）</p>
         <table>
-          <tr><th style="width:25%">カテゴリ</th><th>質問例</th></tr>
-          <tr><td><strong style="color:#76B900">出力予測</strong></td><td>「<code>data = [1,3,5,7,9,11,13]</code> で <code>target = 9</code> を二分探索するとき、最初の mid は何？ 次の mid は？」</td></tr>
-          <tr><td><strong style="color:#FFB800">理由説明</strong></td><td>「二分探索はなぜソート済みのデータでないと使えないのか？」</td></tr>
-          <tr><td><strong style="color:#FF5252">改造提案</strong></td><td>「二分探索でターゲットが見つからなかったとき、『最も近い値』を返すようにするにはどう改造する？」</td></tr>
+          <tr><th style="width:18%">題材</th><th style="width:20%">切り口</th><th>質問例</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">例題1</strong></td>
+            <td style="color:#FFB800">理由説明</td>
+            <td>「二分探索は<code>sorted()</code>などで<strong>ソート済み</strong>のデータでないと使えないのはなぜ？ ソートされていないとどこで困る？」</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">例題2</strong></td>
+            <td style="color:#76B900">出力予測</td>
+            <td>「<code>data = [1,3,5,7,9,11,13]</code> で <code>target = 13</code> を探すと、各ステップの <code>left</code>, <code>right</code>, <code>mid</code> はどう変化する？ ステップ数は？」</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">例題2</strong></td>
+            <td style="color:#FFB800">理由説明</td>
+            <td>「先頭の値（<code>target = 1</code>）を探したのに1回で見つからないのはなぜ？ 二分探索の動作の特徴を説明して。」</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">例題3</strong></td>
+            <td style="color:#76B900">出力予測</td>
+            <td>「20件のデータで <code>target = 20</code>（末尾）を探すと、逐次探索と二分探索の比較回数は何回ずつ？ その差は？」</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">例題4</strong></td>
+            <td style="color:#93D500">違いを説明</td>
+            <td>「<code>bisect_left</code> と <code>bisect_right</code> の違いを、重複データ <code>[1,3,5,5,5,7,9]</code> で5を探した結果を使って説明して。」</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#76B900">例題5</strong></td>
+            <td style="color:#FFB800">改造提案</td>
+            <td>「二分探索は<strong>ソート</strong>がコスト。1回しか検索しないなら逐次探索の方が速いこともある。どんな場面で二分探索のメリットが大きい？」</td>
+          </tr>
         </table>
       </div>
+
+      <div style="background:#1A1A1A;border:1px solid #4FC3F7;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.5rem">進め方</p>
+        <ol style="margin:0 0 0 1.2rem;line-height:2;color:#ccc;font-size:0.9rem">
+          <li>各自、上の表から<strong>1つ質問を選ぶ</strong>（または自分で考える）</li>
+          <li>出題者が質問を読み上げる → 回答者が答える</li>
+          <li>グループ全員で回答を検証する（実際にコードを動かして確認してもOK）</li>
+          <li>出題者は回答の出来を <strong>A / B / C</strong> で評価する</li>
+          <li>全員が1回は出題者・回答者を経験するようにローテーション</li>
+        </ol>
+      </div>
+
       <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバーの氏名と、議論した質問・回答の要点を記録してください。</div></div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。left/right/midの動きを口頭で追跡する練習をしておくと、標準課題のトレース問題がスムーズに解けるはずです。
@@ -822,18 +1463,18 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
         <span class="tag tag-standard">標準課題 1</span>
         <h3>二分探索のトレースを手で追う</h3>
       </div>
-      <p><code>data = [2, 5, 8, 12, 16, 23, 38, 42, 56, 72]</code> で <code>target = 23</code> を二分探索するとき、各ステップの left, right, mid を記入しなさい。</p>
-      
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の内容を自分のNotionノートに記録してください。</div></div>
+      <p>以下のソート済みデータで <code>target = 23</code> を二分探索するとき、各ステップの <code>left</code>, <code>right</code>, <code>mid</code>, <code>data[mid]</code> と比較結果を表に記入しなさい。</p>
+      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">data = [2, 5, 8, 12, 16, 23, 38, 42, 56, 72]</pre>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 各ステップの left/right/mid と比較結果を表形式でNotionノートに記録してください。</div></div>
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
         <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記録する内容</p>
         <ul class="point-list">
-          <li><strong>グループメンバー全員の氏名</strong></li>
-          <li>各ラウンド: <strong>誰が</strong>（出題者）→ <strong>誰に</strong>（回答者）→ <strong>何を</strong>質問したか</li>
-          <li>回答の要点</li>
-          <li>評価（A / B / C）</li>
+          <li>各ステップで <strong>left</strong>, <strong>right</strong>, <strong>mid</strong> の値</li>
+          <li><strong>data[mid]</strong> と <strong>target</strong> の比較結果（一致 / 小さい→右半分へ / 大きい→左半分へ）</li>
+          <li>何ステップ目で発見したか（比較回数）</li>
+          <li>発見したインデックス</li>
         </ul>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「出題: 田中 → 回答: 鈴木 ／ 質問: ○○を△△に変えたら？ ／ 要点: □□になる ／ 評価: A」</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「ステップ1: left=0, right=9, mid=4, data[4]=16, 16&lt;23 → 右半分へ / ステップ2: ...」</p>
       </div>
     </div>
 
@@ -956,6 +1597,17 @@ count = <span class="num">0</span>
 
 ---
 
+## グループ口頭試問
+**グループメンバー:**
+
+| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
+|--------|-------------|--------|------|------|
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+|        |             |        |      | A/B/C |
+
+---
+
 ## 標準課題 1: 二分探索のトレースを手で追う
 （回答を記入）
 
@@ -970,17 +1622,6 @@ count = <span class="num">0</span>
 
 ### Q3.
 （実行結果（予測と合っていたか））
-
----
-
-## グループ口頭試問
-**グループメンバー:**
-
-| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
-|--------|-------------|--------|------|------|
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
 
 ---
 
@@ -999,7 +1640,7 @@ count = <span class="num">0</span>
   </div>
 </section>
 
-<!-- ============ ANSWERS ============ -->
+<!-- ============ ANSWERS (例題: 公開 / 課題: 暗号化) ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-05-20T14:40">
   <div class="container">
     <div class="section-header">
@@ -1007,6 +1648,69 @@ count = <span class="num">0</span>
       <h2>解答例</h2>
     </div>
 
+    <!-- ── 例題の解答（常に公開） ── -->
+    <div id="answers-examples">
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>numbers = [1, 2, 3, 4, 5]</code> （最初からソート済み）に変更した場合:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">元のリスト: [1, 2, 3, 4, 5]
+ソート後:   [1, 2, 3, 4, 5]
+元はソート済み？: True
+ソート後はソート済み？: True</pre>
+        <p>また、<code>sorted()</code> は<strong>元のリストを変更せず、新しいリストを返す</strong>。<code>numbers</code> と <code>sorted_numbers</code> は別オブジェクトで、<code>numbers</code> の中身は呼び出し後も元のままになる。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>data = [1, 3, 5, 7, 9, 11, 13]</code> で <code>target = 1</code> を探した場合:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">ステップ1: left=0, right=6, mid=3, data[3]=7  → 7 > 1 なので左半分へ
+ステップ2: left=0, right=2, mid=1, data[1]=3  → 3 > 1 なので左半分へ
+ステップ3: left=0, right=0, mid=0, data[0]=1  → 発見! インデックス0</pre>
+        <p>先頭の値でも<strong>3ステップ</strong>かかる。二分探索は常に<strong>真ん中</strong>から調べるため、先頭にあっても1回では見つからない（逐次探索とは違う特徴）。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>data = list(range(1, 101))</code>（100件）にした場合の比較回数:</p>
+        <table>
+          <tr><th>target</th><th>逐次探索</th><th>二分探索</th><th>差</th></tr>
+          <tr><td>1</td><td>1回</td><td>6回</td><td>-5回</td></tr>
+          <tr><td>50</td><td>50回</td><td>1回</td><td>+49回</td></tr>
+          <tr><td>100</td><td>100回</td><td>7回</td><td>+93回</td></tr>
+        </table>
+        <p>20件のときと比べて、<strong>末尾の値（target=最大値）での差が大きく広がる</strong>。データ数が10倍になると、逐次探索の最悪比較回数は10倍になるが、二分探索はわずか数回増えるだけ。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>data_dup = [1, 3, 5, 5, 5, 7, 9]</code> で <code>bisect_left(data_dup, 6)</code> を実行した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">bisect_left(data_dup, 6) → 5</pre>
+        <p>位置5の前の値は <code>data_dup[4] = 5</code>、後の値は <code>data_dup[5] = 7</code>。つまり<strong>「6を入れるならインデックス5の位置（5と7の間）」</strong>という挿入位置を返している。<code>bisect</code> は存在しない値でも、ソート順を保ったまま挿入できる位置を教えてくれる。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>n = 1000000</code>（100万件）に変えた場合の結果例:</p>
+        <table>
+          <tr><th>n</th><th>逐次探索</th><th>二分探索</th><th>速度差</th></tr>
+          <tr><td>100,000</td><td>約 2〜3 秒</td><td>約 0.001 秒</td><td>約数千倍</td></tr>
+          <tr><td>1,000,000</td><td>約 20〜30 秒</td><td>約 0.001 秒</td><td>約数万倍</td></tr>
+        </table>
+        <p>データが10倍になると、<strong>逐次探索は約10倍遅くなる</strong>（O(n)）が、<strong>二分探索はほぼ変わらない</strong>（O(log n) → 20回 → 23回程度）。データ量が大きいほど二分探索のメリットが圧倒的になる。</p>
+      </div>
+    </details>
+    </div>
+
+    <!-- ── 標準課題・発展課題の解答（暗号化） ── -->
     <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
