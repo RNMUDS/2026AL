@@ -1354,6 +1354,26 @@ right_pos = bisect.<span class="fn">bisect_right</span>(data_dup, <span class="n
       <pre><span class="code-label">Python</span>
 <span class="kw">import</span> time, random
 
+<span class="cmt"># --- 探索関数の定義 ---</span>
+<span class="kw">def</span> <span class="fn">linear_search</span>(data, target):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        <span class="kw">if</span> data[i] == target:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> -<span class="num">1</span>
+
+<span class="kw">def</span> <span class="fn">binary_search</span>(data, target):
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(data) - <span class="num">1</span>
+    <span class="kw">while</span> left <= right:
+        mid = (left + right) // <span class="num">2</span>
+        <span class="kw">if</span> data[mid] == target:
+            <span class="kw">return</span> mid
+        <span class="kw">elif</span> data[mid] < target:
+            left = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            right = mid - <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>
+
+<span class="cmt"># --- データとターゲットの準備 ---</span>
 n = <span class="num">100000</span>
 data = <span class="fn">list</span>(<span class="fn">range</span>(n))
 targets = [random.<span class="fn">randint</span>(<span class="num">0</span>, n-<span class="num">1</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">500</span>)]
