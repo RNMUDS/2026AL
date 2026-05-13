@@ -342,6 +342,35 @@ pre { position: relative; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.8rem; font-weight: 700;
 }
+a.sub-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+a.sub-item:hover {
+  border-color: #76B900;
+  background: #1f2a14;
+  transform: translateY(-1px);
+}
+
+/* ============ CHAPTER TOGGLE ============ */
+.section-header {
+  cursor: pointer;
+  user-select: none;
+}
+.section-header::after {
+  content: '▼';
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: #76B900;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.section-header:hover::after { opacity: 1; }
+.section-header.collapsed::after { content: '▶'; }
+.section-body.collapsed { display: none; }
 </style>
 </head>
 <body>
@@ -371,12 +400,12 @@ pre { position: relative; }
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
+      <h3>📋 提出ガイド（この回の提出物: 計8項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
-        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -1384,7 +1413,7 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
       <div class="section-num" style="background:#4A7A00">3</div>
       <h2>グループディスカッション</h2>
     </div>
-    <p style="margin-bottom:1rem">3〜4人のグループで議論してください。</p>
+    <p style="margin-bottom:1rem">2〜4人のグループで議論してください。</p>
 
     <div class="card" style="border-left:4px solid #4FC3F7">
       <div class="card-header">
@@ -1443,7 +1472,7 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
 
       <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバーの氏名と、議論した質問・回答の要点を記録してください。</div></div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。left/right/midの動きを口頭で追跡する練習をしておくと、標準課題のトレース問題がスムーズに解けるはずです。
+        <strong>ヒント:</strong> このディスカッションで話し合った内容は、次の「標準課題」を解くのに役立ちます。left/right/midの動きを口頭で追跡する練習をしておくと、標準課題のトレース問題がスムーズに解けるはずです。
       </div>
     </div>
 
@@ -1478,41 +1507,6 @@ time_linear = time.<span class="fn">perf_counter</span>() - start
       </div>
     </div>
 
-    <div class="card standard">
-      <div class="card-header">
-        <span class="tag tag-standard">標準課題 2</span>
-        <h3>二分探索コードのトレース</h3>
-      </div>
-      <p>以下のコードを<strong>実行せずに</strong>、whileループの各ステップで <code>left</code>, <code>right</code>, <code>mid</code> がどう変化するかを追い、最終出力を予測しなさい。<br>予測を書いた後に、<code>AL04-3.py</code> として保存・実行して確かめなさい。</p>
-      <pre><span class="code-label">Python ── AL04-3.py</span>
-data = [<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>, <span class="num">11</span>, <span class="num">13</span>, <span class="num">15</span>, <span class="num">17</span>, <span class="num">19</span>]
-target = <span class="num">13</span>
-left = <span class="num">0</span>
-right = <span class="fn">len</span>(data) - <span class="num">1</span>
-count = <span class="num">0</span>
-
-<span class="kw">while</span> left <= right:
-    mid = (left + right) // <span class="num">2</span>
-    count += <span class="num">1</span>
-    <span class="fn">print</span>(<span class="str">f"</span>{count}<span class="str">回目: left={left}, right={right}, mid={mid}, data[mid]={data[mid]}"</span>)
-    <span class="kw">if</span> data[mid] == target:
-        <span class="fn">print</span>(<span class="str">f"発見！ インデックス={mid}, 比較回数={count}"</span>)
-        <span class="kw">break</span>
-    <span class="kw">elif</span> data[mid] < target:
-        left = mid + <span class="num">1</span>
-    <span class="kw">else</span>:
-        right = mid - <span class="num">1</span>
-<span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">f"見つからない。比較回数={count}"</span>)</pre>
-      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 各ステップで left, right, mid の値を表に書き出すと追いやすいです。data[mid] と target の大小関係で left と right のどちらが変わるかに注目。</p>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。
-        <ul class="point-list">
-          <li><strong>Q1.</strong> 各ステップの <code>left</code>, <code>right</code>, <code>mid</code> の値のトレース表</li>
-          <li><strong>Q2.</strong> 最終出力の予測（インデックスと比較回数）</li>
-          <li><strong>Q3.</strong> 実行結果（予測と合っていたか）</li>
-        </ul>
-      </div></div>
-    </div>
   </div>
 </section>
 
@@ -1581,23 +1575,31 @@ count = <span class="num">0</span>
 
 ## 例題 やってみよう
 ### 例題1: sorted() の動作確認
-（回答を記入）
+- 元のリスト:
+- sorted() 後のリスト:
+- 元とsorted()後が別物であることの確認（気づいたこと）:
 
 ### 例題2: target=1 のステップ数と left/right/mid
-（回答を記入）
+- ステップ数（比較回数）:
+- 各ステップの left / right / mid の値:
 
 ### 例題3: 20件 vs 100件での比較回数の差
-（回答を記入）
+- 20件のとき（target=最後の値）の比較回数:
+- 100件のとき（target=最後の値）の比較回数:
+- 差（気づいたこと）:
 
 ### 例題4: bisect_left(data_dup, 6) の結果
-（回答を記入）
+- 返り値（インデックス）:
+- その位置の前の値 / 後の値:
 
-### 例題5: n=100万件での実行時間と倍率
-（回答を記入）
+### 例題5: n=10万件 と n=100万件 での実行時間と倍率
+- n=100000 の実行時間:
+- n=1000000 の実行時間:
+- 倍率（100万 ÷ 10万）と気づいたこと:
 
 ---
 
-## グループ口頭試問
+## グループディスカッション
 **グループメンバー:**
 
 | 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
@@ -1609,25 +1611,20 @@ count = <span class="num">0</span>
 ---
 
 ## 標準課題 1: 二分探索のトレースを手で追う
-（回答を記入）
+### Q1. 各ステップの left / right / mid のトレース表
+| ステップ | left | right | mid | data[mid] | 比較結果（一致/小→右半分/大→左半分） |
+|---------|------|-------|-----|-----------|---------------------------------------|
+|         |      |       |     |           |                                       |
 
----
+### Q2. 何ステップ目で発見したか（比較回数）
 
-## 標準課題 2: 二分探索コードのトレース
-### Q1.
-（各ステップの left, right, mid の値のトレース表）
-
-### Q2.
-（最終出力の予測（インデックスと比較回数））
-
-### Q3.
-（実行結果（予測と合っていたか））
+### Q3. 発見したインデックス
 
 ---
 
 ## 発展課題: 二分探索の応用: 条件を満たす最小値を見つける
 ### コード
-（AL04-?.py のコードを貼り付け）
+（AL04-4.py のコードを貼り付け）
 ### 音声説明
 （1〜2分の音声ファイルを添付）
 </pre>
@@ -1745,6 +1742,42 @@ document.querySelectorAll('pre').forEach(function(pre) {
     });
   });
   pre.appendChild(btn);
+});
+
+// Chapter toggle (expand/collapse each section)
+document.querySelectorAll('.section-header').forEach(function(header) {
+  var container = header.parentElement;
+  var body = document.createElement('div');
+  body.className = 'section-body';
+  var sibs = [];
+  var next = header.nextElementSibling;
+  while (next) {
+    sibs.push(next);
+    next = next.nextElementSibling;
+  }
+  sibs.forEach(function(n) { body.appendChild(n); });
+  container.appendChild(body);
+  header.addEventListener('click', function() {
+    body.classList.toggle('collapsed');
+    header.classList.toggle('collapsed');
+  });
+});
+
+// Smooth scroll for submission guide links (offset for sticky nav)
+document.querySelectorAll('a.sub-item').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    var targetId = link.getAttribute('href');
+    if (!targetId || !targetId.startsWith('#')) return;
+    var target = document.querySelector(targetId);
+    if (!target) return;
+    e.preventDefault();
+    // Auto-expand if the chapter is collapsed
+    var header = target.querySelector('.section-header');
+    if (header && header.classList.contains('collapsed')) {
+      header.click();
+    }
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 });
 </script>
 
