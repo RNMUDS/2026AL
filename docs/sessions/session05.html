@@ -728,6 +728,49 @@ else:
         <tr><td>データ数不明・巨大・先頭付近を高速に探したい</td><td><strong>指数探索</strong></td></tr>
       </table>
 
+      <h5 style="color:#76B900;margin-top:1rem">違い⑤ — なぜ「倍々」なのか？100 や 1000 ずつではダメな理由</h5>
+      <p>「だったら 100 や 1000 ずつ範囲を広げてもいいのでは？」と思うかもしれません。しかし <strong>固定刻みのジャンプ</strong> には次の問題があり、<strong>倍々（指数）</strong> にすることでそれが解消されます。</p>
+
+      <p style="margin-top:0.8rem"><strong>① target の位置に応じて自動で「ちょうどよい」スピードになる</strong></p>
+      <p>倍々に広げると、target がどこにいても <strong>必要な分だけ</strong> しか広げません。</p>
+      <table>
+        <tr><th>target の位置</th><th>倍々（指数）で到達するまで</th><th>固定 100 で到達するまで</th><th>固定 1000 で到達するまで</th></tr>
+        <tr><td>5 番目</td><td>3 回（1→2→4→8）</td><td>1 回</td><td>1 回</td></tr>
+        <tr><td>500 番目</td><td>10 回（…→1024）</td><td>5 回</td><td>1 回</td></tr>
+        <tr><td>50,000 番目</td><td>17 回（…→131072）</td><td><strong>500 回</strong></td><td>50 回</td></tr>
+        <tr><td>5,000,000 番目</td><td>23 回</td><td><strong>50,000 回</strong></td><td><strong>5,000 回</strong></td></tr>
+      </table>
+      <p>固定刻みは「target が遠いほどジャンプ回数が <strong>線形に増える</strong>」のに対して、倍々は <strong>log で増えるだけ</strong>。これが O(log n) と O(n/step) の決定的な差です。</p>
+
+      <p style="margin-top:0.8rem"><strong>② 「最適な step を事前に決められない」問題を回避できる</strong></p>
+      <p>固定刻みで最適な step を選ぼうとすると、</p>
+      <ul>
+        <li>step が小さい（例: 100） → target が遠いと回数爆発</li>
+        <li>step が大きい（例: 10000） → target が近いと無駄に飛ばしすぎる</li>
+        <li>数学的な最適は <code>step = √n</code> → これがジャンプ探索だが、<strong>n を知っている必要がある</strong></li>
+      </ul>
+      <p>データ数 n が未知なら、そもそも「100 が良いか 1000 が良いか」を決める根拠がありません。倍々は <strong>n を知らなくても自動的に target の位置に合わせて止まる</strong> ので、この選択問題そのものが消えます。</p>
+
+      <p style="margin-top:0.8rem"><strong>③ 「広げすぎた量」が target の位置以下に収まる</strong></p>
+      <p>倍々で止まった時点で <code>bound ≤ 2 × target の位置</code>。つまり</p>
+      <pre><code>target が位置 k にあるとき、bound は最大でも 2k 程度で止まる
+              ↓
+二分探索する範囲 [bound/2, bound] の幅 ≤ k
+              ↓
+二分探索は log(k) 回で完了 → 全体で O(log k)</code></pre>
+      <p>固定 1000 で広げると、target が位置 5 でも範囲 [0, 1000] を二分探索することになり、target に対して <strong>過剰に広い範囲</strong> を毎回二分探索する羽目になります。倍々ならこの「広げすぎ」が target に比例した量に抑えられます。</p>
+
+      <p style="margin-top:0.8rem"><strong>④ どんな n でも自動でスケールする</strong></p>
+      <p>10 要素のリストでも 100 億要素のリストでも、同じコードがそのまま動きます。固定刻みだとデータ規模ごとに step を調整しないと性能が崩れます。</p>
+
+      <p style="margin-top:0.8rem"><strong>直感的なまとめ</strong></p>
+      <p>固定刻みは <strong>「一定速度で歩いて探す」</strong>、倍々は <strong>「歩幅をだんだん広げて走る」</strong> イメージです。target が遠ければ遠いほど大股になり、近ければ近いだけ小股のまま止まる ── target との距離に応じて勝手にギアチェンジしてくれる、これが指数的に広げる本質的な利点です。</p>
+      <ul>
+        <li>固定刻み s での到達回数: <code>target位置 / s</code>（<strong>線形</strong>）</li>
+        <li>倍々での到達回数: <code>log2(target位置)</code>（<strong>対数</strong>）</li>
+      </ul>
+      <p>n が大きくなるほど、この差は決定的になります（n=10億 なら 線形 1000万回 vs 対数 30 回）。</p>
+
       <h5 style="color:#76B900;margin-top:1rem">まとめの一言</h5>
       <ul>
         <li><strong>ジャンプ探索</strong> = 「√n 幅で飛び石、当たりブロックを逐次探索」。n が既知のときの中間的選択肢。</li>
