@@ -636,6 +636,105 @@ else:
         💡 <strong>二分探索・bisect・指数探索</strong> は全て同じ <code>O(log n)</code> 曲線に乗ります（理論的な比較回数は同じ）。差は<strong>実装の速度</strong>（bisect は C 言語で最速）と<strong>得意な状況</strong>（指数探索は先頭付近 / 巨大リストが得意）にあります。
       </p>
     </div>
+
+    <!-- Jump vs Exponential search explanation -->
+    <div class="concept-box">
+      <h4>ジャンプ探索と指数探索 — 何が違う？どう使い分ける？</h4>
+      <p>二分探索を学んだあとに登場する <strong>ジャンプ探索</strong> と <strong>指数探索</strong> は、どちらも「ソート済みデータを高速に探す」という目的では似ています。しかし <strong>「どうやって探索範囲を狭めるか」</strong> と <strong>「データ数 n を最初に知っているか」</strong> という 2 点で大きく違います。</p>
+
+      <h5 style="color:#76B900;margin-top:1rem">共通点</h5>
+      <ul>
+        <li>両方とも <strong>ソート済み</strong> であることが前提</li>
+        <li>どちらも <strong>2 段階</strong> の探索（まず大ざっぱに範囲を絞り、次にその範囲を詳しく調べる）</li>
+        <li>純粋な逐次探索 O(n) よりは速い</li>
+      </ul>
+
+      <h5 style="color:#76B900;margin-top:1rem">違い① — 範囲の絞り方</h5>
+      <table>
+        <tr><th></th><th>ジャンプ探索</th><th>指数探索</th></tr>
+        <tr><td>第 1 段階のジャンプ幅</td><td><strong>固定</strong> √n ずつ</td><td><strong>倍々</strong>（1, 2, 4, 8, 16, …）</td></tr>
+        <tr><td>第 2 段階の探索方法</td><td>ブロック内を <strong>逐次探索</strong></td><td>絞り込んだ範囲で <strong>二分探索</strong></td></tr>
+        <tr><td>計算量</td><td>O(√n)</td><td>O(log n)</td></tr>
+        <tr><td>データ数 n の事前知識</td><td><strong>必要</strong>（√n を計算するため）</td><td><strong>不要</strong>（端を知らなくても進める）</td></tr>
+      </table>
+
+      <h5 style="color:#76B900;margin-top:1rem">違い② — 探索の手順をフローで見る</h5>
+      <p><strong>ジャンプ探索の流れ</strong>（例: n=100, target=42, ジャンプ幅=√100=10）</p>
+      <pre><code>ステップ1: √n=10 ずつ「飛び石」のように進む
+  [0] [1] ... [9] [10] [11] ... [19] [20] ... [29] [30] ... [39] [40] ... [49] ...
+   ↑               ↑                ↑                ↑                ↑
+   0 を見る         10 を見る         20 を見る         30 を見る         40 を見る
+   (0 &lt; 42 OK)      (10 &lt; 42 OK)      (20 &lt; 42 OK)      (30 &lt; 42 OK)      (40 &lt; 42 OK)
+                                                                          ↓
+                                                                          次は50で42を超える!
+
+ステップ2: 一つ前のブロック [40, 49] に target がいるはず → ブロック内を1つずつ確認
+  data[40]=40 → ✗
+  data[41]=41 → ✗
+  data[42]=42 → ✓ 見つかった!</code></pre>
+      <p>ポイント: <strong>「行き過ぎたら一つ前のブロックに戻って、そこを逐次探索」</strong> が本質。√n ジャンプ + √n 逐次 = 合計 O(√n)。</p>
+
+      <p style="margin-top:1rem"><strong>指数探索の流れ</strong>（例: target=42、データ数は不明 or 巨大）</p>
+      <pre><code>ステップ1: bound を 2倍ずつ広げていく
+  bound=1   : data[1]=1   &lt; 42  → さらに広げる
+  bound=2   : data[2]=2   &lt; 42  → さらに広げる
+  bound=4   : data[4]=4   &lt; 42  → さらに広げる
+  bound=8   : data[8]=8   &lt; 42  → さらに広げる
+  bound=16  : data[16]=16 &lt; 42  → さらに広げる
+  bound=32  : data[32]=32 &lt; 42  → さらに広げる
+  bound=64  : data[64]=64 ≥ 42  → ストップ! target は [32, 64] の間にいる
+
+ステップ2: 範囲 [32, 64] に対して「二分探索」を実行
+  ← ここで前回学んだ二分探索がそのまま使える!
+  mid=48 → data[48]=48 &gt; 42 → 右半分を捨てる → 範囲 [32, 47]
+  mid=39 → data[39]=39 &lt; 42 → 左半分を捨てる → 範囲 [40, 47]
+  mid=43 → data[43]=43 &gt; 42 → 右半分を捨てる → 範囲 [40, 42]
+  mid=41 → data[41]=41 &lt; 42 → 左半分を捨てる → 範囲 [42, 42]
+  mid=42 → data[42]=42 = 42 → ✓ 見つかった!</code></pre>
+      <p>ポイント: <strong>「範囲を倍々に広げて当たり地点を超えたら、そこから二分探索」</strong>。</p>
+
+      <h5 style="color:#76B900;margin-top:1rem">違い③ — どこで二分探索を呼んでいる？</h5>
+      <p>ここが最初に混乱しやすいところです。<strong>指数探索は中身で二分探索を呼び出します</strong>。</p>
+      <pre><code>指数探索(data, target):
+    bound = 1
+    while bound &lt; n and data[bound] &lt; target:   # ← ここはステップ1（指数的に広げる）
+        bound = bound * 2
+
+    # ↓ ここでステップ2として「二分探索」を呼ぶ!
+    return binary_search(data, target, 範囲=[bound//2, min(bound, n-1)])</code></pre>
+      <p>つまり指数探索とは <strong>「二分探索を実行する前に、適切な探索区間 [L, R] を素早く見つけるための前処理」</strong> です。二分探索は「<code>left</code> と <code>right</code> がわかっていないと始められない」のですが、データ数 n がわからない状況では <code>right</code> を決められません。指数探索は <strong><code>right</code> を見つけるための仕組み</strong> とも言えます。</p>
+
+      <h5 style="color:#76B900;margin-top:1rem">違い④ — データ数 n が「わかる」か「わからない」かで選ぶ</h5>
+      <p>最大の判断基準はここです。</p>
+
+      <p style="margin-top:0.8rem"><strong>ジャンプ探索を選ぶ場面</strong></p>
+      <ul>
+        <li>データ数 n が <strong>事前にわかっている</strong>（普通の Python リストなど <code>len(data)</code> がすぐ得られる）</li>
+        <li>ランダムアクセス（任意の位置 <code>data[i]</code> への参照）は可能だが、できれば「インデックス計算は単純に」したい</li>
+        <li>教育的な題材として「逐次探索より速く、二分探索より単純」な中間例を見たい</li>
+      </ul>
+
+      <p style="margin-top:0.6rem"><strong>指数探索を選ぶ場面</strong></p>
+      <ul>
+        <li>データ数 n が <strong>未知</strong>、または非常に大きい（例: ストリーミングデータ、巨大ファイル、無限数列、API ページネーション）</li>
+        <li>探したい値が <strong>配列の先頭付近にあると予想される</strong>。倍々に広げるので、target が先頭近くなら数回で済む（二分探索は毎回 n/2 から始まるので、先頭付近の値でも <code>log n</code> 回必要）</li>
+        <li>「終端がどこかわからないが、ソートされてはいる」ようなデータに対して二分探索を適用したい</li>
+      </ul>
+
+      <table style="margin-top:0.8rem">
+        <tr><th>状況</th><th>おすすめ</th></tr>
+        <tr><td>普通の Python リストで <code>len()</code> が使える</td><td><strong>二分探索 / bisect</strong>（最も高速 O(log n)）</td></tr>
+        <tr><td>同上だがアルゴリズム比較として</td><td>ジャンプ探索</td></tr>
+        <tr><td>データ数不明・巨大・先頭付近を高速に探したい</td><td><strong>指数探索</strong></td></tr>
+      </table>
+
+      <h5 style="color:#76B900;margin-top:1rem">まとめの一言</h5>
+      <ul>
+        <li><strong>ジャンプ探索</strong> = 「√n 幅で飛び石、当たりブロックを逐次探索」。n が既知のときの中間的選択肢。</li>
+        <li><strong>指数探索</strong> = 「倍々に広げて範囲を見つけ、その範囲を二分探索」。n が未知 / 巨大なときの強力な選択肢。</li>
+        <li>計算量は <strong>指数探索 O(log n) &gt; ジャンプ探索 O(√n)</strong> で指数探索が速いが、ジャンプ探索は実装が簡単という良さがある。</li>
+      </ul>
+    </div>
   </div>
 </section>
 
