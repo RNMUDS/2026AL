@@ -153,6 +153,17 @@ pre { position: relative; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.8rem; font-weight: 700;
 }
+a.sub-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+a.sub-item:hover {
+  border-color: #76B900;
+  background: #1f2a14;
+  transform: translateY(-1px);
+}
 </style>
 </head>
 <body>
@@ -183,10 +194,10 @@ pre { position: relative; }
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
-        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -274,11 +285,11 @@ pre { position: relative; }
 
           <!-- Legend -->
           <rect x="100" y="310" width="14" height="14" rx="3" fill="#76B900"/>
-          <text x="120" y="322" fill="#aaa" font-size="10">整列済み</text>
+          <text x="120" y="322" fill="#aaa" font-size="11">整列済み</text>
           <rect x="190" y="310" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
-          <text x="210" y="322" fill="#aaa" font-size="10">未整列</text>
+          <text x="210" y="322" fill="#aaa" font-size="11">未整列</text>
           <rect x="270" y="310" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
-          <text x="290" y="322" fill="#aaa" font-size="10">最初の1枚</text>
+          <text x="290" y="322" fill="#aaa" font-size="11">最初の1枚</text>
         </svg>
       </div>
     </div>
@@ -291,6 +302,27 @@ pre { position: relative; }
         <tr><td>平均</td><td>O(n<sup>2</sup>)</td><td>約 n(n-1)/4 回</td></tr>
         <tr><td>最悪（逆順）</td><td>O(n<sup>2</sup>)</td><td>n(n-1)/2 回</td></tr>
       </table>
+    </div>
+
+    <!-- R8: Q&A concept box for confusing parts -->
+    <div class="concept-box" style="border-left:4px solid #FFB800">
+      <h4 style="color:#FFB800">1.5 よくある疑問 Q&amp;A</h4>
+      <div style="background:#1a1700;border-radius:8px;padding:0.8rem 1rem;margin:0.6rem 0;border-left:3px solid #FFB800">
+        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.3rem">Q1. <code>key</code>（読み: キー）って何ですか？</p>
+        <p style="color:#ccc;font-size:0.9rem">「いま手に取った1枚のカード」を表す<strong>一時変数（temporary variable / テンポラリ変数）</strong>です。<code>key = data[i]</code> でリストから値を取り出し、左側の整列済み部分の正しい位置に挿入します。具体例: <code>data = [25, 34, 64, 12, 22]</code> で <code>i = 3</code> のとき <code>key = 12</code>。これを <code>[25, 34, 64]</code> の先頭に挿入する。</p>
+      </div>
+      <div style="background:#1a1700;border-radius:8px;padding:0.8rem 1rem;margin:0.6rem 0;border-left:3px solid #FFB800">
+        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.3rem">Q2. なぜ <code>data[j + 1] = data[j]</code> でずらすの？「交換」じゃダメ？</p>
+        <p style="color:#ccc;font-size:0.9rem">挿入ソートは「交換（swap / スワップ）」ではなく「ずらす（shift / シフト）」を使います。<code>key</code> をいったん退避してあるので、<strong>上書き（overwrite / オーバーライト）</strong>でずらせばよく、毎回 temp 変数を作る必要がない。これによって動作が約2倍速くなる。<br>例: <code>[25, 34, 64, _]</code> に key=12 を挿入する場合、<code>data[3]=data[2]=64</code>, <code>data[2]=data[1]=34</code>, <code>data[1]=data[0]=25</code>, 最後に <code>data[0]=key=12</code>。</p>
+      </div>
+      <div style="background:#1a1700;border-radius:8px;padding:0.8rem 1rem;margin:0.6rem 0;border-left:3px solid #FFB800">
+        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.3rem">Q3. <code>j + 1</code> で挿入するのはなぜ？ <code>j</code> ではないの？</p>
+        <p style="color:#ccc;font-size:0.9rem"><code>while</code> ループの最後に <code>j -= 1</code> されているからです。ループを抜けた時点で <code>j</code> は<strong>挿入位置の1つ左</strong>（または -1）になっているので、実際の挿入位置は <code>j + 1</code>。<br>例: key=12 が先頭に入る場合、<code>j</code> は -1 まで減って while を抜けるので、挿入は <code>data[-1 + 1] = data[0]</code>。</p>
+      </div>
+      <div style="background:#1a1700;border-radius:8px;padding:0.8rem 1rem;margin:0.6rem 0;border-left:3px solid #FFB800">
+        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.3rem">Q4. 「安定ソート（stable sort / ステーブルソート）」って？</p>
+        <p style="color:#ccc;font-size:0.9rem">同じ値を持つ要素の<strong>元の順序が保たれる</strong>ソートのことです。挿入ソートは <code>data[j] &gt; key</code>（厳密に大きいとき）でしかずらさないので、同じ値の場合は元の順序のまま。<br>具体例: 学生 <code>[("田中", 70), ("鈴木", 80), ("佐藤", 70)]</code> を点数でソートしても、田中と佐藤の順序は元のまま <code>[("田中", 70), ("佐藤", 70), ("鈴木", 80)]</code> になる。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -410,9 +442,9 @@ pre { position: relative; }
 
           <!-- Legend -->
           <rect x="120" y="250" width="14" height="14" rx="3" fill="#FFB800"/>
-          <text x="140" y="262" fill="#aaa" font-size="10">挿入された要素</text>
+          <text x="140" y="262" fill="#aaa" font-size="11">挿入された要素</text>
           <rect x="260" y="250" width="14" height="14" rx="3" fill="#76B900"/>
-          <text x="280" y="262" fill="#aaa" font-size="10">右にずらされた要素</text>
+          <text x="280" y="262" fill="#aaa" font-size="11">右にずらされた要素</text>
         </svg>
       </div>
     </div>
@@ -437,6 +469,118 @@ value_b = temp
 value_x, value_y = <span class="num">50</span>, <span class="num">20</span>
 value_x, value_y = value_y, value_x  <span class="cmt"># 一行で交換!</span></pre>
 
+      <!-- Example 1: animated swap diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">一時変数 temp を使った変数交換のステップ</text>
+
+          <!-- Step badge (top right) -->
+          <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ① 初期状態
+          </text>
+          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ② temp = value_a
+          </text>
+          <text x="580" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ③ value_a = value_b
+          </text>
+          <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ④ value_b = temp（完了!）
+          </text>
+
+          <!-- Box labels -->
+          <text x="135" y="110" text-anchor="middle" fill="#888" font-size="13" font-weight="600">value_a</text>
+          <text x="340" y="110" text-anchor="middle" fill="#888" font-size="13" font-weight="600">temp</text>
+          <text x="545" y="110" text-anchor="middle" fill="#888" font-size="13" font-weight="600">value_b</text>
+
+          <!-- Box outlines (fixed) -->
+          <rect x="80" y="125" width="110" height="60" rx="10" fill="#141414" stroke="#76B900" stroke-width="2"/>
+          <rect x="285" y="125" width="110" height="60" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+          <rect x="490" y="125" width="110" height="60" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
+
+          <!-- value_a content: 30 → 30 → 10 → 10 -->
+          <text x="135" y="166" text-anchor="middle" fill="#76B900" font-size="26" font-weight="900" opacity="0">
+            <animate attributeName="opacity" values="1;1;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            30
+          </text>
+          <text x="135" y="166" text-anchor="middle" fill="#4FC3F7" font-size="26" font-weight="900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            10
+          </text>
+
+          <!-- temp content: empty → 30 → 30 → empty(used) -->
+          <text x="340" y="166" text-anchor="middle" fill="#666" font-size="20" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ─
+          </text>
+          <text x="340" y="166" text-anchor="middle" fill="#FFB800" font-size="26" font-weight="900" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            30
+          </text>
+          <text x="340" y="166" text-anchor="middle" fill="#666" font-size="20" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ─
+          </text>
+
+          <!-- value_b content: 10 → 10 → 10 → 30 -->
+          <text x="545" y="166" text-anchor="middle" fill="#4FC3F7" font-size="26" font-weight="900" opacity="0">
+            <animate attributeName="opacity" values="1;1;1;1;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            10
+          </text>
+          <text x="545" y="166" text-anchor="middle" fill="#76B900" font-size="26" font-weight="900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            30
+          </text>
+
+          <!-- Highlight ring moving between boxes -->
+          <rect x="76" y="121" width="118" height="68" rx="12" fill="none" stroke="#FFB800" stroke-width="3" stroke-dasharray="6,4" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="281" y="121" width="118" height="68" rx="12" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-dasharray="6,4" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="486" y="121" width="118" height="68" rx="12" fill="none" stroke="#76B900" stroke-width="3" stroke-dasharray="6,4" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Step-specific explanation text (middle area) -->
+          <text x="340" y="235" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            value_a = 30, value_b = 10（交換前）
+          </text>
+          <text x="340" y="235" text-anchor="middle" fill="#FFB800" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            value_a の値 30 を temp に退避
+          </text>
+          <text x="340" y="235" text-anchor="middle" fill="#4FC3F7" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            value_b の 10 を value_a に上書き
+          </text>
+          <text x="340" y="235" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            temp の 30 を value_b に → 交換完了!
+          </text>
+
+          <!-- Result panel - appears at step 4 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            <rect x="180" y="260" width="320" height="40" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="340" y="285" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">value_a = 10, value_b = 30</text>
+          </g>
+
+          <!-- Bottom legend with O notation -->
+          <rect x="60" y="320" width="560" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+          <text x="340" y="341" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+            変数交換: O(1) ── 挿入ソートでも要素のずらしの基礎となる操作
+          </text>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem"><code>value_a = 30</code> と <code>value_b = 10</code> を自分の好きな数字に変えて実行してみよう。交換前と交換後が正しく入れ替わっている？</p>
@@ -450,19 +594,109 @@ value_x, value_y = value_y, value_x  <span class="cmt"># 一行で交換!</span>
         <h3>挿入位置を見つけて要素を挿入する</h3>
       </div>
       <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">find_insert_position</span>(sorted_part, new_value):
+    <span class="cmt"># 右端から左に向かって比較</span>
+    position = <span class="fn">len</span>(sorted_part)
+    last_index = <span class="fn">len</span>(sorted_part) - <span class="num">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(last_index, -<span class="num">1</span>, -<span class="num">1</span>):
+        <span class="kw">if</span> sorted_part[i] > new_value:
+            position = i
+        <span class="kw">else</span>:
+            <span class="kw">break</span>
+    <span class="kw">return</span> position
+
 sorted_part = [<span class="num">12</span>, <span class="num">25</span>, <span class="num">34</span>, <span class="num">64</span>]
 new_value = <span class="num">22</span>
-
-<span class="cmt"># 右端から左に向かって比較</span>
-position = <span class="fn">len</span>(sorted_part)
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(sorted_part) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
-    <span class="kw">if</span> sorted_part[i] > new_value:
-        position = i
-    <span class="kw">else</span>:
-        <span class="kw">break</span>
-
+position = <span class="fn">find_insert_position</span>(sorted_part, new_value)
 <span class="fn">print</span>(<span class="str">f"挿入位置: {position}"</span>)  <span class="cmt"># → 1（12の後）</span>
 <span class="cmt"># 要素をずらして挿入 → [12, 22, 25, 34, 64]</span></pre>
+
+      <!-- Example 2: animated insert-position search -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">右から左へ挿入位置を探す（new_value = 22）</text>
+
+          <!-- Step badge (top right) -->
+          <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ① i=3: 64 &gt; 22
+          </text>
+          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ② i=2: 34 &gt; 22
+          </text>
+          <text x="580" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ③ i=1: 25 &gt; 22
+          </text>
+          <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ④ i=0: 12 ≤ 22 → break
+          </text>
+
+          <!-- Array sorted_part = [12, 25, 34, 64] -->
+          <text x="60" y="120" fill="#888" font-size="13" font-weight="600">sorted_part:</text>
+          <rect x="180" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="220" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">12</text>
+          <text x="220" y="172" text-anchor="middle" fill="#666" font-size="12">[0]</text>
+
+          <rect x="270" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="310" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">25</text>
+          <text x="310" y="172" text-anchor="middle" fill="#666" font-size="12">[1]</text>
+
+          <rect x="360" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="400" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">34</text>
+          <text x="400" y="172" text-anchor="middle" fill="#666" font-size="12">[2]</text>
+
+          <rect x="450" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="490" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">64</text>
+          <text x="490" y="172" text-anchor="middle" fill="#666" font-size="12">[3]</text>
+
+          <!-- new_value tag -->
+          <rect x="555" y="100" width="80" height="56" rx="8" fill="#2e1a0a" stroke="#FFB800" stroke-width="2.5"/>
+          <text x="595" y="135" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="900">22</text>
+          <text x="595" y="92" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">new_value</text>
+
+          <!-- Highlight ring moving right-to-left through indices 3,2,1,0 -->
+          <rect width="88" height="64" rx="12" x="446" y="96" fill="none" stroke="#FF5252" stroke-width="3" stroke-dasharray="6,4">
+            <animate attributeName="x" values="446;446;356;356;266;266;176;176" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" values="#FF5252;#FF5252;#FF5252;#FF5252;#FF5252;#FF5252;#76B900;#76B900" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Comparison text below array (changes per step) -->
+          <text x="340" y="220" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            sorted_part[3]=64 &gt; 22 → position = 3
+          </text>
+          <text x="340" y="220" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            sorted_part[2]=34 &gt; 22 → position = 2
+          </text>
+          <text x="340" y="220" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            sorted_part[1]=25 &gt; 22 → position = 1
+          </text>
+          <text x="340" y="220" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            sorted_part[0]=12 ≤ 22 → break! 挿入位置 = 1
+          </text>
+
+          <!-- Result panel - appears at step 4 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            <rect x="120" y="250" width="440" height="56" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="340" y="275" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">[12, 22, 25, 34, 64]</text>
+            <text x="340" y="295" text-anchor="middle" fill="#aaa" font-size="13">→ 22 を index=1 に挿入</text>
+          </g>
+
+          <!-- Bottom legend with O notation -->
+          <rect x="60" y="320" width="560" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+          <text x="340" y="341" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+            位置探索: O(n) ── 右から左への線形走査、break で早期終了
+          </text>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -477,18 +711,142 @@ position = <span class="fn">len</span>(sorted_part)
         <h3>挿入ソートの1パス</h3>
       </div>
       <pre><span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">insert_one_pass</span>(data, target_index):
+    key = data[target_index]
+    j = target_index - <span class="num">1</span>
+
+    <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> data[j] > key:
+        data[j + <span class="num">1</span>] = data[j]  <span class="cmt"># 要素を右にずらす</span>
+        j = j - <span class="num">1</span>
+
+    data[j + <span class="num">1</span>] = key  <span class="cmt"># keyを空いた位置に挿入</span>
+    <span class="kw">return</span> data
+
 data = [<span class="num">25</span>, <span class="num">34</span>, <span class="num">64</span>, <span class="num">12</span>, <span class="num">22</span>]  <span class="cmt"># 先頭3つがソート済み</span>
 target_index = <span class="num">3</span>  <span class="cmt"># data[3]=12 を挿入する</span>
+result = <span class="fn">insert_one_pass</span>(data, target_index)
+<span class="fn">print</span>(<span class="str">f"結果: {result}"</span>)  <span class="cmt"># → [12, 25, 34, 64, 22]</span></pre>
 
-key = data[target_index]
-j = target_index - <span class="num">1</span>
+      <!-- Example 3: animated 1-pass insertion -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">挿入ソート 1パス: key=12 を [25, 34, 64] に挿入</text>
 
-<span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> data[j] > key:
-    data[j + <span class="num">1</span>] = data[j]  <span class="cmt"># 要素を右にずらす</span>
-    j = j - <span class="num">1</span>
+          <!-- Step badge (top right) -->
+          <rect x="520" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="600" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ① key=12 を取り出す
+          </text>
+          <text x="600" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ② 64 を右へずらす
+          </text>
+          <text x="600" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ③ 34, 25 を右へずらす
+          </text>
+          <text x="600" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            ④ 先頭に key=12 を挿入
+          </text>
 
-data[j + <span class="num">1</span>] = key  <span class="cmt"># keyを空いた位置に挿入</span>
-<span class="fn">print</span>(<span class="str">f"結果: {data}"</span>)  <span class="cmt"># → [12, 25, 34, 64, 22]</span></pre>
+          <!-- Array index labels (fixed) -->
+          <text x="115" y="225" text-anchor="middle" fill="#666" font-size="12">[0]</text>
+          <text x="185" y="225" text-anchor="middle" fill="#666" font-size="12">[1]</text>
+          <text x="255" y="225" text-anchor="middle" fill="#666" font-size="12">[2]</text>
+          <text x="325" y="225" text-anchor="middle" fill="#666" font-size="12">[3]</text>
+          <text x="395" y="225" text-anchor="middle" fill="#666" font-size="12">[4]</text>
+
+          <!-- Position 0: value 25 - shifts to position 1 in step 3 -->
+          <g>
+            <rect width="60" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5" x="85" y="155">
+              <animate attributeName="x" values="85;85;85;85;155;155;155;155" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            </rect>
+            <text text-anchor="middle" fill="#aaa" font-size="22" font-weight="700" y="187">
+              <animate attributeName="x" values="115;115;115;115;185;185;185;185" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              25
+            </text>
+          </g>
+
+          <!-- Position 1: value 34 - shifts to position 2 in step 3 -->
+          <g>
+            <rect width="60" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5" x="155" y="155">
+              <animate attributeName="x" values="155;155;155;155;225;225;225;225" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            </rect>
+            <text text-anchor="middle" fill="#aaa" font-size="22" font-weight="700" y="187">
+              <animate attributeName="x" values="185;185;185;185;255;255;255;255" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              34
+            </text>
+          </g>
+
+          <!-- Position 2: value 64 - shifts to position 3 in step 2 -->
+          <g>
+            <rect width="60" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5" x="225" y="155">
+              <animate attributeName="x" values="225;225;225;225;295;295;295;295" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            </rect>
+            <text text-anchor="middle" fill="#aaa" font-size="22" font-weight="700" y="187">
+              <animate attributeName="x" values="255;255;255;255;325;325;325;325" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              64
+            </text>
+          </g>
+
+          <!-- key=12 floating box - starts at index 3 position, hovers, then lands at index 0 -->
+          <g>
+            <rect width="60" height="50" rx="8" fill="#2e1a0a" stroke="#FFB800" stroke-width="2.5">
+              <animate attributeName="x" values="295;295;295;295;295;295;85;85" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="155;155;90;90;90;90;155;155" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              <animate attributeName="stroke" values="#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            </rect>
+            <text text-anchor="middle" font-size="22" font-weight="900">
+              <animate attributeName="x" values="325;325;325;325;325;325;115;115" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="187;187;122;122;122;122;187;187" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+              12
+            </text>
+          </g>
+
+          <!-- key label above floating box -->
+          <text text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="x" values="325;325;325;325;325;325;115;115" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="80;80;80;80;80;80;145;145" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            key
+          </text>
+
+          <!-- Step-specific explanation text below -->
+          <text x="350" y="260" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            key = data[3] = 12, j = 2
+          </text>
+          <text x="350" y="260" text-anchor="middle" fill="#FFB800" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            data[2]=64 &gt; 12 → data[3] = data[2], j=1
+          </text>
+          <text x="350" y="260" text-anchor="middle" fill="#4FC3F7" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            34&gt;12, 25&gt;12 → 連続でずらす、j=-1
+          </text>
+          <text x="350" y="260" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            data[j+1] = data[0] = 12 → 挿入完了
+          </text>
+
+          <!-- Result panel - appears at step 4 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
+            <rect x="130" y="290" width="440" height="56" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="350" y="315" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">[12, 25, 34, 64, 22]</text>
+            <text x="350" y="335" text-anchor="middle" fill="#aaa" font-size="13">先頭4要素がソート済み（[4]=22 はまだ未挿入）</text>
+          </g>
+
+          <!-- Bottom legend with O notation -->
+          <rect x="60" y="360" width="580" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+          <text x="350" y="381" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+            1パスの挿入: 最悪 O(i) ── 「右にずらす」回数 = 比較回数
+          </text>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -530,6 +888,137 @@ data[j + <span class="num">1</span>] = key  <span class="cmt"># keyを空いた�
 test_data = [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>]
 <span class="fn">insertion_sort</span>(test_data[:])</pre>
 
+      <!-- Example 4: animated full insertion sort (5 passes) -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">挿入ソート全パス: [64, 34, 25, 12, 22] → [12, 22, 25, 34, 64]</text>
+
+          <!-- Step badge (top right) -->
+          <rect x="510" y="50" width="170" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            ① i=1: key=34
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            ② i=2: key=25
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            ③ i=3: key=12
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            ④ i=4: key=22
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            ⑤ ソート完了!
+          </text>
+
+          <!-- Initial state row -->
+          <text x="50" y="120" fill="#888" font-size="12" font-weight="600">初期:</text>
+          <g font-size="18" font-weight="700" text-anchor="middle">
+            <rect x="110" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/><text x="135" y="124" fill="white">64</text>
+            <rect x="165" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="190" y="124" fill="white">34</text>
+            <rect x="220" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="245" y="124" fill="white">25</text>
+            <rect x="275" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="300" y="124" fill="white">12</text>
+            <rect x="330" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="124" fill="white">22</text>
+          </g>
+
+          <!-- Pass 1: [34, 64, 25, 12, 22] (visible during step 1) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="50" y="170" fill="#FFB800" font-size="12" font-weight="700">i=1:</text>
+            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
+            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
+            <rect x="220" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
+            <rect x="275" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
+            <rect x="330" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
+            <text x="395" y="172" fill="#aaa" font-size="11">key=34 を 64 の前へ</text>
+          </g>
+
+          <!-- Pass 2: [25, 34, 64, 12, 22] -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="50" y="170" fill="#FFB800" font-size="12" font-weight="700">i=2:</text>
+            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
+            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
+            <rect x="220" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
+            <rect x="275" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
+            <rect x="330" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
+            <text x="395" y="172" fill="#aaa" font-size="11">key=25 を先頭へ</text>
+          </g>
+
+          <!-- Pass 3: [12, 25, 34, 64, 22] -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="50" y="170" fill="#FFB800" font-size="12" font-weight="700">i=3:</text>
+            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
+            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
+            <rect x="220" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
+            <rect x="275" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
+            <rect x="330" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
+            <text x="395" y="172" fill="#aaa" font-size="11">key=12 を最先頭へ（3回ずらし）</text>
+          </g>
+
+          <!-- Pass 4: [12, 22, 25, 34, 64] -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="50" y="170" fill="#76B900" font-size="12" font-weight="700">i=4:</text>
+            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
+            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
+            <rect x="220" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
+            <rect x="275" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
+            <rect x="330" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
+            <text x="395" y="172" fill="#76B900" font-weight="700" font-size="11">key=22 を 25 の前へ → 完了!</text>
+          </g>
+
+          <!-- Highlight ring showing current key position -->
+          <rect width="58" height="44" rx="8" fill="none" stroke="#FFB800" stroke-width="3" stroke-dasharray="6,4" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <animate attributeName="x" values="106;106;106;106;106;106;106;106;106;106" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="146;146;146;146;146;146;146;146;146;146" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Counter / explanation strip -->
+          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            初期: data[0]=64 だけが整列済み区間
+          </text>
+          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            i=1: 34 と 64 を比較 → 1回ずらす
+          </text>
+          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            i=2: 25 を 34, 64 と比較 → 2回ずらす
+          </text>
+          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            i=3: 12 は最小 → 3回ずらす
+          </text>
+          <text x="350" y="240" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            i=4: 22 は 25 の前へ → 全体ソート完了
+          </text>
+
+          <!-- Result panel - appears at step 5 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="120" y="280" width="460" height="60" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="350" y="305" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">[12, 22, 25, 34, 64]</text>
+            <text x="350" y="325" text-anchor="middle" fill="#aaa" font-size="13">比較回数: 7, 移動回数: 7</text>
+          </g>
+
+          <!-- Bottom legend with O notation -->
+          <rect x="60" y="358" width="580" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+          <text x="350" y="379" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+            挿入ソート: 最悪 O(n²) ── 各 i パスで最大 i 回の比較・移動
+          </text>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem"><code>test_data</code> を <code>[1, 2, 3, 4, 5]</code>（ソート済み）に変えて実行してみよう。比較回数はどうなる？</p>
@@ -569,6 +1058,191 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
         <span class="fn">print</span>()
 
 <span class="fn">visualize_sort</span>([<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">50</span>, <span class="num">15</span>])</pre>
+
+      <!-- Example 5: animated bar chart visualization (逆順データの4パス) -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">棒グラフ可視化: [5, 4, 3, 2, 1] が左下がりから右上がりへ</text>
+
+          <!-- Step badge (top right) -->
+          <rect x="510" y="50" width="170" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ① 初期: [5,4,3,2,1]
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ② i=1: 4を先頭へ
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ③ i=2: 3を先頭へ
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ④ i=3: 2を先頭へ
+          </text>
+          <text x="595" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ⑤ i=4: 1を先頭へ → ソート完了
+          </text>
+
+          <!-- Bar chart - 5 bars, height scaled, animated -->
+          <!-- Bar 1 (position 0): values [5, 4, 3, 2, 1] (becomes min over passes) -->
+          <g>
+            <rect x="80" y="100" width="80" height="0" fill="#FFB800" rx="4">
+              <animate attributeName="height" values="150;150;120;120;90;90;60;60;30;30" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="100;100;130;130;160;160;190;190;220;220" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="#FFB800;#FFB800;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white">
+              <animate attributeName="fill" values="white;white;white;white;white;white;white;white;white;white" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            </text>
+            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              5
+            </text>
+            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              4
+            </text>
+            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              3
+            </text>
+            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              2
+            </text>
+            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              1
+            </text>
+          </g>
+
+          <!-- Bar 2 (position 1): values [4, 5, 4, 3, 2] -->
+          <g>
+            <rect x="170" y="130" width="80" height="0" fill="#76B900" rx="4">
+              <animate attributeName="height" values="120;120;150;150;120;120;90;90;60;60" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="130;130;100;100;130;130;160;160;190;190" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              4
+            </text>
+            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              5
+            </text>
+            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              4
+            </text>
+            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              3
+            </text>
+            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              2
+            </text>
+          </g>
+
+          <!-- Bar 3 (position 2): values [3, 3, 5, 4, 3] -->
+          <g>
+            <rect x="260" y="160" width="80" height="0" fill="#76B900" rx="4">
+              <animate attributeName="height" values="90;90;90;90;150;150;120;120;90;90" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="160;160;160;160;100;100;130;130;160;160" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="1;1;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              3
+            </text>
+            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              5
+            </text>
+            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              4
+            </text>
+            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              3
+            </text>
+          </g>
+
+          <!-- Bar 4 (position 3): values [2, 2, 2, 5, 4] -->
+          <g>
+            <rect x="350" y="190" width="80" height="0" fill="#76B900" rx="4">
+              <animate attributeName="height" values="60;60;60;60;60;60;150;150;120;120" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="190;190;190;190;190;190;100;100;130;130" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <text x="390" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="1;1;1;1;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              2
+            </text>
+            <text x="390" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              5
+            </text>
+            <text x="390" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              4
+            </text>
+          </g>
+
+          <!-- Bar 5 (position 4): values [1, 1, 1, 1, 5] -->
+          <g>
+            <rect x="440" y="220" width="80" height="30" fill="#76B900" rx="4">
+              <animate attributeName="height" values="30;30;30;30;30;30;30;30;150;150" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="220;220;220;220;220;220;220;220;100;100" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <text x="480" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="1;1;1;1;1;1;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="480" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+              5
+            </text>
+          </g>
+
+          <!-- Baseline -->
+          <line x1="70" y1="250" x2="540" y2="250" stroke="#333" stroke-width="1"/>
+
+          <!-- Step explanation -->
+          <text x="350" y="310" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            最悪ケース（逆順）: 各パスで先頭まで戻る
+          </text>
+          <text x="350" y="310" text-anchor="middle" fill="#FFB800" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            @ = 挿入中の値（4 が左端へ）
+          </text>
+          <text x="350" y="310" text-anchor="middle" fill="#4FC3F7" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            # = 整列済み部分（[3, 4, 5] と 2つの未整列）
+          </text>
+          <text x="350" y="310" text-anchor="middle" fill="#FF5252" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            2 を先頭へ → 3 ずつ移動
+          </text>
+          <text x="350" y="310" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
+            完了: [1, 2, 3, 4, 5]（合計移動 1+2+3+4=10回）
+          </text>
+
+          <!-- Bottom legend with O notation -->
+          <rect x="60" y="340" width="580" height="40" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+          <text x="350" y="358" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+            逆順データ = 最悪ケース O(n²) ── 合計移動回数 = n(n-1)/2
+          </text>
+          <text x="350" y="374" text-anchor="middle" fill="#666" font-size="11">
+            n=5 → 4+3+2+1 = 10回、n=7 → 21回
+          </text>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -789,7 +1463,7 @@ comparisons = <span class="num">0</span>
   </div>
 </section>
 
-<!-- ============ ANSWERS ============ -->
+<!-- ============ ANSWERS (例題: 公開 / 課題: 暗号化) ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-06-17T14:40">
   <div class="container">
     <div class="section-header">
@@ -797,6 +1471,73 @@ comparisons = <span class="num">0</span>
       <h2>解答例</h2>
     </div>
 
+    <!-- ── 例題の解答（常に公開） ── -->
+    <div id="answers-examples">
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>例えば <code>value_a = 100</code>, <code>value_b = 7</code> に変えて実行した場合:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">交換前: a=100, b=7
+交換後: a=7, b=100</pre>
+        <p>方法1（一時変数 <code>temp</code> を使う方法）は、<strong>多くの言語で共通の交換手順</strong>。<code>temp</code> を介して値を保存しないと、<code>value_a = value_b</code> の時点で元の <code>value_a</code> が上書きされて失われてしまう。方法2（<code>value_x, value_y = value_y, value_x</code>）は Python の<strong>タプルの同時代入</strong>機能を使った書き方で、内部的には右辺を一度タプル <code>(value_y, value_x)</code> として評価してから左辺に展開するため、一時変数が不要になる。挿入ソートでは「整列済み部分の要素を右にずらす」場面で何度も値の入れ替えが発生するので、この交換操作が基礎になる。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>sorted_part = [12, 25, 34, 64]</code> で <code>new_value = 50</code> を探した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">i=3: sorted_part[3]=64 > 50 → position = 3
+i=2: sorted_part[2]=34 > 50 ではない → break
+挿入位置: 3
+挿入後: [12, 25, 34, 50, 64]</pre>
+        <p><code>22</code> のときは <code>position = 1</code>（先頭付近）だったが、<code>50</code> は<strong>34 と 64 のあいだ</strong>に入るため <code>position = 3</code> になる。このコードのポイントは「<strong>右から左へ</strong>」比較していることと、<code>new_value</code> 以下の値に出会った瞬間に <code>break</code> で打ち切る点。これにより、挿入ソートの内側ループ（while ループでの要素のずらし）と同じ「不要な比較を打ち切る」最適化を実現している。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>data = [25, 34, 64, 12, 22]</code> で <code>target_index = 4</code> に変えた場合:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">key = data[4] = 22
+j = 3
+while 判定: data[3]=12 > 22 ではない → ループに入らない
+data[4] = 22  (そのまま)
+結果: [25, 34, 64, 12, 22]</pre>
+        <p>このコードは<strong>「data[0..target_index-1] がすでにソート済みである」ことを前提</strong>にしている。<code>target_index = 3</code> のとき <code>data[0..2] = [25, 34, 64]</code> はソート済みなので正しく動くが、<code>target_index = 4</code> では <code>data[0..3] = [25, 34, 64, 12]</code> がソートされていないため、<strong>結果も正しいソート結果にはならない</strong>。これが「挿入ソートの 1 パス」を抜き出した形であり、全体を完全にソートするには <code>i = 1</code> から <code>n-1</code> まで順に挿入を繰り返す必要がある（これが例題4の <code>insertion_sort</code> の構造）。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>test_data = [1, 2, 3, 4, 5]</code>（最初からソート済み）に変えた場合:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">  ステップ1: key=2 → [1, 2, 3, 4, 5]
+  ステップ2: key=3 → [1, 2, 3, 4, 5]
+  ステップ3: key=4 → [1, 2, 3, 4, 5]
+  ステップ4: key=5 → [1, 2, 3, 4, 5]
+比較回数: 4, 移動回数: 0</pre>
+        <p>各ステップで <code>data[j] > key</code> が一度で偽になり、<strong>すぐに <code>break</code> で while ループを抜ける</strong>。比較は1回だけ、移動は0回。<code>n = 5</code> なら比較回数は <code>n - 1 = 4</code> 回。これが挿入ソートの<strong>最良ケース O(n)</strong> である。元のデータ <code>[64, 34, 25, 12, 22]</code> では比較回数が増えていたはず（最悪ケースに近いほど O(n²) に近づく）。「<strong>ほぼソート済みのデータには挿入ソートが速い</strong>」と言われる理由がここにある。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>[7, 6, 5, 4, 3, 2, 1]</code>（逆順）に変えて実行した場合、各パスで key（<code>@</code>）が<strong>毎回先頭まで移動</strong>する様子が観察できる:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">パス i=1: key=6 を先頭に挿入 → [6, 7, 5, 4, 3, 2, 1]  (移動1回)
+パス i=2: key=5 を先頭に挿入 → [5, 6, 7, 4, 3, 2, 1]  (移動2回)
+パス i=3: key=4 を先頭に挿入 → [4, 5, 6, 7, 3, 2, 1]  (移動3回)
+パス i=4: key=3 を先頭に挿入 → [3, 4, 5, 6, 7, 2, 1]  (移動4回)
+パス i=5: key=2 を先頭に挿入 → [2, 3, 4, 5, 6, 7, 1]  (移動5回)
+パス i=6: key=1 を先頭に挿入 → [1, 2, 3, 4, 5, 6, 7]  (移動6回)
+合計移動回数: 1+2+3+4+5+6 = 21回</pre>
+        <p>逆順データは挿入ソートの<strong>最悪ケース</strong>で、各 <code>i</code> パスで key が必ず先頭まで戻されるため、合計移動回数は <code>1 + 2 + ... + (n-1) = n(n-1)/2</code> になる。<code>n = 7</code> なら <code>7 × 6 / 2 = 21</code> 回。これが挿入ソートの計算量が <strong>O(n²)</strong> と言われる根拠。可視化すると <code>@</code>（挿入中の要素）が毎回 <code>#</code>（整列済み部分）の左端まで突き抜けていく動きが見て取れる。ソート済みデータ（例題4）と比較すると、データの「乱れ具合」によって性能が大きく変わることが体感できる。</p>
+      </div>
+    </details>
+    </div>
+
+    <!-- ── 標準課題・発展課題の解答（暗号化） ── -->
     <div id="answers-encrypted" data-cipher="Edk4PCPXwo4+90ae+r72hhkMkzqv4RWCZ+G7rHnjlV5OZ2NrNiDq1sLJbg0VUqUhcc0w34kjjA4EQrNrDWsZodggCeP7Ix2VbY3vi8zRy5USBVbTEMhUooNu6A8ChvEzmftxAkeQdXJWzlVhmk7EyO0wilGnZhz7qW2jrRop17pJUyMhFSr5sQqKedI1CEjg3nuI3vRa+/hgSMC5tXtkwLdL1lk38jY+rdgfzMnxPLUrfG3DDsyDljl08ERiam+wN10PzEnJXNFzpIpE14Hb8GDLoJ4f+2mvMMa5+ZOTxEMu+OwvrzBS0kVK9yhHEpFSVONi2cTCxxC2pLf0JrpXKbbV2P5BaSL0cOSbtc4yqVL5EeasgKneFIop+fEny+kZKrfdYqCDqsoCB751x903Dmj39qShk/vwSHs8Tpm+kMAw+gPXiHlJymh+f9nuoTXm8DKFJXK6UjNU1OiXWZ/qv6+JV1WiXTabPjz0xG/QVN2IdPn8JQPy8B9ZUUzajKHV6cJXW32dDBg8VgbPNvwrS3JQ0wXreMDeYf5cFmwFFOjFuuiwY0ewWFdFn9NrjyW/bYhBqouVlLYKO+3tdRbf+i+0YxGWt81uAtblWuqZ7v3Qc0hgZb6h2aCpg6rMwPPo7IKg5aGYnzlahqTczzLG+5YrcEdwF7ZDbGEKSUzj2RwuNJe68zu5+OYIpHDd6hXBx0noXiZYy8Vfslh384+msWATgPdOnE9mdAJuf+sEVqqkRZmkgfNQ6e02ROi5nQupAnGQrSYNaA/Dn0EGLVtVu4YCJFTqpNFBnznAPCUBoor+RIHyBXc2LpAuUnO6QwGJg5NwXRNRRfRFNUPfeksm9W0xl0Zwz4AqdjlRRJuSvAn+oTuivFZ+5TLVZmJbn9/8DQJVJd4hof4SWXgeyFryvG2uH0fRTYldEi6tekHD/qZmGK+1aKYPPUEQsWMyTPlvL8rqRc4J96lazopAJNz8wyj6UHhD/D7D3GuGyc+PRCOUrIfeUbk9KkAZTGKvJt4IMKtYfFc8AD/8aGL8XGVb1eIG1UJ5Nk54bOgZfwd54YbkFgHnx8a3NxeI6VDAV/mQIXIOMmVvNADIgx6xhqfWJWuqUEFdfeafpcbyO4V7KAC6qMQCZvP92rkoiV9K7qPlRoxwIImrp2BmXkvLpYcBiC9n/R3xCNPqd8bjVDqyXsfVb43HVqziYKKsmjKhY5+GCs8/hxB5LWwLP5fzkJvcANPMdUmJcXStRhChTP+LFUXQLyTliRpNp00F9YvF87fIW6hs4Q9q/TdTvEyk1pSkFLDVq/eCwSIfJv2RnLokkdk7t9aQ+ft60z//mCEQMuAlcVtK66QEyC2fkdGP1a/6g2YLfGAmsjltZy6aBQf0xA7Xpuw5fGWL89zEvgHqLGZBEK0JybJk3IwkLG7/PGiISXhhykqiEH6PHPN5IxxDXX3Jpl1DuVMVjJkh4aIpTKaEyyYb8l9RrQdcyhs6rLELfr6OEjvk0jEaSP+PhoHj+ELgaBEsPbMNhiu7b0EAN/GnlFpxcmlCYFEQBXZagFJT4koBlIIMPdjJCXsVpWQVfJj8ixS93prHiProdA5b2ANZ2oYHP3lTU3fOlacR7t19EE+lmFsr9Hku0lwMQeOEFFqnXsxGuga0zP4zx/lI9hhQgmctZQG2gDTcN7cq+w4xj09bkF+RYwi2DdttguEhVwTpJq3NR3iGRDV0pBB+KG6MBWFspWxMKj4nGSCYQY1tzkUdePpicqbUYCNrMBQoNrQOR9RhcSl6Oc8UcLpH/MNJiB3HQ0uPw2pLK93udf1dNAJl8aAXyAmxvAqCEtgXVBp6N81mIOWqOyArUnGK9xUjmUIv9qgHA0SLh+jVFnjBXbzprZT8B1AgAaLOvrk0Nu0z/J02od8fNX3J8AViN34hkJixx7cqU8D5Mqs441T7YS3+YqGIzkIsA3CXoy9FQf6qke3YzkDF9n/GHsZu0srU7oUv3+Dvup6TL44O7qUDWjktAcFoVzWRAMr8YE+TDznj39QFZGo/y8kInIrmqG4T/Np3CitHELDVh0fwHWYUo6ncD/GNA7Mt58Wwy8lffuPJpiqfu8e25z+YCApTeS8RLLhxEC6MW+BGQT/DvEiSugePYE2nPVzHEYKBztZYvnktJaI221etVexZ2n/CmzUoGkR+XuULJvakIxHj+atSYE/+vKKZHSLFJSUWBYxJL20EjX8PalS2K/r9X20W+QiEkxT4Gkd9Ur5yFVurltgHaCSIHFv3ZpaqBqjUGsyUveVVdW+QfO1bg8f3H6k1xW9cCLyRj+PQKYNhRCbzGnNdGqo+satBh2PYhdElxEY4c3UjMqqDIuXi86Af+3GD7ve1Rl+VZy4fRbRRsjjK0+bJSVBU+D40d4hVRne1JGasa8MOOZBFm061a4GLlXIyvC8Tz4fhfByAWko+f+VKGpiwB9htkVbx6z3I6FjIDgqGBxq+Lgo7SePlWfv4iidEShg28EqYxU0hVi+u382bpx9bgR1mHPCoyrBAoszAsWyAcyJAmDMX61gv/3wvF5qrK+A6AJyAdM4bM8BuG1SypxTaFUKJwrA20+rshxEAxHIUpljwsM1ROUIabnRbjmRYmAvg49xVpVhM5NA3utnTI2OppWugg0OTvqOHZTCythPcAr66Cd2GVk2ni2oBgkiL05Lo3n9ToxK1klmm5CYfN3qB5qQeB+qGOsVMSxhpnahfQazUTkQSN4JF4WD9bmUIX4uyqPS9Hnb7UbcIhCYP+t1DKs0U/On/uZppx2ZiLEsAzMB3/3SJTPCZ3oOYQDbThp0jKluflVBFddgqrKLxyM+ZUp5LdeBvugCGewwUxvs7qfEOT8HEfT1X0YLs2QkMuzmg2hX0O7+oE+/xmcuRrqu+3BoZ9ggfn20j98lEF/YQ/I18y/VYetTJ0xHMITNHkFPawD5wqAwF38KNFYWYWjQ+Hn/I0J9ZxdqO4Ep6V/fCdsKirSpQ65TdCcQGIeUmnSR34UY/7UjvAZ/e5orlvUHvJxmJuW6TgKABAXCJVzaxUWhN15T/JDgu5YW0kfOW4tzIsoKQCLuAjehpususuIAs8A8vk90Rygu24N4hd+FPTSsF3MAgDvCDQps1MhKJunuF9GxR+G6zrQbKTZTXFL+neEs4Dg+08RKpd2kmKpNpe5TF/Z9RZfGtdZEJGQaJwb6UQA3I213PzAjr7W2seHK8ikO+69sgS5L54UsU7pN915/aWm5IzY7/F8jEoV78T0OCYOUuhN+4tjP6Hz9tWjyCne1tjGRj7T8fb3G+cml2l5HoijqzVnrQPHd6Ram7vgEM75ovLQXBSuzDEcR0/o6CEGhZVLKaPgn1Ee7L1su6vuQJxII3fNw+x7q4S9rE59VFgp9gdXSCW9t8kM+FXAvvgOQbyKaAqrHcO0+7Bfcnvt5v/owumarAAYgZ69Zjm0j/S+WKgVrW8OHQnWKQOVWIjruX1Izsz2HSkHxLrRZPi5AJsS9jF9YzIkq4KbpCOiS3CHRZLqSicpJqKnTcqr1028kcLZ0OWSXvxqF3DKfnpVL73S9H0TFV4ej1bxZMFyLzwOlatkHPOoZNbXbqeSB9VJcgGJTaz1N2VroYeop3LIL9lzT6d87fcj2ttrDid2rOHMCGGNwtatKHvGnBv1tS7xGT2X4pS1L2NQI2j+57GT6REKJ+WvrIc8X+MbEqvLku801chLMV/t3cXYix2NnOEG6GLyoBTevPxpPiDG0aAfMWA44xdBzbst7VXXUVtL9Ek5LmJJYtKPG93XuXy0ylCMCyrVcbu38VV82WwyM5XPjAn9/B9+s8fpZNR0uJogqPVoa1U167X7/4EUVjEE2sddvmhpTmofYtb1HaosCxpHOIT874Nmcb7pr3WiSBMtZqjAfYJ9AFVoDs+tbV3yNt8rHQErApdNBuGb+fxZFtCZpawFn5SQjBc1qusUyISJIfIka7r12J9P0P/O3e23n25yLdra6JhmJwjNzlqO6w7EPP6LZI5gY8U2DL0KqB3feJEKrIaWgH3mQVCm4wtT6URFpBsHivqwNexVcQZCbyeVi9EvAw4nGkhpBWYzG4w82xenTbyze0lyG+hOcqRg1m1D6eCzGztiYHNPyzkfWA+PWX+32mTmxKO9lZ1prvrBZLE8RHpIxKWjErUDH+pnjx2gJklRbAQqMa8BX+Go81xg0UHpdrjgq27CYLwJoqTJnnVcipggFMrBxt14hXYwI+xg3RZbsHhpCnsahRF27lKNGu5pJp4IlgCwOWVV8Tb4DkXUhCZ0buHxY0WPUqy4OFVHAbmVUxEwJPSCBre9JptBt9B5FegqpJP4ZPP/oY2pkFFqFaHHUp9e+ZsvnS1oUlN2aKrOMdlGs8MR5Ki3ce0oHgsII/br9Y4Q0qfNcxlNCn3wcbdkwR/+M1G8cZz2ySbsf0xPyRoPepFnZd7SvkaGra8lcOm3vWKZL0xH2WeDvc/m4xZ9lGnI6SEbPcpyj0jv5s0S/0Zzaf9YVw5Fi7DJHd47+Kfpzg0MLHD2Trfp/C2WVPrSlA2fDvIaaOSgcjbYJQWKWfp/aXV3wLXm7W7VMkK6RNqNW4Jz0D0Q8sTE85EcmRjdCDdvTliUl7uJornTXLEJvYhk1uwnYDzCU="></div>
 
   </div>

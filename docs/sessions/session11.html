@@ -346,6 +346,17 @@ pre { position: relative; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.8rem; font-weight: 700;
 }
+a.sub-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+a.sub-item:hover {
+  border-color: #76B900;
+  background: #1f2a14;
+  transform: translateY(-1px);
+}
 </style>
 </head>
 <body>
@@ -378,10 +389,10 @@ pre { position: relative; }
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
-        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -455,7 +466,14 @@ pre { position: relative; }
     <!-- 1.3 安定ソート -->
     <div class="concept-box">
       <h4>1.3 安定ソート（Stable Sort）とは</h4>
+      <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.6rem 1rem;margin-bottom:1rem;border-radius:6px;font-size:0.95rem">
+        <strong style="color:#76B900">読み方:</strong> <code>stable sort</code> = <strong>ステーブル・ソート</strong>（日本語では「安定ソート」）。
+        対義語の <code>unstable sort</code>＝アンステーブル・ソート（不安定ソート）。<code>stable</code> は「安定した／ぐらつかない」という意味で、同じキーの要素の<strong>相対順序が動かない</strong>ことを表します。
+      </p>
       <p><strong>安定ソート</strong>とは、同じ値の要素が<strong>元の配列での順序を保つ</strong>ソートのことです。</p>
+      <div class="analogy">
+        トランプを「数字」で並び替えるとき、同じ数字（例: ハート7とスペード7）が来た場合、<strong>並べる前の順番のまま</strong>に残るのが安定ソート。シャッフルされてしまうのが不安定ソート。複数の条件で並べ替えたいときに、この「順序保持」がとても大切になります。
+      </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
@@ -505,6 +523,30 @@ pre { position: relative; }
       <p style="margin-top:0.5rem;color:#76B900;font-weight:700">→ 同じ点数の人は五十音順が保たれる！</p>
     </div>
 
+    <!-- Q&A: 安定ソート -->
+    <div class="concept-box" style="border-left:4px solid #FFB800">
+      <h4>❓ なぜ「末尾から配置」すると安定ソートになるの？</h4>
+      <p style="font-size:0.95rem;margin-bottom:0.8rem">
+        分布数えソートで、累積度数を使って要素を出力配列に置くとき、<strong>入力を末尾から走査</strong>する理由はここにあります。
+      </p>
+      <table>
+        <tr><th>走査の向き</th><th>同じキーを持つ要素の順序</th><th>安定性</th></tr>
+        <tr>
+          <td>末尾から（<code>range(n-1, -1, -1)</code>）</td>
+          <td>後ろの要素ほど<strong>右の空き位置</strong>に置かれる → 元の並びが保たれる</td>
+          <td style="color:#76B900;font-weight:700">安定 ✓</td>
+        </tr>
+        <tr>
+          <td>先頭から（<code>range(n)</code>）</td>
+          <td>先に出た要素が<strong>右の空き位置</strong>に置かれる → 並びが反転</td>
+          <td style="color:#FF5252;font-weight:700">不安定 ✗</td>
+        </tr>
+      </table>
+      <p style="margin-top:1rem;font-size:0.95rem;color:#93D500">
+        💡 <strong>まとめ:</strong> 累積度数 <code>count[key]</code> は「そのキーの<strong>最後に入る位置 + 1</strong>」を表すため、末尾から見ていけば「最後 → 後ろから2番目 → …」と<strong>右から左へ詰めていく</strong>ことになり、元の順序が保たれます。例題3で実際に体験できます。
+      </p>
+    </div>
+
     <!-- 1.5 各ソートの安定性 -->
     <div class="concept-box">
       <h4>1.5 各ソートアルゴリズムの安定性</h4>
@@ -521,7 +563,15 @@ pre { position: relative; }
     <!-- 1.6 基数ソート -->
     <div class="concept-box">
       <h4>1.6 基数ソート（Radix Sort）入門</h4>
+      <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.6rem 1rem;margin-bottom:1rem;border-radius:6px;font-size:0.95rem">
+        <strong style="color:#76B900">読み方:</strong> <code>radix sort</code> = <strong>ラディックス・ソート</strong>（日本語では「基数ソート」）。
+        <code>radix</code> は「基数（=数を表すときの底、10進数なら10）」を意味するラテン語由来の単語で、<strong>桁ごとに処理する</strong>ことが名前の由来です。
+        派生語の <code>counting sort</code>＝カウンティング・ソート（分布数えソート／計数ソート）も同じ系統のアルゴリズム。
+      </p>
       <p>基数ソートは、数値を<strong>桁ごとに分布数えソート</strong>するアルゴリズムです。</p>
+      <div class="analogy">
+        トランプの数字を並べるときに、まず「1の位」だけ見て山を作り、次に「10の位」だけ見て山を作り直す…という作業を桁の数だけ繰り返すイメージ。郵便番号でハガキを仕分けるときも、上から1桁ずつ仕分け箱に入れていけば自動的に番号順になります。基数ソートはこの「桁ごとの仕分け」を機械的に行うアルゴリズムです。
+      </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 340" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
@@ -673,6 +723,130 @@ loaded = read_scores_csv(<span class="str">"scores.csv"</span>)
 <span class="kw">for</span> record <span class="kw">in</span> loaded:
     <span class="fn">print</span>(<span class="str">f"  {record[0]}: 数学={record[1]}, 英語={record[2]}"</span>)</pre>
 
+      <!-- Example 1: CSV file I/O animated diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">CSVファイル入出力の動き（書き込み → 保存 → 読み込み）</text>
+
+          <!-- Step badge -->
+          <g>
+            <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1;1;1" dur="16s" repeatCount="indefinite"/>
+              ① Python データ準備
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1;1;1" dur="16s" repeatCount="indefinite"/>
+              ② writer.writerow で書込
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1;1;1" dur="16s" repeatCount="indefinite"/>
+              ③ ファイル保存完了
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1;1;1" dur="16s" repeatCount="indefinite"/>
+              ④ csv.reader で読込
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1;1;1" dur="16s" repeatCount="indefinite"/>
+              ⑤ records に展開完了
+            </text>
+          </g>
+
+          <!-- Python list (left side) -->
+          <g>
+            <rect x="40" y="90" width="180" height="180" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="130" y="112" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">Python リスト</text>
+            <text x="130" y="135" text-anchor="middle" fill="#888" font-size="11" font-family="JetBrains Mono">sample_data</text>
+            <text x="55" y="160" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Tanaka", 85, 72]</text>
+            <text x="55" y="180" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Sato",   92, 88]</text>
+            <text x="55" y="200" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Suzuki", 78, 95]</text>
+            <text x="55" y="220" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Yamada", 65, 80]</text>
+            <rect x="40" y="90" width="180" height="180" rx="10" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;1;1;0;0;0;0;0" keyTimes="0;0.15;0.20;0.30;0.40;0.45;0.65;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Arrow 1: write -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;0;0;0;0;0" keyTimes="0;0.15;0.20;0.30;0.40;0.45;0.65;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <line x1="225" y1="180" x2="290" y2="180" stroke="#FFB800" stroke-width="3"/>
+            <polygon points="290,175 300,180 290,185" fill="#FFB800"/>
+            <text x="257" y="170" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">write</text>
+          </g>
+
+          <!-- CSV file (center) -->
+          <g>
+            <rect x="305" y="90" width="180" height="180" rx="10" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="395" y="112" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">CSVファイル</text>
+            <text x="395" y="135" text-anchor="middle" fill="#888" font-size="11" font-family="JetBrains Mono">scores.csv</text>
+            <text x="320" y="160" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">name,math,english</text>
+            <text x="320" y="180" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">Tanaka,85,72</text>
+            <text x="320" y="200" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">Sato,92,88</text>
+            <text x="320" y="220" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">Suzuki,78,95</text>
+            <text x="320" y="240" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">Yamada,65,80</text>
+            <rect x="305" y="90" width="180" height="180" rx="10" fill="none" stroke="#4FC3F7" stroke-width="3" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;1;1;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.50;0.65;0.70;0.85;0.90;1;1" dur="16s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Arrow 2: read -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.75;0.85;0.90" dur="16s" repeatCount="indefinite"/>
+            <line x1="490" y1="180" x2="555" y2="180" stroke="#FFB800" stroke-width="3"/>
+            <polygon points="555,175 565,180 555,185" fill="#FFB800"/>
+            <text x="522" y="170" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">read</text>
+          </g>
+
+          <!-- records list (right side) -->
+          <g>
+            <rect x="510" y="90" width="170" height="180" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="595" y="112" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">records</text>
+            <text x="595" y="135" text-anchor="middle" fill="#888" font-size="11" font-family="JetBrains Mono">読込結果</text>
+            <text x="525" y="160" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Tanaka", 85, 72]</text>
+            <text x="525" y="180" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Sato",   92, 88]</text>
+            <text x="525" y="200" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Suzuki", 78, 95]</text>
+            <text x="525" y="220" fill="#E0E0E0" font-size="10" font-family="JetBrains Mono">["Yamada", 65, 80]</text>
+            <rect x="510" y="90" width="170" height="180" rx="10" fill="none" stroke="#76B900" stroke-width="3" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Step text annotation -->
+          <text x="350" y="305" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            メモリ上の Python リストを準備
+          </text>
+          <text x="350" y="305" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            csv.writer がカンマ区切りで書き出し
+          </text>
+          <text x="350" y="305" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ディスクに永続化（テキストファイル）
+          </text>
+          <text x="350" y="305" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            csv.reader が1行ずつパース
+          </text>
+          <text x="350" y="305" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            int() で数値変換して records に保存
+          </text>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="40" y="340" width="640" height="42" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="55" y="358" fill="#76B900" font-size="12" font-weight="700">凡例:</text>
+            <rect x="100" y="349" width="16" height="14" fill="#1A1A1A" stroke="#76B900"/>
+            <text x="122" y="360" fill="#aaa" font-size="11">Pythonデータ</text>
+            <rect x="220" y="349" width="16" height="14" fill="#1A1A1A" stroke="#4FC3F7"/>
+            <text x="242" y="360" fill="#aaa" font-size="11">CSVファイル</text>
+            <text x="55" y="376" fill="#93D500" font-size="11" font-weight="600">計算量 O(n): 件数に比例 ／ encoding="utf-8" で日本語対応 ／ newline="" で改行統一</text>
+          </g>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">自分の名前と好きな科目の点数を追加して <code>scores.csv</code> に書き込み、メモ帳で開いて中身を確認してみよう。</p>
@@ -707,6 +881,103 @@ loaded = read_scores_csv(<span class="str">"scores.csv"</span>)
         count[key] -= <span class="num">1</span>
 
     <span class="kw">return</span> output</pre>
+
+      <!-- Example 2: read → sort → write pipeline animated diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">CSV → ソート → CSV の3ステップパイプライン</text>
+
+          <!-- Step badge -->
+          <g>
+            <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+              ① scores.csv 読込
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+              ② 数学列でソート（key_index=1）
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+              ③ 累積度数で位置決定
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+              ④ scores_sorted.csv 書込
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+              ⑤ 完了！
+            </text>
+          </g>
+
+          <!-- Input CSV box -->
+          <g>
+            <rect x="30" y="90" width="190" height="220" rx="10" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="125" y="112" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">scores.csv (入力)</text>
+            <text x="45" y="138" fill="#888" font-size="10" font-family="JetBrains Mono">name,math,english</text>
+            <text x="45" y="160" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Tanaka, <tspan fill="#FFB800" font-weight="700">85</tspan>, 72</text>
+            <text x="45" y="180" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Sato,   <tspan fill="#FFB800" font-weight="700">92</tspan>, 88</text>
+            <text x="45" y="200" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Suzuki, <tspan fill="#FFB800" font-weight="700">78</tspan>, 95</text>
+            <text x="45" y="220" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Yamada, <tspan fill="#FFB800" font-weight="700">65</tspan>, 80</text>
+            <text x="125" y="260" text-anchor="middle" fill="#888" font-size="10">数学の点数:</text>
+            <text x="125" y="278" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" font-family="JetBrains Mono">[85, 92, 78, 65]</text>
+            <text x="125" y="296" text-anchor="middle" fill="#888" font-size="10">→ ソート対象キー</text>
+          </g>
+
+          <!-- Sort engine (center) -->
+          <g>
+            <rect x="245" y="120" width="210" height="160" rx="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+            <text x="350" y="145" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">counting_sort_records</text>
+            <text x="350" y="167" text-anchor="middle" fill="#888" font-size="11">key_index=1, max_val=100</text>
+            <text x="260" y="195" fill="#aaa" font-size="11">① 度数を数える</text>
+            <text x="260" y="215" fill="#aaa" font-size="11">② 累積度数を作る</text>
+            <text x="260" y="235" fill="#aaa" font-size="11">③ 末尾から配置</text>
+            <text x="260" y="255" fill="#76B900" font-size="11" font-weight="700">→ 安定ソート完了</text>
+            <rect x="245" y="120" width="210" height="160" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Output CSV box -->
+          <g>
+            <rect x="480" y="90" width="200" height="220" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="580" y="112" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">scores_sorted.csv</text>
+            <text x="495" y="138" fill="#888" font-size="10" font-family="JetBrains Mono">name,math,english</text>
+            <text x="495" y="160" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Yamada, <tspan fill="#76B900" font-weight="700">65</tspan>, 80</text>
+            <text x="495" y="180" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Suzuki, <tspan fill="#76B900" font-weight="700">78</tspan>, 95</text>
+            <text x="495" y="200" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Tanaka, <tspan fill="#76B900" font-weight="700">85</tspan>, 72</text>
+            <text x="495" y="220" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Sato,   <tspan fill="#76B900" font-weight="700">92</tspan>, 88</text>
+            <text x="580" y="260" text-anchor="middle" fill="#888" font-size="10">数学の点数:</text>
+            <text x="580" y="278" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" font-family="JetBrains Mono">[65, 78, 85, 92]</text>
+            <text x="580" y="296" text-anchor="middle" fill="#888" font-size="10">→ 昇順</text>
+            <rect x="480" y="90" width="200" height="220" rx="10" fill="none" stroke="#4FC3F7" stroke-width="3" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Arrow 1 -->
+          <line x1="225" y1="200" x2="240" y2="200" stroke="#FFB800" stroke-width="2"/>
+          <polygon points="240,195 250,200 240,205" fill="#FFB800"/>
+          <!-- Arrow 2 -->
+          <line x1="460" y1="200" x2="475" y2="200" stroke="#76B900" stroke-width="2"/>
+          <polygon points="475,195 485,200 475,205" fill="#76B900"/>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="30" y="340" width="650" height="46" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="45" y="358" fill="#76B900" font-size="12" font-weight="700">凡例:</text>
+            <rect x="100" y="349" width="16" height="14" fill="#1A1A1A" stroke="#4FC3F7"/>
+            <text x="122" y="360" fill="#aaa" font-size="11">入力 CSV</text>
+            <rect x="200" y="349" width="16" height="14" fill="#1A1A1A" stroke="#FFB800"/>
+            <text x="222" y="360" fill="#aaa" font-size="11">ソート処理</text>
+            <rect x="305" y="349" width="16" height="14" fill="#1A1A1A" stroke="#76B900"/>
+            <text x="327" y="360" fill="#aaa" font-size="11">出力 CSV (昇順)</text>
+            <text x="45" y="380" fill="#93D500" font-size="11" font-weight="600">計算量 O(n+k): n=件数, k=max_val ／ 元の CSV は変更されず別ファイルに保存（安全）</text>
+          </g>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -753,6 +1024,111 @@ score_80 = [name <span class="kw">for</span> name, score <span class="kw">in</sp
 <span class="fn">print</span>(<span class="str">f"80点の順序: {score_80}"</span>)
 <span class="fn">print</span>(<span class="str">f"元の順序保持: {score_80 == ['Sato', 'Suzuki', 'Ito']}"</span>)</pre>
 
+      <!-- Example 3: stable vs unstable animated diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 440" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">安定ソート（末尾から）vs 不安定（先頭から）の比較</text>
+
+          <!-- Step badge -->
+          <g>
+            <rect x="500" y="50" width="180" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="590" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ① 入力（80点の3人）
+            </text>
+            <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ② 末尾から配置（安定）
+            </text>
+            <text x="590" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ③ 先頭から配置（不安定）
+            </text>
+            <text x="590" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ④ 結果を比較
+            </text>
+          </g>
+
+          <!-- Input (top) -->
+          <text x="35" y="100" fill="#888" font-size="12" font-weight="700">入力:</text>
+          <g>
+            <rect x="90" y="85" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="130" y="106" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">Sato, 80</text>
+            <rect x="180" y="85" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="220" y="106" text-anchor="middle" fill="#aaa" font-size="11">Tanaka, 90</text>
+            <rect x="270" y="85" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="310" y="106" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">Suzuki, 80</text>
+            <rect x="360" y="85" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="400" y="106" text-anchor="middle" fill="#aaa" font-size="11">Yamada, 90</text>
+            <rect x="450" y="85" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+            <text x="490" y="106" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">Ito, 80</text>
+            <rect x="540" y="85" width="100" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="590" y="106" text-anchor="middle" fill="#aaa" font-size="11">Watanabe, 90</text>
+          </g>
+          <text x="35" y="138" fill="#76B900" font-size="11">↑ 80点グループの元の順序: <tspan font-weight="700">[Sato, Suzuki, Ito]</tspan></text>
+
+          <!-- Stable sort row (middle) -->
+          <text x="35" y="180" fill="#76B900" font-size="12" font-weight="700">安定ソート:</text>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="160" y="165" width="80" height="32" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="200" y="186" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">Sato, 80</text>
+            <rect x="250" y="165" width="80" height="32" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="290" y="186" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">Suzuki, 80</text>
+            <rect x="340" y="165" width="80" height="32" rx="6" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="380" y="186" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">Ito, 80</text>
+            <rect x="430" y="165" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="470" y="186" text-anchor="middle" fill="#aaa" font-size="11">Tanaka, 90</text>
+            <rect x="520" y="165" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="560" y="186" text-anchor="middle" fill="#aaa" font-size="11">Yamada, 90</text>
+          </g>
+          <text x="35" y="218" fill="#76B900" font-size="11" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+            → 80点グループ: [Sato, Suzuki, Ito] ＝ 元の順序が保たれた ✓
+          </text>
+
+          <!-- Unstable sort row (middle) -->
+          <text x="35" y="265" fill="#FF5252" font-size="12" font-weight="700">不安定ソート:</text>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="160" y="250" width="80" height="32" rx="6" fill="#2e1a0a" stroke="#FF5252" stroke-width="2"/>
+            <text x="200" y="271" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">Ito, 80</text>
+            <rect x="250" y="250" width="80" height="32" rx="6" fill="#2e1a0a" stroke="#FF5252" stroke-width="2"/>
+            <text x="290" y="271" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">Suzuki, 80</text>
+            <rect x="340" y="250" width="80" height="32" rx="6" fill="#2e1a0a" stroke="#FF5252" stroke-width="2"/>
+            <text x="380" y="271" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">Sato, 80</text>
+            <rect x="430" y="250" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="470" y="271" text-anchor="middle" fill="#aaa" font-size="11">Tanaka, 90</text>
+            <rect x="520" y="250" width="80" height="32" rx="6" fill="#1A1A1A" stroke="#888" stroke-width="1"/>
+            <text x="560" y="271" text-anchor="middle" fill="#aaa" font-size="11">Yamada, 90</text>
+          </g>
+          <text x="35" y="303" fill="#FF5252" font-size="11" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+            → 80点グループ: [Ito, Suzuki, Sato] ＝ 順序が反転 ✗
+          </text>
+
+          <!-- Conclusion box (bottom) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.45;0.50;0.80;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="100" y="325" width="500" height="44" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="350" y="345" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">range(n-1, -1, -1) で末尾から ⇒ 安定</text>
+            <text x="350" y="362" text-anchor="middle" fill="#aaa" font-size="11">range(n) で先頭から ⇒ 不安定（同じ点数の人が逆順になる）</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="30" y="380" width="650" height="46" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="45" y="398" fill="#76B900" font-size="12" font-weight="700">凡例:</text>
+            <rect x="100" y="389" width="16" height="14" fill="#1a2e0a" stroke="#76B900"/>
+            <text x="122" y="400" fill="#aaa" font-size="11">安定（順序保持）</text>
+            <rect x="230" y="389" width="16" height="14" fill="#2e1a0a" stroke="#FF5252"/>
+            <text x="252" y="400" fill="#aaa" font-size="11">不安定（順序崩壊）</text>
+            <text x="45" y="420" fill="#93D500" font-size="11" font-weight="600">計算量 O(n+k): どちらも同じ ／ 安定性は走査方向だけで決まる ／ 基数ソートの前提</text>
+          </g>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">Step 3 の末尾から配置する部分を <code>for i in range(len(data)):</code>（先頭から）に変えて実行し、80点の3人の順序がどうなるか確認してみよう。</p>
@@ -796,6 +1172,120 @@ sizes = [<span class="num">10000</span>, <span class="num">50000</span>, <span c
     <span class="fn">sorted</span>(data)
     builtin_time = time.<span class="fn">time</span>() - start
     <span class="fn">print</span>(<span class="str">f"{size:>8} {counting_time:>13.4f}s {builtin_time:>9.4f}s"</span>)</pre>
+
+      <!-- Example 4: large-data benchmark animated diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 420" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">大規模データ（10万件）の処理時間と n,k のスケール</text>
+
+          <!-- Step badge -->
+          <g>
+            <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ① n=10,000 件 (k=999)
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ② n=50,000 件
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ③ n=100,000 件
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ④ k を巨大化 (k=10⁶)
+            </text>
+            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ⑤ 使い分けの基準
+            </text>
+          </g>
+
+          <!-- Chart frame -->
+          <line x1="80" y1="320" x2="640" y2="320" stroke="#444" stroke-width="1.5"/>
+          <line x1="80" y1="100" x2="80" y2="320" stroke="#444" stroke-width="1.5"/>
+          <text x="80" y="345" text-anchor="middle" fill="#888" font-size="10">10,000</text>
+          <text x="260" y="345" text-anchor="middle" fill="#888" font-size="10">50,000</text>
+          <text x="440" y="345" text-anchor="middle" fill="#888" font-size="10">100,000</text>
+          <text x="620" y="345" text-anchor="middle" fill="#888" font-size="10">+大きなk</text>
+          <text x="360" y="365" text-anchor="middle" fill="#aaa" font-size="11" font-weight="700">データ件数 n</text>
+          <text x="40" y="220" fill="#aaa" font-size="11" font-weight="700" transform="rotate(-90 40 220)">処理時間</text>
+
+          <!-- Counting sort bar 1: n=10k -->
+          <rect x="100" y="305" width="40" height="0" fill="#76B900" opacity="0.8">
+            <animate attributeName="height" values="0;0;15;15;15;15;15;15;15;15" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="320;320;305;305;305;305;305;305;305;305" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="120" y="295" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            0.01s
+          </text>
+
+          <!-- Counting sort bar 2: n=50k -->
+          <rect x="280" y="320" width="40" height="0" fill="#76B900" opacity="0.8">
+            <animate attributeName="height" values="0;0;0;0;40;40;40;40;40;40" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="320;320;320;320;280;280;280;280;280;280" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="300" y="270" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            0.05s
+          </text>
+
+          <!-- Counting sort bar 3: n=100k -->
+          <rect x="460" y="320" width="40" height="0" fill="#76B900" opacity="0.8">
+            <animate attributeName="height" values="0;0;0;0;0;0;80;80;80;80" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="320;320;320;320;320;320;240;240;240;240" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="480" y="230" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            0.09s
+          </text>
+
+          <!-- Counting sort bar 4: k=10⁶ (huge spike) -->
+          <rect x="600" y="320" width="40" height="0" fill="#FF5252" opacity="0.8">
+            <animate attributeName="height" values="0;0;0;0;0;0;0;0;200;200" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="320;320;320;320;320;320;320;320;120;120" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="620" y="110" text-anchor="middle" fill="#FF5252" font-size="10" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            急に遅く！
+          </text>
+
+          <!-- Description text -->
+          <text x="350" y="135" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            n が小さい：分布数えソートは sorted() より高速
+          </text>
+          <text x="350" y="135" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            件数 5倍 → 時間も約5倍（線形に増加）
+          </text>
+          <text x="350" y="135" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            10万件でも約0.09秒 — 高速！
+          </text>
+          <text x="350" y="135" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            k=10⁶ になると度数配列が巨大化 → 遅延
+          </text>
+          <text x="350" y="135" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
+            k が n と同程度のときだけ使う！
+          </text>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="30" y="380" width="650" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <rect x="45" y="389" width="14" height="14" fill="#76B900" opacity="0.8"/>
+            <text x="65" y="400" fill="#aaa" font-size="11">分布数えソート (O(n+k))</text>
+            <rect x="230" y="389" width="14" height="14" fill="#FF5252" opacity="0.8"/>
+            <text x="250" y="400" fill="#aaa" font-size="11">k が大きすぎるケース</text>
+            <text x="420" y="400" fill="#93D500" font-size="11" font-weight="600">→ sorted() は O(n log n) で k に依存しない</text>
+          </g>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -845,6 +1335,124 @@ sizes = [<span class="num">10000</span>, <span class="num">50000</span>, <span c
 test_data = [<span class="num">170</span>, <span class="num">45</span>, <span class="num">75</span>, <span class="num">90</span>, <span class="num">802</span>, <span class="num">24</span>, <span class="num">2</span>, <span class="num">66</span>]
 sorted_result = radix_sort(test_data)
 <span class="fn">print</span>(<span class="str">f"結果: {sorted_result}"</span>)</pre>
+
+      <!-- Example 5: radix sort animated diagram (1の位 → 10の位 → 100の位) -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 720 440" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="360" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">基数ソート: 各桁ごとに安定ソートを繰り返す</text>
+
+          <!-- Step badge -->
+          <g>
+            <rect x="520" y="50" width="180" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="610" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+              ① 入力データ
+            </text>
+            <text x="610" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+              ② 1の位でソート
+            </text>
+            <text x="610" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+              ③ 10の位でソート
+            </text>
+            <text x="610" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+              ④ 100の位でソート
+            </text>
+            <text x="610" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+              ⑤ ソート完了！
+            </text>
+          </g>
+
+          <!-- Stage 1: Input -->
+          <text x="40" y="115" fill="#888" font-size="12" font-weight="700">入力:</text>
+          <text x="105" y="115" fill="#E0E0E0" font-size="13" font-family="JetBrains Mono">[170, 45, 75, 90, 802, 24, 2, 66]</text>
+          <rect x="100" y="98" width="395" height="24" rx="6" fill="none" stroke="#76B900" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Stage 2: 1の位 sorted -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="40" y="165" fill="#FFB800" font-size="12" font-weight="700">1の位:</text>
+            <text x="105" y="165" fill="#E0E0E0" font-size="13" font-family="JetBrains Mono">[17<tspan fill="#FFB800" font-weight="700">0</tspan>, 9<tspan fill="#FFB800" font-weight="700">0</tspan>, 80<tspan fill="#FFB800" font-weight="700">2</tspan>, <tspan fill="#FFB800" font-weight="700">2</tspan>, 2<tspan fill="#FFB800" font-weight="700">4</tspan>, 4<tspan fill="#FFB800" font-weight="700">5</tspan>, 7<tspan fill="#FFB900" font-weight="700">5</tspan>, 6<tspan fill="#FFB800" font-weight="700">6</tspan>]</text>
+            <text x="500" y="165" fill="#FFB800" font-size="11">↑ 末桁: 0,0,2,2,4,5,5,6</text>
+          </g>
+          <rect x="100" y="148" width="395" height="24" rx="6" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Stage 3: 10の位 sorted -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="40" y="215" fill="#4FC3F7" font-size="12" font-weight="700">10の位:</text>
+            <text x="105" y="215" fill="#E0E0E0" font-size="13" font-family="JetBrains Mono">[8<tspan fill="#4FC3F7" font-weight="700">0</tspan>2, <tspan fill="#4FC3F7" font-weight="700">0</tspan>2, <tspan fill="#4FC3F7" font-weight="700">2</tspan>4, <tspan fill="#4FC3F7" font-weight="700">4</tspan>5, <tspan fill="#4FC3F7" font-weight="700">6</tspan>6, 1<tspan fill="#4FC3F7" font-weight="700">7</tspan>0, <tspan fill="#4FC3F7" font-weight="700">7</tspan>5, <tspan fill="#4FC3F7" font-weight="700">9</tspan>0]</text>
+            <text x="500" y="215" fill="#4FC3F7" font-size="11">↑ 十の位: 0,0,2,4,6,7,7,9</text>
+          </g>
+          <rect x="100" y="198" width="395" height="24" rx="6" fill="none" stroke="#4FC3F7" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Stage 4: 100の位 sorted -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <text x="40" y="265" fill="#FF5252" font-size="12" font-weight="700">100の位:</text>
+            <text x="105" y="265" fill="#E0E0E0" font-size="13" font-family="JetBrains Mono">[<tspan fill="#FF5252" font-weight="700">0</tspan>02, <tspan fill="#FF5252" font-weight="700">0</tspan>24, <tspan fill="#FF5252" font-weight="700">0</tspan>45, <tspan fill="#FF5252" font-weight="700">0</tspan>66, <tspan fill="#FF5252" font-weight="700">0</tspan>75, <tspan fill="#FF5252" font-weight="700">0</tspan>90, <tspan fill="#FF5252" font-weight="700">1</tspan>70, <tspan fill="#FF5252" font-weight="700">8</tspan>02]</text>
+            <text x="500" y="265" fill="#FF5252" font-size="11">↑ 百の位: 0,0,0,0,0,0,1,8</text>
+          </g>
+          <rect x="100" y="248" width="395" height="24" rx="6" fill="none" stroke="#FF5252" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Stage 5: Result -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="100" y="298" width="395" height="34" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="40" y="320" fill="#76B900" font-size="12" font-weight="700">結果:</text>
+            <text x="115" y="320" fill="#76B900" font-size="13" font-family="JetBrains Mono" font-weight="700">[2, 24, 45, 66, 75, 90, 170, 802]</text>
+            <text x="500" y="320" fill="#76B900" font-size="11" font-weight="700">完全に昇順 ✓</text>
+          </g>
+
+          <!-- Step explanation -->
+          <text x="360" y="365" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            最大値 802 → 3桁。1の位から処理する
+          </text>
+          <text x="360" y="365" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            (value // 1) % 10 で1の位を取り出し、分布数えソートで並べる
+          </text>
+          <text x="360" y="365" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            (value // 10) % 10 で10の位を取り出す。1の位の順序は安定ソートで保持
+          </text>
+          <text x="360" y="365" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            (value // 100) % 10 で100の位。下位桁の順序が引き継がれる
+          </text>
+          <text x="360" y="365" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.68;0.72;0.88;0.92;1" dur="20s" repeatCount="indefinite"/>
+            d=3 桁を処理して全体が完全にソート完了！
+          </text>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="30" y="385" width="660" height="42" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="45" y="403" fill="#76B900" font-size="12" font-weight="700">凡例:</text>
+            <rect x="100" y="394" width="14" height="14" fill="none" stroke="#FFB800" stroke-width="2"/>
+            <text x="120" y="405" fill="#aaa" font-size="11">1の位</text>
+            <rect x="170" y="394" width="14" height="14" fill="none" stroke="#4FC3F7" stroke-width="2"/>
+            <text x="190" y="405" fill="#aaa" font-size="11">10の位</text>
+            <rect x="245" y="394" width="14" height="14" fill="none" stroke="#FF5252" stroke-width="2"/>
+            <text x="265" y="405" fill="#aaa" font-size="11">100の位</text>
+            <rect x="325" y="394" width="14" height="14" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="345" y="405" fill="#aaa" font-size="11">結果</text>
+            <text x="45" y="421" fill="#93D500" font-size="11" font-weight="600">計算量 O(d × (n+k)): d=桁数, n=件数, k=基数(=10) ／ 各桁の安定ソートが正しさの鍵</text>
+          </g>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -1076,7 +1684,7 @@ result2 = <span class="fn">sorted</span>(students, key=<span class="kw">lambda</
   </div>
 </section>
 
-<!-- ============ ANSWERS ============ -->
+<!-- ============ ANSWERS (例題: 公開 / 課題: 暗号化) ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-07-08T14:40">
   <div class="container">
     <div class="section-header">
@@ -1084,6 +1692,76 @@ result2 = <span class="fn">sorted</span>(students, key=<span class="kw">lambda</
       <h2>解答例</h2>
     </div>
 
+    <!-- ── 例題の解答（常に公開） ── -->
+    <div id="answers-examples">
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>sample_data</code> に自分のレコード（例: <code>["Nakamura", 88, 76]</code>）を追加して実行した場合、<code>scores.csv</code> の中身は次のようになる:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">name,math,english
+Tanaka,85,72
+Sato,92,88
+Suzuki,78,95
+Yamada,65,80
+Nakamura,88,76</pre>
+        <p>1行目はヘッダー、2行目以降が実データになる。<code>csv.writer</code> はカンマ区切りで書き出し、改行は OS に依存しないよう <code>open(..., newline="")</code> で開くのがポイント。<code>encoding="utf-8"</code> を指定しているので、日本語の名前を入れても文字化けしない。CSV は単なる<strong>テキストファイル</strong>なので、メモ帳・VS Code・Excel など何で開いても同じ内容が見えることを確認しよう。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>例題1の <code>scores.csv</code> を <code>read_scores_csv</code> で読み込み、<code>counting_sort_records(records, key_index=1, max_val=100)</code> で数学（インデックス1）の点数順にソートし、<code>write_scores_csv("scores_sorted.csv", sorted_records)</code> で書き出した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">name,math,english
+Yamada,65,80
+Suzuki,78,95
+Tanaka,85,72
+Sato,92,88</pre>
+        <p>数学の点数が <strong>昇順</strong>（65 → 78 → 85 → 92）に並ぶ。<code>counting_sort_records</code> は <code>key_index</code> で「どの列を基準にソートするか」を切り替えられるので、<code>key_index=2</code> にすれば英語の点数順に並べ替えられる。読み込み → 計算 → 書き出しという<strong>ファイル入出力の3ステップ</strong>を実感しよう。ソート結果は元のファイルを壊さず別ファイルに保存するのが安全な使い方。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>末尾から配置するループ <code>for i in range(len(data) - 1, -1, -1):</code> を <code>for i in range(len(data)):</code>（先頭から）に変えると、80点グループの順序が<strong>逆転</strong>する:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">末尾から配置（元のコード）:
+  80点の順序: ['Sato', 'Suzuki', 'Ito']
+  元の順序保持: True  ← 安定ソート
+
+先頭から配置（変更後）:
+  80点の順序: ['Ito', 'Suzuki', 'Sato']
+  元の順序保持: False ← 不安定になる</pre>
+        <p>分布数えソートが安定であるためには、<strong>累積度数を「右端の次に入る位置」として使い、入力を末尾から走査する</strong>必要がある。先頭から走査すると、同じキーの要素のうち <em>先に出てきたもの</em> が累積度数の <em>後ろ</em> の位置に置かれてしまい、入力順が反転する。安定性は単独データでは差が出ないが、<strong>多段ソート（基数ソートや「数学順 → 同点なら英語順」など）</strong>では結果を大きく左右する。例題5の基数ソートが正しく動く前提でもあるので、ここでの「末尾から」は省略不可。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>10万件のデータについて、値の範囲だけを変えて <code>counting_sort_large</code> を実行した結果例:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">値の範囲     度数配列サイズ   分布数えソート    sorted()
+0 ~ 9              10要素        約 0.010 秒    約 0.020 秒
+0 ~ 999          1,000要素       約 0.012 秒    約 0.020 秒
+0 ~ 999999   1,000,000要素      約 0.090 秒    約 0.020 秒</pre>
+        <p>値の範囲 <code>k</code> が小さいときは、<code>counting_sort_large</code> は <code>sorted()</code> よりも速い。しかし範囲を <code>0~999999</code> まで広げると、<strong>長さ100万の度数配列を初期化・累積する時間とメモリ</strong>が支配的になり、データが10万件しかなくても急に遅くなる。これが分布数えソートの計算量 <strong>O(n + k)</strong> の意味で、<code>k ≫ n</code> になると優位性を失う。一方 <code>sorted()</code>（Timsort, O(n log n)）は値の範囲に依存せず安定。<strong>使い分けの基準</strong>: 値の範囲が「データ件数と同程度かそれ以下」のときだけ分布数えソートを選ぶ。範囲が非常に大きい整数や、実数・文字列をソートしたいときは Timsort や基数ソートを使う。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>入力を <code>test_data = [329, 457, 657, 839, 436, 720, 355]</code> に変えて <code>radix_sort</code> を実行したときの、各桁ソート後の状態:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">  1の位でソート: [329, 457, 657, 839, 436, 720, 355]...
+  10の位でソート: [720, 355, 436, 457, 657, 329, 839]...
+  100の位でソート: [720, 329, 436, 839, 355, 457, 657]...
+結果: [329, 355, 436, 457, 657, 720, 839]</pre>
+        <p>各桁の動きを追うと、<strong>1の位ソート後</strong>は末尾が <code>0,5,6,7,9,9</code> のように1の位で昇順、<strong>10の位ソート後</strong>は <code>20,29,36,55,57,57,39</code>（十の位）で並び替えられ、<strong>100の位ソート後</strong>に最終結果 <code>[329, 355, 436, 457, 657, 720, 839]</code> が得られる。基数ソートが正しく動く鍵は、<strong>各桁の分布数えソートが「安定」であること</strong>（例題3）。下位の桁で揃えた順序を、上位の桁で「同点ならその順を保ったまま」並べ直すから、桁を順に処理するだけで全体が完全にソートされる。最大値の桁数を <code>d</code>、データ数を <code>n</code> とすると計算量は <strong>O(d × n)</strong>。整数キーで <code>d</code> が小さければ Timsort より高速になる。</p>
+      </div>
+    </details>
+    </div>
+
+    <!-- ── 標準課題・発展課題の解答（暗号化） ── -->
     <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>

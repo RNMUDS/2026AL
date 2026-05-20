@@ -66,32 +66,27 @@ bisect_right(data, 5) → 5  (最後の5の次の位置)
 
 import bisect  # bisectモジュールをインポートする
 
-# --- 重複なしのデータ ---
+def show_bisect(data, target):  # bisectの結果を表示する関数
+    """指定したtargetに対するbisect_leftとbisect_rightの位置を表示する"""
+    left_pos = bisect.bisect_left(data, target)  # 左端の挿入位置を求める
+    right_pos = bisect.bisect_right(data, target)  # 右端の挿入位置を求める
+    print(f"  bisect_left(data, {target})  = {left_pos}")  # 左端の位置を表示する
+    print(f"  bisect_right(data, {target}) = {right_pos}")  # 右端の位置を表示する
+    return (left_pos, right_pos)  # (左端, 右端)のタプルを返す
+
+# --- 重複なしのデータで動作確認する ---
 data = [1, 3, 5, 7, 9, 11, 13]  # 重複なしのソート済みリスト
 print(f"データ（重複なし）: {data}")  # データを表示する
+show_bisect(data, 5)  # 存在する値の挿入位置を確認する
+print()  # 空行
+show_bisect(data, 8)  # 存在しない値の挿入位置（8を挿入する位置）
 
-target = 5  # 探したい値
-left_pos = bisect.bisect_left(data, target)  # 左端の挿入位置を求める
-right_pos = bisect.bisect_right(data, target)  # 右端の挿入位置を求める
-print(f"  bisect_left(data, {target})  = {left_pos}")  # 左端の位置を表示する
-print(f"  bisect_right(data, {target}) = {right_pos}")  # 右端の位置を表示する
-
-# --- 存在しない値 ---
-target = 8  # 存在しない値
-left_pos = bisect.bisect_left(data, target)  # 挿入位置を求める
-print(f"\n  bisect_left(data, {target})  = {left_pos}（8を挿入する位置）")  # 結果を表示する
-
-# --- 重複ありのデータ ---
+# --- 重複ありのデータで動作確認する ---
 data_dup = [1, 3, 5, 5, 5, 7, 9]  # 重複ありのソート済みリスト
 print(f"\nデータ（重複あり）: {data_dup}")  # データを表示する
-
-target = 5  # 重複している値
-left_pos = bisect.bisect_left(data_dup, target)  # 最初の5の位置を求める
-right_pos = bisect.bisect_right(data_dup, target)  # 最後の5の次の位置を求める
-print(f"  bisect_left(data, {target})  = {left_pos}（最初の5の位置）")  # 結果を表示する
-print(f"  bisect_right(data, {target}) = {right_pos}（最後の5の次）")  # 結果を表示する
-print(f"  5の個数: {right_pos - left_pos}個")  # 個数を計算して表示する
-print(f"  5のスライス: data[{left_pos}:{right_pos}] = {data_dup[left_pos:right_pos]}")  # スライスで取得
+left_pos, right_pos = show_bisect(data_dup, 5)  # 重複する値の左右位置を取得する
+print(f"  5の個数: {right_pos - left_pos}個")  # 差が個数になる
+print(f"  5のスライス: data_dup[{left_pos}:{right_pos}] = {data_dup[left_pos:right_pos]}")  # スライス
 ```
 
 ---
@@ -124,7 +119,7 @@ print("insort でソートを保ったまま挿入する")  # タイトルを表
 print("=" * 50)  # 区切り線
 
 for value in values:  # 各値について処理する
-    insert_pos = bisect.bisect_left(sorted_list, value)  # 挿入位置を確認する
+    insert_pos = bisect.bisect_left(sorted_list, value)  # 挿入位置を事前に確認する（insort内部でも同じ計算が行われる）
     bisect.insort(sorted_list, value)  # ソートを保ったまま挿入する
     print(f"  insort({value:>2}) → 位置{insert_pos}に挿入 → {sorted_list}")  # 状態を表示する
 
@@ -175,14 +170,15 @@ def jump_search(data, target):  # ジャンプ探索の関数
             print(f" → 範囲外")  # 範囲外と表示する
 
     # --- ステップ2: ブロック内を逐次探索する ---
-    print(f"  ブロック内探索: 位置{prev}〜{min(curr, n - 1)}")  # 探索範囲を表示する
-    for i in range(prev, min(curr + 1, n)):  # ブロック内を順に調べる
+    block_end = min(curr, n - 1)  # ブロック末尾を1か所で定義する
+    print(f"  ブロック内探索: 位置{prev}〜{block_end}")  # 探索範囲を表示する
+    for i in range(prev, block_end + 1):  # ブロック内を順に調べる
         if data[i] == target:  # 一致したら
             return i  # インデックスを返す
     return -1  # 見つからなかった
 
 # --- テスト ---
-data = list(range(0, 100, 3))  # [0, 3, 6, 9, ..., 99]を作る
+data = list(range(0, 100))  # [0, 1, 2, ..., 99]を作る（インデックス＝値で追いやすい）
 print(f"データ: {data[:10]}... (全{len(data)}個)")  # 先頭10個を表示する
 print()  # 空行
 
@@ -246,7 +242,7 @@ def exponential_search(data, target):  # 指数探索の関数
     return -1  # 見つからなかった
 
 # --- テスト ---
-data = list(range(0, 200, 2))  # [0, 2, 4, 6, ..., 198]を作る
+data = list(range(0, 200))  # [0, 1, 2, ..., 199]を作る（インデックス＝値で追いやすい）
 print(f"データ: {data[:10]}... (全{len(data)}個)")  # 先頭10個を表示する
 print()  # 空行
 
@@ -572,7 +568,8 @@ def jump_search_count(data, target):  # ジャンプ探索（比較回数付き�
         prev = curr  # 位置を記憶する
         curr += jump_size  # ジャンプする
 
-    for i in range(prev, min(curr + 1, n)):  # ブロック内探索
+    block_end = min(curr, n - 1)  # ブロック末尾を1か所で定義する
+    for i in range(prev, block_end + 1):  # ブロック内を逐次探索する
         count += 1  # 比較を1回カウント
         if data[i] == target:  # 一致したら
             return (i, count)  # 返す
@@ -663,9 +660,9 @@ def exponential_search_detail(data, target):  # フェーズ別カウント付�
     # --- 指数フェーズ ---
     bound = 1  # 最初の境界値
     while bound < n and data[bound] < target:  # targetより小さい間
-        exp_count += 1  # 指数フェーズの比較回数を増やす
+        exp_count += 1  # 指数フェーズの比較を1回カウント
         bound *= 2  # 境界を2倍にする
-    exp_count += 1  # 最後の比較もカウントする
+    exp_count += 1  # ループを抜ける判定（bound>=n または data[bound]>=target）の比較もカウント
 
     # --- 二分探索フェーズ ---
     left = bound // 2  # 左端
@@ -747,7 +744,8 @@ def jump_search(data, target):  # ジャンプ探索
     while curr < n and data[curr] < target:  # ジャンプ
         prev = curr  # 記憶
         curr += jump_size  # 進む
-    for i in range(prev, min(curr + 1, n)):  # ブロック内探索
+    block_end = min(curr, n - 1)  # ブロック末尾を1か所で定義する
+    for i in range(prev, block_end + 1):  # ブロック内を逐次探索する
         if data[i] == target:  # 一致
             return i  # 返す
     return -1  # 見つからない
@@ -830,45 +828,60 @@ def linear_search(data, target):  # 逐次探索
 
 def binary_search(data, target):  # 二分探索
     """二分探索"""
-    left, right = 0, len(data) - 1  # 範囲設定
+    left = 0  # 左端
+    right = len(data) - 1  # 右端
     while left <= right:  # 範囲がある間
         mid = (left + right) // 2  # 中央
-        if data[mid] == target: return mid  # 一致なら返す
-        elif data[mid] < target: left = mid + 1  # 右へ
-        else: right = mid - 1  # 左へ
+        if data[mid] == target:  # 一致
+            return mid  # 返す
+        elif data[mid] < target:  # 小さい
+            left = mid + 1  # 右へ
+        else:  # 大きい
+            right = mid - 1  # 左へ
     return -1  # 見つからない
 
 def bisect_search(data, target):  # bisect探索
     """bisect探索"""
     idx = bisect.bisect_left(data, target)  # 挿入位置
-    if idx < len(data) and data[idx] == target: return idx  # 一致なら返す
+    if idx < len(data) and data[idx] == target:  # 一致
+        return idx  # 返す
     return -1  # 見つからない
 
 def jump_search(data, target):  # ジャンプ探索
     """ジャンプ探索"""
     n = len(data)  # データの長さ
     jump_size = int(math.sqrt(n))  # ジャンプ幅
-    prev, curr = 0, 0  # 開始位置
+    prev = 0  # ブロック開始
+    curr = 0  # 現在位置
     while curr < n and data[curr] < target:  # ジャンプ
         prev = curr  # 記憶
         curr += jump_size  # 進む
-    for i in range(prev, min(curr + 1, n)):  # ブロック内
-        if data[i] == target: return i  # 一致なら返す
+    block_end = min(curr, n - 1)  # ブロック末尾
+    for i in range(prev, block_end + 1):  # ブロック内を逐次探索する
+        if data[i] == target:  # 一致
+            return i  # 返す
     return -1  # 見つからない
 
 def exponential_search(data, target):  # 指数探索
     """指数探索"""
     n = len(data)  # データの長さ
-    if n == 0: return -1  # 空なら返す
-    if data[0] == target: return 0  # 先頭一致
+    if n == 0:  # 空
+        return -1  # 返す
+    if data[0] == target:  # 先頭一致
+        return 0  # 返す
     bound = 1  # 境界
-    while bound < n and data[bound] < target: bound *= 2  # 2倍に広げる
-    left, right = bound // 2, min(bound, n - 1)  # 範囲
+    while bound < n and data[bound] < target:  # 指数的に広げる
+        bound *= 2  # 2倍
+    left = bound // 2  # 左端
+    right = min(bound, n - 1)  # 右端
     while left <= right:  # 二分探索
         mid = (left + right) // 2  # 中央
-        if data[mid] == target: return mid  # 一致
-        elif data[mid] < target: left = mid + 1  # 右へ
-        else: right = mid - 1  # 左へ
+        if data[mid] == target:  # 一致
+            return mid  # 返す
+        elif data[mid] < target:  # 小さい
+            left = mid + 1  # 右へ
+        else:  # 大きい
+            right = mid - 1  # 左へ
     return -1  # 見つからない
 
 # --- ベンチマーク実行 ---
@@ -966,17 +979,19 @@ def binary_guess(secret, max_val):  # 二分探索による推測
     return count  # 推測回数を返す
 
 def jump_guess(secret, max_val):  # ジャンプ探索による推測
-    """ジャンプ探索: sqrt(n)ずつジャンプ"""
+    """ジャンプ探索: sqrt(n)ずつジャンプしてブロックを特定し、ブロック内を逐次探索"""
     jump_size = int(math.sqrt(max_val))  # ジャンプ幅
     count = 0  # 推測回数
-    prev = 1  # 前の位置
-    curr = 1  # 現在位置
+    prev = 1  # ブロック開始位置
+    curr = jump_size  # 最初のジャンプ先
     while curr <= max_val and curr < secret:  # ジャンプフェーズ
-        count += 1  # カウント
-        prev = curr  # 位置を記憶
-        curr += jump_size  # ジャンプ
-    for i in range(prev, min(curr + 1, max_val + 1)):  # ブロック内探索
-        count += 1  # カウント
+        count += 1  # ジャンプ先の比較を1回カウント
+        prev = curr  # 位置を記憶する
+        curr += jump_size  # 次のジャンプへ
+    count += 1  # ジャンプ先で「secret以上」と判明した比較もカウント
+    block_end = min(curr, max_val)  # ブロック末尾
+    for i in range(prev, block_end + 1):  # ブロック内を逐次探索する
+        count += 1  # 比較を1回カウント
         if i == secret:  # 正解なら
             return count  # 推測回数を返す
     return count  # 返す
@@ -1053,57 +1068,81 @@ import random  # ランダム値生成用モジュール
 import bisect  # bisectモジュール
 import math  # 数学関数用モジュール
 
-# --- 既存アルゴリズム（省略版） ---
+# --- 既存アルゴリズム ---
 def linear_search(data, target):  # 逐次探索
-    for i in range(len(data)):  # 順に調べる
-        if data[i] == target: return i  # 一致なら返す
+    """逐次探索"""
+    for i in range(len(data)):  # 先頭から順に調べる
+        if data[i] == target:  # 一致したら
+            return i  # インデックスを返す
     return -1  # 見つからない
 
 def binary_search(data, target):  # 二分探索
-    left, right = 0, len(data) - 1  # 範囲
+    """二分探索"""
+    left = 0  # 左端
+    right = len(data) - 1  # 右端
     while left <= right:  # 範囲がある間
         mid = (left + right) // 2  # 中央
-        if data[mid] == target: return mid  # 一致
-        elif data[mid] < target: left = mid + 1  # 右
-        else: right = mid - 1  # 左
+        if data[mid] == target:  # 一致
+            return mid  # 返す
+        elif data[mid] < target:  # 小さい
+            left = mid + 1  # 右へ
+        else:  # 大きい
+            right = mid - 1  # 左へ
     return -1  # 見つからない
 
 def bisect_search(data, target):  # bisect探索
+    """bisect探索"""
     idx = bisect.bisect_left(data, target)  # 挿入位置
-    if idx < len(data) and data[idx] == target: return idx  # 一致
+    if idx < len(data) and data[idx] == target:  # 一致
+        return idx  # 返す
     return -1  # 見つからない
 
 def jump_search(data, target):  # ジャンプ探索
-    n = len(data)  # 長さ
+    """ジャンプ探索"""
+    n = len(data)  # データの長さ
     jump_size = int(math.sqrt(n))  # ジャンプ幅
-    prev, curr = 0, 0  # 位置
-    while curr < n and data[curr] < target: prev, curr = curr, curr + jump_size  # ジャンプ
-    for i in range(prev, min(curr + 1, n)):  # ブロック内
-        if data[i] == target: return i  # 一致
+    prev = 0  # ブロック開始
+    curr = 0  # 現在位置
+    while curr < n and data[curr] < target:  # ジャンプ
+        prev = curr  # 前の位置を記憶する
+        curr += jump_size  # ジャンプ幅分進む
+    block_end = min(curr, n - 1)  # ブロック末尾
+    for i in range(prev, block_end + 1):  # ブロック内を逐次探索する
+        if data[i] == target:  # 一致
+            return i  # 返す
     return -1  # 見つからない
 
 def exponential_search(data, target):  # 指数探索
-    n = len(data)  # 長さ
-    if n == 0: return -1  # 空
-    if data[0] == target: return 0  # 先頭一致
+    """指数探索"""
+    n = len(data)  # データの長さ
+    if n == 0:  # 空
+        return -1  # 返す
+    if data[0] == target:  # 先頭一致
+        return 0  # 返す
     bound = 1  # 境界
-    while bound < n and data[bound] < target: bound *= 2  # 広げる
-    left, right = bound // 2, min(bound, n - 1)  # 範囲
+    while bound < n and data[bound] < target:  # 指数的に広げる
+        bound *= 2  # 2倍
+    left = bound // 2  # 左端
+    right = min(bound, n - 1)  # 右端
     while left <= right:  # 二分探索
         mid = (left + right) // 2  # 中央
-        if data[mid] == target: return mid  # 一致
-        elif data[mid] < target: left = mid + 1  # 右
-        else: right = mid - 1  # 左
+        if data[mid] == target:  # 一致
+            return mid  # 返す
+        elif data[mid] < target:  # 小さい
+            left = mid + 1  # 右へ
+        else:  # 大きい
+            right = mid - 1  # 左へ
     return -1  # 見つからない
 
 # --- オリジナルアルゴリズム: ギャロッピングジャンプ探索 ---
 def galloping_jump_search(data, target):  # ギャロッピングジャンプ探索
     """
     オリジナル: ギャロッピングジャンプ探索
-    戦略: 最初は小さいジャンプで始め、targetが見つからない間
-    ジャンプ幅を2倍に増やしていく（ギャロッピング）。
-    ブロックを特定したら、そのブロック内で二分探索する。
-    指数探索の「広げ方」とジャンプ探索の「ブロック探索」を組み合わせた手法。
+    戦略: 最初は小さいジャンプ幅1で始め、見つからない間にジャンプ幅を2倍に
+    増やしていく（ギャロッピング＝指数探索の「広げ方」）。
+    ブロックを特定したら、そのブロック内を二分探索する
+    （ジャンプ探索の「ブロック特定→ブロック内探索」と同じ構造）。
+    ジャンプ幅が固定でない点が通常のジャンプ探索と異なる。
     """
     n = len(data)  # データの長さを取得する
     if n == 0:  # 空リストの場合

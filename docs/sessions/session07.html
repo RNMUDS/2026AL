@@ -153,6 +153,17 @@ pre { position: relative; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.8rem; font-weight: 700;
 }
+a.sub-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+a.sub-item:hover {
+  border-color: #76B900;
+  background: #1f2a14;
+  transform: translateY(-1px);
+}
 </style>
 </head>
 <body>
@@ -183,10 +194,10 @@ pre { position: relative; }
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
-        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -216,44 +227,58 @@ pre { position: relative; }
     </div>
 
     <div class="concept-box">
-      <h4>1.2 衝突（Collision）とは</h4>
-      <p>異なるキーが<strong>同じインデックス</strong>に格納されようとすること。</p>
+      <h4>1.2 衝突（Collision / コリジョン）とは</h4>
+      <p>異なるキーが<strong>同じインデックス</strong>に格納されようとすること。「衝突」とは英語の collision (コリジョン = ぶつかること) の訳語です。</p>
       <ul class="point-list">
         <li>テーブルサイズは有限（例: 10 スロット）</li>
         <li>格納するキーは無限に存在しうる</li>
-        <li><strong>鳩の巣原理</strong>: 11個のデータを10個のスロットに入れたら、必ずどこかが重複する</li>
+        <li><strong>鳩の巣原理（pigeonhole principle）</strong>: 11羽の鳩を10個の巣箱に入れたら、必ずどこかの巣箱に2羽以上入る</li>
       </ul>
+      <div class="analogy">
+        100種類の苗字を10個の郵便受けに振り分けるなら、必ずどこかの郵便受けに複数の苗字が割り当てられます。これがハッシュテーブルで起きる「衝突」です。
+      </div>
+    </div>
+
+    <div class="concept-box" style="border-left:4px solid #FFB800">
+      <h4 style="color:#FFB800">よくある疑問 Q&amp;A</h4>
+      <p><strong style="color:#FFB800">Q1.</strong> 「衝突解決法」と「オープンアドレス法」は同じもの？</p>
+      <p style="margin-left:1rem;color:#ccc"><strong>A.</strong> 衝突解決法は「衝突が起きたときの対処法」の総称。その中に <strong>オープンアドレス法</strong>（テーブル内で別のスロットを探す）と <strong>チェイン法</strong>（リストを連結する）の2つの大きな流派があります。線形探索法はオープンアドレス法の最も基本的な方式です。</p>
+      <p style="margin-top:0.6rem"><strong style="color:#FFB800">Q2.</strong> 線形探索法（Linear Probing）と「線形探索（Linear Search）」は別物？</p>
+      <p style="margin-left:1rem;color:#ccc"><strong>A.</strong> 別物です。<strong>線形探索（第3回）</strong>は配列を端から順に調べる探索アルゴリズム。<strong>線形探索法 / 線形プロービング</strong>はハッシュテーブルで衝突したときに「+1ずつスロットをずらして空きを探す」方法。日本語では似た名前ですが、英語では Linear Search と Linear Probing で区別されます。</p>
+      <p style="margin-top:0.6rem"><strong style="color:#FFB800">Q3.</strong> 「チェイン法」の「チェイン」って何？</p>
+      <p style="margin-left:1rem;color:#ccc"><strong>A.</strong> Chain = 鎖（くさり）。各スロットから連結リストが「鎖のように」伸びる様子を表しています。「鎖法」とも訳されます。</p>
     </div>
 
     <div class="concept-box">
-      <h4>1.3 線形探索法（Linear Probing）</h4>
+      <h4>1.3 線形探索法（Linear Probing / リニアプロービング）</h4>
+      <p><strong>Probing</strong>（プロービング）は「探りを入れる」という意味。<strong>Linear</strong>（リニア）は「直線的に・一直線に」。つまり「1つずつ直線的に空きを探す」方法。<strong>オープンアドレス法</strong>の一種です。</p>
       <div class="analogy">
         駐車場を想像してください。目的の番号の駐車場が埋まっていたら、<strong>隣の空いている場所</strong>に停めます。探すときも同じルートで探します。
       </div>
-      <p>衝突が起きたら<strong>次のスロット</strong>を試す。それも埋まっていたら<strong>さらに次</strong>へ。</p>
+      <p>衝突が起きたら<strong>次のスロット</strong>を試す。それも埋まっていたら<strong>さらに次</strong>へ。具体的には <code>index = (index + 1) % size</code> で次の位置を計算します。</p>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
           <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">線形探索法（Linear Probing）</text>
 
           <!-- Table slots -->
-          <rect x="50" y="50" width="75" height="40" rx="6" fill="#76B900"/><text x="87" y="75" text-anchor="middle" fill="white" font-weight="600" font-size="10">[0] apple</text>
-          <rect x="130" y="50" width="75" height="40" rx="6" fill="#76B900"/><text x="167" y="75" text-anchor="middle" fill="white" font-weight="600" font-size="10">[1] pleap</text>
-          <rect x="210" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="247" y="75" text-anchor="middle" fill="#666" font-size="10">[2] ---</text>
-          <rect x="290" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="327" y="75" text-anchor="middle" fill="#666" font-size="10">[3] ---</text>
-          <rect x="370" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="407" y="75" text-anchor="middle" fill="#666" font-size="10">[4] ---</text>
-          <rect x="450" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="487" y="75" text-anchor="middle" fill="#666" font-size="10">[5] ---</text>
+          <rect x="50" y="50" width="75" height="40" rx="6" fill="#76B900"/><text x="87" y="75" text-anchor="middle" fill="white" font-weight="600" font-size="11">[0] apple</text>
+          <rect x="130" y="50" width="75" height="40" rx="6" fill="#76B900"/><text x="167" y="75" text-anchor="middle" fill="white" font-weight="600" font-size="11">[1] pleap</text>
+          <rect x="210" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="247" y="75" text-anchor="middle" fill="#666" font-size="11">[2] ---</text>
+          <rect x="290" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="327" y="75" text-anchor="middle" fill="#666" font-size="11">[3] ---</text>
+          <rect x="370" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="407" y="75" text-anchor="middle" fill="#666" font-size="11">[4] ---</text>
+          <rect x="450" y="50" width="75" height="40" rx="6" fill="#1A1A1A" stroke="#333"/><text x="487" y="75" text-anchor="middle" fill="#666" font-size="11">[5] ---</text>
 
           <!-- Probing demonstration -->
           <text x="87" y="120" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="11">Step 1</text>
-          <text x="87" y="140" text-anchor="middle" fill="#888" font-size="10">"pleap" → [0]</text>
-          <text x="87" y="155" text-anchor="middle" fill="#FF5252" font-size="10">既に使用中!</text>
+          <text x="87" y="140" text-anchor="middle" fill="#888" font-size="11">"pleap" → [0]</text>
+          <text x="87" y="155" text-anchor="middle" fill="#FF5252" font-size="11">既に使用中!</text>
 
           <path d="M87 160 Q87 180 167 180 L167 90" stroke="#FFB800" stroke-width="2" fill="none" stroke-dasharray="5 3" marker-end="url(#arr-lp)"/>
 
           <text x="167" y="210" text-anchor="middle" fill="#76B900" font-weight="700" font-size="11">Step 2</text>
-          <text x="167" y="230" text-anchor="middle" fill="#888" font-size="10">[1] が空き!</text>
-          <text x="167" y="245" text-anchor="middle" fill="#76B900" font-size="10">ここに格納</text>
+          <text x="167" y="230" text-anchor="middle" fill="#888" font-size="11">[1] が空き!</text>
+          <text x="167" y="245" text-anchor="middle" fill="#76B900" font-size="11">ここに格納</text>
 
           <!-- Legend -->
           <rect x="400" y="130" width="250" height="100" rx="10" fill="#1A1A1A" stroke="#333"/>
@@ -268,8 +293,11 @@ pre { position: relative; }
     </div>
 
     <div class="concept-box">
-      <h4>1.4 チェイン法（Chaining）</h4>
-      <p>各スロットにリストを持たせ、衝突したデータをリストに追加する方法。</p>
+      <h4>1.4 チェイン法（Chaining / チェイニング）</h4>
+      <p>各スロットに<strong>リスト（連結リスト）</strong>を持たせ、衝突したデータをリストに追加する方法。「鎖法」「連結リスト法」「セパレートチェイニング（separate chaining）」とも呼ばれます。</p>
+      <div class="analogy">
+        マンションの郵便受けを想像してください。同じ部屋番号に複数の住人がいる場合、郵便受けの中にさらに小箱（リスト）を入れて、そこに郵便物を順番に積み重ねていきます。
+      </div>
       <pre><span class="code-label">概念</span>
 テーブル[<span class="num">3</span>] → [(<span class="str">"apple"</span>, <span class="num">100</span>), (<span class="str">"pleap"</span>, <span class="num">999</span>)]
 テーブル[<span class="num">9</span>] → [(<span class="str">"banana"</span>, <span class="num">80</span>)]</pre>
@@ -293,20 +321,20 @@ pre { position: relative; }
 
           <!-- Chain from [0] -->
           <line x1="110" y1="67" x2="140" y2="67" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
-          <rect x="145" y="50" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="72" text-anchor="middle" fill="white" font-size="10">apple: 100</text>
+          <rect x="145" y="50" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="72" text-anchor="middle" fill="white" font-size="11">apple: 100</text>
           <line x1="235" y1="67" x2="260" y2="67" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
-          <rect x="265" y="50" width="90" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="310" y="72" text-anchor="middle" fill="white" font-size="10">pleap: 999</text>
+          <rect x="265" y="50" width="90" height="35" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="310" y="72" text-anchor="middle" fill="white" font-size="11">pleap: 999</text>
 
           <!-- Chain from [1] -->
           <line x1="110" y1="107" x2="140" y2="107" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
-          <rect x="145" y="90" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="112" text-anchor="middle" fill="white" font-size="10">cherry: 150</text>
+          <rect x="145" y="90" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="112" text-anchor="middle" fill="white" font-size="11">cherry: 150</text>
 
           <!-- Empty [2] -->
           <text x="130" y="152" fill="#666" font-size="11">null</text>
 
           <!-- Chain from [3] -->
           <line x1="110" y1="187" x2="140" y2="187" stroke="#76B900" stroke-width="2" marker-end="url(#arr-ch)"/>
-          <rect x="145" y="170" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="192" text-anchor="middle" fill="white" font-size="10">banana: 80</text>
+          <rect x="145" y="170" width="90" height="35" rx="6" fill="#76B900"/><text x="190" y="192" text-anchor="middle" fill="white" font-size="11">banana: 80</text>
 
           <text x="500" y="80" fill="#888" font-size="12">各スロットがリストを</text>
           <text x="500" y="100" fill="#888" font-size="12">保持しているので</text>
@@ -407,49 +435,120 @@ pre { position: relative; }
       </table>
     </div>
 
-    <!-- SVG: Linear Probing step-by-step -->
+    <!-- SVG: Linear Probing step-by-step (ANIMATED) -->
     <div class="card concept" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
         <span class="tag" style="background:rgba(118,185,0,0.15);color:#76B900">図解</span>
-        <h3>線形探索法の動き: 3つのキーを挿入する</h3>
+        <h3>線形探索法の動き: 3つのキーを挿入する（アニメーション）</h3>
       </div>
       <div class="diagram-container">
-        <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
-          <!-- Title -->
-          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">線形探索法: hash=0 のキーを3つ挿入</text>
+        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">線形探索法: hash(key)=0 のキー3つを連続挿入</text>
 
-          <!-- Step 1: insert key A -->
-          <text x="30" y="60" fill="#FFB800" font-weight="700" font-size="12">Step 1:</text>
-          <text x="100" y="60" fill="#ccc" font-size="11">key=14, hash=14%7=0 → [0]が空き → 格納</text>
-          <rect x="100" y="70" width="60" height="32" rx="6" fill="#76B900"/><text x="130" y="91" text-anchor="middle" fill="white" font-weight="700" font-size="11">[0] 14</text>
-          <rect x="165" y="70" width="60" height="32" rx="6" fill="#1A1A1A" stroke="#333"/><text x="195" y="91" text-anchor="middle" fill="#666" font-size="10">[1] ---</text>
-          <rect x="230" y="70" width="60" height="32" rx="6" fill="#1A1A1A" stroke="#333"/><text x="260" y="91" text-anchor="middle" fill="#666" font-size="10">[2] ---</text>
-          <rect x="295" y="70" width="60" height="32" rx="6" fill="#1A1A1A" stroke="#333"/><text x="325" y="91" text-anchor="middle" fill="#666" font-size="10">[3] ---</text>
+          <!-- Step badge (top-right) -->
+          <rect x="490" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ① key=14 を挿入
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ② key=21 衝突 → +1
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ③ key=7 2回衝突 → +2
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ④ クラスタ完成
+          </text>
 
-          <!-- Step 2: insert key B, collision -->
-          <text x="30" y="135" fill="#FFB800" font-weight="700" font-size="12">Step 2:</text>
-          <text x="100" y="135" fill="#ccc" font-size="11">key=21, hash=21%7=0 → [0]に14あり → [1]へ → 格納</text>
-          <rect x="100" y="145" width="60" height="32" rx="6" fill="#76B900"/><text x="130" y="166" text-anchor="middle" fill="white" font-weight="700" font-size="11">[0] 14</text>
-          <rect x="165" y="145" width="60" height="32" rx="6" fill="#FFB800"/><text x="195" y="166" text-anchor="middle" fill="white" font-weight="700" font-size="11">[1] 21</text>
-          <rect x="230" y="145" width="60" height="32" rx="6" fill="#1A1A1A" stroke="#333"/><text x="260" y="166" text-anchor="middle" fill="#666" font-size="10">[2] ---</text>
-          <rect x="295" y="145" width="60" height="32" rx="6" fill="#1A1A1A" stroke="#333"/><text x="325" y="166" text-anchor="middle" fill="#666" font-size="10">[3] ---</text>
-          <text x="500" y="162" fill="#FF5252" font-weight="700" font-size="11">衝突! → 1つ右へ</text>
+          <!-- Table slots (always visible frames) -->
+          <text x="40" y="135" fill="#888" font-size="13" font-weight="600">テーブル</text>
+          <rect x="120" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="154" y="171" text-anchor="middle" fill="#666" font-size="12">[0]</text>
+          <rect x="194" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="228" y="171" text-anchor="middle" fill="#666" font-size="12">[1]</text>
+          <rect x="268" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="302" y="171" text-anchor="middle" fill="#666" font-size="12">[2]</text>
+          <rect x="342" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="376" y="171" text-anchor="middle" fill="#666" font-size="12">[3]</text>
+          <rect x="416" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="450" y="171" text-anchor="middle" fill="#666" font-size="12">[4]</text>
+          <rect x="490" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="524" y="171" text-anchor="middle" fill="#666" font-size="12">[5]</text>
+          <rect x="564" y="110" width="68" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="598" y="171" text-anchor="middle" fill="#666" font-size="12">[6]</text>
 
-          <!-- Step 3: insert key C, double collision -->
-          <text x="30" y="210" fill="#FFB800" font-weight="700" font-size="12">Step 3:</text>
-          <text x="100" y="210" fill="#ccc" font-size="11">key=7, hash=7%7=0 → [0]に14, [1]に21 → [2]へ → 格納</text>
-          <rect x="100" y="220" width="60" height="32" rx="6" fill="#76B900"/><text x="130" y="241" text-anchor="middle" fill="white" font-weight="700" font-size="11">[0] 14</text>
-          <rect x="165" y="220" width="60" height="32" rx="6" fill="#76B900"/><text x="195" y="241" text-anchor="middle" fill="white" font-weight="700" font-size="11">[1] 21</text>
-          <rect x="230" y="220" width="60" height="32" rx="6" fill="#FFB800"/><text x="260" y="241" text-anchor="middle" fill="white" font-weight="700" font-size="11">[2] 7</text>
-          <rect x="295" y="220" width="60" height="32" rx="6" fill="#1A1A1A" stroke="#333"/><text x="325" y="241" text-anchor="middle" fill="#666" font-size="10">[3] ---</text>
-          <text x="500" y="237" fill="#FF5252" font-weight="700" font-size="11">2回衝突! → 2つ右へ</text>
+          <!-- Stored value at [0]: 14 (appears at step 1 and stays) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="120" y="110" width="68" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="154" y="139" text-anchor="middle" fill="#76B900" font-size="20" font-weight="900">14</text>
+          </g>
 
-          <!-- Legend -->
-          <rect x="100" y="275" width="14" height="14" rx="3" fill="#76B900"/>
-          <text x="120" y="287" fill="#aaa" font-size="10">格納済み</text>
-          <rect x="200" y="275" width="14" height="14" rx="3" fill="#FFB800"/>
-          <text x="220" y="287" fill="#aaa" font-size="10">今回格納</text>
-          <text x="350" y="287" fill="#888" font-size="10">← これがクラスタリング（連続して埋まる現象）</text>
+          <!-- Stored value at [1]: 21 (appears at step 2 and stays) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="194" y="110" width="68" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="228" y="139" text-anchor="middle" fill="#76B900" font-size="20" font-weight="900">21</text>
+          </g>
+
+          <!-- Stored value at [2]: 7 (appears at step 3 and stays) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="268" y="110" width="68" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="302" y="139" text-anchor="middle" fill="#76B900" font-size="20" font-weight="900">7</text>
+          </g>
+
+          <!-- Highlight ring (cursor) moves [0] -> [0] -> [1] -> [0] -> [1] -> [2] -->
+          <rect width="74" height="50" x="117" y="107" rx="10" fill="none" stroke="#FFB800" stroke-width="3">
+            <animate attributeName="x" values="117;117;117;117;117;117;117;117" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Second cursor (step 2): start at [0] then move to [1] -->
+          <rect width="74" height="50" y="107" rx="10" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
+            <animate attributeName="x" values="117;117;117;117;191;191;191;191" keyTimes="0;0.16;0.20;0.30;0.40;0.50;0.55;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;1;1;1;0;0;0" keyTimes="0;0.16;0.20;0.30;0.40;0.50;0.55;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Third cursor (step 3): [0] -> [1] -> [2] -->
+          <rect width="74" height="50" y="107" rx="10" fill="none" stroke="#FF5252" stroke-width="3" opacity="0">
+            <animate attributeName="x" values="117;117;117;117;117;191;265;265" keyTimes="0;0.16;0.20;0.50;0.55;0.65;0.75;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.88;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Step explanation text (fading) -->
+          <g>
+            <text x="40" y="220" fill="#ccc" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+              key=14, hash=14%7=0 → [0]は空き → そのまま格納
+            </text>
+            <text x="40" y="220" fill="#FFB800" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+              key=21, hash=21%7=0 → [0]衝突! → +1 → [1]に格納
+            </text>
+            <text x="40" y="220" fill="#FF5252" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+              key=7, hash=7%7=0 → [0]衝突 → [1]衝突 → +2 → [2]に格納
+            </text>
+            <text x="40" y="220" fill="#76B900" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+              [0][1][2] が連続して埋まる = クラスタリング
+            </text>
+          </g>
+
+          <!-- Cluster bracket (appears at step 4) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.50;0.55;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <path d="M120 245 L120 255 L336 255 L336 245" stroke="#FF5252" stroke-width="2" fill="none"/>
+            <text x="228" y="278" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700">クラスタ（連続する塊）</text>
+          </g>
+
+          <!-- Bottom legend / formula -->
+          <rect x="40" y="305" width="600" height="40" rx="8" fill="#111" stroke="#333"/>
+          <text x="340" y="320" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">公式: index = (index + 1) % size  ／  最悪計算量 O(n)（クラスタが大きいとき）</text>
+          <text x="340" y="337" text-anchor="middle" fill="#888" font-size="11">平均 O(1)、ただし負荷率が高いと急速に劣化</text>
         </svg>
       </div>
     </div>
@@ -477,6 +576,87 @@ index = <span class="fn">hash_function</span>(key, table_size)
 
 table[index] = (key, value)
 <span class="fn">print</span>(<span class="str">f"テーブル[{index}] に ('{key}', {value}) を格納しました"</span>)</pre>
+
+      <!-- Example 1 animated diagram: hash function calculation -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">ハッシュ関数: "apple" → インデックス計算のステップ</text>
+
+          <!-- Step badge -->
+          <rect x="490" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ① 各文字をord()で変換
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ② 合計 total を計算
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ③ size=10 で剰余
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ④ 格納先[0]決定
+          </text>
+
+          <!-- Key "apple" characters -->
+          <text x="40" y="120" fill="#888" font-size="13" font-weight="600">key</text>
+          <g>
+            <rect x="100" y="95" width="56" height="44" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="128" y="123" text-anchor="middle" fill="#FFB800" font-size="20" font-weight="900">a</text>
+            <rect x="162" y="95" width="56" height="44" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="190" y="123" text-anchor="middle" fill="#FFB800" font-size="20" font-weight="900">p</text>
+            <rect x="224" y="95" width="56" height="44" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="252" y="123" text-anchor="middle" fill="#FFB800" font-size="20" font-weight="900">p</text>
+            <rect x="286" y="95" width="56" height="44" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="314" y="123" text-anchor="middle" fill="#FFB800" font-size="20" font-weight="900">l</text>
+            <rect x="348" y="95" width="56" height="44" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="376" y="123" text-anchor="middle" fill="#FFB800" font-size="20" font-weight="900">e</text>
+          </g>
+
+          <!-- ord values (appear at step 1) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <text x="128" y="170" text-anchor="middle" fill="#aaa" font-size="13">97</text>
+            <text x="190" y="170" text-anchor="middle" fill="#aaa" font-size="13">112</text>
+            <text x="252" y="170" text-anchor="middle" fill="#aaa" font-size="13">112</text>
+            <text x="314" y="170" text-anchor="middle" fill="#aaa" font-size="13">108</text>
+            <text x="376" y="170" text-anchor="middle" fill="#aaa" font-size="13">101</text>
+          </g>
+
+          <!-- Total = 530 (appear at step 2) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <text x="40" y="215" fill="#FFB800" font-size="14" font-weight="700">total = 97 + 112 + 112 + 108 + 101 = 530</text>
+          </g>
+
+          <!-- Modulo calculation (step 3) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <text x="40" y="250" fill="#4FC3F7" font-size="14" font-weight="700">530 % 10 = 0  →  table[0] = ("apple", 100)</text>
+          </g>
+
+          <!-- Highlight ring on characters (step 1) -->
+          <rect width="62" height="50" x="97" y="92" rx="10" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
+            <animate attributeName="x" values="97;97;97;159;221;283;345;345" keyTimes="0;0.05;0.10;0.18;0.26;0.34;0.42;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;0" keyTimes="0;0.05;0.10;0.18;0.26;0.34;0.42;0.50" dur="16s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Table slot showing result -->
+          <text x="40" y="300" fill="#888" font-size="13" font-weight="600">テーブル</text>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.16;0.20;0.45;0.50;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="120" y="280" width="80" height="36" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="160" y="304" text-anchor="middle" fill="#76B900" font-size="13" font-weight="900">[0] apple</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <rect x="220" y="280" width="420" height="36" rx="8" fill="#111" stroke="#333"/>
+          <text x="430" y="304" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">ハッシュ関数の計算量: O(k)（k=キーの長さ）</text>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -508,6 +688,124 @@ table = [<span class="num">None</span>] * <span class="num">10</span>
 <span class="fn">insert_item</span>(table, <span class="str">"cherry"</span>, <span class="num">150</span>)
 <span class="fn">insert_item</span>(table, <span class="str">"date"</span>, <span class="num">200</span>)</pre>
 
+      <!-- Example 2 animated diagram: 4 keys insertion into size-10 table -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">4つのキーを順に挿入: テーブル(size=10) の状態変化</text>
+
+          <!-- Step badge -->
+          <rect x="490" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ① apple → [0]
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ② banana → [9]
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ③ cherry → [3]
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ④ date → [4]
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ⑤ 完成 / 空き6
+          </text>
+
+          <!-- 10 slots in 2 rows of 5 -->
+          <g>
+            <!-- Row 1: [0]-[4] -->
+            <rect x="60" y="110" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="89" y="170" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+            <rect x="124" y="110" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="153" y="170" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+            <rect x="188" y="110" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="217" y="170" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+            <rect x="252" y="110" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="281" y="170" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+            <rect x="316" y="110" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="345" y="170" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+            <!-- Row 2: [5]-[9] -->
+            <rect x="60" y="200" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="89" y="260" text-anchor="middle" fill="#666" font-size="11">[5]</text>
+            <rect x="124" y="200" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="153" y="260" text-anchor="middle" fill="#666" font-size="11">[6]</text>
+            <rect x="188" y="200" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="217" y="260" text-anchor="middle" fill="#666" font-size="11">[7]</text>
+            <rect x="252" y="200" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="281" y="260" text-anchor="middle" fill="#666" font-size="11">[8]</text>
+            <rect x="316" y="200" width="58" height="44" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="345" y="260" text-anchor="middle" fill="#666" font-size="11">[9]</text>
+          </g>
+
+          <!-- apple at [0] (appears step 1) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="60" y="110" width="58" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="89" y="138" text-anchor="middle" fill="#76B900" font-size="11" font-weight="900">apple</text>
+            <text x="89" y="150" text-anchor="middle" fill="#76B900" font-size="10">100</text>
+          </g>
+          <!-- banana at [9] (step 2) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="316" y="200" width="58" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="345" y="228" text-anchor="middle" fill="#76B900" font-size="11" font-weight="900">banana</text>
+            <text x="345" y="240" text-anchor="middle" fill="#76B900" font-size="10">80</text>
+          </g>
+          <!-- cherry at [3] (step 3) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="252" y="110" width="58" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="281" y="138" text-anchor="middle" fill="#76B900" font-size="11" font-weight="900">cherry</text>
+            <text x="281" y="150" text-anchor="middle" fill="#76B900" font-size="10">150</text>
+          </g>
+          <!-- date at [4] (step 4) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="316" y="110" width="58" height="44" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="345" y="138" text-anchor="middle" fill="#76B900" font-size="11" font-weight="900">date</text>
+            <text x="345" y="150" text-anchor="middle" fill="#76B900" font-size="10">200</text>
+          </g>
+
+          <!-- Right-side panel: explanation -->
+          <text x="430" y="115" fill="#ccc" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            "apple" → 530 % 10 = 0
+          </text>
+          <text x="430" y="115" fill="#FFB800" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            "banana" → 609 % 10 = 9
+          </text>
+          <text x="430" y="115" fill="#4FC3F7" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            "cherry" → 633 % 10 = 3
+          </text>
+          <text x="430" y="115" fill="#FFB800" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            "date" → 414 % 10 = 4
+          </text>
+
+          <!-- Result panel (step 5) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="410" y="100" width="240" height="120" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="530" y="128" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">負荷率 = 4 / 10 = 0.4</text>
+            <text x="530" y="152" text-anchor="middle" fill="#aaa" font-size="12">空きスロット: 6個</text>
+            <text x="530" y="172" text-anchor="middle" fill="#aaa" font-size="12">衝突: 0回（運がよい）</text>
+            <text x="530" y="195" text-anchor="middle" fill="#93D500" font-size="11">理想的な O(1) 状態</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <rect x="60" y="305" width="580" height="40" rx="8" fill="#111" stroke="#333"/>
+          <text x="350" y="320" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">挿入の平均計算量: O(1)  ／  負荷率 = データ数 ÷ テーブルサイズ</text>
+          <text x="350" y="338" text-anchor="middle" fill="#888" font-size="11">負荷率が 0.7 を超えると衝突が増え始める</text>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">最後に <code>print(table)</code> を追加して、テーブルの中身を表示してみよう。None のスロットはいくつある？</p>
@@ -531,6 +829,109 @@ table_size = <span class="num">10</span>
 
 <span class="cmt"># "apple" と "pleap" は同じ文字の組み合わせ → 同じハッシュ値 → 衝突!</span></pre>
 
+      <!-- Example 3 animated diagram: anagram collision -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 380" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">アナグラム衝突: "apple" と "pleap" が同じインデックスへ</text>
+
+          <!-- Step badge -->
+          <rect x="490" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ① "apple" を計算
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ② "pleap" を計算
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ③ 両方ともhash=0
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ④ 衝突発生!
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            ⑤ 原因: 文字順序を無視
+          </text>
+
+          <!-- apple row -->
+          <text x="40" y="120" fill="#76B900" font-size="13" font-weight="700">apple</text>
+          <g>
+            <rect x="100" y="98" width="44" height="38" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="122" y="123" text-anchor="middle" fill="#76B900" font-size="18" font-weight="900">a</text>
+            <rect x="148" y="98" width="44" height="38" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="170" y="123" text-anchor="middle" fill="#76B900" font-size="18" font-weight="900">p</text>
+            <rect x="196" y="98" width="44" height="38" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="218" y="123" text-anchor="middle" fill="#76B900" font-size="18" font-weight="900">p</text>
+            <rect x="244" y="98" width="44" height="38" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="266" y="123" text-anchor="middle" fill="#76B900" font-size="18" font-weight="900">l</text>
+            <rect x="292" y="98" width="44" height="38" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="314" y="123" text-anchor="middle" fill="#76B900" font-size="18" font-weight="900">e</text>
+          </g>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            <text x="370" y="123" fill="#aaa" font-size="14">→ total = 530</text>
+            <text x="500" y="123" fill="#76B900" font-size="14" font-weight="700">→ 530%10 = 0</text>
+          </g>
+
+          <!-- pleap row -->
+          <text x="40" y="190" fill="#FFB800" font-size="13" font-weight="700">pleap</text>
+          <g>
+            <rect x="100" y="168" width="44" height="38" rx="6" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="122" y="193" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="900">p</text>
+            <rect x="148" y="168" width="44" height="38" rx="6" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="170" y="193" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="900">l</text>
+            <rect x="196" y="168" width="44" height="38" rx="6" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="218" y="193" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="900">e</text>
+            <rect x="244" y="168" width="44" height="38" rx="6" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="266" y="193" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="900">a</text>
+            <rect x="292" y="168" width="44" height="38" rx="6" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="314" y="193" text-anchor="middle" fill="#FFB800" font-size="18" font-weight="900">p</text>
+          </g>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            <text x="370" y="193" fill="#aaa" font-size="14">→ total = 530</text>
+            <text x="500" y="193" fill="#FFB800" font-size="14" font-weight="700">→ 530%10 = 0</text>
+          </g>
+
+          <!-- Arrows to slot[0] -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            <path d="M150 230 Q150 260 250 280" stroke="#76B900" stroke-width="2" fill="none" marker-end="url(#arr-c3)"/>
+            <path d="M260 230 Q260 260 270 280" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-c3-y)"/>
+          </g>
+
+          <!-- Slot [0] with two arrows pointing -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="220" y="280" width="80" height="48" rx="10" fill="#2e0a0a" stroke="#FF5252" stroke-width="3"/>
+            <text x="260" y="306" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="900">[0] 衝突!</text>
+            <text x="260" y="322" text-anchor="middle" fill="#FF5252" font-size="11">2つが競合</text>
+          </g>
+
+          <!-- Reason panel (step 5) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.55;0.60;0.82;0.86;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="370" y="240" width="280" height="80" rx="10" fill="#1a1700" stroke="#FFB800" stroke-width="2"/>
+            <text x="510" y="264" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">原因: 合計だけ計算しているから</text>
+            <text x="510" y="284" text-anchor="middle" fill="#aaa" font-size="12">a+p+p+l+e = p+l+e+a+p</text>
+            <text x="510" y="304" text-anchor="middle" fill="#aaa" font-size="12">（同じ文字の集合 → 同じハッシュ）</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <rect x="40" y="345" width="600" height="28" rx="8" fill="#111" stroke="#333"/>
+          <text x="340" y="363" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">アナグラム = 文字を並び替えた語  ／  実用ハッシュは位置を考慮する設計</text>
+
+          <defs>
+            <marker id="arr-c3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker>
+            <marker id="arr-c3-y" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">実行結果から、衝突しているキーのペアを見つけよう。<code>"apple"</code> と <code>"pleap"</code> 以外にも衝突しているペアはある？</p>
@@ -552,8 +953,9 @@ table_size = <span class="num">10</span>
     <span class="kw">while</span> table[index] <span class="kw">is not</span> <span class="num">None</span>:
         <span class="kw">if</span> table[index][<span class="num">0</span>] == key:
             <span class="kw">break</span>
-        probe_count += <span class="num">1</span>
-        index = (index + <span class="num">1</span>) % size
+        probe_count = probe_count + <span class="num">1</span>
+        next_index = (index + <span class="num">1</span>) % size
+        index = next_index
         <span class="kw">if</span> index == original_index:
             <span class="fn">print</span>(<span class="str">"テーブルが満杯です"</span>)
             <span class="kw">return</span> -<span class="num">1</span>
@@ -566,11 +968,12 @@ table_size = <span class="num">10</span>
     start_index = index
     probe_count = <span class="num">0</span>
     <span class="kw">while</span> table[index] <span class="kw">is not</span> <span class="num">None</span>:
-        probe_count += <span class="num">1</span>
+        probe_count = probe_count + <span class="num">1</span>
         <span class="kw">if</span> table[index][<span class="num">0</span>] == key:
             <span class="fn">print</span>(<span class="str">f"  search '{key}': [{index}]で発見, 探索{probe_count}回"</span>)
             <span class="kw">return</span> table[index][<span class="num">1</span>]
-        index = (index + <span class="num">1</span>) % size
+        next_index = (index + <span class="num">1</span>) % size
+        index = next_index
         <span class="kw">if</span> index == start_index:
             <span class="kw">break</span>
     <span class="fn">print</span>(<span class="str">f"  search '{key}': 見つかりません"</span>)
@@ -581,6 +984,120 @@ table = [<span class="num">None</span>] * <span class="num">10</span>
 <span class="fn">insert_with_probing</span>(table, <span class="str">"pleap"</span>, <span class="num">999</span>)  <span class="cmt"># appleと衝突</span>
 <span class="fn">search_with_probing</span>(table, <span class="str">"apple"</span>)
 <span class="fn">search_with_probing</span>(table, <span class="str">"pleap"</span>)</pre>
+
+      <!-- Example 4 animated diagram: linear probing insert+search -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 380" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">線形探索法: apple と pleap の挿入・検索ステップ</text>
+
+          <!-- Step badge -->
+          <rect x="490" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            ① insert apple → [0]
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            ② insert pleap [0]衝突
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            ③ +1 → [1]に格納
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            ④ search apple = 1回
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            ⑤ search pleap = 2回
+          </text>
+
+          <!-- Table 4 slots -->
+          <rect x="80" y="120" width="100" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="130" y="188" text-anchor="middle" fill="#666" font-size="13">[0]</text>
+          <rect x="186" y="120" width="100" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="236" y="188" text-anchor="middle" fill="#666" font-size="13">[1]</text>
+          <rect x="292" y="120" width="100" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="342" y="188" text-anchor="middle" fill="#666" font-size="13">[2]</text>
+          <rect x="398" y="120" width="100" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+          <text x="448" y="188" text-anchor="middle" fill="#666" font-size="13">[3]</text>
+
+          <!-- apple at [0] -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="80" y="120" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="130" y="148" text-anchor="middle" fill="#76B900" font-size="14" font-weight="900">apple</text>
+            <text x="130" y="164" text-anchor="middle" fill="#76B900" font-size="11">100</text>
+          </g>
+          <!-- pleap at [1] (step 3 onwards) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="186" y="120" width="100" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="236" y="148" text-anchor="middle" fill="#76B900" font-size="14" font-weight="900">pleap</text>
+            <text x="236" y="164" text-anchor="middle" fill="#76B900" font-size="11">999</text>
+          </g>
+
+          <!-- Highlight cursors -->
+          <!-- Step 2: pleap arrives at [0], finds collision -->
+          <rect width="106" height="56" x="77" y="117" rx="10" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Step 3: pleap moves to [1] -->
+          <rect width="106" height="56" y="117" rx="10" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
+            <animate attributeName="x" values="77;77;77;77;183;183;183;183;183;183" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Step 4: search apple [0] direct hit -->
+          <rect width="106" height="56" x="77" y="117" rx="10" fill="none" stroke="#4FC3F7" stroke-width="3" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Step 5: search pleap [0] -> [1] -->
+          <rect width="106" height="56" y="117" rx="10" fill="none" stroke="#FF5252" stroke-width="3" opacity="0">
+            <animate attributeName="x" values="77;77;77;77;77;77;77;77;77;183" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Explanation -->
+          <g>
+            <text x="80" y="240" fill="#ccc" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+              hash("apple")=0 → [0]は空き → そのまま格納（探索0回）
+            </text>
+            <text x="80" y="240" fill="#FFB800" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+              hash("pleap")=0 → [0]に apple あり → 衝突!
+            </text>
+            <text x="80" y="240" fill="#FFB800" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+              index = (0+1) % 10 = 1 → [1]空き → 格納（探索1回）
+            </text>
+            <text x="80" y="240" fill="#4FC3F7" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+              search("apple") → [0]で即発見 → 比較1回で成功
+            </text>
+            <text x="80" y="240" fill="#FF5252" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+              search("pleap") → [0]=apple ≠ → [1]=pleap 一致 → 2回
+            </text>
+          </g>
+
+          <!-- Probe-count panel (right) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.36;0.40;0.62;0.66;0.86;0.90;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="520" y="120" width="140" height="100" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="590" y="142" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">探索回数比較</text>
+            <text x="590" y="166" text-anchor="middle" fill="#aaa" font-size="12">apple: 1回</text>
+            <text x="590" y="186" text-anchor="middle" fill="#FF5252" font-size="12">pleap: 2回 (+1)</text>
+            <text x="590" y="208" text-anchor="middle" fill="#888" font-size="10">衝突分だけ遅くなる</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <rect x="40" y="305" width="600" height="42" rx="8" fill="#111" stroke="#333"/>
+          <text x="340" y="322" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">最良 O(1) ／ 平均 O(1) ／ 最悪 O(n)</text>
+          <text x="340" y="340" text-anchor="middle" fill="#888" font-size="11">衝突1回ごとに探索回数+1。クラスタリングが大きいほど劣化</text>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -605,7 +1122,7 @@ table = [<span class="num">None</span>] * <span class="num">10</span>
     <span class="kw">def</span> <span class="fn">_hash</span>(self, key):
         total = <span class="num">0</span>
         <span class="kw">for</span> char <span class="kw">in</span> key:
-            total += <span class="fn">ord</span>(char)
+            total = total + <span class="fn">ord</span>(char)
         <span class="kw">return</span> total % self.size
 
     <span class="kw">def</span> <span class="fn">insert</span>(self, key, value):
@@ -614,11 +1131,12 @@ table = [<span class="num">None</span>] * <span class="num">10</span>
         <span class="kw">while</span> self.table[index] <span class="kw">is not</span> <span class="num">None</span>:
             <span class="kw">if</span> self.table[index][<span class="num">0</span>] == key:
                 <span class="kw">break</span>
-            index = (index + <span class="num">1</span>) % self.size
+            next_index = (index + <span class="num">1</span>) % self.size
+            index = next_index
             <span class="kw">if</span> index == original:
                 <span class="kw">return</span> -<span class="num">1</span>
         self.table[index] = (key, value)
-        self.count += <span class="num">1</span>
+        self.count = self.count + <span class="num">1</span>
 
     <span class="kw">def</span> <span class="fn">search</span>(self, key):
         index = self.<span class="fn">_hash</span>(key)
@@ -626,8 +1144,10 @@ table = [<span class="num">None</span>] * <span class="num">10</span>
         <span class="kw">while</span> self.table[index] <span class="kw">is not</span> <span class="num">None</span>:
             <span class="kw">if</span> self.table[index][<span class="num">0</span>] == key:
                 <span class="kw">return</span> self.table[index][<span class="num">1</span>]
-            index = (index + <span class="num">1</span>) % self.size
-            <span class="kw">if</span> index == start: <span class="kw">break</span>
+            next_index = (index + <span class="num">1</span>) % self.size
+            index = next_index
+            <span class="kw">if</span> index == start:
+                <span class="kw">break</span>
         <span class="kw">return</span> <span class="num">None</span>
 
     <span class="kw">def</span> <span class="fn">delete</span>(self, key):
@@ -636,10 +1156,12 @@ table = [<span class="num">None</span>] * <span class="num">10</span>
         <span class="kw">while</span> self.table[index] <span class="kw">is not</span> <span class="num">None</span>:
             <span class="kw">if</span> self.table[index][<span class="num">0</span>] == key:
                 self.table[index] = <span class="num">None</span>
-                self.count -= <span class="num">1</span>
+                self.count = self.count - <span class="num">1</span>
                 <span class="kw">return</span> <span class="num">True</span>
-            index = (index + <span class="num">1</span>) % self.size
-            <span class="kw">if</span> index == start: <span class="kw">break</span>
+            next_index = (index + <span class="num">1</span>) % self.size
+            index = next_index
+            <span class="kw">if</span> index == start:
+                <span class="kw">break</span>
         <span class="kw">return</span> <span class="num">False</span>
 
 <span class="cmt"># --- テスト ---</span>
@@ -649,6 +1171,138 @@ ht.<span class="fn">insert</span>(<span class="str">"banana"</span>, <span class
 <span class="fn">print</span>(ht.<span class="fn">search</span>(<span class="str">"apple"</span>))   <span class="cmt"># → 100</span>
 ht.<span class="fn">delete</span>(<span class="str">"apple"</span>)
 <span class="fn">print</span>(ht.<span class="fn">search</span>(<span class="str">"apple"</span>))   <span class="cmt"># → None</span></pre>
+
+      <!-- Example 5 animated diagram: HashTable lifecycle -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 380" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">HashTable のライフサイクル: insert → search → delete → search</text>
+
+          <!-- Step badge -->
+          <rect x="490" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="575" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            ① insert apple/banana
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            ② search apple → 100
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            ③ delete apple
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            ④ [0]はNoneに戻る
+          </text>
+          <text x="575" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            ⑤ search apple → None
+          </text>
+
+          <!-- 10 slots in single row of size 10 -->
+          <g>
+            <rect x="60" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="89" y="186" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+            <rect x="120" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="149" y="186" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+            <rect x="180" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="209" y="186" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+            <rect x="240" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="269" y="186" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+            <rect x="300" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="329" y="186" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+            <rect x="360" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="389" y="186" text-anchor="middle" fill="#666" font-size="11">[5]</text>
+            <rect x="420" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="449" y="186" text-anchor="middle" fill="#666" font-size="11">[6]</text>
+            <rect x="480" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="509" y="186" text-anchor="middle" fill="#666" font-size="11">[7]</text>
+            <rect x="540" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="569" y="186" text-anchor="middle" fill="#666" font-size="11">[8]</text>
+            <rect x="600" y="120" width="58" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="629" y="186" text-anchor="middle" fill="#666" font-size="11">[9]</text>
+          </g>
+
+          <!-- apple at [0]: present steps 1-3, vanish at 4 -->
+          <g>
+            <rect x="60" y="120" width="58" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            </rect>
+            <text x="89" y="148" text-anchor="middle" fill="#76B900" font-size="12" font-weight="900" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              apple
+            </text>
+            <text x="89" y="164" text-anchor="middle" fill="#76B900" font-size="10" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              100
+            </text>
+          </g>
+          <!-- "None" label at [0] after delete (step 4+) -->
+          <text x="89" y="148" text-anchor="middle" fill="#666" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            None
+          </text>
+
+          <!-- banana at [9]: present steps 1-end -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="600" y="120" width="58" height="50" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="629" y="148" text-anchor="middle" fill="#76B900" font-size="12" font-weight="900">banana</text>
+            <text x="629" y="164" text-anchor="middle" fill="#76B900" font-size="10">80</text>
+          </g>
+
+          <!-- Highlight for search apple step 2 -->
+          <rect width="64" height="56" x="57" y="117" rx="10" fill="none" stroke="#4FC3F7" stroke-width="3" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Highlight for delete step 3 -->
+          <rect width="64" height="56" x="57" y="117" rx="10" fill="none" stroke="#FF5252" stroke-width="3" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Highlight for search apple step 5 (not found) -->
+          <rect width="64" height="56" x="57" y="117" rx="10" fill="none" stroke="#FF5252" stroke-width="3" stroke-dasharray="5 3" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Explanation text -->
+          <g>
+            <text x="60" y="230" fill="#ccc" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              apple → [0]、banana → [9] にそれぞれ格納
+            </text>
+            <text x="60" y="230" fill="#4FC3F7" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              ht.search("apple") → table[0] にあり → 100 を返す
+            </text>
+            <text x="60" y="230" fill="#FF5252" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              ht.delete("apple") → table[0] = None / count -= 1
+            </text>
+            <text x="60" y="230" fill="#FFB800" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              [0] が None に戻る（再利用可能なスロットに）
+            </text>
+            <text x="60" y="230" fill="#FF5252" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+              ht.search("apple") → [0]=None → ループ即終了 → None
+            </text>
+          </g>
+
+          <!-- Warning box about tombstone -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.34;0.38;0.58;0.62;0.82;0.86;1" dur="20s" repeatCount="indefinite"/>
+            <rect x="60" y="255" width="600" height="46" rx="10" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/>
+            <text x="360" y="276" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">⚠ 注意: 衝突連鎖がある場合は「tombstone（墓石）」マーカーが必要</text>
+            <text x="360" y="294" text-anchor="middle" fill="#aaa" font-size="11">本実装は単純化版。実用ではNoneにせず削除マーカーを置く</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <rect x="40" y="320" width="600" height="40" rx="8" fill="#111" stroke="#333"/>
+          <text x="340" y="338" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">insert / search / delete: 平均 O(1)、最悪 O(n)</text>
+          <text x="340" y="354" text-anchor="middle" fill="#888" font-size="11">クラスとしてまとめると、状態（self.table, self.count）の管理が安全</text>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -735,11 +1389,12 @@ table = [<span class="num">14</span>, <span class="num">21</span>, <span class="
     h = key % SIZE
     count = <span class="num">0</span>
     <span class="kw">while</span> table[h] <span class="kw">is not</span> <span class="num">None</span>:
-        count += <span class="num">1</span>
+        count = count + <span class="num">1</span>
         <span class="fn">print</span>(<span class="str">f"  比較{count}: table[{h}]={table[h]}"</span>)
         <span class="kw">if</span> table[h] == key:
             <span class="kw">return</span> h, count
-        h = (h + <span class="num">1</span>) % SIZE
+        next_h = (h + <span class="num">1</span>) % SIZE
+        h = next_h
     <span class="kw">return</span> -<span class="num">1</span>, count
 
 <span class="kw">for</span> key <span class="kw">in</span> [<span class="num">28</span>, <span class="num">35</span>, <span class="num">10</span>]:
@@ -874,7 +1529,7 @@ table = [<span class="num">14</span>, <span class="num">21</span>, <span class="
   </div>
 </section>
 
-<!-- ============ ANSWERS ============ -->
+<!-- ============ ANSWERS (例題: 公開 / 課題: 暗号化) ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-06-10T14:40">
   <div class="container">
     <div class="section-header">
@@ -882,6 +1537,91 @@ table = [<span class="num">14</span>, <span class="num">21</span>, <span class="
       <h2>解答例</h2>
     </div>
 
+    <!-- ── 例題の解答（常に公開） ── -->
+    <div id="answers-examples">
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>key = "banana"</code> に変更して <code>hash_function(key, 10)</code> を実行した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">ord('b')+ord('a')+ord('n')+ord('a')+ord('n')+ord('a')
+= 98 + 97 + 110 + 97 + 110 + 97 = 609
+609 % 10 = 9
+
+'banana' のハッシュ値: 9
+テーブル[9] に ('banana', 80) を格納しました</pre>
+        <p>ハッシュ関数は「文字コードの総和を <code>size</code> で割った余り」を返すだけ。<code>"apple"</code>（→0）と <code>"banana"</code>（→9）のように、入力が少し変わるとインデックスは大きく散らばる。これがハッシュ法の <strong>O(1) で格納先が決まる</strong> という性質の本質。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>末尾に <code>print(table)</code> を追加して実行した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">  'apple'  → インデックス 0 → 格納完了
+  'banana' → インデックス 9 → 格納完了
+  'cherry' → インデックス 3 → 格納完了
+  'date'   → インデックス 4 → 格納完了
+
+[('apple', 100), None, None, ('cherry', 150), ('date', 200),
+ None, None, None, None, ('banana', 80)]
+
+None のスロット数: 6個（インデックス 1, 2, 5, 6, 7, 8）</pre>
+        <p>4件のデータをサイズ10のテーブルに入れたので、<strong>負荷率 = 4/10 = 0.4</strong>。空きスロットが6個あり、まだ衝突は起きていない。負荷率が低いうちはハッシュ法の性能が最大限に発揮される（理想的な O(1)）。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>5つのキーのハッシュ値を計算した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">=== 各キーのハッシュ値 ===
+  'apple'  → インデックス 0
+  'pleap'  → インデックス 0   ← apple と衝突
+  'banana' → インデックス 9
+  'ananab' → インデックス 9   ← banana と衝突
+  'cherry' → インデックス 3
+
+衝突しているペア:
+  (apple, pleap)   → どちらもインデックス 0
+  (banana, ananab) → どちらもインデックス 9</pre>
+        <p><code>"apple"</code> と <code>"pleap"</code>、<code>"banana"</code> と <code>"ananab"</code> はそれぞれ <strong>同じ文字を並び替えただけ（アナグラム）</strong>。文字コードの総和は順序に依存しないため、必ず同じハッシュ値になる。これは「総和型ハッシュ関数の弱点」で、実用ではより複雑なハッシュ関数（例: 文字位置で重み付け）を使う必要がある。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>線形探索法で <code>"apple"</code> と <code>"pleap"</code> を挿入・検索した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">  insert 'apple': 初期=0, 探索0回 → [0]
+  insert 'pleap': 初期=0, 探索1回 → [1]   ← 衝突して1つズレた
+  search 'apple': [0]で発見, 探索1回
+  search 'pleap': [1]で発見, 探索2回   ← apple を見てから pleap へ
+
+apple の検索回数 = 1回
+pleap の検索回数 = 2回（apple のスロットを経由するため +1）</pre>
+        <p><code>"pleap"</code> は本来インデックス0に行きたいが、すでに <code>"apple"</code> が居るので <strong>右隣の1番に「ずらされて」格納</strong>される（線形探索法 / オープンアドレス法）。検索時も同じ経路をたどるため、衝突した側は <strong>探索回数が +1</strong> される。衝突が増えるほど検索性能は劣化する。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>ht.delete("apple")</code> の後に <code>ht.insert("grape", 200)</code> と <code>ht.search("grape")</code> を追加した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">ht.insert("apple", 100)   → table[0] = ('apple', 100)
+ht.insert("banana", 80)   → table[9] = ('banana', 80)
+ht.search("apple")        → 100
+ht.delete("apple")        → table[0] = None  （空きに戻る）
+ht.insert("grape", 200)   → 'grape' のハッシュ = (103+114+97+112+101) % 10
+                          = 527 % 10 = 7 → table[7] = ('grape', 200)
+ht.search("grape")        → 200
+
+削除された apple のスロット（インデックス0）は None に戻り、再利用可能。</pre>
+        <p><code>"grape"</code> はハッシュ値が <strong>7</strong> なので、空きスロット <code>table[0]</code> ではなく <code>table[7]</code> に格納される。<strong>削除したスロットは別キーで再利用されるわけではない</strong>。なお、本実装は <code>delete</code> でスロットを <code>None</code> に戻すシンプル版だが、線形探索法では本来「削除済みマーカー（tombstone）」を置かないと、衝突連鎖の途中で検索が打ち切られて見つからなくなるバグが起こりうる点に注意。</p>
+      </div>
+    </details>
+    </div>
+
+    <!-- ── 標準課題・発展課題の解答（暗号化） ── -->
     <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>

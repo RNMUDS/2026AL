@@ -158,6 +158,17 @@ pre { position: relative; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.8rem; font-weight: 700;
 }
+a.sub-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+a.sub-item:hover {
+  border-color: #76B900;
+  background: #1f2a14;
+  transform: translateY(-1px);
+}
 </style>
 </head>
 <body>
@@ -188,10 +199,10 @@ pre { position: relative; }
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
-        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -214,6 +225,13 @@ pre { position: relative; }
 
     <div class="concept-box">
       <h4>基本の考え方</h4>
+      <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.6rem 1rem;margin-bottom:1rem;border-radius:6px;font-size:0.95rem">
+        <strong style="color:#76B900">読み方:</strong>
+        <code>BFS</code>＝<strong>ビーエフエス</strong>（Breadth-First Search／幅優先探索）、
+        <code>frozenset</code>＝<strong>フローズンセット</strong>（凍った集合、変更不可な集合）、
+        <code>hashable</code>＝<strong>ハッシュ可能</strong>（辞書のキーや集合の要素にできる性質）、
+        <code>state space</code>＝<strong>ステートスペース</strong>（状態空間）。
+      </p>
       <p>普通のBFSでは「位置」だけを状態として記録しますが、アイテム収集では<strong>「位置 + 集めたアイテムの組み合わせ」</strong>を状態として管理する必要があります。同じ位置でも、集めたアイテムが違えば<strong>別の状態</strong>として扱います。</p>
 
       <div class="diagram-container">
@@ -225,14 +243,14 @@ pre { position: relative; }
           <text x="175" y="65" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="13">通常のBFS</text>
           <text x="175" y="90" text-anchor="middle" fill="#E0E0E0" font-size="11">状態 = 位置 のみ</text>
           <text x="175" y="115" text-anchor="middle" fill="#888" font-size="11">(0,0), (0,1), (1,0), ...</text>
-          <text x="175" y="132" text-anchor="middle" fill="#888" font-size="10">各マスは1回だけ訪問</text>
+          <text x="175" y="132" text-anchor="middle" fill="#888" font-size="11">各マスは1回だけ訪問</text>
 
           <!-- Item BFS -->
           <rect x="370" y="40" width="310" height="100" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
           <text x="525" y="65" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">アイテム収集BFS</text>
           <text x="525" y="90" text-anchor="middle" fill="#E0E0E0" font-size="11">状態 = (位置, 集めたアイテム集合)</text>
           <text x="525" y="115" text-anchor="middle" fill="#888" font-size="11">((0,0), {}), ((0,0), {A}), ...</text>
-          <text x="525" y="132" text-anchor="middle" fill="#888" font-size="10">同じマスでもアイテム違い = 別状態</text>
+          <text x="525" y="132" text-anchor="middle" fill="#888" font-size="11">同じマスでもアイテム違い = 別状態</text>
 
           <!-- Used tools -->
           <text x="350" y="175" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">使うデータ構造</text>
@@ -249,16 +267,51 @@ pre { position: relative; }
           <rect x="520" y="190" width="140" height="35" rx="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
           <text x="590" y="213" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="11">set（訪問済み）</text>
 
-          <text x="110" y="245" text-anchor="middle" fill="#888" font-size="10">最短経路の保証</text>
-          <text x="270" y="245" text-anchor="middle" fill="#888" font-size="10">アイテム集合の管理</text>
-          <text x="430" y="245" text-anchor="middle" fill="#888" font-size="10">経路復元</text>
-          <text x="590" y="245" text-anchor="middle" fill="#888" font-size="10">重複探索防止</text>
+          <text x="110" y="245" text-anchor="middle" fill="#888" font-size="11">最短経路の保証</text>
+          <text x="270" y="245" text-anchor="middle" fill="#888" font-size="11">アイテム集合の管理</text>
+          <text x="430" y="245" text-anchor="middle" fill="#888" font-size="11">経路復元</text>
+          <text x="590" y="245" text-anchor="middle" fill="#888" font-size="11">重複探索防止</text>
         </svg>
       </div>
     </div>
 
     <div class="analogy">
       スーパーで買い物をするとき、買い物リストの商品を全て集めてからレジに行くのと似ています。最短ルートで全商品を集めてレジ（ゴール）に行きたい。同じ通路にいても、カゴの中身が違えば「別の状態」です。
+    </div>
+
+    <div class="concept-box" style="border-left:4px solid #FFB800">
+      <h4>❓ どうして「位置」だけでは足りないの？</h4>
+
+      <p style="font-size:0.95rem;margin-bottom:0.8rem">
+        通常のBFSが「位置」だけを状態として扱うのに対し、アイテム収集BFSでは <strong>「位置 + 持ち物セット」</strong> を1つの状態にする必要があります。なぜなら、<strong>「同じマスにいても、持ち物が違えば次の最適手が変わる」</strong>からです。
+      </p>
+
+      <table>
+        <tr><th>状況</th><th>状態の例</th><th>意味</th></tr>
+        <tr>
+          <td>スタート直後</td>
+          <td><code>((0,0), frozenset())</code></td>
+          <td>位置(0,0)、持ち物なし</td>
+        </tr>
+        <tr>
+          <td>アイテムA取得後に再び(0,0)</td>
+          <td><code>((0,0), frozenset({A}))</code></td>
+          <td>位置(0,0)、持ち物A入り</td>
+        </tr>
+        <tr>
+          <td>アイテムAとBを取得後に(0,0)</td>
+          <td><code>((0,0), frozenset({A,B}))</code></td>
+          <td>位置(0,0)、持ち物A・B入り</td>
+        </tr>
+      </table>
+
+      <p style="margin-top:1rem;font-size:0.95rem">
+        位置だけで「訪問済み」と判定してしまうと、<strong>持ち物が変わってからの再訪問</strong>を逃してしまい、全アイテム収集の最短解が見つけられません。だから「位置」だけでなく「持ち物セット」も状態の一部として記録します。
+      </p>
+
+      <p style="margin-top:1rem;font-size:0.95rem;color:#93D500">
+        💡 <strong>まとめ:</strong> 状態 = 「今どこにいて、何を持っているか」。状態空間のサイズは <code>マス数 × 2^アイテム数</code> になります（アイテム3個なら 8倍）。
+      </p>
     </div>
   </div>
 </section>
@@ -368,24 +421,24 @@ pre { position: relative; }
         <text x="505" y="68" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">状態 = (位置, 収集済みアイテム)</text>
 
         <rect x="345" y="82" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#555" stroke-width="1"/>
-        <text x="425" y="101" text-anchor="middle" fill="#E0E0E0" font-size="10">((0,0), {})</text>
-        <text x="520" y="101" fill="#888" font-size="9">スタート、アイテム0個</text>
+        <text x="425" y="101" text-anchor="middle" fill="#E0E0E0" font-size="11">((0,0), {})</text>
+        <text x="520" y="101" fill="#888" font-size="11">スタート、アイテム0個</text>
 
         <rect x="345" y="118" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="425" y="137" text-anchor="middle" fill="#FFB800" font-size="10">((2,0), {A})</text>
-        <text x="520" y="137" fill="#888" font-size="9">アイテムA取得!</text>
+        <text x="425" y="137" text-anchor="middle" fill="#FFB800" font-size="11">((2,0), {A})</text>
+        <text x="520" y="137" fill="#888" font-size="11">アイテムA取得!</text>
 
         <rect x="345" y="154" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
-        <text x="425" y="173" text-anchor="middle" fill="#FFB800" font-size="10">((2,3), {A,B})</text>
-        <text x="520" y="173" fill="#888" font-size="9">アイテムB取得!</text>
+        <text x="425" y="173" text-anchor="middle" fill="#FFB800" font-size="11">((2,3), {A,B})</text>
+        <text x="520" y="173" fill="#888" font-size="11">アイテムB取得!</text>
 
         <rect x="345" y="190" width="160" height="28" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
-        <text x="425" y="209" text-anchor="middle" fill="#76B900" font-size="10">((3,3), {A,B})</text>
-        <text x="520" y="209" fill="#76B900" font-size="9">ゴール + 全アイテム!</text>
+        <text x="425" y="209" text-anchor="middle" fill="#76B900" font-size="11">((3,3), {A,B})</text>
+        <text x="520" y="209" fill="#76B900" font-size="11">ゴール + 全アイテム!</text>
 
-        <text x="505" y="245" text-anchor="middle" fill="#888" font-size="10">同じマスでもアイテムが違えば</text>
-        <text x="505" y="260" text-anchor="middle" fill="#888" font-size="10">別の状態として探索する</text>
-        <text x="505" y="280" text-anchor="middle" fill="#FF5252" font-size="10">((2,0), {}) ≠ ((2,0), {A})</text>
+        <text x="505" y="245" text-anchor="middle" fill="#888" font-size="11">同じマスでもアイテムが違えば</text>
+        <text x="505" y="260" text-anchor="middle" fill="#888" font-size="11">別の状態として探索する</text>
+        <text x="505" y="280" text-anchor="middle" fill="#FF5252" font-size="11">((2,0), {}) ≠ ((2,0), {A})</text>
       </svg>
     </div>
 
@@ -418,6 +471,112 @@ maze = [
     [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
 ]
 display_maze(maze)</pre>
+
+      <!-- Example 1: animated maze rendering -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 380" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">迷路の絵文字レンダリング（行ごとに表示）</text>
+
+          <!-- 2D list source (left) -->
+          <g>
+            <text x="40" y="78" fill="#888" font-size="13" font-weight="600">maze（2次元リスト）</text>
+            <rect x="40" y="88" width="220" height="200" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+            <text x="55" y="115" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 0, 1, 0, 0],</text>
+            <text x="55" y="138" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 1, 0, 0, 0],</text>
+            <text x="55" y="161" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 0, 0, 1, 0],</text>
+            <text x="55" y="184" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 1, 1, 0, 0],</text>
+            <text x="55" y="207" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 0, 0, 0, 0],</text>
+            <text x="55" y="240" fill="#888" font-family="JetBrains Mono,monospace" font-size="12">0=通路(🟩) 1=壁(🟫)</text>
+          </g>
+
+          <!-- Arrow -->
+          <line x1="270" y1="180" x2="310" y2="180" stroke="#76B900" stroke-width="2" marker-end="url(#arrow-m1)"/>
+          <defs><marker id="arrow-m1" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#76B900"/></marker></defs>
+
+          <!-- Rendered maze (right): 5x5 cells, render row by row -->
+          <g font-family="Apple Color Emoji,Segoe UI Emoji,sans-serif">
+            <!-- Row 0: [0,0,1,0,0] - appears at step 1 -->
+            <text x="340" y="115" font-size="28" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              🟩🟩🟫🟩🟩
+            </text>
+            <!-- Row 1: [0,1,0,0,0] - step 2 -->
+            <text x="340" y="148" font-size="28" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              🟩🟫🟩🟩🟩
+            </text>
+            <!-- Row 2: [0,0,0,1,0] - step 3 -->
+            <text x="340" y="181" font-size="28" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              🟩🟩🟩🟫🟩
+            </text>
+            <!-- Row 3: [0,1,1,0,0] - step 4 -->
+            <text x="340" y="214" font-size="28" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              🟩🟫🟫🟩🟩
+            </text>
+            <!-- Row 4: [0,0,0,0,0] - step 5 -->
+            <text x="340" y="247" font-size="28" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+              🟩🟩🟩🟩🟩
+            </text>
+          </g>
+
+          <!-- Highlight ring on the row currently being rendered -->
+          <rect x="48" y="100" width="200" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="48" y="123" width="200" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="48" y="146" width="200" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="48" y="169" width="200" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="48" y="192" width="200" height="22" rx="4" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Step badges -->
+          <g>
+            <rect x="500" y="48" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="580" y="64" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+              ① 1行目を読む
+            </text>
+            <text x="580" y="64" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+              ② 2行目を読む
+            </text>
+            <text x="580" y="64" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+              ③ 3行目を読む
+            </text>
+            <text x="580" y="64" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+              ④ 4行目を読む
+            </text>
+            <text x="580" y="64" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+              ⑤ 5行目を読む
+            </text>
+            <text x="580" y="64" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;1" dur="16s" repeatCount="indefinite"/>
+              ⑥ 表示完了！
+            </text>
+          </g>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="60" y="320" width="560" height="36" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="340" y="344" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+              ループで2次元リストを読む → 各セルを🟩/🟫に変換 → 行ごとにprint  ／ O(rows × cols)
+            </text>
+          </g>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -466,6 +625,196 @@ display_maze(maze)</pre>
                 parent[next_pos] = current
     <span class="kw">return</span> <span class="kw">None</span></pre>
 
+      <!-- Example 2: animated BFS shortest path -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 420" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="30" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">BFSによる最短経路探索（5x5 迷路）</text>
+
+          <!-- Maze grid 5x5, cell size 40, starting at (140, 50) -->
+          <!-- Walls: (0,2),(1,1),(2,3),(3,1),(3,2) per maze data -->
+          <!-- S=(0,0) G=(4,4) -->
+          <g>
+            <!-- Row 0 -->
+            <rect x="140" y="50" width="40" height="40" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="160" y="76" text-anchor="middle" fill="#76B900" font-weight="900" font-size="14">S</text>
+            <rect x="180" y="50" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="220" y="50" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="260" y="50" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="50" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <!-- Row 1 -->
+            <rect x="140" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="90" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="220" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="260" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <!-- Row 2 -->
+            <rect x="140" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="220" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="260" y="130" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="300" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <!-- Row 3 -->
+            <rect x="140" y="170" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="170" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="220" y="170" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="260" y="170" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="170" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <!-- Row 4 -->
+            <rect x="140" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="220" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="260" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="210" width="40" height="40" rx="4" fill="#FF5252"/>
+            <text x="320" y="236" text-anchor="middle" fill="white" font-weight="900" font-size="14">G</text>
+          </g>
+
+          <!-- BFS expansion: rings at progressing distance from S - keyTimes share 7-step structure -->
+          <!-- Distance 1: (0,1) and (1,0) -->
+          <g>
+            <rect x="180" y="50" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.7;0.7;0.4;0.4;0.4;0.4;0.4;0.4;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.40;0.50;0.60;0.70;0.85;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="140" y="90" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0;0;0.7;0.7;0.4;0.4;0.4;0.4;0.4;0.4;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.40;0.50;0.60;0.70;0.85;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Distance 2: (2,0) -->
+          <rect x="140" y="130" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0.7;0.7;0.4;0.4;0.4;0.4;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.50;0.60;0.85;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Distance 3: (2,1),(3,0) -->
+          <g>
+            <rect x="180" y="130" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0.7;0.7;0.4;0.4;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.85;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="140" y="170" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0.7;0.7;0.4;0.4;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.85;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Distance 4: (2,2),(4,0) -->
+          <g>
+            <rect x="220" y="130" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0.7;0.7;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.52;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="140" y="210" width="40" height="40" rx="4" fill="#FFB800" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0.7;0.7;0.4;0.4" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.52;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Goal reached - all final path cells turn green -->
+          <g>
+            <rect x="180" y="50" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="140" y="90" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="140" y="130" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="180" y="130" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="220" y="130" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="260" y="170" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="260" y="210" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0.8;0.8" keyTimes="0;0.08;0.14;0.20;0.22;0.30;0.32;0.40;0.42;0.50;0.62;1" dur="18s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+
+          <!-- Step badges -->
+          <g>
+            <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ① Sからスタート
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ② 距離1のマス探索
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ③ 距離2のマス探索
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ④ 距離3〜4を探索
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ⑤ Gに到達！経路復元
+            </text>
+          </g>
+
+          <!-- Queue panel right side -->
+          <g>
+            <rect x="380" y="90" width="280" height="200" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+            <text x="520" y="113" text-anchor="middle" fill="#888" font-size="12" font-weight="600">queue（deque） の中身</text>
+
+            <text x="400" y="142" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              [(0,1), (1,0)]
+            </text>
+            <text x="400" y="142" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              [(2,0)]
+            </text>
+            <text x="400" y="142" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              [(2,1), (3,0), (2,2), (4,0)]
+            </text>
+            <text x="400" y="142" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ゴール到達！ 歩数=8
+            </text>
+
+            <text x="400" y="180" fill="#888" font-family="JetBrains Mono,monospace" font-size="11">parent辞書で経路復元:</text>
+            <text x="400" y="200" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              (4,4)←(4,3)←(3,3)
+            </text>
+            <text x="400" y="220" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ←(2,2)←(2,1)←(2,0)
+            </text>
+            <text x="400" y="240" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.14;0.30;0.32;0.40;0.42;0.50;0.62;0.85;0.90;1" dur="18s" repeatCount="indefinite"/>
+              ←(1,0)←(0,0)
+            </text>
+          </g>
+
+          <!-- Legend (bottom) -->
+          <g>
+            <rect x="60" y="310" width="560" height="84" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <rect x="80" y="324" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="110" y="340" fill="#aaa" font-size="12">スタート(S)</text>
+            <rect x="220" y="324" width="20" height="20" rx="3" fill="#FF5252"/>
+            <text x="250" y="340" fill="#aaa" font-size="12">ゴール(G)</text>
+            <rect x="340" y="324" width="20" height="20" rx="3" fill="#444"/>
+            <text x="370" y="340" fill="#aaa" font-size="12">壁</text>
+            <rect x="420" y="324" width="20" height="20" rx="3" fill="#FFB800"/>
+            <text x="450" y="340" fill="#aaa" font-size="12">探索中</text>
+            <rect x="520" y="324" width="20" height="20" rx="3" fill="#76B900"/>
+            <text x="550" y="340" fill="#aaa" font-size="12">最短経路</text>
+            <text x="340" y="372" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+              BFSは「近い順」に同心円状に広がる ／ O(rows × cols)
+            </text>
+          </g>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">例題1の迷路で <code>find_shortest_path(maze, (0,0), (4,4))</code> を実行し、最短経路の長さ（歩数）を確認しよう。</p>
@@ -496,6 +845,164 @@ collected = check_item_pickup(path, items)
 <span class="fn">print</span>(<span class="str">f"取得数: {len(collected)}/{len(items)}個"</span>)
 <span class="cmt"># → 全アイテムを集めるには経路を変える必要がある！</span></pre>
 
+      <!-- Example 3: animated path walking with item pickup -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 420" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="30" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">最短経路上のアイテム拾得（経路は固定）</text>
+
+          <!-- Maze grid - same as Example 2 -->
+          <g>
+            <rect x="140" y="50" width="40" height="40" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="160" y="76" text-anchor="middle" fill="#76B900" font-weight="900" font-size="14">S</text>
+            <rect x="180" y="50" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="220" y="50" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="260" y="50" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <!-- Item A at (0,4) -->
+            <rect x="300" y="50" width="40" height="40" rx="4" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+            <text x="320" y="76" text-anchor="middle" fill="#FFB800" font-size="18">💎</text>
+
+            <rect x="140" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="90" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="220" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="260" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="90" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <!-- Item B at (2,0) -->
+            <rect x="140" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+            <text x="160" y="156" text-anchor="middle" fill="#FFB800" font-size="18">💎</text>
+            <rect x="180" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="220" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="260" y="130" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="300" y="130" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <rect x="140" y="170" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="170" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="220" y="170" width="40" height="40" rx="4" fill="#444"/>
+            <rect x="260" y="170" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="170" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <rect x="140" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="180" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <!-- Item C at (4,2) -->
+            <rect x="220" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+            <text x="240" y="236" text-anchor="middle" fill="#FFB800" font-size="18">💎</text>
+            <rect x="260" y="210" width="40" height="40" rx="4" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="300" y="210" width="40" height="40" rx="4" fill="#FF5252"/>
+            <text x="320" y="236" text-anchor="middle" fill="white" font-weight="900" font-size="14">G</text>
+          </g>
+
+          <!-- Path overlay (fixed shortest path - via (2,0)) -->
+          <path d="M160 70 L160 110 L160 150 L200 150 L240 150 L280 190 L280 230 L320 230" stroke="#4FC3F7" stroke-width="2.5" fill="none" stroke-dasharray="5,3" opacity="0.6"/>
+
+          <!-- Player walking along path -->
+          <g>
+            <!-- Player circle traverses path positions -->
+            <circle r="14" fill="#76B900" stroke="white" stroke-width="2">
+              <animate attributeName="cx" values="160;160;160;160;200;240;280;280;320;320" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.90;1" dur="20s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="70;110;150;150;150;150;190;230;230;230" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.90;1" dur="20s" repeatCount="indefinite"/>
+            </circle>
+            <text text-anchor="middle" font-size="14" font-weight="900" fill="white">
+              <animate attributeName="x" values="160;160;160;160;200;240;280;280;320;320" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.90;1" dur="20s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="75;115;155;155;155;155;195;235;235;235" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.90;1" dur="20s" repeatCount="indefinite"/>
+              P
+            </text>
+          </g>
+
+          <!-- Item B (2,0) collected at step 3 -->
+          <rect x="140" y="130" width="40" height="40" rx="4" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.90;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+          <text x="160" y="156" text-anchor="middle" font-size="18" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;1" keyTimes="0;0.10;0.20;0.21;0.30;0.40;0.50;0.65;0.80;1" dur="20s" repeatCount="indefinite"/>
+            ✅
+          </text>
+
+          <!-- Items A (0,4) and C (4,2) marked as missed at the end -->
+          <text x="320" y="76" text-anchor="middle" font-size="18" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+            ❌
+          </text>
+          <text x="240" y="236" text-anchor="middle" font-size="18" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+            ❌
+          </text>
+
+          <!-- Step badges -->
+          <g>
+            <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ① Sを出発
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ② 💎B を拾得！
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ③ 右へ進む
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ④ 下へ進んでG到達
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ⑤ AとCは拾えず！
+            </text>
+          </g>
+
+          <!-- Inventory display -->
+          <g>
+            <rect x="380" y="90" width="280" height="200" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+            <text x="520" y="113" text-anchor="middle" fill="#888" font-size="12" font-weight="600">collected（拾得済リスト）</text>
+
+            <text x="400" y="145" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              [] （空）
+            </text>
+            <text x="400" y="145" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;0;0" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              [(2, 0)]
+            </text>
+            <text x="400" y="145" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              [(2, 0)]  → 1/3 個のみ
+            </text>
+
+            <text x="400" y="180" fill="#888" font-size="11">経路: (0,0)→(1,0)→(2,0)→(2,1)</text>
+            <text x="400" y="200" fill="#888" font-size="11">     →(2,2)→(3,3)→(4,3)→(4,4)</text>
+            <text x="400" y="232" fill="#FF5252" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ❌ A=(0,4) は右上で経路外
+            </text>
+            <text x="400" y="252" fill="#FF5252" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.30;0.40;0.50;0.65;0.80;0.88;1" dur="20s" repeatCount="indefinite"/>
+              ❌ C=(4,2) は下段で経路外
+            </text>
+            <text x="400" y="278" fill="#93D500" font-size="11">→ 経路を変えないと全部拾えない</text>
+          </g>
+
+          <!-- Legend -->
+          <g>
+            <rect x="60" y="310" width="560" height="84" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <circle cx="92" cy="334" r="10" fill="#76B900" stroke="white" stroke-width="2"/>
+            <text x="115" y="340" fill="#aaa" font-size="12">プレイヤー</text>
+            <text x="200" y="340" fill="#FFB800" font-size="14">💎</text>
+            <text x="225" y="340" fill="#aaa" font-size="12">アイテム</text>
+            <text x="310" y="340" fill="#aaa" font-size="14">✅</text>
+            <text x="335" y="340" fill="#aaa" font-size="12">拾得</text>
+            <text x="400" y="340" fill="#aaa" font-size="14">❌</text>
+            <text x="425" y="340" fill="#aaa" font-size="12">未拾得</text>
+            <text x="510" y="340" fill="#4FC3F7" font-size="12">‐‐‐</text>
+            <text x="540" y="340" fill="#aaa" font-size="12">経路</text>
+            <text x="340" y="372" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+              通常BFSの最短経路は「位置のみ最適」 ／ アイテムは偶然通った分だけ拾える
+            </text>
+          </g>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">最短経路で拾えるアイテムと拾えないアイテムを確認しよう。なぜ全部拾えないのか考えてみよう。</p>
@@ -525,6 +1032,115 @@ visited[state_c] = <span class="kw">True</span>  <span class="cmt"># 管理で�
 collected = <span class="fn">frozenset</span>()
 collected = collected | {(<span class="num">2</span>, <span class="num">0</span>)}  <span class="cmt"># 1個取得: frozenset({(2, 0)})</span>
 collected = collected | {(<span class="num">0</span>, <span class="num">4</span>)}  <span class="cmt"># 2個取得: frozenset({(2, 0), (0, 4)})</span></pre>
+
+      <!-- Example 4: animated frozenset state branching (2^N states) -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 400" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="30" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">frozenset で表す状態空間（アイテム3個 = 2³ = 8通り）</text>
+
+          <!-- Tree: root at top, expanding -->
+          <!-- Level 0: frozenset() -->
+          <g>
+            <rect x="280" y="55" width="120" height="36" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="340" y="78" text-anchor="middle" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700">frozenset()</text>
+          </g>
+
+          <!-- Branch lines level 0 -> level 1 -->
+          <line x1="320" y1="91" x2="160" y2="130" stroke="#FFB800" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+          </line>
+          <line x1="340" y1="91" x2="340" y2="130" stroke="#FFB800" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+          </line>
+          <line x1="360" y1="91" x2="520" y2="130" stroke="#FFB800" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+          </line>
+
+          <!-- Level 1: 3 states with 1 item -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="100" y="130" width="120" height="34" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="160" y="152" text-anchor="middle" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="10">frozenset({A})</text>
+
+            <rect x="280" y="130" width="120" height="34" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="340" y="152" text-anchor="middle" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="10">frozenset({B})</text>
+
+            <rect x="460" y="130" width="120" height="34" rx="8" fill="#141414" stroke="#FFB800" stroke-width="1.5"/>
+            <text x="520" y="152" text-anchor="middle" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="10">frozenset({C})</text>
+          </g>
+
+          <!-- Branch lines level 1 -> level 2 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <line x1="140" y1="164" x2="80" y2="210" stroke="#4FC3F7" stroke-width="1.5"/>
+            <line x1="180" y1="164" x2="240" y2="210" stroke="#4FC3F7" stroke-width="1.5"/>
+            <line x1="320" y1="164" x2="240" y2="210" stroke="#4FC3F7" stroke-width="1.5"/>
+            <line x1="360" y1="164" x2="440" y2="210" stroke="#4FC3F7" stroke-width="1.5"/>
+            <line x1="500" y1="164" x2="440" y2="210" stroke="#4FC3F7" stroke-width="1.5"/>
+            <line x1="540" y1="164" x2="600" y2="210" stroke="#4FC3F7" stroke-width="1.5"/>
+          </g>
+
+          <!-- Level 2: 3 states with 2 items -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="20" y="210" width="120" height="34" rx="8" fill="#141414" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="80" y="232" text-anchor="middle" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="9">frozenset({A,B})</text>
+
+            <rect x="180" y="210" width="120" height="34" rx="8" fill="#141414" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="240" y="232" text-anchor="middle" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="9">frozenset({A,C})</text>
+
+            <rect x="380" y="210" width="120" height="34" rx="8" fill="#141414" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="440" y="232" text-anchor="middle" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="9">frozenset({B,C})</text>
+
+            <rect x="540" y="210" width="120" height="34" rx="8" fill="#141414" stroke="#4FC3F7" stroke-width="1.5"/>
+            <text x="600" y="232" text-anchor="middle" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="9">（重複）</text>
+          </g>
+
+          <!-- Branch lines level 2 -> level 3 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <line x1="80" y1="244" x2="340" y2="290" stroke="#76B900" stroke-width="1.5"/>
+            <line x1="240" y1="244" x2="340" y2="290" stroke="#76B900" stroke-width="1.5"/>
+            <line x1="440" y1="244" x2="340" y2="290" stroke="#76B900" stroke-width="1.5"/>
+          </g>
+
+          <!-- Level 3: full collected -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="240" y="290" width="200" height="40" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2.5"/>
+            <text x="340" y="315" text-anchor="middle" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700">frozenset({A,B,C}) ★</text>
+          </g>
+
+          <!-- Step badges -->
+          <g>
+            <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ① 持ち物0個から開始
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ② 1個持つ状態へ分岐
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ③ 2個持つ状態へ分岐
+            </text>
+            <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.20;0.35;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
+              ④ 全部集めた状態 ★
+            </text>
+          </g>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="60" y="350" width="560" height="36" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="340" y="374" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+              アイテム N 個 → 持ち物の組み合わせは 2ᴺ 通り ／ 状態数 = マス数 × 2ᴺ
+            </text>
+          </g>
+        </svg>
+      </div>
 
       <div class="analogy" style="border-left-color:#93D500">
         <span style="display:block;font-weight:700;font-size:0.8rem;color:#93D500;margin-bottom:0.3rem">frozenset のポイント</span>
@@ -592,6 +1208,171 @@ collected = collected | {(<span class="num">0</span>, <span class="num">4</span>
                     parent[new_state] = (current_pos, collected)
 
     <span class="kw">return</span> <span class="kw">None</span></pre>
+
+      <!-- Example 5: animated full item-collecting BFS - state transitions -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 680 440" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="340" y="30" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">アイテム収集BFS：状態 (位置, frozenset) の遷移</text>
+
+          <!-- Maze grid - smaller -->
+          <g>
+            <rect x="40" y="50" width="32" height="32" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="56" y="71" text-anchor="middle" fill="#76B900" font-weight="900" font-size="11">S</text>
+            <rect x="72" y="50" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="104" y="50" width="32" height="32" rx="3" fill="#444"/>
+            <rect x="136" y="50" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="168" y="50" width="32" height="32" rx="3" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+            <text x="184" y="71" text-anchor="middle" font-size="12">💎</text>
+
+            <rect x="40" y="82" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="72" y="82" width="32" height="32" rx="3" fill="#444"/>
+            <rect x="104" y="82" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="136" y="82" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="168" y="82" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <rect x="40" y="114" width="32" height="32" rx="3" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+            <text x="56" y="135" text-anchor="middle" font-size="12">💎</text>
+            <rect x="72" y="114" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="104" y="114" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="136" y="114" width="32" height="32" rx="3" fill="#444"/>
+            <rect x="168" y="114" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <rect x="40" y="146" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="72" y="146" width="32" height="32" rx="3" fill="#444"/>
+            <rect x="104" y="146" width="32" height="32" rx="3" fill="#444"/>
+            <rect x="136" y="146" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="168" y="146" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+
+            <rect x="40" y="178" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="72" y="178" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="104" y="178" width="32" height="32" rx="3" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+            <text x="120" y="199" text-anchor="middle" font-size="12">💎</text>
+            <rect x="136" y="178" width="32" height="32" rx="3" fill="#141414" stroke="#555" stroke-width="1"/>
+            <rect x="168" y="178" width="32" height="32" rx="3" fill="#FF5252"/>
+            <text x="184" y="199" text-anchor="middle" fill="white" font-weight="900" font-size="11">G</text>
+          </g>
+
+          <!-- Player marker animated along optimal item-collecting path: visits B then C then A then G -->
+          <!-- Path: (0,0)→(1,0)→(2,0)[B]→(2,1)→(3,3)→(4,3)→(4,2)[C]→(4,3)→(4,4)... actually shows simplified key steps -->
+          <circle r="9" fill="#76B900" stroke="white" stroke-width="2">
+            <animate attributeName="cx" values="56;56;56;120;120;184;184;184" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="66;130;130;194;194;66;130;194" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- B collected check at step 2 -->
+          <text x="56" y="135" text-anchor="middle" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+            ✅
+          </text>
+          <!-- C collected check at step 4 -->
+          <text x="120" y="199" text-anchor="middle" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+            ✅
+          </text>
+          <!-- A collected check at step 6 -->
+          <text x="184" y="71" text-anchor="middle" font-size="14" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+            ✅
+          </text>
+
+          <!-- State panel right side -->
+          <g>
+            <rect x="240" y="50" width="420" height="180" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+            <text x="450" y="73" text-anchor="middle" fill="#888" font-size="12" font-weight="600">現在の状態 (位置, frozenset(持ち物))</text>
+
+            <text x="260" y="105" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ((0,0), frozenset())
+            </text>
+            <text x="260" y="105" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ((2,0), frozenset({B}))
+            </text>
+            <text x="260" y="105" fill="#FFB800" font-family="JetBrains Mono,monospace" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ((4,2), frozenset({B,C}))
+            </text>
+            <text x="260" y="105" fill="#4FC3F7" font-family="JetBrains Mono,monospace" font-size="13" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ((0,4), frozenset({A,B,C}))
+            </text>
+
+            <text x="260" y="140" fill="#888" font-size="11">visited に追加:</text>
+            <text x="260" y="160" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              { ((0,0), frozenset()) }
+            </text>
+            <text x="260" y="160" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              + ((2,0), frozenset({B}))
+            </text>
+            <text x="260" y="160" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              + ((4,2), frozenset({B,C}))
+            </text>
+            <text x="260" y="160" fill="#76B900" font-family="JetBrains Mono,monospace" font-size="11" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              + ((0,4), frozenset({A,B,C})) ★
+            </text>
+
+            <text x="260" y="190" fill="#888" font-size="11">条件チェック:</text>
+            <text x="260" y="210" fill="#FF5252" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="1;1;1;1;1;1;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              collected ≠ all_items → 続行
+            </text>
+            <text x="260" y="210" fill="#76B900" font-size="12" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              collected == all_items → 終了！
+            </text>
+          </g>
+
+          <!-- Step badges -->
+          <g>
+            <rect x="40" y="240" width="200" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+            <text x="140" y="256" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ① 初期状態をキューへ
+            </text>
+            <text x="140" y="256" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ② アイテムB を取得
+            </text>
+            <text x="140" y="256" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ③ アイテムC も取得
+            </text>
+            <text x="140" y="256" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.22;0.40;0.55;0.72;0.85;1" dur="18s" repeatCount="indefinite"/>
+              ④ Aも取得→Gで終了 ★
+            </text>
+          </g>
+
+          <!-- Comparison panel -->
+          <g>
+            <rect x="280" y="240" width="380" height="120" rx="10" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="470" y="263" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">通常BFS vs アイテム収集BFS</text>
+
+            <text x="300" y="290" fill="#aaa" font-size="11">通常BFS（位置のみ状態）:</text>
+            <text x="510" y="290" fill="#FF5252" font-size="11">8歩  ／ 1/3 個</text>
+
+            <text x="300" y="312" fill="#aaa" font-size="11">アイテム収集BFS（位置+持ち物）:</text>
+            <text x="510" y="312" fill="#76B900" font-size="11">16歩 ／ 3/3 個 ★</text>
+
+            <text x="300" y="340" fill="#888" font-size="10">状態数: 25 → 25 × 2³ = 200 通り</text>
+          </g>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="40" y="380" width="620" height="46" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="350" y="402" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
+              状態 = (位置, frozenset(持ち物)) ／ 訪問済み判定で「同じ状態」を回避
+            </text>
+            <text x="350" y="420" text-anchor="middle" fill="#888" font-size="11">
+              計算量: O(rows × cols × 2ᴺ) ／ N = アイテム数
+            </text>
+          </g>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -840,7 +1621,7 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
   </div>
 </section>
 
-<!-- ============ ANSWERS ============ -->
+<!-- ============ ANSWERS (例題: 公開 / 課題: 暗号化) ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-07-22T14:40">
   <div class="container">
     <div class="section-header">
@@ -848,6 +1629,75 @@ visited.<span class="fn">add</span>((<span class="num">0</span>, <span class="nu
       <h2>解答例</h2>
     </div>
 
+    <!-- ── 例題の解答（常に公開） ── -->
+    <div id="answers-examples">
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>5×5の迷路を <code>display_maze(maze)</code> で表示した結果（0=🟩 通路、1=🟫 壁）:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">🟩🟩🟫🟩🟩
+🟩🟫🟩🟩🟩
+🟩🟩🟩🟫🟩
+🟩🟫🟫🟩🟩
+🟩🟩🟩🟩🟩</pre>
+        <p>例えば <code>maze[0][1]</code> を <code>1</code> に変えると、左上付近に壁が追加され <code>(0,0)</code> から右へ進めなくなる。<strong>迷路は単なる2次元リストで表現でき、値を書き換えるだけで地形を変えられる</strong>のがポイント。BFS で経路を解く前に、まずデータ構造を可視化して正しく読み込めていることを確認するのが重要。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>find_shortest_path(maze, (0,0), (4,4))</code> を実行した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">最短経路: [(0,0), (1,0), (2,0), (2,1), (2,2), (3,3), (4,3), (4,4)]
+        ↓ 別解の一例 ↓
+[(0,0), (1,0), (2,0), (2,1), (2,2), (3,3), (4,4) ではなく途中 (4,3) を経由]
+経路長: 9マス（= 8歩）</pre>
+        <p>BFS は<strong>「最初に見つかった経路 = 最短経路」</strong>になる性質をもつ。キューに入れる順序によって等距離の別経路が選ばれることもあるが、<strong>歩数（経路長 − 1）は必ず最小</strong>になる。今回は壁を避けて 8歩でゴールに到達できる。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>最短経路 <code>[(0,0), (1,0), (2,0), (2,1), (2,2), (3,3), (4,3), (4,4)]</code> 上でアイテムを判定した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">  位置(2, 0)でアイテムを拾った！
+取得数: 1/3個
+
+拾えたアイテム:   (2, 0)
+拾えなかったアイテム: (0, 4), (4, 2)</pre>
+        <p>最短経路はあくまで「<strong>スタートからゴールまでの最短ルート</strong>」を返すだけで、アイテムの位置は考慮していない。<code>(0, 4)</code> は右上、<code>(4, 2)</code> は下段にあり、最短経路から外れている。<strong>「全アイテムを集める」という制約を満たすには、経路選択そのものを変える必要がある</strong>—— これが例題5の動機になる。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>state_a</code>, <code>state_b</code>, <code>state_c</code> を辞書 <code>visited</code> のキーとして登録した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">visited = {
+  ((0, 0), frozenset()):                  True,
+  ((0, 0), frozenset({(2, 0)})):          True,
+  ((0, 0), frozenset({(2, 0), (0, 4)})): True,
+}
+len(visited) == 3   # 位置は同じ (0,0) でも別キーとして区別される</pre>
+        <p><strong><code>set</code> と <code>frozenset</code> の違い</strong>: <code>set</code> は要素を追加・削除できる「ミュータブル（変更可能）」、<code>frozenset</code> は一度作ったら変更できない「イミュータブル（変更不可）」。Python の辞書のキーには<strong>イミュータブルな値しか使えない</strong>ため、<code>set</code> はキーにできないが <code>frozenset</code> はキーにできる。アイテム収集 BFS では「位置」だけでなく「持ち物セット」も状態の一部として記録したいので、<code>(位置, frozenset(持ち物))</code> という組をキーにする。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>同じ迷路・同じアイテム3個 <code>[(0,4), (2,0), (4,2)]</code> で、通常BFSとアイテム収集BFSを比較した結果:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">方法                       経路長   拾えたアイテム
+通常BFS（アイテム無視）       8歩      1/3個
+アイテム収集BFS              16歩     3/3個
+
+差: +8歩（2倍の遠回り）で全アイテム回収</pre>
+        <p>通常BFS は「位置」だけを状態にするので訪問済みノード数は最大 <code>rows×cols = 25</code> 個。一方アイテム収集BFS は「位置 × 持ち物の組合せ」を状態にするので、訪問済みノード数は最大 <code>25 × 2³ = 200</code> 個に膨らむ。<strong>状態空間は 2^(アイテム数) 倍になる</strong>が、それでも BFS なので「全アイテム収集の最短経路」が確実に求まる。<br>この拡張パターン（位置＋持ち物を状態にする）は、ゼルダ風ダンジョン探索・パックマン・配達ルート最適化など、実践的な問題でそのまま応用できる強力なテクニック。</p>
+      </div>
+    </details>
+    </div>
+
+    <!-- ── 標準課題・発展課題の解答（暗号化） ── -->
     <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>

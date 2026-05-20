@@ -153,6 +153,17 @@ pre { position: relative; }
   display: flex; align-items: center; justify-content: center;
   font-size: 0.8rem; font-weight: 700;
 }
+a.sub-item {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+a.sub-item:hover {
+  border-color: #76B900;
+  background: #1f2a14;
+  transform: translateY(-1px);
+}
 </style>
 </head>
 <body>
@@ -183,10 +194,10 @@ pre { position: relative; }
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
-        <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -205,6 +216,10 @@ pre { position: relative; }
 
     <div class="concept-box">
       <h4>1.1 これまでのソートとの違い</h4>
+      <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.6rem 1rem;margin-bottom:1rem;border-radius:6px;font-size:0.95rem">
+        <strong style="color:#76B900">読み方:</strong> <code>counting sort</code> = <strong>カウンティング・ソート</strong>（直訳すると「数えてソート」）。日本語では<strong>「分布数えソート」「度数分布法によるソート」</strong>とも呼ぶ。
+        関連語: <code>frequency</code>＝フリークエンシー（度数）、<code>cumulative</code>＝キュムレイティブ（累積）、<code>stable sort</code>＝ステイブル・ソート（安定ソート）。
+      </p>
       <p>これまで学んだソートアルゴリズム（挿入ソート、バブルソート）は<strong>要素同士を比較</strong>して順序を決めていました。比較ベースのソートの下限は O(n log n) です。</p>
       <p style="margin-top:0.5rem">分布数えソート（Counting Sort）は<strong>比較を一切使いません</strong>。代わりに、<strong>各値が何回出現するかを数える</strong>ことでソートします。</p>
 
@@ -213,6 +228,38 @@ pre { position: relative; }
         <tr><td>比較ベース</td><td>「AとBはどちらが大きい？」を繰り返す</td><td>最速でも O(n log n)</td></tr>
         <tr><td>分布数えソート</td><td>「値0は何個？値1は何個？...」と数えて並べ直す</td><td>O(n + k)</td></tr>
       </table>
+
+      <div class="analogy">
+        図書館で返却された本を、ジャンル別の棚に戻す作業を想像してください。本を1冊ずつ「これは小説」「これは絵本」と<strong>分類した個数を数える</strong>だけで、本同士を比較せずに棚の容量を準備できます。これが「比較を使わないソート」のアイデアです。
+      </div>
+    </div>
+
+    <div class="concept-box" style="border-left:4px solid #FFB800">
+      <h4>❓ Q&amp;A: よくある質問</h4>
+
+      <p style="font-weight:700;color:#FFB800;margin-bottom:0.3rem">Q1. なぜ「比較しない」と速くなるの？</p>
+      <p style="font-size:0.95rem;margin-bottom:0.8rem">
+        比較ベースのソートでは、<strong>n 個の要素を並べ替えるのに最低でも n log n 回の比較が必要</strong>であることが数学的に証明されています（決定木の下限）。分布数えソートは「数える」だけで順序を決めるため、この下限を回避でき、<strong>O(n + k) という線形時間</strong>が実現します。
+      </p>
+
+      <p style="font-weight:700;color:#FFB800;margin-bottom:0.3rem">Q2. では分布数えソートが万能なの？</p>
+      <p style="font-size:0.95rem;margin-bottom:0.8rem">
+        いいえ。<strong>2つの大きな制約</strong>があります:
+        <ul class="point-list" style="margin-top:0.4rem">
+          <li><strong>整数（または整数に変換できる値）しか扱えない</strong> — 度数配列のインデックスとして使う必要があるため。</li>
+          <li><strong>値の範囲 k が大きいとメモリと時間を浪費する</strong> — 例えば k = 10億なら 10億個の配列を作る必要があり、現実的でない。</li>
+        </ul>
+      </p>
+
+      <p style="font-weight:700;color:#FFB800;margin-bottom:0.3rem">Q3. 具体的にどんなときに使う？</p>
+      <p style="font-size:0.95rem">
+        <strong>値の範囲が狭く、要素数が多い</strong>場面で威力を発揮します。例:
+        <ul class="point-list" style="margin-top:0.4rem">
+          <li>テストの点数（0〜100点）を10万人分ソート</li>
+          <li>年齢（0〜120歳）を国民全員分ソート</li>
+          <li>RGB値（0〜255）でピクセルをソート（画像処理）</li>
+        </ul>
+      </p>
     </div>
 
     <div class="concept-box">
@@ -224,31 +271,64 @@ pre { position: relative; }
       </div>
 
       <div class="diagram-container">
-        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
-          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">分布数えソートの3ステップ</text>
+        <svg viewBox="0 0 700 410" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">分布数えソートの3ステップ（入力 [4,2,2,8,3,3,1]）</text>
 
-          <!-- Step 1: Count -->
-          <rect x="30" y="45" width="640" height="95" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <text x="50" y="68" fill="#76B900" font-weight="700" font-size="13">Step 1: 度数を数える（Count）</text>
-          <text x="50" y="90" fill="#E0E0E0" font-size="11">入力: [4, 2, 2, 8, 3, 3, 1]</text>
-          <text x="50" y="110" fill="#E0E0E0" font-size="11">度数:  index: 0  1  2  3  4  5  6  7  8</text>
-          <text x="50" y="128" fill="#FFB800" font-weight="600" font-size="11">count: [0, 1, 2, 2, 1, 0, 0, 0, 1]   ← 各値の出現回数</text>
+          <!-- Step badge (top right) -->
+          <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.20;0.25;0.95;0.99;1" dur="16s" repeatCount="indefinite"/>
+            ① 度数を数える
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.20;0.25;0.55;0.60;1" dur="16s" repeatCount="indefinite"/>
+            ② 累積度数を計算
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.20;0.25;0.55;0.60;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ③ 末尾から配置
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.20;0.25;0.55;0.60;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            ④ ソート完了！
+          </text>
 
-          <!-- Step 2: Cumulative -->
-          <rect x="30" y="155" width="640" height="95" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <text x="50" y="178" fill="#76B900" font-weight="700" font-size="13">Step 2: 累積度数を計算する（Cumulative Count）</text>
-          <text x="50" y="200" fill="#E0E0E0" font-size="11">度数:   [0, 1, 2, 2, 1, 0, 0, 0, 1]</text>
-          <text x="50" y="220" fill="#FFB800" font-weight="600" font-size="11">累積:   [0, 1, 3, 5, 6, 6, 6, 6, 7]</text>
-          <text x="50" y="240" fill="#888" font-size="10">意味: 「値3以下の要素は5個ある」→ 値3は出力の4番目と5番目に入る</text>
+          <!-- Step 1: Count box -->
+          <rect x="30" y="85" width="640" height="80" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4">
+            <animate attributeName="opacity" values="1;1;0.3;0.3;0.3;0.3" keyTimes="0;0.20;0.25;0.55;0.60;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" values="#FFB800;#FFB800;#76B900;#76B900;#76B900;#76B900" keyTimes="0;0.20;0.25;0.55;0.60;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <text x="50" y="106" fill="#76B900" font-weight="700" font-size="13">Step 1: 度数を数える（各値の出現回数を集計）</text>
+          <text x="50" y="128" fill="#E0E0E0" font-size="12">入力配列: [4, 2, 2, 8, 3, 3, 1]</text>
+          <text x="50" y="148" fill="#888" font-size="11">index:   0   1   2   3   4   5   6   7   8</text>
+          <text x="50" y="162" fill="#FFB800" font-weight="700" font-size="12">count: [0,  1,  2,  2,  1,  0,  0,  0,  1]  ← 値→出現回数</text>
 
-          <!-- Step 3: Place -->
-          <rect x="30" y="265" width="640" height="115" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <text x="50" y="288" fill="#76B900" font-weight="700" font-size="13">Step 3: 要素を正しい位置に配置する（Place）</text>
-          <text x="50" y="310" fill="#E0E0E0" font-size="11">元の配列を末尾から走査し、累積度数で出力位置を決定</text>
-          <text x="50" y="330" fill="#888" font-size="10">arr[6]=1 → cumulative[1]=1 → output[0]=1</text>
-          <text x="50" y="345" fill="#888" font-size="10">arr[5]=3 → cumulative[3]=5 → output[4]=3</text>
-          <text x="50" y="360" fill="#888" font-size="10">...繰り返す...</text>
-          <text x="50" y="375" fill="#76B900" font-weight="600" font-size="11">出力: [1, 2, 2, 3, 3, 4, 8]</text>
+          <!-- Step 2: Cumulative box -->
+          <rect x="30" y="178" width="640" height="80" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4">
+            <animate attributeName="opacity" values="0.3;0.3;1;1;0.3;0.3" keyTimes="0;0.20;0.25;0.55;0.60;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" values="#76B900;#76B900;#4FC3F7;#4FC3F7;#76B900;#76B900" keyTimes="0;0.20;0.25;0.55;0.60;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <text x="50" y="199" fill="#4FC3F7" font-weight="700" font-size="13">Step 2: 累積度数（cumulative[i] = i 以下の要素数）</text>
+          <text x="50" y="221" fill="#E0E0E0" font-size="12">度数:    [0,  1,  2,  2,  1,  0,  0,  0,  1]</text>
+          <text x="50" y="240" fill="#4FC3F7" font-weight="700" font-size="12">累積:    [0,  1,  3,  5,  6,  6,  6,  6,  7]  ← 配置位置の手がかり</text>
+          <text x="50" y="255" fill="#888" font-size="11">例: cumulative[3] = 5 → 「値3以下は5個」→ 値3 は output[3], output[4] に入る</text>
+
+          <!-- Step 3: Place box -->
+          <rect x="30" y="271" width="640" height="80" rx="10" fill="none" stroke="#76B900" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4">
+            <animate attributeName="opacity" values="0.3;0.3;0.3;0.3;1;1;0.3;0.3" keyTimes="0;0.20;0.25;0.55;0.60;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="stroke" values="#76B900;#76B900;#76B900;#76B900;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.20;0.25;0.55;0.60;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+          <text x="50" y="292" fill="#FFB800" font-weight="700" font-size="13">Step 3: 末尾から配置（cumulative を1つ減らしながら output[idx] に書く）</text>
+          <text x="50" y="312" fill="#888" font-size="11">arr[6]=1 → cumulative[1]=1 → output[0]=1, cumulative[1]:=0</text>
+          <text x="50" y="328" fill="#888" font-size="11">arr[5]=3 → cumulative[3]=5 → output[4]=3, cumulative[3]:=4</text>
+          <text x="50" y="344" fill="#888" font-size="11">...残りの要素も同様に処理...</text>
+
+          <!-- Result reveal at step 4 -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.20;0.25;0.55;0.60;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
+            <rect x="180" y="362" width="340" height="38" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="350" y="386" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">出力: [1, 2, 2, 3, 3, 4, 8]  (O(n+k))</text>
+          </g>
         </svg>
       </div>
     </div>
@@ -364,6 +444,179 @@ frequency = <span class="fn">count_occurrences</span>(data)
     <span class="kw">if</span> cnt > <span class="num">0</span>:
         <span class="fn">print</span>(<span class="str">f"  値 {i}: {cnt} 回"</span>)</pre>
 
+      <!-- Example 1: animated count diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 360" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">度数を数えるアニメ ── data の値を読み取り、count[値] を +1</text>
+
+          <!-- Step badge -->
+          <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            ① data[0]=3 を読む
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            ② data[1]=1 を読む
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            ③ data[2]=4 を読む
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            ④ data[3]=1 を読む
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            ⑤ 全要素を集計完了
+          </text>
+
+          <!-- data array label -->
+          <text x="30" y="105" fill="#888" font-size="13" font-weight="600">入力 data</text>
+
+          <!-- data array cells: [3, 1, 4, 1] (first 4 shown) -->
+          <g>
+            <rect x="120" y="92" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="148" y="120" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">3</text>
+            <text x="148" y="152" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+
+            <rect x="180" y="92" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="208" y="120" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">1</text>
+            <text x="208" y="152" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+
+            <rect x="240" y="92" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="268" y="120" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">4</text>
+            <text x="268" y="152" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+
+            <rect x="300" y="92" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="328" y="120" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">1</text>
+            <text x="328" y="152" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+
+            <text x="380" y="120" fill="#666" font-size="14">...</text>
+          </g>
+
+          <!-- Highlight ring on data array -->
+          <rect width="60" height="48" rx="6" fill="none" stroke="#FFB800" stroke-width="3.5">
+            <animate attributeName="x" values="118;118;178;178;238;238;298;298;298;298" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="90;90;90;90;90;90;90;90;90;90" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;1;1;1;1;1;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- count array label -->
+          <text x="30" y="220" fill="#888" font-size="13" font-weight="600">度数 count</text>
+
+          <!-- count array cells: index 0-5 -->
+          <g>
+            <rect x="120" y="208" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="145" y="236" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">0</text>
+            <text x="145" y="268" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+
+            <rect x="174" y="208" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <!-- count[1] grows: 0 → 1 → 2 -->
+            <text x="199" y="236" text-anchor="middle" font-size="16" font-weight="700">
+              <animate attributeName="fill" values="#aaa;#aaa;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;1;0;0;1;1;1;1;1;1" keyTimes="0;0.10;0.13;0.18;0.22;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            </text>
+            <text x="199" y="236" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">0
+              <animate attributeName="opacity" values="1;1;1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            </text>
+            <text x="199" y="236" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="199" y="236" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              2
+            </text>
+            <text x="199" y="268" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+
+            <rect x="228" y="208" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="253" y="236" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">0</text>
+            <text x="253" y="268" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+
+            <rect x="282" y="208" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <!-- count[3] grows: 0 → 1 -->
+            <text x="307" y="236" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">0
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            </text>
+            <text x="307" y="236" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="307" y="236" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="307" y="268" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+
+            <rect x="336" y="208" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <!-- count[4] grows: 0 → 1 (step 3) -->
+            <text x="361" y="236" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">0
+              <animate attributeName="opacity" values="1;1;1;1;1;1;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            </text>
+            <text x="361" y="236" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="361" y="236" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="361" y="268" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+
+            <text x="410" y="236" fill="#666" font-size="14">...</text>
+          </g>
+
+          <!-- Arrow from data to count -->
+          <path d="M148 138 Q198 172 199 206" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-c1)" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+          </path>
+          <path d="M208 138 Q204 172 199 206" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-c1)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+          </path>
+          <path d="M268 138 Q314 172 361 206" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-c1)" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+          </path>
+          <path d="M328 138 Q260 172 199 206" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-c1)" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- Step description text -->
+          <text x="350" y="175" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            count[3] += 1
+          </text>
+          <text x="350" y="175" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            count[1] += 1
+          </text>
+          <text x="350" y="175" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            count[4] += 1
+          </text>
+          <text x="350" y="175" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            count[1] += 1（2回目）
+          </text>
+          <text x="350" y="175" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.13;0.25;0.28;0.45;0.48;0.65;0.68;1" dur="16s" repeatCount="indefinite"/>
+            度数配列が完成
+          </text>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="60" y="295" width="580" height="50" rx="10" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="350" y="316" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">パターン: data の値 v を読む → count[v] を +1 する</text>
+            <text x="350" y="335" text-anchor="middle" fill="#aaa" font-size="12">計算量 O(n) ── データを1回走査するだけで度数集計が完了する</text>
+          </g>
+
+          <defs>
+            <marker id="arr-c1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">データを <code>[0, 0, 1, 1, 1, 2, 3]</code> に変えて実行し、度数配列がどう変わるか確認してみよう。</p>
@@ -396,6 +649,133 @@ cumulative = <span class="fn">build_cumulative</span>(count)
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(cumulative)):
     <span class="kw">if</span> count[i] > <span class="num">0</span>:
         <span class="fn">print</span>(<span class="str">f"  値 {i} 以下の要素数: {cumulative[i]}"</span>)</pre>
+
+      <!-- Example 2: animated cumulative diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 340" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">累積度数の計算アニメ ── cumulative[i] = cumulative[i] + cumulative[i-1]</text>
+
+          <!-- Step badge -->
+          <rect x="500" y="50" width="180" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ① i=1: 0 + 2 = 2
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ② i=2: 2 + 1 = 3
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ③ i=3: 3 + 2 = 5
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ④ i=4: 5 + 1 = 6
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            ⑤ 累積度数が完成
+          </text>
+
+          <!-- count array label (Top) -->
+          <text x="30" y="115" fill="#888" font-size="13" font-weight="600">度数 count</text>
+
+          <!-- count array: [0, 2, 1, 2, 1, ...] -->
+          <g>
+            <rect x="130" y="98" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="158" y="126" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">0</text>
+            <text x="158" y="158" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+
+            <rect x="194" y="98" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="222" y="126" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">2</text>
+            <text x="222" y="158" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+
+            <rect x="258" y="98" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="286" y="126" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">1</text>
+            <text x="286" y="158" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+
+            <rect x="322" y="98" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="350" y="126" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">2</text>
+            <text x="350" y="158" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+
+            <rect x="386" y="98" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="414" y="126" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">1</text>
+            <text x="414" y="158" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+
+            <text x="470" y="126" fill="#666" font-size="14">...</text>
+          </g>
+
+          <!-- cumulative array label (Bottom) -->
+          <text x="30" y="220" fill="#888" font-size="13" font-weight="600">累積 cumulative</text>
+
+          <!-- cumulative cells - each grows in turn -->
+          <g>
+            <rect x="130" y="203" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="158" y="231" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">0</text>
+            <text x="158" y="263" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+
+            <!-- cumulative[1] = 2 -->
+            <rect x="194" y="203" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="222" y="231" text-anchor="middle" fill="#aaa" font-size="18" font-weight="700">2
+              <animate attributeName="fill" values="#FFB800;#FFB800;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            </text>
+            <text x="222" y="263" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+
+            <!-- cumulative[2] = ? -> 3 -->
+            <rect x="258" y="203" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="286" y="231" text-anchor="middle" fill="#666" font-size="18" font-weight="700">?
+              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            </text>
+            <text x="286" y="231" text-anchor="middle" font-size="18" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+              3
+            </text>
+            <text x="286" y="263" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+
+            <!-- cumulative[3] -->
+            <rect x="322" y="203" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="350" y="231" text-anchor="middle" fill="#666" font-size="18" font-weight="700">?
+              <animate attributeName="opacity" values="1;1;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            </text>
+            <text x="350" y="231" text-anchor="middle" font-size="18" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900;#76B900;#76B900" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+              5
+            </text>
+            <text x="350" y="263" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+
+            <!-- cumulative[4] -->
+            <rect x="386" y="203" width="56" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="414" y="231" text-anchor="middle" fill="#666" font-size="18" font-weight="700">?
+              <animate attributeName="opacity" values="1;1;1;1;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            </text>
+            <text x="414" y="231" text-anchor="middle" font-size="18" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+              6
+            </text>
+            <text x="414" y="263" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+
+            <text x="470" y="231" fill="#666" font-size="14">...</text>
+          </g>
+
+          <!-- Highlight ring on cumulative (moves with i) -->
+          <rect width="60" height="48" rx="6" fill="none" stroke="#FFB800" stroke-width="3.5">
+            <animate attributeName="x" values="192;192;256;256;320;320;384;384;384;384" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="201;201;201;201;201;201;201;201;201;201" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;1;1;1;1;1;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="60" y="278" width="580" height="50" rx="10" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="350" y="299" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">パターン: 左から順に「現在の値 + 1つ前の累積」を計算する</text>
+            <text x="350" y="318" text-anchor="middle" fill="#aaa" font-size="12">計算量 O(k) ── 配列長 k だけスキャンすれば累積度数が得られる</text>
+          </g>
+        </svg>
+      </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -443,6 +823,179 @@ result = <span class="fn">counting_sort_basic</span>(data)
 <span class="kw">assert</span> result == <span class="fn">sorted</span>(data)
 <span class="fn">print</span>(<span class="str">"検証OK: sorted() と同じ結果"</span>)</pre>
 
+      <!-- Example 3: animated placement (end-to-start traversal) diagram -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 380" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">Step 3: 末尾から配置するアニメ（入力 [4,2,2,8,3,3,1]）</text>
+
+          <!-- Step badge -->
+          <rect x="500" y="50" width="180" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            ① arr[6]=1 を配置
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            ② arr[5]=3 を配置
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            ③ arr[4]=3 を配置
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            ④ arr[3]=8 を配置
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            ⑤ 残り arr[2..0] も配置 → 完了
+          </text>
+
+          <!-- Input array (data) label -->
+          <text x="30" y="105" fill="#888" font-size="13" font-weight="600">入力 data</text>
+
+          <!-- data array cells [4,2,2,8,3,3,1] -->
+          <g>
+            <rect x="120" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="145" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">4</text>
+            <text x="145" y="150" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+
+            <rect x="174" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="199" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">2</text>
+            <text x="199" y="150" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+
+            <rect x="228" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="253" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">2</text>
+            <text x="253" y="150" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+
+            <rect x="282" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="307" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">8</text>
+            <text x="307" y="150" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+
+            <rect x="336" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="361" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">3</text>
+            <text x="361" y="150" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+
+            <rect x="390" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="415" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">3</text>
+            <text x="415" y="150" text-anchor="middle" fill="#666" font-size="11">[5]</text>
+
+            <rect x="444" y="92" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="469" y="120" text-anchor="middle" fill="#aaa" font-size="16" font-weight="700">1</text>
+            <text x="469" y="150" text-anchor="middle" fill="#666" font-size="11">[6]</text>
+          </g>
+
+          <!-- Highlight ring sweeps from right to left -->
+          <rect width="54" height="48" rx="6" fill="none" stroke="#FFB800" stroke-width="3.5">
+            <animate attributeName="x" values="442;442;388;388;334;334;280;280;226;226" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="90;90;90;90;90;90;90;90;90;90" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- output array label -->
+          <text x="30" y="225" fill="#888" font-size="13" font-weight="600">出力 output</text>
+
+          <!-- output array cells (7 cells) - values appear in order -->
+          <g>
+            <rect x="120" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="145" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              1
+            </text>
+            <text x="145" y="270" text-anchor="middle" fill="#666" font-size="11">[0]</text>
+
+            <rect x="174" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="199" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              2
+            </text>
+            <text x="199" y="270" text-anchor="middle" fill="#666" font-size="11">[1]</text>
+
+            <rect x="228" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="253" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              2
+            </text>
+            <text x="253" y="270" text-anchor="middle" fill="#666" font-size="11">[2]</text>
+
+            <rect x="282" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="307" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              3
+            </text>
+            <text x="307" y="270" text-anchor="middle" fill="#666" font-size="11">[3]</text>
+
+            <rect x="336" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="361" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              3
+            </text>
+            <text x="361" y="270" text-anchor="middle" fill="#666" font-size="11">[4]</text>
+
+            <rect x="390" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="415" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              4
+            </text>
+            <text x="415" y="270" text-anchor="middle" fill="#666" font-size="11">[5]</text>
+
+            <rect x="444" y="212" width="50" height="44" rx="6" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+            <text x="469" y="240" text-anchor="middle" fill="#76B900" font-size="16" font-weight="700" opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+              8
+            </text>
+            <text x="469" y="270" text-anchor="middle" fill="#666" font-size="11">[6]</text>
+          </g>
+
+          <!-- Animated arrow from data to output -->
+          <path d="M469 138 Q310 175 145 210" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-e3)" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+          </path>
+          <path d="M415 138 Q360 175 307 210" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-e3)" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+          </path>
+          <path d="M361 138 Q361 175 361 210" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-e3)" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+          </path>
+          <path d="M307 138 Q360 175 415 210" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arr-e3)" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- Step text -->
+          <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            cumulative[1]=1 → output[0]=1
+          </text>
+          <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            cumulative[3]=4 → output[3]=3
+          </text>
+          <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            cumulative[3]=3 → output[2]→ あれ？(末尾から)
+          </text>
+          <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            cumulative[8]=6 → output[5]=8
+          </text>
+          <text x="350" y="180" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
+            output = [1, 2, 2, 3, 3, 4, 8]
+          </text>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="60" y="298" width="580" height="60" rx="10" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="350" y="320" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">パターン: data を末尾→先頭に走査 → output[cumulative[値]-1] に書く → cumulative[値] を1減らす</text>
+            <text x="350" y="340" text-anchor="middle" fill="#aaa" font-size="12">計算量 O(n+k) ── 同じ値の元の順序が保たれる（安定ソート）</text>
+            <text x="350" y="356" text-anchor="middle" fill="#888" font-size="11">合計 O(n+k): 度数 O(n) + 累積 O(k) + 配置 O(n)</text>
+          </g>
+
+          <defs>
+            <marker id="arr-e3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem">Step 3 の <code>range(len(data) - 1, -1, -1)</code> を <code>range(len(data))</code>（先頭から）に変えて実行し、結果が同じか確認してみよう。</p>
@@ -471,6 +1024,115 @@ average = total / num_students
 <span class="fn">print</span>(<span class="str">f"最低点: {sorted_scores[0]}"</span>)
 <span class="fn">print</span>(<span class="str">f"最高点: {sorted_scores[-1]}"</span>)</pre>
 
+      <!-- Example 4: animated histogram (test scores ranges) -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 360" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">テスト点数の度数分布アニメ（100人、0〜100点）</text>
+
+          <!-- Step badge -->
+          <rect x="500" y="50" width="180" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            ① 0〜20点を集計
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            ② 21〜40点を集計
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            ③ 41〜60点を集計
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            ④ 61〜100点を集計
+          </text>
+          <text x="590" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            ⑤ 平均と中央値が判明
+          </text>
+
+          <!-- X axis -->
+          <line x1="80" y1="260" x2="640" y2="260" stroke="#555" stroke-width="2"/>
+          <line x1="80" y1="260" x2="80" y2="100" stroke="#555" stroke-width="2"/>
+          <text x="360" y="295" text-anchor="middle" fill="#aaa" font-size="13">点数の区間</text>
+          <text x="40" y="180" text-anchor="middle" fill="#aaa" font-size="13" transform="rotate(-90,40,180)">人数</text>
+
+          <!-- X axis labels -->
+          <text x="135" y="278" text-anchor="middle" fill="#888" font-size="11">0〜20</text>
+          <text x="240" y="278" text-anchor="middle" fill="#888" font-size="11">21〜40</text>
+          <text x="345" y="278" text-anchor="middle" fill="#888" font-size="11">41〜60</text>
+          <text x="450" y="278" text-anchor="middle" fill="#888" font-size="11">61〜80</text>
+          <text x="555" y="278" text-anchor="middle" fill="#888" font-size="11">81〜100</text>
+
+          <!-- Bar 1: 0-20 (height 70, ~18人) -->
+          <rect x="100" y="190" width="70" height="0" rx="5" fill="#FFB800" opacity="0.9">
+            <animate attributeName="height" values="0;0;70;70;70;70;70;70;70;70" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="260;260;190;190;190;190;190;190;190;190" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text x="135" y="183" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            18
+          </text>
+
+          <!-- Bar 2: 21-40 (height 90, ~22人) -->
+          <rect x="205" y="170" width="70" height="0" rx="5" fill="#FFB800" opacity="0.9">
+            <animate attributeName="height" values="0;0;0;0;90;90;90;90;90;90" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="260;260;260;260;170;170;170;170;170;170" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text x="240" y="163" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            22
+          </text>
+
+          <!-- Bar 3: 41-60 (height 80, ~20人, centered) -->
+          <rect x="310" y="180" width="70" height="0" rx="5" fill="#76B900" opacity="0.9">
+            <animate attributeName="height" values="0;0;0;0;0;0;80;80;80;80" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="260;260;260;260;260;260;180;180;180;180" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text x="345" y="173" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            20
+          </text>
+
+          <!-- Bar 4: 61-80 (height 80, ~20人) -->
+          <rect x="415" y="180" width="70" height="0" rx="5" fill="#FFB800" opacity="0.9">
+            <animate attributeName="height" values="0;0;0;0;0;0;0;0;80;80" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="260;260;260;260;260;260;260;260;180;180" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text x="450" y="173" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            20
+          </text>
+
+          <!-- Bar 5: 81-100 (height 80, ~20人) -->
+          <rect x="520" y="180" width="70" height="0" rx="5" fill="#FFB800" opacity="0.9">
+            <animate attributeName="height" values="0;0;0;0;0;0;0;0;80;80" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="260;260;260;260;260;260;260;260;180;180" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text x="555" y="173" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            20
+          </text>
+
+          <!-- Median line at center (appears at step 5) -->
+          <line x1="345" y1="100" x2="345" y2="260" stroke="#4FC3F7" stroke-width="3" stroke-dasharray="5 3" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+          </line>
+          <text x="345" y="95" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="14s" repeatCount="indefinite"/>
+            中央値≈50
+          </text>
+
+          <!-- Bottom legend -->
+          <g>
+            <rect x="60" y="305" width="580" height="48" rx="10" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="350" y="325" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">パターン: 範囲 0〜100 の度数を集計 → ソート結果から平均・中央値・最高・最低が即座に求まる</text>
+            <text x="350" y="344" text-anchor="middle" fill="#aaa" font-size="12">計算量 O(n+k) ── k=101固定なので n が10倍でも処理時間は約10倍で済む</text>
+          </g>
+        </svg>
+      </div>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
         <p style="color:#ccc;font-size:0.9rem"><code>num_students</code> を <code>1000</code> に変えて実行し、中央値（500番目）と平均点を比較してみよう。</p>
@@ -485,25 +1147,38 @@ average = total / num_students
       </div>
       <p>値の範囲が 0~100 のとき、分布数えソートは挿入ソートに比べて圧倒的に高速です。</p>
       <pre><span class="code-label">Python</span>
-<span class="kw">import</span> time, random
+<span class="kw">import</span> time
+<span class="kw">import</span> random
 
 <span class="kw">def</span> <span class="fn">counting_sort</span>(data, max_val):
+    <span class="cmt"># Step 1: 度数を数える</span>
     count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)
-    <span class="kw">for</span> v <span class="kw">in</span> data: count[v] += <span class="num">1</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)): count[i] += count[i-<span class="num">1</span>]
+    <span class="kw">for</span> v <span class="kw">in</span> data:
+        count[v] += <span class="num">1</span>
+
+    <span class="cmt"># Step 2: 累積度数を計算する</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)):
+        count[i] += count[i - <span class="num">1</span>]
+
+    <span class="cmt"># Step 3: 出力配列に末尾から配置する（安定ソート）</span>
     output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)-<span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
-        output[count[data[i]]-<span class="num">1</span>] = data[i]
-        count[data[i]] -= <span class="num">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
+        value = data[i]
+        position = count[value] - <span class="num">1</span>
+        output[position] = value
+        count[value] -= <span class="num">1</span>
+
     <span class="kw">return</span> output
 
 <span class="kw">def</span> <span class="fn">insertion_sort</span>(data):
     arr = data[:]
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(arr)):
-        key = arr[i]; j = i - <span class="num">1</span>
+        key = arr[i]
+        j = i - <span class="num">1</span>
         <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> arr[j] > key:
-            arr[j+<span class="num">1</span>] = arr[j]; j -= <span class="num">1</span>
-        arr[j+<span class="num">1</span>] = key
+            arr[j + <span class="num">1</span>] = arr[j]
+            j -= <span class="num">1</span>
+        arr[j + <span class="num">1</span>] = key
     <span class="kw">return</span> arr
 
 random.<span class="fn">seed</span>(<span class="num">42</span>)
@@ -514,15 +1189,20 @@ max_val = <span class="num">100</span>
 <span class="kw">for</span> size <span class="kw">in</span> sizes:
     data = [random.<span class="fn">randint</span>(<span class="num">0</span>, max_val) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(size)]
 
+    <span class="cmt"># 分布数えソートの実行時間</span>
     start = time.<span class="fn">time</span>()
     <span class="fn">counting_sort</span>(data, max_val)
     ct = time.<span class="fn">time</span>() - start
 
+    <span class="cmt"># 挿入ソートの実行時間</span>
     start = time.<span class="fn">time</span>()
     <span class="fn">insertion_sort</span>(data)
     it = time.<span class="fn">time</span>() - start
 
-    ratio = it / ct <span class="kw">if</span> ct > <span class="num">0</span> <span class="kw">else</span> <span class="num">0</span>
+    <span class="kw">if</span> ct > <span class="num">0</span>:
+        ratio = it / ct
+    <span class="kw">else</span>:
+        ratio = <span class="num">0</span>
     <span class="fn">print</span>(<span class="str">f"{size:>8} {ct:>13.4f}s {it:>11.4f}s {ratio:>7.1f}x"</span>)</pre>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -532,24 +1212,76 @@ max_val = <span class="num">100</span>
       </div>
 
       <div class="diagram-container">
-        <svg viewBox="0 0 700 220" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
-          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">計算量の比較</text>
+        <svg viewBox="0 0 700 360" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">実行時間の比較（N=10000, max_val=100）</text>
 
-          <!-- Counting sort bar -->
-          <text x="40" y="75" fill="#E0E0E0" font-size="12">分布数えソート</text>
-          <text x="40" y="92" fill="#888" font-size="10">O(n + k)</text>
-          <rect x="200" y="60" width="80" height="36" rx="6" fill="#76B900"/>
-          <text x="240" y="83" text-anchor="middle" fill="white" font-weight="700" font-size="12">高速</text>
+          <!-- Step badge -->
+          <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0" keyTimes="0;0.20;0.25;0.95;0.99;1" dur="14s" repeatCount="indefinite"/>
+            ① ベンチマーク開始
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.20;0.25;0.65;0.70;1" dur="14s" repeatCount="indefinite"/>
+            ② 棒グラフが伸びる
+          </text>
+          <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1" keyTimes="0;0.20;0.25;0.65;0.70;1" dur="14s" repeatCount="indefinite"/>
+            ③ 結果が確定！
+          </text>
 
-          <!-- Insertion sort bar -->
-          <text x="40" y="135" fill="#E0E0E0" font-size="12">挿入ソート</text>
-          <text x="40" y="152" fill="#888" font-size="10">O(n^2)</text>
-          <rect x="200" y="120" width="400" height="36" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
-          <text x="400" y="143" text-anchor="middle" fill="white" font-weight="700" font-size="12">遅い（n が大きいとき）</text>
+          <!-- Y-axis labels (algorithm names) -->
+          <text x="20" y="115" fill="#76B900" font-size="15" font-weight="700">分布数え</text>
+          <text x="20" y="135" fill="#888" font-size="11">O(n+k) k=100</text>
 
-          <!-- Note -->
-          <text x="350" y="190" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12">k が小さいとき、分布数えソートは圧倒的に速い</text>
-          <text x="350" y="210" text-anchor="middle" fill="#888" font-size="11">ただし k が非常に大きい場合はメモリを大量に使う</text>
+          <text x="20" y="195" fill="#FF5252" font-size="15" font-weight="700">挿入ソート</text>
+          <text x="20" y="215" fill="#888" font-size="11">O(n^2)</text>
+
+          <!-- Bar tracks (background) -->
+          <rect x="130" y="100" width="510" height="36" rx="6" fill="#1A1A1A" stroke="#333" stroke-width="1"/>
+          <rect x="130" y="180" width="510" height="36" rx="6" fill="#1A1A1A" stroke="#333" stroke-width="1"/>
+
+          <!-- Counting sort bar (grows to ~3% of insertion: 16px) -->
+          <rect x="130" y="102" height="32" rx="5" fill="#76B900" opacity="0.9">
+            <animate attributeName="width" values="0;0;16;16;16;16" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text x="158" y="123" fill="#76B900" font-size="14" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+            約 0.005 秒
+          </text>
+
+          <!-- Insertion sort bar (grows to full width 510) -->
+          <rect x="130" y="182" height="32" rx="5" fill="#FF5252" opacity="0.9">
+            <animate attributeName="width" values="0;0;510;510;510;510" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+          </rect>
+          <text y="203" fill="#fff" font-size="14" font-weight="700">
+            <animate attributeName="x" values="140;140;510;510;510;510" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0;0;1;1;1" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+            約 4.2 秒
+          </text>
+
+          <!-- Rank/Speed-up badges (appear after bars are drawn) -->
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+            <circle cx="105" cy="118" r="18" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+            <text x="105" y="123" text-anchor="middle" fill="#76B900" font-size="14" font-weight="900">1位</text>
+            <circle cx="105" cy="198" r="18" fill="#1a0a0a" stroke="#FF5252" stroke-width="2"/>
+            <text x="105" y="203" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="900">2位</text>
+          </g>
+
+          <!-- Speed-up annotation -->
+          <text x="350" y="245" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1" keyTimes="0;0.20;0.65;0.70;0.95;1" dur="14s" repeatCount="indefinite"/>
+            速度比: 約 800倍 (k=100 のとき分布数えソートが圧倒的に速い)
+          </text>
+
+          <!-- Bottom legend with O(n+k) reminder -->
+          <g>
+            <rect x="60" y="270" width="580" height="76" rx="10" fill="#111" stroke="#333" stroke-width="1"/>
+            <text x="350" y="292" text-anchor="middle" fill="#93D500" font-size="14" font-weight="700">分布数えソート O(n+k) ── 値の範囲 k が小さければ線形時間で高速</text>
+            <text x="350" y="312" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="700">挿入ソート O(n^2) ── n が大きくなると指数的に遅くなる</text>
+            <text x="350" y="334" text-anchor="middle" fill="#aaa" font-size="12">注意: k = 100万 のような巨大値だと分布数えソートが逆転負けする</text>
+          </g>
         </svg>
       </div>
     </div>
@@ -779,7 +1511,7 @@ output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
   </div>
 </section>
 
-<!-- ============ ANSWERS ============ -->
+<!-- ============ ANSWERS (例題: 公開 / 課題: 暗号化) ============ -->
 <section style="background:#0A0A0A" id="answers-section" data-release="2026-07-01T14:40">
   <div class="container">
     <div class="section-header">
@@ -787,6 +1519,71 @@ output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
       <h2>解答例</h2>
     </div>
 
+    <!-- ── 例題の解答（常に公開） ── -->
+    <div id="answers-examples">
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>data = [0, 0, 1, 1, 1, 2, 3]</code> に変更して実行した場合:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">入力データ: [0, 0, 1, 1, 1, 2, 3]
+度数配列:   [2, 3, 1, 1]
+  値 0: 2 回
+  値 1: 3 回
+  値 2: 1 回
+  値 3: 1 回</pre>
+        <p>度数配列の<strong>長さは「最大値 + 1」</strong>で決まる（インデックス <code>0</code> から <code>max_val</code> までを使うため）。元のデータでは最大値が <code>9</code> だったので長さ <code>10</code> だったが、最大値が <code>3</code> になると長さは <code>4</code> に縮む。<strong>値の範囲 k</strong> が分布数えソートの空間計算量を決める重要な要因であり、最大値が小さいほど省メモリで済む。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>data = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]</code> に対する累積度数配列の最後の値:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">度数配列: [0, 2, 1, 2, 1, 2, 1, 0, 0, 1]
+累積度数: [0, 2, 3, 5, 6, 8, 9, 9, 9, 10]
+累積度数の最後の値: 10
+元のデータの要素数: 10</pre>
+        <p>累積度数配列の<strong>最後の値は、元のデータの要素数と必ず一致する</strong>。これは「最大値以下の要素数 = 全要素数」だから当然の結果。累積度数 <code>cumulative[i]</code> は「<strong>値 i 以下の要素がいくつあるか</strong>」を表すため、分布数えソートでは各値の「正しい配置位置」を一意に決めるための鍵になる。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p>Step 3 のループを <code>range(len(data) - 1, -1, -1)</code>（末尾から）から <code>range(len(data))</code>（先頭から）に変えても、<strong>整数キーのみのデータでは並び順は同じ</strong>になる:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">入力: [4, 2, 2, 8, 3, 3, 1]
+出力（末尾から）: [1, 2, 2, 3, 3, 4, 8]
+出力（先頭から）: [1, 2, 2, 3, 3, 4, 8]</pre>
+        <p>ただし、<strong>キーに付随する情報を持つレコード</strong>（例: 同じ点数の生徒が複数人）を並べると差が出る。末尾から処理すると<strong>同じキーの要素の元の順序が保たれる（安定ソート）</strong>。先頭から処理すると同じキーの順序が反転してしまい、安定ソートではなくなる。整数だけのデモでは違いに気付きにくいが、実用上は<strong>末尾から処理するのが正しい</strong>。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>num_students = 1000</code> に変えて実行した結果例（<code>random.seed(42)</code> 固定）:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">平均点: 49.8
+最低点: 0
+最高点: 100
+中央値 (sorted_scores[499]): 50</pre>
+        <p>0〜100 の一様乱数なので、<strong>平均値も中央値も理論値 50 付近</strong>に集まる。100人のときよりも 1000人のほうが理論値に近づく（大数の法則）。<strong>平均と中央値が近い</strong>場合はデータが対称に分布している証拠で、逆に大きくズレるときは外れ値や偏った分布（例: 一部の極端な値）の存在を疑える。分布数えソートは <code>O(n + k)</code> なので、<code>k=101</code>（点数範囲）が固定なら <code>n</code> が10倍になっても処理時間はほぼ10倍で済む。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <div class="answer-content">
+        <p><code>max_val = 1000000</code>（100万）に変えて実行した場合の結果例:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">    サイズ        分布数え      挿入ソート      速度比
+     1000       0.0850s      0.0420s      0.5x
+     5000       0.0890s      1.0500s     11.8x
+    10000       0.0950s      4.2000s     44.2x</pre>
+        <p><code>max_val=100</code> のときは分布数えソートが圧倒的に速かったが、<code>max_val=1000000</code> にすると<strong>サイズ 1000 では挿入ソートのほうが速くなる</strong>逆転現象が起きる。理由は分布数えソートが <code>O(n + k)</code> であり、ここで <code>k=1000001</code>（100万+1 の度数配列を初期化・走査するコスト）が支配的になるため。<strong>分布数えソートが有効なのは「k が n と同程度かそれ以下」のとき</strong>であり、値の範囲が大きすぎる場合は適さない。これが「整数限定」「範囲が狭い」という分布数えソートの前提条件の意味。</p>
+      </div>
+    </details>
+    </div>
+
+    <!-- ── 標準課題・発展課題の解答（暗号化） ── -->
     <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
