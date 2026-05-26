@@ -1494,7 +1494,12 @@ Ito:       73+116+111                       = 300  →  300 % 10 = 0  → スロ
       </div>
       <p>多数の単語をハッシュテーブルに入れたとき、同じ<strong>スロット</strong>（＝ハッシュテーブルの1つ1つの入れ物・マス目。0番,1番,2番…と番号がついている）に複数の単語が割り当てられる（＝<strong>衝突</strong>する）ことを確認します。</p>
       <div style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:8px;padding:0.7rem 1rem;font-size:0.9rem;color:#93D500;margin:0.5rem 0">
-        🎯 <strong>この例題のねらい:</strong> 言葉で習った「衝突」を<strong>実データで自分の目で見る</strong>こと。① 20個の単語を10スロットに入れて衝突が起きる様子を観察 → ② <strong>鳩の巣原理</strong>で「サイズより多く入れれば衝突は必ず起きる」と納得 → ③ <code>slots = {}</code> で「1スロットに複数ためる」書き方を体験（次回の<strong>衝突処理</strong>へつながる布石）。
+        🎯 <strong>この例題のねらい:</strong> 「衝突が起きること」自体は鳩の巣原理から当たり前。確かめてほしいのは、その先の<strong>自明でない3点</strong>です。
+        <ol style="margin:0.5rem 0 0;padding-left:1.3rem;line-height:1.9">
+          <li><strong>衝突の"ひどさ"と"偏り"</strong>: 出来の悪いハッシュ関数では衝突はまれな事故ではなく、あるスロットに4語も集中する一方で空きスロットも多い。<strong>関数の"質"で結果が大きく変わる</strong>と体感する（→ 例題3の多項式ハッシュが必要な理由）。</li>
+          <li><strong>サイズを増やしても治らない</strong>: やってみようでテーブルサイズを10→20にしても衝突は消えない。「入れ物を増やせば解決」という素朴な予想が外れる＝原因はサイズでなく<strong>関数の構造的な弱点</strong>。</li>
+          <li><strong>衝突を"数えて比較する手段"を持つ</strong>: <code>slots = {}</code> で衝突を数える。これで以降、ハッシュ関数や衝突処理法の良し悪しを<strong>数値で測れる</strong>ようになる（次回の衝突処理への布石）。</li>
+        </ol>
       </div>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">simple_hash</span>(key, table_size):
