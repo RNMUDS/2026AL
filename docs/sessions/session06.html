@@ -747,6 +747,24 @@ h = h * <span class="num">31</span> + ord(c<sub>1</sub>)
         <h3>ord() 関数で文字を数値にする</h3>
       </div>
       <p>Pythonの <code>ord()</code> 関数で文字をUnicodeの数値に変換し、<code>chr()</code> で逆変換できます。</p>
+
+      <div class="concept-box" style="border-left:4px solid #76B900">
+        <h4>そもそも <code>ord()</code> とは？</h4>
+        <p style="margin-bottom:0.6rem">コンピュータは、文字をそのまま記憶しているわけではありません。内部では <strong>すべての文字に「背番号」（整数）が割り当てられて</strong> いて、その番号で文字を区別しています。この世界共通の番号表が <strong>Unicode（ユニコード）</strong> で、1文字ごとに決められた番号を <strong>コードポイント</strong> と呼びます。</p>
+        <ul class="point-list" style="margin-bottom:0.6rem">
+          <li><code>ord(文字)</code> … 1文字を受け取り、その文字の<strong>背番号（整数）を返す</strong>。<span style="color:#888">※ ord は「順序＝ordinal」の略</span></li>
+          <li><code>chr(整数)</code> … 逆に、<strong>背番号から元の文字に戻す</strong></li>
+        </ul>
+        <table style="margin:0.5rem 0">
+          <tr><th>文字</th><th><code>ord()</code></th><th>メモ</th></tr>
+          <tr><td><code>'A'</code></td><td>65</td><td>大文字Aから連番。'B'=66, 'C'=67 …</td></tr>
+          <tr><td><code>'a'</code></td><td>97</td><td>小文字aから連番。'b'=98, 'c'=99 …</td></tr>
+          <tr><td><code>'0'</code>（文字のゼロ）</td><td>48</td><td>数字の文字。'1'=49 …（整数の0とは別物）</td></tr>
+          <tr><td><code>'あ'</code></td><td>12354</td><td>日本語にも番号がある</td></tr>
+        </table>
+        <p style="margin-top:0.5rem"><strong>なぜハッシュで使うの？</strong> ハッシュ関数は「キー（文字列）から番号（インデックス）を計算する」しくみです。計算するにはまず <strong>文字を数値に変える</strong> 必要があり、その第一歩が <code>ord()</code> です。「<code>'a'+'p'+'p'+'l'+'e'</code>」は足し算できませんが、「<code>97+112+112+108+101</code>」なら足し算できますよね。<code>ord()</code> は<strong>文字を「計算できる数」に翻訳する道具</strong>だと考えてください。</p>
+      </div>
+
       <pre><span class="code-label">Python</span>
 <span class="cmt"># --- アルファベットの ord 値 ---</span>
 <span class="fn">print</span>(<span class="str">f"'A' → {ord('A')}"</span>)  <span class="cmt"># 65</span>
