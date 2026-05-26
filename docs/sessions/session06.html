@@ -736,7 +736,25 @@ h = h * <span class="num">31</span> + ord(c<sub>1</sub>)
         <p style="margin-bottom:1rem;color:#ccc">A. メモリを大量に使うからです。1万件のデータに対してサイズ100万のテーブルを用意すれば衝突はほぼゼロですが、99%が空のスロットになり<strong>無駄</strong>です。実用的にはサイズ ≒ 要素数の1.3〜2倍に設定します（負荷率 0.5〜0.75）。</p>
 
         <p style="margin-bottom:0.6rem"><strong style="color:#FFB800">Q3. なぜテーブルサイズに素数を使うの？</strong></p>
-        <p style="color:#ccc">A. サイズが偶数だと <code>ord 合計</code> が偶数なら必ず偶数スロットに入り、奇数なら必ず奇数スロットに入って<strong>分布が偏る</strong>。素数なら剰余が均等にばらけやすくなります。例: サイズ10 → 末尾0/2/4/6/8と1/3/5/7/9に偏る。サイズ11 → 全スロットに散らばる。</p>
+        <p style="margin-bottom:0.6rem;color:#ccc">A. ひとことで言うと、<strong>「データに隠れた規則性があっても、巻き込まれにくい安全なサイズ」だから</strong>です。</p>
+        <p style="margin-bottom:0.6rem;color:#ccc">ハッシュは <code>余り（%）</code> で入れる場所を決めます。ここで <strong>「テーブルサイズ」と「データ」が共通の倍数（公約数）を持つと、入れる場所が飛び飛びになって偏る</strong> という性質があります。</p>
+
+        <p style="margin-bottom:0.4rem;color:#ccc"><strong>極端な例:</strong> たまたま ord 合計が <strong>全部「10の倍数」</strong>（30, 50, 120…）だったとします。</p>
+        <table style="margin:0.4rem 0">
+          <tr><th>ord合計</th><th>サイズ10 で <code>% 10</code></th><th>サイズ11 で <code>% 11</code></th></tr>
+          <tr><td>30</td><td style="color:#FF5252">0</td><td style="color:#76B900">8</td></tr>
+          <tr><td>50</td><td style="color:#FF5252">0</td><td style="color:#76B900">6</td></tr>
+          <tr><td>120</td><td style="color:#FF5252">0</td><td style="color:#76B900">10</td></tr>
+        </table>
+        <p style="margin-bottom:0.6rem;color:#ccc">サイズ10だと <strong>全部スロット0に集中</strong>して大渋滞（10とデータが「10」という公約数を持つため）。サイズ11なら 8・6・10 とちゃんとバラけます。</p>
+
+        <p style="margin-bottom:0.4rem;color:#ccc">もう少しゆるい例として、ord 合計が <strong>全部「偶数」</strong> だった場合:</p>
+        <ul class="point-list" style="margin-bottom:0.6rem">
+          <li>サイズ10（＝2×5）: 偶数 % 10 は必ず偶数 → <strong>0,2,4,6,8 の半分のスロットしか使われない</strong>（残り半分は永久に空）</li>
+          <li>サイズ11（素数）: 偶数 % 11 は 0〜10 どれにもなる（例 12→1, 20→9, 22→0）→ 全スロットに散らばる</li>
+        </ul>
+
+        <p style="color:#ccc"><strong>なぜ素数が安全？</strong> 素数は <strong>1と自分自身以外に約数を持たない</strong> ので、データの ord 合計とたまたま「共通の倍数」ができてしまうことがほぼありません。だから、データにどんな隠れた規則性（偶数だらけ・10の倍数だらけ等）があっても、全スロットに均等にばらけやすいのです。</p>
       </div>
     </div>
 
