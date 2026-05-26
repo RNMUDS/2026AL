@@ -390,7 +390,7 @@ a.sub-item:hover {
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">5</span><span class="tag" style="background:rgba(118,185,0,0.15);color:#76B900">コード体験</span>例題の観察記録</a>
         <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
         <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
@@ -1017,6 +1017,7 @@ h2 = <span class="fn">simple_hash</span>(<span class="str">"pleap"</span>, table
         <h3>多項式ハッシュ関数</h3>
       </div>
       <p>基数（base=31）の累乗をかけて、文字の位置情報を反映させます。</p>
+      <p style="background:#1a1700;border-left:3px solid #FFB800;border-radius:8px;padding:0.7rem 1rem;font-size:0.88rem;color:#ccc;margin:0.5rem 0"><strong style="color:#FFB800">📝 <code>mask</code> について:</strong> ハッシュ値は文字が増えるほど桁が無限に大きくなってしまうので、<code>& mask</code> で「下位32ビットだけ残す（一定の幅に抑える）」工夫をしています。<strong>今回の短い単語では値が32ビットに収まるため結果は変わりません</strong>。まずは <code>h = h * 31 + ord(c)</code> の部分だけ追えればOKです。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">polynomial_hash_trace</span>(key):
     base = <span class="num">31</span>
@@ -1165,7 +1166,7 @@ h2 = <span class="fn">simple_hash</span>(<span class="str">"pleap"</span>, table
             <text x="340" y="300" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">アナグラム比較: 多項式は順番を区別する</text>
             <text x="180" y="324" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">"abc" = 96354</text>
             <text x="340" y="324" text-anchor="middle" fill="#888" font-size="14">≠</text>
-            <text x="500" y="324" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">"cba" = 95910</text>
+            <text x="500" y="324" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">"cba" = 98274</text>
             <text x="340" y="346" text-anchor="middle" fill="#93D500" font-size="11">同じ文字でも順序が変わると別の値 → 衝突が減る</text>
           </g>
 
@@ -1192,7 +1193,7 @@ h2 = <span class="fn">simple_hash</span>(<span class="str">"pleap"</span>, table
         <span class="tag tag-example">例題 4</span>
         <h3>複数の名前でハッシュ値を比較する</h3>
       </div>
-      <p>日本の名字トップ15で単純ハッシュと多項式ハッシュの分布を比較します。</p>
+      <p>日本の名字トップ10で単純ハッシュと多項式ハッシュの分布を比較します。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">simple_hash</span>(key, table_size):
     total = <span class="num">0</span>
@@ -1425,7 +1426,7 @@ slots = {}
             <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.15;0.30;0.35;0.55;0.60;0.80;0.85;1" dur="20s" repeatCount="indefinite"/>
             <rect x="40" y="90" width="110" height="40" rx="10" fill="#2e1a0a" stroke="#FFB800" stroke-width="2"/>
             <text x="95" y="115" text-anchor="middle" fill="white" font-size="14" font-weight="700">"fig"</text>
-            <text x="220" y="115" text-anchor="middle" fill="#FFB800" font-size="13">ord合計=320 → 320%10=0</text>
+            <text x="220" y="115" text-anchor="middle" fill="#FFB800" font-size="13">ord合計=310 → 310%10=0</text>
           </g>
 
           <!-- Incoming word "mango" -->
@@ -1433,7 +1434,7 @@ slots = {}
             <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.15;0.30;0.35;0.55;0.60;0.80;0.85;1" dur="20s" repeatCount="indefinite"/>
             <rect x="40" y="90" width="110" height="40" rx="10" fill="#2e0a0a" stroke="#FF5252" stroke-width="2"/>
             <text x="95" y="115" text-anchor="middle" fill="white" font-size="14" font-weight="700">"mango"</text>
-            <text x="220" y="115" text-anchor="middle" fill="#FF5252" font-size="13">ord合計=510 → 510%10=0</text>
+            <text x="220" y="115" text-anchor="middle" fill="#FF5252" font-size="13">ord合計=530 → 530%10=0</text>
           </g>
 
           <!-- Incoming word "cherry" -->
@@ -1600,17 +1601,7 @@ slots = {}
         <tr><td>David</td><td></td><td></td><td></td></tr>
         <tr><td>Eve</td><td></td><td></td><td></td></tr>
       </table>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の内容を自分のNotionノートに記録してください。</div></div>
-      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記録する内容</p>
-        <ul class="point-list">
-          <li><strong>グループメンバー全員の氏名</strong></li>
-          <li>各ラウンド: <strong>誰が</strong>（出題者）→ <strong>誰に</strong>（回答者）→ <strong>何を</strong>質問したか</li>
-          <li>回答の要点</li>
-          <li>評価（A / B / C）</li>
-        </ul>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「出題: 田中 → 回答: 鈴木 ／ 質問: ○○を△△に変えたら？ ／ 要点: □□になる ／ 評価: A」</p>
-      </div>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 5名分の表（先頭文字・<code>ord()</code>・<code>% 10</code> のハッシュ値）を完成させて記録してください。同じハッシュ値になった名前（衝突）があれば、その組も書きましょう。</div></div>
     </div>
 
     <div class="card standard">
@@ -1816,7 +1807,7 @@ apple=5, pleap=5 → アナグラムは依然として同じ値</pre>
   Step3: 'p' ord=112  3119*31+112 = 96801
   Step4: 'l' ord=108  96801*31+108 = 3000939
   Step5: 'e' ord=101  3000939*31+101 = 93029210
-  最終ハッシュ値: 93029210 (0x05892C5A)
+  最終ハッシュ値: 93029210 (0x058B835A)
 
 base=2:
   Step1: 'a' ord=97   0*2+97   = 97
@@ -1872,17 +1863,18 @@ Kato         単純=9  多項式=?   ← Yamamoto と衝突
 【table_size = 20】
   スロット3:  ['vanilla']
   スロット5:  ['quince']
+  スロット6:  ['raspberry']
   スロット7:  ['grape', 'honeydew']        ← 衝突!
   スロット9:  ['banana', 'strawberry']     ← 衝突!
   スロット10: ['apple', 'fig', 'mango']    ← 衝突!
   スロット12: ['elderberry']
   スロット13: ['cherry', 'nectarine', 'ugli']  ← 衝突!
   スロット14: ['date']
-  スロット16: ['kiwi', 'orange', 'papaya', 'raspberry']  ← 衝突!
+  スロット16: ['kiwi', 'orange', 'papaya']  ← 衝突!
   スロット17: ['tangerine']
   スロット19: ['lemon']
-  → 衝突しているスロット数: 5、使用スロット数: 11/20</pre>
-        <p>テーブルサイズを2倍にしても、<strong>衝突は完全には消えない</strong>（依然として5スロットで衝突）。ただし衝突に巻き込まれる単語の総数は減る（例: スロット6の4語のうち <code>kiwi/orange/papaya/raspberry</code> はサイズ20でも同じスロットに集まり続ける）。これは <code>simple_hash</code> がアナグラムや ord 合計が偶然一致するキーに弱いためで、<strong>テーブルを大きくしても根本解決にはならない</strong>。次回はこの衝突をどう処理するか（チェイン法・オープンアドレス法）を学ぶ。</p>
+  → 衝突しているスロット数: 5、使用スロット数: 12/20</pre>
+        <p>テーブルサイズを2倍にしても、<strong>衝突は完全には消えない</strong>（依然として5スロットで衝突）。ただし衝突に巻き込まれる単語の総数は減る（例: サイズ10のスロット6に集まっていた4語のうち、サイズ20では <code>kiwi/orange/papaya</code> がスロット16に、<code>raspberry</code> がスロット6に分かれる）。これは <code>simple_hash</code> がアナグラムや ord 合計が偶然一致するキーに弱いためで、<strong>テーブルを大きくしても根本解決にはならない</strong>。次回はこの衝突をどう処理するか（チェイン法・オープンアドレス法）を学ぶ。</p>
       </div>
     </details>
     </div>
