@@ -641,6 +641,37 @@ h = h * <span class="num">31</span> + ord(c<sub>1</sub>)
         </svg>
       </div>
     </div>
+
+    <!-- 1.4 Table size -->
+    <div class="concept-box">
+      <h4>1.4 「テーブルサイズ」とは？</h4>
+      <p style="margin-bottom:0.6rem"><strong>ハッシュテーブル</strong>とは、番号のついた入れ物（<strong>スロット</strong>）が一列に並んだ棚のことです。その <strong>スロットが全部で何個あるか</strong> が「テーブルサイズ」です。</p>
+      <div class="analogy">ロッカーで言えば「ロッカーが全部で何個あるか」。サイズ10なら、0番〜9番の<strong>10個</strong>のロッカーが並んでいる、ということ。</div>
+      <p style="margin-bottom:0.6rem"><strong>なぜ <code>% テーブルサイズ</code> をするの？</strong> ord 合計はどんどん大きな数になります（例: "apple" は 530）。でも実際のスロットは10個しかないかもしれません。そこで <strong>「サイズで割った余り」</strong> を取ると、どんなに大きな数でも必ず <strong>0 〜 (サイズ−1)</strong> の範囲に収まり、必ずどれかのスロット番号になります。</p>
+      <pre><span class="code-label">例</span>
+ord合計 530 → 530 % 10 = <span class="num">0</span>   → スロット0番に入れる
+ord合計 314 → 314 % 10 = <span class="num">4</span>   → スロット4番に入れる</pre>
+      <p style="color:#888;font-size:0.9rem">※ サイズを大きくするとスロットに余裕ができて衝突は減りますが、空きが増えてメモリが無駄になります（→ よくある誤解 Q2）。</p>
+    </div>
+
+    <!-- 1.5 Collision -->
+    <div class="concept-box" style="border-left:4px solid #FF5252">
+      <h4 style="color:#FF5252">1.5 「衝突（コリジョン）」とは？</h4>
+      <p style="margin-bottom:0.6rem"><strong>別々のキー（別々の単語）が、計算の結果たまたま同じスロット番号になってしまうこと</strong>を「衝突」と呼びます。</p>
+      <div class="analogy">ロッカーの例え: 別々の2人の名前から番号を計算したら、<strong>たまたま同じロッカー番号が出てしまった</strong>。同じ1つのロッカーに2人分の荷物を入れたい——この「かち合い」が衝突です。</div>
+      <p style="margin:0.6rem 0 0.4rem">具体例（サイズ10の単純ハッシュ）:</p>
+      <table style="margin:0.4rem 0">
+        <tr><th>キー</th><th>ord合計</th><th><code>% 10</code></th><th>結果</th></tr>
+        <tr><td>apple</td><td>530</td><td>0</td><td>スロット0へ</td></tr>
+        <tr><td>fig</td><td>310</td><td>0</td><td style="color:#FF5252">スロット0へ（apple と衝突！）</td></tr>
+      </table>
+      <p style="margin-top:0.6rem"><strong>なぜ起きる？</strong> 主に2つの理由があります。</p>
+      <ul class="point-list" style="margin-bottom:0.6rem">
+        <li>スロット数が有限なのに、それより多くのキーを入れようとするから（<strong>鳩の巣原理</strong>）</li>
+        <li>違う単語でも ord 合計がたまたま一致してしまうことがあるから（例: アナグラム "apple"/"pleap"）</li>
+      </ul>
+      <p>衝突は<strong>故障やバグではなく「必ず起こる想定内のこと」</strong>です。だからハッシュ法では「衝突をどう処理するか」が次の大事なテーマになります（次回学習）。</p>
+    </div>
   </div>
 </section>
 
