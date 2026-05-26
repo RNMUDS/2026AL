@@ -795,6 +795,7 @@ ord合計 314 → 314 % 10 = <span class="num">4</span>   → スロット4番�
         <span class="tag tag-example">例題 1</span>
         <h3>ord() 関数で文字を数値にする</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 文字どうしは足し算できないけれど、<code>ord()</code> で数字に変えれば計算できる。ハッシュの第一歩＝<strong>「文字を計算できる数に翻訳する」</strong>感覚をつかむ。</p>
       <p>Pythonの <code>ord()</code> 関数で文字をUnicodeの数値に変換し、<code>chr()</code> で逆変換できます。</p>
 
       <div class="concept-box" style="border-left:4px solid #76B900">
@@ -967,6 +968,7 @@ total = <span class="num">0</span>
         <span class="tag tag-example">例題 2</span>
         <h3>単純ハッシュ関数</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 文字列を <strong>「ord合計 ÷ テーブルサイズの余り」</strong> で1つのスロット番号に変える、いちばん簡単なハッシュの作り方を体験する。同時に「文字の順番を見ない」という弱点（アナグラムが衝突する）にも気づく。</p>
       <p>各文字の ord 値を合計し、テーブルサイズで割った余りを返します。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">simple_hash</span>(key, table_size):
@@ -1142,6 +1144,7 @@ h2 = <span class="fn">simple_hash</span>(<span class="str">"pleap"</span>, table
         <span class="tag tag-example">例題 3</span>
         <h3>多項式ハッシュ関数</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 例題2の弱点（文字の順番を区別できない）を直す方法を体験する。計算に文字の<strong>"位置"も混ぜる</strong>ことで、同じ文字でも並びが違えば別の番号になり、衝突が減る仕組みを確かめる。</p>
       <p>基数（base=31）の累乗をかけて、文字の位置情報を反映させます。</p>
       <p style="background:#1a1700;border-left:3px solid #FFB800;border-radius:8px;padding:0.7rem 1rem;font-size:0.88rem;color:#ccc;margin:0.5rem 0"><strong style="color:#FFB800">📝 <code>mask</code> について:</strong> ハッシュ値は文字が増えるほど桁が無限に大きくなってしまうので、<code>& mask</code> で「下位32ビットだけ残す（一定の幅に抑える）」工夫をしています。<strong>今回の短い単語では値が32ビットに収まるため結果は変わりません</strong>。まずは <code>h = h * 31 + ord(c)</code> の部分だけ追えればOKです。</p>
       <pre><span class="code-label">Python</span>
@@ -1319,6 +1322,7 @@ h2 = <span class="fn">simple_hash</span>(<span class="str">"pleap"</span>, table
         <span class="tag tag-example">例題 4</span>
         <h3>複数の名前でハッシュ値を比較する</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 同じ名前リストを単純ハッシュと多項式ハッシュの<strong>両方に通して並べて見比べ</strong>、どちらが衝突しにくいかを目で確かめる。ハッシュ関数の<strong>"良し悪し"を比較する目</strong>を養う。</p>
       <p>日本の名字トップ10で単純ハッシュと多項式ハッシュの分布を比較します。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">simple_hash</span>(key, table_size):
