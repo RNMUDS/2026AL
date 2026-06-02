@@ -173,7 +173,7 @@ a.sub-item:hover {
   <a href="#sec-submission">提出</a>
   <a href="#sec-explanation">説明</a>
   <a href="#sec-examples">例題</a>
-  <a href="#sec-group-disc" class="nav-advanced">議論</a>
+  <a href="#sec-group-disc" class="nav-advanced">口頭試問</a>
   <a href="#sec-standard" class="nav-assignment">標準</a>
   <a href="#sec-advanced" class="nav-advanced">発展</a>
   <a href="#sec-notion" style="color:#76B900">Notion</a>
@@ -192,12 +192,12 @@ a.sub-item:hover {
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
+      <h3>📋 提出ガイド（この回の提出物: 計11項目）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
         <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
-        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">3</span><span class="tag" style="background:#0a1a2e;color:#4FC3F7;border:1px solid #2a4a6a">口頭試問</span>3問に記述で回答</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -220,10 +220,83 @@ a.sub-item:hover {
       <pre><span class="code-label">概念</span>
 キー <span class="str">"apple"</span>  → ハッシュ関数 → インデックス <span class="num">0</span> → テーブル[<span class="num">0</span>] に格納
 キー <span class="str">"banana"</span> → ハッシュ関数 → インデックス <span class="num">9</span> → テーブル[<span class="num">9</span>] に格納</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 720 320" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
+          <text x="360" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">ハッシュテーブルの仕組み（キー → ハッシュ関数 → 格納先）</text>
+
+          <!-- Keys -->
+          <rect x="22" y="92" width="120" height="46" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+          <text x="82" y="120" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">"apple"</text>
+          <rect x="22" y="200" width="120" height="46" rx="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+          <text x="82" y="228" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="14">"banana"</text>
+          <text x="82" y="270" text-anchor="middle" fill="#888" font-size="11">キー（入れたいデータ）</text>
+
+          <!-- Hash function box -->
+          <rect x="236" y="123" width="150" height="92" rx="10" fill="#0A0A0A" stroke="#888" stroke-width="1.5"/>
+          <text x="311" y="156" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="13">ハッシュ関数</text>
+          <text x="311" y="180" text-anchor="middle" fill="#888" font-size="11">文字コードの和</text>
+          <text x="311" y="198" text-anchor="middle" fill="#888" font-size="11">÷ 10 の余り</text>
+
+          <!-- Arrows: key -> hash -->
+          <path d="M142 113 L232 150" stroke="#76B900" stroke-width="2" fill="none" marker-end="url(#arrG)"/>
+          <path d="M142 225 L232 188" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arrO)"/>
+
+          <!-- Arrows: hash -> table -->
+          <path d="M386 150 L514 34" stroke="#76B900" stroke-width="2" fill="none" marker-end="url(#arrG)"/>
+          <text x="452" y="80" fill="#76B900" font-size="11" font-weight="700">→ 0</text>
+          <path d="M386 188 L514 277" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#arrO)"/>
+          <text x="452" y="246" fill="#FFB800" font-size="11" font-weight="700">→ 9</text>
+
+          <!-- Table (10 slots) -->
+          <text x="600" y="14" text-anchor="middle" fill="#888" font-size="11">テーブル（配列）</text>
+          <rect x="518" y="22"  width="164" height="24" rx="4" fill="#76B900"/><text x="528" y="39"  fill="white" font-weight="700" font-size="12">[0] apple</text>
+          <rect x="518" y="49"  width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="66"  fill="#666" font-size="12">[1] ---</text>
+          <rect x="518" y="76"  width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="93"  fill="#666" font-size="12">[2] ---</text>
+          <rect x="518" y="103" width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="120" fill="#666" font-size="12">[3] ---</text>
+          <rect x="518" y="130" width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="147" fill="#666" font-size="12">[4] ---</text>
+          <rect x="518" y="157" width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="174" fill="#666" font-size="12">[5] ---</text>
+          <rect x="518" y="184" width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="201" fill="#666" font-size="12">[6] ---</text>
+          <rect x="518" y="211" width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="228" fill="#666" font-size="12">[7] ---</text>
+          <rect x="518" y="238" width="164" height="24" rx="4" fill="#1A1A1A" stroke="#333"/><text x="528" y="255" fill="#666" font-size="12">[8] ---</text>
+          <rect x="518" y="265" width="164" height="24" rx="4" fill="#FFB800"/><text x="528" y="282" fill="#0A0A0A" font-weight="700" font-size="12">[9] banana</text>
+
+          <defs>
+            <marker id="arrG" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#76B900"/></marker>
+            <marker id="arrO" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#FFB800"/></marker>
+          </defs>
+        </svg>
+      </div>
+
       <ul class="point-list">
         <li>キーからハッシュ関数でインデックスを計算し、そのインデックスにデータを格納する</li>
-        <li>検索・格納が平均 O(1) で行える高速なデータ構造</li>
+        <li>検索・格納が<strong>平均 O(1)</strong>（データが何個あってもほぼ一定の速さ）で行える高速なデータ構造 <span style="color:#888;font-size:0.85rem">→ 下の補足で詳しく説明</span></li>
       </ul>
+    </div>
+
+    <div class="concept-box" style="border-left:4px solid #4FC3F7">
+      <h4 style="color:#4FC3F7">補足: 「平均 O(1)」ってどういう意味？</h4>
+      <p><strong>O(1)</strong> は「オー・いち」と読み、<strong>データが何個あっても処理時間がほぼ一定</strong>であることを表す記号です（<strong>定数時間 / constant time</strong>）。O記法（オーダー記法）は「データの個数 n が増えたとき、処理時間がどんな割合で増えるか」をざっくり表す書き方です。</p>
+
+      <div class="analogy">
+        靴箱（げた箱）を思い出してください。「出席番号5番の人は5番の箱」とルールが決まっていれば、端から順に全部開けなくても <strong>一発で自分の箱に手が届きます</strong>。これが O(1)。クラスが10人でも1000人でも、自分の箱を開ける手間は変わりません。
+      </div>
+
+      <p>ハッシュ法も同じで、キーをハッシュ関数に入れれば「何番の箱に入れる／探すか」が<strong>即座に計算</strong>でき、配列の <code>table[index]</code> に一発でアクセスできます（端から順に調べる線形探索 <strong>O(n)</strong> とは対照的）。</p>
+
+      <table>
+        <tr><th>データ数 n</th><th>O(1)（ハッシュ法・理想）</th><th>O(n)（線形探索）</th></tr>
+        <tr><td>100 件</td><td>約 1 回の確認</td><td>約 100 回の確認</td></tr>
+        <tr><td>1,000,000 件</td><td>約 1 回の確認</td><td>約 1,000,000 回の確認</td></tr>
+      </table>
+
+      <p><strong>なぜ「平均」が付くのか？</strong> 衝突（→ 1.2）が起きると、線形探索法では隣のスロットを何回か確認する必要があり、その分だけ遅くなります。</p>
+      <ul class="point-list">
+        <li>衝突がまったく無ければ <strong>ちょうど1回</strong>（理想の O(1)）</li>
+        <li>衝突があると数回 → でも「ならせば（平均すれば）ほぼ一定回数」</li>
+        <li>テーブルに詰め込みすぎる（負荷率が高い）と衝突が増え、<strong>最悪のケースでは O(n)</strong> まで悪化することもある</li>
+      </ul>
+      <p style="color:#888;font-size:0.9rem">だから「いつでも必ず1回」ではなく、<strong>「平均すればほぼ1回」</strong>という意味で <strong>平均 O(1)</strong> と呼びます。負荷率と性能の関係は発展課題で実験します。</p>
     </div>
 
     <div class="concept-box">
@@ -239,8 +312,24 @@ a.sub-item:hover {
       </div>
     </div>
 
+    <div class="concept-box">
+      <h4>1.3 衝突が起きたらどうする？（衝突解決法）</h4>
+      <p>前の節で見たとおり、<strong>鳩の巣原理</strong>により衝突は<strong>原理的に避けられません</strong>。「衝突したらエラーにして諦める」のでは使いものにならないので、<strong>衝突が起きても正しく格納・検索できる工夫</strong>が必要です。この工夫を <strong>衝突解決法（しょうとつかいけつほう / collision resolution）</strong> と呼びます。</p>
+      <p>衝突解決法には、大きく<strong>2つの流派</strong>があります。</p>
+      <table>
+        <tr><th style="width:28%">流派</th><th>考え方</th><th style="width:24%">この回で学ぶ代表例</th></tr>
+        <tr><td><strong style="color:#76B900">① オープンアドレス法</strong><br><span style="color:#888;font-size:0.85rem">open addressing</span></td><td>衝突したら、<strong>テーブルの中の別の空きスロット</strong>を探して、そこに入れる。データはすべてテーブル（配列）の中に収まる。</td><td><strong>線形探索法</strong>（→ 1.4）</td></tr>
+        <tr><td><strong style="color:#FFB800">② チェイン法</strong><br><span style="color:#888;font-size:0.85rem">chaining</span></td><td>各スロットに<strong>リストをぶら下げ</strong>、同じインデックスに来たデータをそのリストに追加していく。1つのスロットに何個でも入る。</td><td><strong>チェイン法</strong>（→ 1.5）</td></tr>
+      </table>
+      <div class="analogy">
+        郵便受けがいっぱいのとき、①「<strong>隣の空いている郵便受け</strong>に入れておく」のがオープンアドレス法、②「その郵便受けに<strong>クリップで束ねて全部ぶら下げる</strong>」のがチェイン法、というイメージです。
+      </div>
+      <p>次の 1.4・1.5 で、この2つを順番にくわしく見ていきます。</p>
+    </div>
+
     <div class="concept-box" style="border-left:4px solid #FFB800">
-      <h4 style="color:#FFB800">よくある疑問 Q&amp;A</h4>
+      <h4 style="color:#FFB800">よくある疑問 Q&amp;A（用語の整理）</h4>
+      <p style="color:#aaa;font-size:0.9rem;margin-bottom:0.6rem">ここまでで似た言葉がいくつか出てきました。先に整理しておきましょう。</p>
       <p><strong style="color:#FFB800">Q1.</strong> 「衝突解決法」と「オープンアドレス法」は同じもの？</p>
       <p style="margin-left:1rem;color:#ccc"><strong>A.</strong> 衝突解決法は「衝突が起きたときの対処法」の総称。その中に <strong>オープンアドレス法</strong>（テーブル内で別のスロットを探す）と <strong>チェイン法</strong>（リストを連結する）の2つの大きな流派があります。線形探索法はオープンアドレス法の最も基本的な方式です。</p>
       <p style="margin-top:0.6rem"><strong style="color:#FFB800">Q2.</strong> 線形探索法（Linear Probing）と「線形探索（Linear Search）」は別物？</p>
@@ -250,7 +339,7 @@ a.sub-item:hover {
     </div>
 
     <div class="concept-box">
-      <h4>1.3 線形探索法（Linear Probing / リニアプロービング）</h4>
+      <h4>1.4 線形探索法（Linear Probing / リニアプロービング）</h4>
       <p><strong>Probing</strong>（プロービング）は「探りを入れる」という意味。<strong>Linear</strong>（リニア）は「直線的に・一直線に」。つまり「1つずつ直線的に空きを探す」方法。<strong>オープンアドレス法</strong>の一種です。</p>
       <div class="analogy">
         駐車場を想像してください。目的の番号の駐車場が埋まっていたら、<strong>隣の空いている場所</strong>に停めます。探すときも同じルートで探します。
@@ -293,21 +382,62 @@ a.sub-item:hover {
     </div>
 
     <div class="concept-box">
-      <h4>1.4 チェイン法（Chaining / チェイニング）</h4>
-      <p>各スロットに<strong>リスト（連結リスト）</strong>を持たせ、衝突したデータをリストに追加する方法。「鎖法」「連結リスト法」「セパレートチェイニング（separate chaining）」とも呼ばれます。</p>
+      <h4>1.5 チェイン法（Chaining / チェイニング）</h4>
+
+      <p><strong>何をする方法？</strong>　線形探索法（1.4）は「衝突したら<strong>別のスロットへ逃がす</strong>」方法でした。チェイン法はその逆で、<strong>衝突したデータを動かさず、同じスロットにまとめて置いておく</strong>方法です。そのために、各スロットには1個分のデータではなく <strong>リスト（連結リスト）＝「いくつでも入る箱」</strong> を持たせます。「鎖法」「連結リスト法」「セパレートチェイニング（separate chaining）」とも呼ばれます。</p>
+
       <div class="analogy">
-        マンションの郵便受けを想像してください。同じ部屋番号に複数の住人がいる場合、郵便受けの中にさらに小箱（リスト）を入れて、そこに郵便物を順番に積み重ねていきます。
+        マンションの郵便受けを想像してください。1つの部屋番号に複数の住人がいても、郵便受けの中に郵便物を<strong>順番に積み重ねて</strong>おけば全員分が入ります。「隣の空いている郵便受けを借りる」（＝線形探索法）必要はありません。
       </div>
+
+      <p><strong>何のため？（目的）</strong>　衝突は鳩の巣原理で<strong>必ず起きます</strong>（→ 1.2）。線形探索法では衝突のたびに別の空きスロットを占領していくため、テーブルが埋まってくると<strong>無関係なキーの場所まで巻き込んで</strong>遅くなったり（クラスタリング）、空きが尽きると<strong>もう格納できなく</strong>なります。チェイン法は「衝突したものは同じ場所のリストに足すだけ」にすることで、この問題を避けるのが目的です。</p>
+
+      <p style="color:#76B900;font-weight:700;margin-bottom:0.3rem">メリット（線形探索法と比べて）</p>
+      <ul class="point-list">
+        <li><strong>テーブルが満杯にならない</strong>: リストはいくらでも伸ばせるので、データ数がテーブルサイズを超えても格納できる（負荷率 &gt; 1 でもOK）。</li>
+        <li><strong>クラスタリングが起きにくい</strong>: 衝突しても他のスロットを占領しないため、無関係なキーを巻き込まない。</li>
+        <li><strong>削除が簡単</strong>: そのスロットのリストから取り除くだけ。線形探索法のような「削除済みマーカー（tombstone）」の工夫が要らない。</li>
+      </ul>
+      <p style="color:#FFB800;font-weight:700;margin:0.6rem 0 0.3rem">デメリット</p>
+      <ul class="point-list">
+        <li>リストをつなぐための<strong>追加メモリ</strong>が必要。</li>
+        <li>同じスロットにデータが集中すると、そのリストを<strong>端から順にたどる</strong>ことになり遅くなる（その部分は O(n) に近づく）。</li>
+      </ul>
+
       <pre><span class="code-label">概念</span>
 テーブル[<span class="num">3</span>] → [(<span class="str">"apple"</span>, <span class="num">100</span>), (<span class="str">"pleap"</span>, <span class="num">999</span>)]
 テーブル[<span class="num">9</span>] → [(<span class="str">"banana"</span>, <span class="num">80</span>)]</pre>
 
+      <p style="margin-top:1rem">2つの方法を、場面ごとに並べて比べてみましょう。</p>
       <table>
-        <tr><th>比較</th><th>線形探索法</th><th>チェイン法</th></tr>
-        <tr><td>衝突時</td><td>空きスロットを探す</td><td>リストに追加</td></tr>
-        <tr><td>テーブル満杯時</td><td>性能低下</td><td>格納可能</td></tr>
-        <tr><td>メモリ</td><td>配列のみ</td><td>リストの追加メモリ</td></tr>
+        <tr><th style="width:22%">比べるポイント</th><th>線形探索法<br><span style="color:#888;font-weight:400;font-size:0.8rem">（オープンアドレス法）</span></th><th>チェイン法</th></tr>
+        <tr>
+          <td><strong>衝突したとき<br>どうする？</strong></td>
+          <td>入れたい場所が埋まっていたら、<strong>隣へ1つずつずれて</strong>空いているスロットを探し、見つけた所に入れる。</td>
+          <td>場所は動かさず、そのスロットが持つ<strong>リストの末尾に追加</strong>する。</td>
+        </tr>
+        <tr>
+          <td><strong>データを<br>探すとき</strong></td>
+          <td>ハッシュ値のスロットから<strong>隣へ順にたどり</strong>、目的のキーか空きに当たるまで見る。</td>
+          <td>ハッシュ値のスロットの<strong>リストだけを端から見る</strong>（他のスロットは見ない）。</td>
+        </tr>
+        <tr>
+          <td><strong>テーブルが<br>満杯に近いと？</strong></td>
+          <td>空きが少なく探索が長くなり<strong>どんどん遅くなる</strong>。空きが0になると<strong>もう入らない</strong>。</td>
+          <td>リストを伸ばすだけなので<strong>入れ続けられる</strong>（データ数がスロット数を超えてもOK）。</td>
+        </tr>
+        <tr>
+          <td><strong>削除のしやすさ</strong></td>
+          <td>単純に空にすると検索が途中で打ち切られて<strong>バグる</strong>ため、「削除済み」の印（tombstone）が必要で<strong>面倒</strong>。</td>
+          <td>リストから<strong>その要素を抜くだけ</strong>で済み<strong>簡単</strong>。</td>
+        </tr>
+        <tr>
+          <td><strong>使うメモリ</strong></td>
+          <td><strong>配列だけ</strong>で済む（追加の領域は不要）。</td>
+          <td>配列に加えて<strong>リストをつなぐ分のメモリ</strong>が余分に要る。</td>
+        </tr>
       </table>
+      <p style="color:#888;font-size:0.9rem">ひとことで言うと、<strong>線形探索法</strong>は「配列1本で省メモリだが、混んでくると弱い」、<strong>チェイン法</strong>は「メモリは少し食うが、混雑や削除に強い」方法です。</p>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 220" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
@@ -346,7 +476,7 @@ a.sub-item:hover {
     </div>
 
     <div class="concept-box">
-      <h4>1.5 Python の dict</h4>
+      <h4>1.6 Python の dict</h4>
       <p>Python の <code>dict</code> は内部的にハッシュテーブルを使っています。<code>hash()</code> 組み込み関数でハッシュ値を確認できます。</p>
       <pre><span class="code-label">Python</span>
 <span class="fn">print</span>(<span class="fn">hash</span>(<span class="str">"apple"</span>))   <span class="cmt"># Pythonが計算するハッシュ値</span>
@@ -1318,28 +1448,29 @@ ht.<span class="fn">delete</span>(<span class="str">"apple"</span>)
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
-      <h2>グループディスカッション</h2>
+      <h2>口頭試問（個人課題）</h2>
     </div>
-    <p style="margin-bottom:1rem">2〜4人のグループで議論してください。</p>
+    <div style="background:#0a1a2e;border:1px solid #2a4a6a;border-radius:8px;padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.9rem;color:#9BD1FF">
+      <strong>今回は対面授業がないため、グループワークは行いません。</strong>本来はグループで口頭で問い合う「口頭試問」を行う予定でしたが、その代わりに、下の3問を<strong>一人で</strong>考え、自分の言葉で<strong>Notionノートに記述して</strong>提出してください。
+    </div>
 
     <div class="card" style="border-left:4px solid #4FC3F7">
       <div class="card-header">
-        <span class="tag tag-group">グループワーク</span>
-        <h3>質問し合って理解を深める（15分）</h3>
+        <span class="tag tag-group">口頭試問</span>
+        <h3>3つの問いに自分の言葉で答える</h3>
       </div>
-      <p>以下の質問例を参考に、グループ内で互いに質問し合ってください。質問例をそのまま使ってもOKです。</p>
+      <p>暗記した言葉を写すのではなく、<strong>「なぜそうなるのか」を順を追って</strong>説明してください。3問すべてに回答します。</p>
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">質問の切り口（参考）</p>
         <table>
-          <tr><th style="width:25%">カテゴリ</th><th>質問例</th></tr>
-          <tr><td><strong style="color:#76B900">出力予測</strong></td><td>「テーブルサイズ7で hash(key)=3 のデータを入れた後、再び hash(key)=3 のデータを入れると、線形探索法では次はどこに格納される？」</td></tr>
-          <tr><td><strong style="color:#FFB800">理由説明</strong></td><td>「チェイン法と線形探索法（オープンアドレス法）では、なぜチェイン法の方がクラスタリング（連続する埋まり）が起きにくいのか？」</td></tr>
-          <tr><td><strong style="color:#FF5252">改造提案</strong></td><td>「線形探索法のステップ幅を1から2に変えたら何が変わる？ メリットとデメリットは？」</td></tr>
+          <tr><th style="width:22%">カテゴリ</th><th>問い（すべて回答）</th></tr>
+          <tr><td><strong style="color:#76B900">Q1<br>出力予測</strong></td><td>テーブルサイズ7（ハッシュ関数 <code>key % 7</code>、衝突時は線形探索法）の<strong>空のテーブル</strong>に、<code>3 → 10 → 17</code> の順でキーを格納します。<strong>各キーが最終的にどのインデックスに入るか</strong>を、途中の探索過程（どのスロットを見て、なぜ次へ進んだか）も含めて説明しなさい。</td></tr>
+          <tr><td><strong style="color:#FFB800">Q2<br>理由説明</strong></td><td>チェイン法と線形探索法（オープンアドレス法）では、<strong>なぜチェイン法の方がクラスタリング（連続する埋まり）が起きにくいのか</strong>を、自分の言葉で説明しなさい。</td></tr>
+          <tr><td><strong style="color:#FF5252">Q3<br>改造提案</strong></td><td>線形探索法のステップ幅を1から2に変える（<code>index = (index + 2) % size</code>）と<strong>何が変わるか</strong>。考えられる<strong>メリットとデメリットを1つずつ</strong>挙げて説明しなさい。</td></tr>
         </table>
       </div>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバーの氏名と、議論した質問・回答の要点を記録してください。</div></div>
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> Q1・Q2・Q3 それぞれの回答を、自分の言葉で記述してください（Q1は途中の探索過程も必ず書くこと）。</div></div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。衝突時の格納先の決定手順を口頭で説明する練習をしておくと、標準課題がスムーズに解けるはずです。
+        <strong>ヒント:</strong> Q1で練習する「衝突時の格納先の決定手順」は、次の「標準課題」を解くのにそのまま役立ちます。口に出して説明できるくらい手順を整理してから書くと、考えがまとまりやすくなります。
       </div>
     </div>
 
@@ -1365,12 +1496,11 @@ ht.<span class="fn">delete</span>(<span class="str">"apple"</span>)
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
         <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記録する内容</p>
         <ul class="point-list">
-          <li><strong>グループメンバー全員の氏名</strong></li>
-          <li>各ラウンド: <strong>誰が</strong>（出題者）→ <strong>誰に</strong>（回答者）→ <strong>何を</strong>質問したか</li>
-          <li>回答の要点</li>
-          <li>評価（A / B / C）</li>
+          <li>各キーの<strong>ハッシュ値</strong>（<code>key % 7</code> の計算結果）</li>
+          <li>各キーの<strong>最終的な格納先インデックス</strong>（衝突した場合は、どこから何回ずらしたかも書く）</li>
+          <li>5個すべて格納し終えたあとの<strong>テーブルの中身</strong>（インデックス0〜6に何が入っているか）</li>
         </ul>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「出題: 田中 → 回答: 鈴木 ／ 質問: ○○を△△に変えたら？ ／ 要点: □□になる ／ 評価: A」</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「14 → 14 % 7 = 0 → [0]に格納」「21 → 21 % 7 = 0 → [0]使用中 → [1]に格納（1回ずらした）」</p>
       </div>
     </div>
 
@@ -1503,14 +1633,15 @@ table = [<span class="num">14</span>, <span class="num">21</span>, <span class="
 
 ---
 
-## グループ口頭試問
-**グループメンバー:**
+## 口頭試問（個人課題）
+### Q1（出力予測）3 → 10 → 17 を線形探索法で格納したときの各インデックスと探索過程
+（回答を記入）
 
-| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
-|--------|-------------|--------|------|------|
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
+### Q2（理由説明）なぜチェイン法の方がクラスタリングが起きにくいのか
+（回答を記入）
+
+### Q3（改造提案）ステップ幅を1から2に変えると何が変わるか（メリット・デメリット）
+（回答を記入）
 
 ---
 
