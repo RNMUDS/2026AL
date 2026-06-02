@@ -173,7 +173,7 @@ a.sub-item:hover {
   <a href="#sec-submission">提出</a>
   <a href="#sec-explanation">説明</a>
   <a href="#sec-examples">例題</a>
-  <a href="#sec-group-disc" class="nav-advanced">口頭試問</a>
+  <a href="#sec-group-disc" class="nav-advanced">記述問題</a>
   <a href="#sec-standard" class="nav-assignment">標準</a>
   <a href="#sec-advanced" class="nav-advanced">発展</a>
   <a href="#sec-notion" style="color:#76B900">Notion</a>
@@ -197,7 +197,7 @@ a.sub-item:hover {
         <a class="sub-item" href="#sec-examples"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
         <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
-        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">3</span><span class="tag" style="background:#0a1a2e;color:#4FC3F7;border:1px solid #2a4a6a">口頭試問</span>3問に記述で回答</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">3</span><span class="tag" style="background:#0a1a2e;color:#4FC3F7;border:1px solid #2a4a6a">記述問題</span>3問に記述で回答</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -496,6 +496,151 @@ a.sub-item:hover {
           <defs><marker id="arr-ch" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker></defs>
         </svg>
       </div>
+
+      <!-- ===== チェイン法 ステップアニメーション ===== -->
+      <p style="margin-top:1.6rem;font-weight:700;color:#76B900;font-size:1rem">▶ 動かして理解する：チェイン法の挿入と検索</p>
+      <p style="font-size:0.9rem;color:#ccc">サイズ5のハッシュテーブル（ハッシュ関数 <code>key % 5</code>）に <code>12 → 5 → 17 → 3 → 8</code> を順に入れ、最後に <code>17</code> を検索します。<strong>「次へ ▶」</strong>で一歩ずつ、<strong>「▶ 再生」</strong>で自動で進みます。衝突したキー（17・8）が<strong>同じ番号のリストにぶら下がる</strong>様子に注目してください。</p>
+
+      <style>
+        .chd-root{background:#0f0f0f;border:1px solid #333;border-radius:12px;padding:1rem;margin:1rem 0}
+        .chd-title{color:#76B900;font-weight:700;font-size:0.95rem;margin-bottom:0.7rem}
+        .chd-incoming{min-height:46px;display:flex;align-items:center;gap:0.55rem;flex-wrap:wrap;margin-bottom:0.8rem;font-size:0.9rem}
+        .chd-keybadge{display:inline-flex;align-items:center;background:#FFB800;color:#0a0a0a;font-weight:800;border-radius:8px;padding:0.3rem 0.7rem;font-size:0.95rem;box-shadow:0 0 0 3px rgba(255,184,0,0.18)}
+        .chd-calc{color:#E0E0E0;font-family:'JetBrains Mono',monospace}
+        .chd-flag{font-weight:700;padding:0.18rem 0.55rem;border-radius:6px;font-size:0.8rem}
+        .chd-flag.col{background:#3a0d0d;color:#FF6B6B;border:1px solid #6b1f1f}
+        .chd-flag.ok{background:#0d2a0d;color:#7CCB3A;border:1px solid #2f6b1f}
+        .chd-flag.sr{background:#0a1a2e;color:#9BD1FF;border:1px solid #2a4a6a}
+        .chd-rows{display:flex;flex-direction:column;gap:0.5rem;overflow-x:auto;padding-bottom:0.3rem}
+        .chd-row{display:flex;align-items:center;width:max-content}
+        .chd-slot{flex:0 0 auto;width:52px;height:38px;display:flex;align-items:center;justify-content:center;background:#1A1A1A;border:1.5px solid #555;border-radius:8px;color:#bbb;font-weight:700;font-family:'JetBrains Mono',monospace;transition:border-color .25s,box-shadow .25s,color .25s}
+        .chd-slot.act{border-color:#76B900;color:#fff;box-shadow:0 0 0 3px rgba(118,185,0,0.28)}
+        .chd-link{flex:0 0 auto;width:26px;text-align:center;color:#76B900;font-weight:800;font-size:1.05rem}
+        .chd-node{flex:0 0 auto;min-width:44px;height:34px;display:flex;align-items:center;justify-content:center;background:#163a16;border:1.5px solid #76B900;border-radius:8px;color:#eafbe0;font-weight:700;font-family:'JetBrains Mono',monospace;padding:0 0.55rem}
+        .chd-node.newpop{animation:chdpop .55s ease}
+        .chd-node.check{border-color:#FFB800;background:#3a2f0d;color:#FFD466}
+        .chd-node.found{border-color:#FFB800;background:#FFB800;color:#0a0a0a;box-shadow:0 0 0 3px rgba(255,184,0,0.32)}
+        .chd-empty{color:#555;font-family:'JetBrains Mono',monospace;font-size:0.85rem;padding-left:0.5rem}
+        @keyframes chdpop{0%{transform:scale(0.2);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+        .chd-note{margin-top:0.9rem;background:#141414;border:1px solid #333;border-left:3px solid #76B900;border-radius:6px;padding:0.65rem 0.85rem;font-size:0.9rem;color:#ddd;min-height:3em;line-height:1.6}
+        .chd-controls{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;align-items:center}
+        .chd-btn{background:#1f1f1f;border:1px solid #444;color:#E0E0E0;border-radius:8px;padding:0.42rem 0.85rem;font-size:0.85rem;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s}
+        .chd-btn:hover:not(:disabled){background:#2a2a2a;border-color:#76B900}
+        .chd-btn:disabled{opacity:0.35;cursor:not-allowed}
+        .chd-btn.play{background:#1a2e0a;border-color:#4A7A00;color:#9BE34A}
+        .chd-prog{margin-left:auto;color:#888;font-size:0.82rem;font-family:'JetBrains Mono',monospace}
+      </style>
+
+      <div class="chd-root" id="chd-root">
+        <div class="chd-title">チェイン法シミュレーター（サイズ5 / hash = key % 5）</div>
+        <div class="chd-incoming" id="chd-incoming"></div>
+        <div class="chd-rows" id="chd-rows"></div>
+        <div class="chd-note" id="chd-note"></div>
+        <div class="chd-controls">
+          <button class="chd-btn" id="chd-reset" type="button">↺ 最初から</button>
+          <button class="chd-btn" id="chd-prev" type="button">◀ 戻る</button>
+          <button class="chd-btn play" id="chd-play" type="button">▶ 再生</button>
+          <button class="chd-btn" id="chd-next" type="button">次へ ▶</button>
+          <span class="chd-prog" id="chd-prog"></span>
+        </div>
+      </div>
+
+      <script>
+      (function(){
+        var root=document.getElementById('chd-root');
+        if(!root) return;
+        var SIZE=5;
+        var steps=[
+          {title:'初期状態', table:[[],[],[],[],[]], active:-1, note:'空のハッシュテーブル（サイズ5）。各スロット [0]〜[4] は「リスト（つながる箱）」を持てます。まだ何も入っていません。'},
+          {title:'12 を挿入', table:[[],[],[12],[],[]], active:2, newNode:{s:2,i:0}, incoming:{key:12,hash:2,flag:'ok'}, note:'12 ÷ 5 の余り = 2 → スロット[2]。[2] は空なので、新しいリストの先頭に 12 を置きます。'},
+          {title:'5 を挿入', table:[[5],[],[12],[],[]], active:0, newNode:{s:0,i:0}, incoming:{key:5,hash:0,flag:'ok'}, note:'5 ÷ 5 の余り = 0 → スロット[0]。[0] は空なので追加します。衝突なし。'},
+          {title:'17 を挿入（衝突）', table:[[5],[],[12,17],[],[]], active:2, newNode:{s:2,i:1}, incoming:{key:17,hash:2,flag:'col'}, note:'17 ÷ 5 の余り = 2 → スロット[2]。すでに 12 がいる＝衝突！ 線形探索法のように別の場所へ移さず、12 のうしろに 17 を「つなぎ」ます（鎖が伸びる）。'},
+          {title:'3 を挿入', table:[[5],[],[12,17],[3],[]], active:3, newNode:{s:3,i:0}, incoming:{key:3,hash:3,flag:'ok'}, note:'3 ÷ 5 の余り = 3 → スロット[3]。空なので追加。衝突なし。'},
+          {title:'8 を挿入（衝突）', table:[[5],[],[12,17],[3,8],[]], active:3, newNode:{s:3,i:1}, incoming:{key:8,hash:3,flag:'col'}, note:'8 ÷ 5 の余り = 3 → スロット[3]。すでに 3 がいる＝衝突！ 3 のうしろに 8 をつなぎます。'},
+          {title:'完成', table:[[5],[],[12,17],[3,8],[]], active:-1, note:'完成。衝突したキー（17 と 8）も、よその番号を侵食せず「同じ番号のリスト」にぶら下がっています。だからテーブルが満杯になることはなく、いくつ衝突しても入ります。'},
+          {title:'検索：17 を探す①', table:[[5],[],[12,17],[3,8],[]], active:2, search:{slot:2,check:[0]}, incoming:{key:17,hash:2,flag:'sr'}, note:'17 を検索。17 ÷ 5 の余り = 2 → スロット[2] のリストを先頭から見ます。1個目は 12 … 探している 17 ではない。次へ進みます。'},
+          {title:'検索：17 を探す②', table:[[5],[],[12,17],[3,8],[]], active:2, search:{slot:2,check:[0,1],found:1}, incoming:{key:17,hash:2,flag:'sr'}, note:'2個目は 17 … 発見！ 確認したのは 2 回だけ。[2] のリストの中しか見ず、他のスロットは一切調べません。これがチェイン法の検索です。'}
+        ];
+        var inc=document.getElementById('chd-incoming');
+        var rowsEl=document.getElementById('chd-rows');
+        var noteEl=document.getElementById('chd-note');
+        var progEl=document.getElementById('chd-prog');
+        var bPrev=document.getElementById('chd-prev');
+        var bNext=document.getElementById('chd-next');
+        var bReset=document.getElementById('chd-reset');
+        var bPlay=document.getElementById('chd-play');
+        var idx=0, timer=null;
+
+        function flagHtml(f){
+          if(f==='col') return '<span class="chd-flag col">衝突！ リストにつなぐ</span>';
+          if(f==='sr')  return '<span class="chd-flag sr">リストを先頭から確認</span>';
+          return '<span class="chd-flag ok">空き → そのまま追加</span>';
+        }
+        function render(){
+          var st=steps[idx];
+          if(st.incoming){
+            inc.innerHTML='<span class="chd-keybadge">key = '+st.incoming.key+'</span>'+
+              '<span class="chd-calc">'+st.incoming.key+' % 5 = '+st.incoming.hash+'</span>'+
+              '<span style="color:#76B900;font-weight:700">→ ['+st.incoming.hash+']</span>'+
+              flagHtml(st.incoming.flag);
+          } else {
+            inc.innerHTML='<span style="color:#666;font-size:0.85rem">（キーの出し入れはありません）</span>';
+          }
+          rowsEl.innerHTML='';
+          for(var i=0;i<SIZE;i++){
+            var row=document.createElement('div'); row.className='chd-row';
+            var slot=document.createElement('div'); slot.className='chd-slot';
+            var isActSlot=(st.active===i)||(st.search&&st.search.slot===i);
+            if(isActSlot) slot.className+=' act';
+            slot.textContent='['+i+']';
+            row.appendChild(slot);
+            var list=st.table[i];
+            if(list.length===0){
+              var emp=document.createElement('span'); emp.className='chd-empty'; emp.textContent='空';
+              row.appendChild(emp);
+            } else {
+              for(var j=0;j<list.length;j++){
+                var link=document.createElement('span'); link.className='chd-link'; link.textContent='→';
+                row.appendChild(link);
+                var node=document.createElement('div'); node.className='chd-node'; node.textContent=list[j];
+                if(st.newNode&&st.newNode.s===i&&st.newNode.i===j) node.className+=' newpop';
+                if(st.search&&st.search.slot===i){
+                  if(st.search.check&&st.search.check.indexOf(j)>=0) node.className+=' check';
+                  if(typeof st.search.found==='number'&&st.search.found===j) node.className='chd-node found';
+                }
+                row.appendChild(node);
+              }
+            }
+            rowsEl.appendChild(row);
+          }
+          noteEl.textContent=st.note;
+          progEl.textContent='('+idx+' / '+(steps.length-1)+') '+st.title;
+          bPrev.disabled=(idx===0);
+          bNext.disabled=(idx===steps.length-1);
+        }
+        function go(n){
+          idx=Math.max(0,Math.min(steps.length-1,n));
+          render();
+          if(idx===steps.length-1) stop();
+        }
+        function stop(){ if(timer){clearInterval(timer);timer=null;} bPlay.textContent='▶ 再生'; bPlay.classList.add('play'); }
+        function play(){
+          if(idx===steps.length-1) idx=0;
+          bPlay.textContent='⏸ 停止'; bPlay.classList.remove('play');
+          timer=setInterval(function(){
+            if(idx>=steps.length-1){ stop(); return; }
+            go(idx+1);
+          },1700);
+          render();
+        }
+        bNext.addEventListener('click',function(){ stop(); go(idx+1); });
+        bPrev.addEventListener('click',function(){ stop(); go(idx-1); });
+        bReset.addEventListener('click',function(){ stop(); go(0); });
+        bPlay.addEventListener('click',function(){ if(timer) stop(); else play(); });
+        go(0);
+      })();
+      </script>
+      <!-- ===== /チェイン法 ステップアニメーション ===== -->
     </div>
 
     <div class="concept-box">
@@ -1471,15 +1616,15 @@ ht.<span class="fn">delete</span>(<span class="str">"apple"</span>)
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#4A7A00">3</div>
-      <h2>口頭試問（個人課題）</h2>
+      <h2>記述問題（個人課題）</h2>
     </div>
     <div style="background:#0a1a2e;border:1px solid #2a4a6a;border-radius:8px;padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.9rem;color:#9BD1FF">
-      <strong>今回は対面授業がないため、グループワークは行いません。</strong>本来はグループで口頭で問い合う「口頭試問」を行う予定でしたが、その代わりに、下の3問を<strong>一人で</strong>考え、自分の言葉で<strong>Notionノートに記述して</strong>提出してください。
+      <strong>今回は対面授業がないため、グループワークは行いません。</strong>下の3問を<strong>一人で</strong>考え、自分の言葉で<strong>Notionノートに記述して</strong>提出してください。
     </div>
 
     <div class="card" style="border-left:4px solid #4FC3F7">
       <div class="card-header">
-        <span class="tag tag-group">口頭試問</span>
+        <span class="tag tag-group">記述問題</span>
         <h3>3つの問いに自分の言葉で答える</h3>
       </div>
       <p>暗記した言葉を写すのではなく、<strong>「なぜそうなるのか」を順を追って</strong>説明してください。3問すべてに回答します。</p>
@@ -1493,7 +1638,7 @@ ht.<span class="fn">delete</span>(<span class="str">"apple"</span>)
       </div>
       <div class="notion-submit"><div><strong>Notionに記録:</strong> Q1・Q2・Q3 それぞれの回答を、自分の言葉で記述してください（Q1は途中の探索過程も必ず書くこと）。</div></div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>ヒント:</strong> Q1で練習する「衝突時の格納先の決定手順」は、次の「標準課題」を解くのにそのまま役立ちます。口に出して説明できるくらい手順を整理してから書くと、考えがまとまりやすくなります。
+        <strong>ヒント:</strong> Q1で練習する「衝突時の格納先の決定手順」は、次の「標準課題」を解くのにそのまま役立ちます。頭の中で順を追って説明できるくらい手順を整理してから書くと、考えがまとまりやすくなります。
       </div>
     </div>
 
@@ -1656,7 +1801,7 @@ table = [<span class="num">14</span>, <span class="num">21</span>, <span class="
 
 ---
 
-## 口頭試問（個人課題）
+## 記述問題（個人課題）
 ### Q1（出力予測）3 → 10 → 17 を線形探索法で格納したときの各インデックスと探索過程
 （回答を記入）
 
