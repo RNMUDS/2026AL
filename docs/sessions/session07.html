@@ -290,13 +290,18 @@ a.sub-item:hover {
         <tr><td>1,000,000 件</td><td>約 1 回の確認</td><td>約 1,000,000 回の確認</td></tr>
       </table>
 
-      <p><strong>なぜ「平均」が付くのか？</strong> 衝突（→ 1.2）が起きると、線形探索法では隣のスロットを何回か確認する必要があり、その分だけ遅くなります。</p>
-      <ul class="point-list">
-        <li>衝突がまったく無ければ <strong>ちょうど1回</strong>（理想の O(1)）</li>
-        <li>衝突があると数回 → でも「ならせば（平均すれば）ほぼ一定回数」</li>
-        <li>テーブルに詰め込みすぎる（負荷率が高い）と衝突が増え、<strong>最悪のケースでは O(n)</strong> まで悪化することもある</li>
-      </ul>
-      <p style="color:#888;font-size:0.9rem">だから「いつでも必ず1回」ではなく、<strong>「平均すればほぼ1回」</strong>という意味で <strong>平均 O(1)</strong> と呼びます。負荷率と性能の関係は発展課題で実験します。</p>
+      <p><strong>なぜ「平均」が付くのか？</strong> 衝突（→ 1.2）が起きると、線形探索法では隣のスロットを何回か確認してから目的のデータに届きます。つまり<strong>探すキーによって「確認した回数」が変わる</strong>のです。「いつでもちょうど1回」ではありません。</p>
+      <p style="font-size:0.9rem;color:#ccc">例: テーブルサイズ7に <code>1, 8, 3, 15</code> を線形探索法で入れた（<code>1→[1] / 8→[2] / 3→[3] / 15→[4]</code>）あと、それぞれを検索すると…</p>
+      <table>
+        <tr><th>検索するキー</th><th>たどるスロット</th><th>確認した回数</th></tr>
+        <tr><td>1</td><td>[1] で発見</td><td>1 回</td></tr>
+        <tr><td>3</td><td>[3] で発見</td><td>1 回</td></tr>
+        <tr><td>8</td><td>[1]→[2] で発見</td><td>2 回</td></tr>
+        <tr><td>15</td><td>[1]→[2]→[3]→[4] で発見</td><td>4 回</td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#ccc">回数は 1回・1回・2回・4回とバラバラ。これを<strong>ならす（平均する）</strong>と <code>(1+1+2+4) ÷ 4 = <strong>2 回</strong></code>。1回のときもあれば4回のときもあるが、<strong>たくさん検索すれば「だいたい2回くらい」に落ち着く</strong> ── これが「平均」の意味です。</p>
+      <p>そして大事なのは、この平均回数（ここでは約2回）が <strong>データ数 n が100件でも100万件でも、ほとんど増えない</strong>こと（テーブルが混みすぎない限り）。だから「平均すれば、n によらずほぼ一定回数」＝ <strong>平均 O(1)</strong> と呼びます。</p>
+      <p style="color:#888;font-size:0.9rem">※ ただしテーブルに詰め込みすぎる（負荷率が高い）と衝突が連鎖して平均回数が増え、<strong>最悪のケースでは O(n)</strong> まで悪化します。負荷率と性能の関係は発展課題で実験します。</p>
     </div>
 
     <div class="concept-box">
@@ -310,6 +315,24 @@ a.sub-item:hover {
       <div class="analogy">
         100種類の苗字を10個の郵便受けに振り分けるなら、必ずどこかの郵便受けに複数の苗字が割り当てられます。これがハッシュテーブルで起きる「衝突」です。
       </div>
+
+      <p style="margin-top:1.2rem"><strong>コンピュータの中では、なぜ衝突が起きるの？</strong></p>
+      <p>原因は、ハッシュ関数の最後にある <code>% size</code>（size で割った<strong>余り</strong>）という計算です。余りは必ず <strong>0 〜 size−1</strong> の範囲に収まるので、<strong>どんなキーを入れても、行き先は決まった個数のスロットのどれか</strong>になります。キーは無数に作れるのに行き先は有限個 ── だから別々のキーが同じ番号に当たることが<strong>必ず</strong>起こります。</p>
+
+      <p style="margin-top:0.6rem;color:#4FC3F7;font-weight:700;font-size:0.9rem">具体例1: 数字を <code>% 7</code> したとき（スロット7個）</p>
+      <pre><span class="code-label">余りは 0〜6 の7種類しかない</span>
+ <span class="num">7</span> % 7 = <span class="num">0</span>
+<span class="num">14</span> % 7 = <span class="num">0</span>   <span class="cmt">← 7, 14, 21, 28 … はぜんぶ [0] に行きたがる！</span>
+<span class="num">21</span> % 7 = <span class="num">0</span>
+<span class="num">28</span> % 7 = <span class="num">0</span>
+ <span class="num">3</span> % 7 = <span class="num">3</span>
+<span class="num">10</span> % 7 = <span class="num">3</span>   <span class="cmt">← 3 と 10 も同じ [3] でぶつかる</span></pre>
+      <p style="font-size:0.9rem;color:#ccc">余りは <strong>0,1,2,3,4,5,6 の7種類</strong>だけ。だから8個目以降の数字は、必ずどれかと余りが一致します。これが衝突です。（この <code>7,14,21,28,35</code> は標準課題1でそのまま出てきます。）</p>
+
+      <p style="margin-top:0.8rem;color:#4FC3F7;font-weight:700;font-size:0.9rem">具体例2: 文字列のハッシュ関数（文字コードの和）</p>
+      <p style="font-size:0.9rem;color:#ccc">この授業のハッシュ関数は「文字コードの総和 ÷ size の余り」です。総和は<strong>文字を並べ替えても変わらない</strong>ので、<code>"apple"</code> と <code>"pleap"</code>（同じ文字の並べ替え＝アナグラム）は<strong>必ず同じハッシュ値</strong>になり、衝突します（→ 例題3で確認します）。</p>
+
+      <p style="margin-top:0.8rem;font-size:0.9rem;color:#aaa">つまり衝突は「ハッシュ関数の出来が悪いから」だけでなく、<strong>「無限の入力を有限のスロットに押し込む」以上、原理的に避けられない</strong>のです（→ だから次の <strong>1.3 衝突解決法</strong> が必要になります）。</p>
     </div>
 
     <div class="concept-box">
@@ -322,7 +345,7 @@ a.sub-item:hover {
         <tr><td><strong style="color:#FFB800">② チェイン法</strong><br><span style="color:#888;font-size:0.85rem">chaining</span></td><td>各スロットに<strong>リストをぶら下げ</strong>、同じインデックスに来たデータをそのリストに追加していく。1つのスロットに何個でも入る。</td><td><strong>チェイン法</strong>（→ 1.5）</td></tr>
       </table>
       <div class="analogy">
-        郵便受けがいっぱいのとき、①「<strong>隣の空いている郵便受け</strong>に入れておく」のがオープンアドレス法、②「その郵便受けに<strong>クリップで束ねて全部ぶら下げる</strong>」のがチェイン法、というイメージです。
+        ①オープンアドレス法は<strong>駐車場</strong>のイメージ。停めたい区画が埋まっていたら、<strong>空いている別の区画</strong>に停めます（→ 1.4）。②チェイン法は<strong>1つの郵便受けに郵便物を積み重ねる</strong>イメージ。同じ番号に来たものは、他の場所を借りずに<strong>その場所へまとめてためていきます</strong>（→ 1.5）。
       </div>
       <p>次の 1.4・1.5 で、この2つを順番にくわしく見ていきます。</p>
     </div>
@@ -387,7 +410,7 @@ a.sub-item:hover {
       <p><strong>何をする方法？</strong>　線形探索法（1.4）は「衝突したら<strong>別のスロットへ逃がす</strong>」方法でした。チェイン法はその逆で、<strong>衝突したデータを動かさず、同じスロットにまとめて置いておく</strong>方法です。そのために、各スロットには1個分のデータではなく <strong>リスト（連結リスト）＝「いくつでも入る箱」</strong> を持たせます。「鎖法」「連結リスト法」「セパレートチェイニング（separate chaining）」とも呼ばれます。</p>
 
       <div class="analogy">
-        マンションの郵便受けを想像してください。1つの部屋番号に複数の住人がいても、郵便受けの中に郵便物を<strong>順番に積み重ねて</strong>おけば全員分が入ります。「隣の空いている郵便受けを借りる」（＝線形探索法）必要はありません。
+        マンションの郵便受けを想像してください。1つの部屋番号に複数の住人がいても、郵便受けの中に郵便物を<strong>順番に積み重ねて</strong>おけば全員分が入ります。衝突したデータを<strong>別の空きスロットへ移して分散させる</strong>線形探索法とは対照的に、チェイン法は<strong>同じ場所にためておく</strong>のが特徴です。
       </div>
 
       <p><strong>何のため？（目的）</strong>　衝突は鳩の巣原理で<strong>必ず起きます</strong>（→ 1.2）。線形探索法では衝突のたびに別の空きスロットを占領していくため、テーブルが埋まってくると<strong>無関係なキーの場所まで巻き込んで</strong>遅くなったり（クラスタリング）、空きが尽きると<strong>もう格納できなく</strong>なります。チェイン法は「衝突したものは同じ場所のリストに足すだけ」にすることで、この問題を避けるのが目的です。</p>
