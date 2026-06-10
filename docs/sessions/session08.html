@@ -273,8 +273,20 @@ a.sub-item:hover {
     </div>
 
     <div class="concept-box">
-      <h4>1.1 なぜソートが重要なのか</h4>
-      <p style="font-size:0.95rem;margin-bottom:0.8rem"><strong>ソート（sort）</strong>とは、データを決まった順序（小さい順・大きい順・五十音順・日付順など）に<strong>並べ替える</strong>ことです。スマホの連絡先（五十音順）、LINEのトーク一覧（新着順）、通販サイトの「安い順」、ゲームのランキング ── あなたが毎日見ている画面のほとんどは、裏でソートが動いた結果です。なぜそこまでソートが使われるのか。理由は「<strong>並んでいるデータは、その後のあらゆる処理が圧倒的に楽になる</strong>」からです。</p>
+      <h4>1.1 なぜ挿入ソートが重要なのか</h4>
+      <p style="font-size:0.95rem;margin-bottom:0.8rem">今回学ぶ<strong>挿入ソート（Insertion Sort）</strong>は、数あるソートアルゴリズムの中で「最初に学ぶべきソート」と言われ、しかも現代のプログラミング言語の内部で<strong>今も実際に使われている現役</strong>のアルゴリズムです。重要な理由は次の4つです。</p>
+
+      <div style="background:#1a1700;border-left:3px solid #FFB800;border-radius:8px;padding:0.9rem 1.1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.5rem">挿入ソートが重要な4つの理由</p>
+        <ul class="point-list" style="font-size:0.9rem">
+          <li><strong>① 直感とコードが1対1で対応する</strong> ── 人間がトランプの手札を並べるときに自然にやる動きそのもの。「頭の中の手順をコードに翻訳する」練習の入口として最適</li>
+          <li><strong>② 「ほぼ並んでいる」データには最速クラス</strong> ── ほとんど整列済みのデータなら <strong>O(n)</strong> で動く。実際、Python の <code>sort()</code>（Timsort）など多くの言語の標準ソートは、内部の小さな区間の処理に<strong>今も挿入ソートを使っている</strong></li>
+          <li><strong>③ 安定ソートの代表例</strong> ── 同じ値の元の順序が保たれる「安定ソート」。ソートアルゴリズムの<strong>性質を比べる目</strong>を養う出発点になる</li>
+          <li><strong>④ 計算量を初めて「体感」できる</strong> ── 同じコードでも<strong>データの並び方しだいで速さが100倍以上変わる</strong>（O(n) ⇔ O(n²)）。「計算量はデータに依存する」というアルゴリズム論の核心を、数字で確かめられる教材</li>
+        </ul>
+      </div>
+
+      <p style="font-size:0.95rem;margin-bottom:0.8rem">前提として、<strong>「ソート（並べ替え）」そのもの</strong>がなぜ重要かも確認しておきましょう。ソートとは、データを決まった順序（小さい順・大きい順・五十音順・日付順など）に<strong>並べ替える</strong>ことです。スマホの連絡先（五十音順）、LINEのトーク一覧（新着順）、通販サイトの「安い順」、ゲームのランキング ── あなたが毎日見ている画面のほとんどは、裏でソートが動いた結果です。これほど使われる理由は「<strong>並んでいるデータは、その後のあらゆる処理が圧倒的に楽になる</strong>」からです。</p>
       <table>
         <tr><th style="width:22%">ソートの効果</th><th style="width:39%">ソートされていないと…</th><th>ソート済みなら…</th></tr>
         <tr><td><strong>検索の高速化</strong></td><td>100万件の名簿から1人を探すのに、先頭から1件ずつ最大100万回確認</td><td>二分探索（第4回）が使えて<strong>約20回</strong>で見つかる ── O(n) が O(log n) になる</td></tr>
@@ -282,17 +294,7 @@ a.sub-item:hover {
         <tr><td><strong>重複の検出</strong></td><td>名簿に同じ人が2回いないか、全ペア約5000通りを比較</td><td><strong>隣どうしを99回</strong>見るだけ ── 同じ値は必ず隣に並ぶから</td></tr>
         <tr><td><strong>表示の整理</strong></td><td>バラバラの順で表示され、目で探すしかない</td><td>名前順・日付順・点数順で<strong>一目で見つかる</strong></td></tr>
       </table>
-      <p style="font-size:0.9rem;color:#aaa;margin-bottom:1rem">つまりソートは「それ自体が目的」というより、<strong>検索・分析・整理を速くするための土台</strong>。だからこそ、コンピュータ科学では昔からソートのアルゴリズムが徹底的に研究されてきました。</p>
-
-      <div style="background:#1a1700;border-left:3px solid #FFB800;border-radius:8px;padding:0.9rem 1.1rem;margin:1rem 0">
-        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.5rem">今回なぜ「挿入ソート」を学ぶのか</p>
-        <ul class="point-list" style="font-size:0.9rem">
-          <li>ソートには挿入・選択・バブル・クイック・マージなど多くの方式があるが、挿入ソートは<strong>人間がトランプの手札を並べるときに自然にやる動きそのもの</strong>。直感と1対1で対応するので、「アルゴリズムをコードにする」練習の入口に最適</li>
-          <li>「ほぼ並んでいる」データには <strong>O(n) と非常に速い</strong>。実際、Python の <code>sort()</code>（Timsort）や多くの言語の標準ソートは、内部の小さな区間の処理に<strong>今も挿入ソートを使っている</strong>現役のアルゴリズム</li>
-          <li>同じ値の元の順序が保たれる<strong>安定ソート</strong>の代表例で、「ソートの性質を比べる目」を養える</li>
-          <li>同じコードでも<strong>データの並び方しだいで速さが100倍以上変わる</strong>（O(n) ⇔ O(n²)）。「計算量はデータに依存する」というアルゴリズム論の核心を、初めて数字で体感できる教材</li>
-        </ul>
-      </div>
+      <p style="font-size:0.9rem;color:#aaa;margin-bottom:1rem">つまりソートは「それ自体が目的」というより、<strong>検索・分析・整理を速くするための土台</strong>。その土台の作り方には挿入・選択・バブル・クイック・マージなど多くの方式があり、その中で<strong>人間の感覚にいちばん近い</strong>のが、今回の挿入ソートです。</p>
 
       <div style="background:#0a1a2e;border-left:3px solid #4FC3F7;border-radius:8px;padding:0.9rem 1.1rem;margin:1rem 0">
         <p style="color:#4FC3F7;font-weight:700;font-size:0.92rem;margin-bottom:0.5rem">この回で具体的に考えること（4つの問い）</p>
