@@ -397,13 +397,21 @@ a.sub-item:hover {
       <div style="background:#1a1700;border-radius:8px;padding:0.8rem 1rem;margin:0.6rem 0;border-left:3px solid #FFB800">
         <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.3rem">Q2. なぜ <code>data[j + 1] = data[j]</code> でずらすの？「交換」じゃダメ？</p>
         <p style="color:#ccc;font-size:0.9rem">交換でもソートはできます。でも<strong>ずらしのほうが手数が少ない</strong>のです。ポイントは、最初に <code>key = data[i]</code> で key を「手に持った」瞬間、<strong>元の場所が空っぽの「穴」になる</strong>こと（1.2のカードゲームや1.3のシミュレーターに出てくる黄色い破線が、この穴です）。</p>
-        <p style="color:#ccc;font-size:0.9rem;margin-top:0.5rem">穴がある状態なら、左隣の値は<strong>「穴に書き写すだけ」＝1手</strong>で動かせます。書き写した後の元の場所は？ ── そこが次の「穴」になるだけなので、何もしなくてOK。<code>data = [25, 34, 64, 12]</code> で key=12 を挿入する様子:</p>
-        <div style="background:#111;border:1px solid #333;border-radius:8px;padding:0.6rem 0.9rem;margin:0.5rem 0;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.9;color:#e0e0e0;white-space:pre">[25, 34, 64, 穴]   key=12 を手に持つ（穴ができる）
-[25, 34, 穴, 64]   64 を右の穴に書き写す（1手）
-[25, 穴, 34, 64]   34 を右の穴に書き写す（1手）
-[穴, 25, 34, 64]   25 を右の穴に書き写す（1手）
-[12, 25, 34, 64]   最後に key=12 を穴に置く（完成）</div>
-        <p style="color:#ccc;font-size:0.9rem">もし「交換」で同じことをすると、12 を左隣と交換しながら1マスずつ運ぶことになります。例題1で見たとおり、交換1回には「temp に退避 → 上書き → temp から書き戻し」の<strong>3手</strong>が必要なので、交換3回＝<strong>9手</strong>。ずらし方式なら「最初に key を持つ（1手）＋書き写し3回（3手）＋最後に置く（1手）」＝<strong>5手</strong>。やることは同じなのに手数がほぼ半分 ── これが「ずらしのほうが約2倍速い」の正体です。</p>
+        <p style="color:#ccc;font-size:0.9rem;margin-top:0.5rem">穴がある状態なら、左隣の値は<strong>「穴に書き写すだけ」＝1手</strong>で動かせます。書き写した後の元の場所は？ ── そこが次の「穴」になるだけなので、何もしなくてOK。下のアニメで、<code>data = [25, 34, 64, 12]</code> の key=12 を先頭まで運ぶ様子を<strong>2つの方式で見比べて</strong>ください:</p>
+
+        <div class="iv-root" id="iv-q2" style="margin:0.8rem 0">
+          <div class="iv-title">🖱 アニメで比較: ずらし方式（5手） vs 交換方式（9手）</div>
+          <div class="iv-presets"><span class="lbl">方式:</span>
+            <button class="iv-btn preset sel" data-m="shift" type="button">ずらし方式（穴に書き写す）</button>
+            <button class="iv-btn preset" data-m="swap" type="button">交換方式（tempで入れ替え）</button>
+          </div>
+          <div class="iv-keyline" id="iv-q2-key"></div>
+          <div class="iv-row" id="iv-q2-row"></div>
+          <div class="iv-stats" id="iv-q2-stats"></div>
+          <div class="iv-legend">黄色の破線 = 穴　🟨 いま動かした値　赤枠 = これから動かす値</div>
+        </div>
+
+        <p style="color:#ccc;font-size:0.9rem">「交換方式」に切り替えて数えてみると、12 を左隣と交換しながら1マスずつ運ぶため、交換1回ごとに「temp に退避 → 上書き → temp から書き戻し」の<strong>3手</strong>がかかり、交換3回＝<strong>9手</strong>。ずらし方式なら「最初に key を持つ（1手）＋書き写し3回（3手）＋最後に置く（1手）」＝<strong>5手</strong>。やることは同じなのに手数がほぼ半分 ── これが「ずらしのほうが約2倍速い」の正体です。</p>
       </div>
       <div style="background:#1a1700;border-radius:8px;padding:0.8rem 1rem;margin:0.6rem 0;border-left:3px solid #FFB800">
         <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.3rem">Q3. <code>j + 1</code> で挿入するのはなぜ？ <code>j</code> ではないの？</p>
@@ -1460,6 +1468,59 @@ function wirePresets(rootId, fn){
   });
   bShuf.addEventListener('click', function(){ reset(true); });
   reset(false);
+})();
+
+// --- 1.5 Q2: ずらし方式 vs 交換方式 アニメ比較 ---
+(function(){
+  var row = $('iv-q2-row'); if(!row) return;
+  var keyl = $('iv-q2-key'), stats = $('iv-q2-stats');
+  var SHIFT = [
+    { arr: [25,34,64,12], hand: null, m: 0, title: 'はじめ', note: 'data = [25, 34, 64, 12]。key=12 を正しい位置（先頭）まで運びたい。「次へ ▶」で進めよう。' },
+    { arr: [25,34,64,null], hand: 12, m: 1, title: '① keyを持つ', note: 'key = 12 を手に持つ → [3] が空っぽの<b>「穴」</b>になる。（1手）' },
+    { arr: [25,34,null,64], hand: 12, m: 2, hl: {3:'keycell'}, title: '② 64をずらす', note: '64 を右の穴に<b>書き写すだけ</b>。元の場所 [2] が新しい穴になる。（1手）' },
+    { arr: [25,null,34,64], hand: 12, m: 3, hl: {2:'keycell'}, title: '③ 34をずらす', note: '34 を右の穴に書き写す。穴がまた1つ左へ。（1手）' },
+    { arr: [null,25,34,64], hand: 12, m: 4, hl: {1:'keycell'}, title: '④ 25をずらす', note: '25 を右の穴に書き写す。穴が先頭に到達。（1手）' },
+    { arr: [12,25,34,64], hand: null, m: 5, hl: {0:'keycell'}, title: '⑤ keyを置く', note: '手に持っていた key=12 を穴に置いて<b>完成！ 合計5手</b>。' }
+  ];
+  var SWAP = [
+    { arr: [25,34,64,12], temp: null, m: 0, title: 'はじめ', note: '交換方式: 12 を左隣と<b>交換しながら</b>1マスずつ運ぶ。交換1回 = 3手（例題1の手順）かかる。' },
+    { arr: [25,34,64,12], temp: 12, m: 1, hl: {3:'cmp'}, title: '交換1: 退避', note: 'temp = data[3] ── 12 を temp に退避。（1手）' },
+    { arr: [25,34,64,64], temp: 12, m: 2, hl: {3:'keycell',2:'cmp'}, title: '交換1: 上書き', note: 'data[3] = data[2] ── 64 が2つに見えるが、12 は temp に避難中なので消えていない。（1手）' },
+    { arr: [25,34,12,64], temp: null, m: 3, hl: {2:'keycell'}, title: '交換1: 書き戻し', note: 'data[2] = temp ── 12 が1マス左へ。<b>ここまでで3手</b>。' },
+    { arr: [25,34,12,64], temp: 12, m: 4, hl: {2:'cmp'}, title: '交換2: 退避', note: 'もう一度。temp = data[2]。（1手）' },
+    { arr: [25,34,34,64], temp: 12, m: 5, hl: {2:'keycell',1:'cmp'}, title: '交換2: 上書き', note: 'data[2] = data[1]。（1手）' },
+    { arr: [25,12,34,64], temp: null, m: 6, hl: {1:'keycell'}, title: '交換2: 書き戻し', note: 'data[1] = temp ── 12 がまた1マス左へ。<b>ここまでで6手</b>。' },
+    { arr: [25,12,34,64], temp: 12, m: 7, hl: {1:'cmp'}, title: '交換3: 退避', note: 'さらにもう一度。temp = data[1]。（1手）' },
+    { arr: [25,25,34,64], temp: 12, m: 8, hl: {1:'keycell',0:'cmp'}, title: '交換3: 上書き', note: 'data[1] = data[0]。（1手）' },
+    { arr: [12,25,34,64], temp: null, m: 9, hl: {0:'keycell'}, title: '交換3: 書き戻し', note: 'data[0] = temp ── 完成。結果は同じなのに<b>合計9手</b>。ずらし方式（5手）のほぼ2倍かかった！' }
+  ];
+  var MODES = { shift: SHIFT, swap: SWAP };
+  var cur = 'shift';
+  function render(st){
+    if(st.hand != null) keyl.innerHTML = '手に持っている: <span class="iv-keybadge">key = ' + st.hand + '</span>';
+    else if(st.temp != null) keyl.innerHTML = '一時変数: <span class="iv-keybadge">temp = ' + st.temp + '</span>';
+    else keyl.innerHTML = '<span style="color:#666;font-weight:500">手元: ─</span>';
+    row.innerHTML = '';
+    for(var k = 0; k < st.arr.length; k++){
+      var c = document.createElement('div'); c.className = 'iv-cell';
+      if(st.arr[k] === null){ c.className += ' hole'; }
+      else {
+        c.textContent = st.arr[k];
+        var mk = st.hl && st.hl[k];
+        if(mk) c.className += ' ' + mk;
+      }
+      var ix = document.createElement('span'); ix.className = 'idx'; ix.textContent = '[' + k + ']';
+      c.appendChild(ix);
+      row.appendChild(c);
+    }
+    var total = MODES[cur][MODES[cur].length - 1].m;
+    stats.innerHTML = '<span>手数: <b>' + st.m + '</b> / ' + total + '</span>';
+  }
+  var api = ivStepper('iv-q2', { steps: SHIFT, interval: 1500, render: render });
+  wirePresets('iv-q2', function(btn){
+    cur = btn.getAttribute('data-m');
+    api.setSteps(MODES[cur]);
+  });
 })();
 })();
 </script>
