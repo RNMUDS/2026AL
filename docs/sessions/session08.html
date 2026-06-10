@@ -31,6 +31,7 @@ section + section { border-top: 1px solid #222; }
 .tag-standard  { background: #1a2e0a; color: #93D500; }
 .tag-advanced  { background: #2e1a0a; color: #FFB800; }
 .tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.tag-code-exp  { background: #0a1a2e; color: #4FC3F7; }
 .card.standard  { border-left: 4px solid #76B900; }
 .card.advanced  { border-left: 4px solid #FFB800; }
 .notion-submit {
@@ -116,6 +117,63 @@ pre { position: relative; }
 .copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
 .copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
 
+/* ============ INTERACTIVE STEP WIDGETS ============ */
+.iv-root{background:#0A0A0A;border:1px solid #333;border-radius:14px;padding:1.1rem 1.2rem;margin:1.5rem 0}
+.iv-title{color:#76B900;font-weight:700;font-size:0.95rem;margin-bottom:1rem;text-align:center}
+.iv-keyline{display:flex;justify-content:center;align-items:center;gap:0.5rem;min-height:2.2rem;margin-bottom:0.6rem;color:#FFB800;font-weight:700;font-size:0.95rem;flex-wrap:wrap;text-align:center}
+.iv-keybadge{background:#FFB800;color:#111;border-radius:8px;padding:0.1rem 0.7rem;font-family:'JetBrains Mono',monospace;font-weight:800}
+.iv-row{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;padding-bottom:1.6rem}
+.iv-cell{position:relative;width:54px;height:46px;display:flex;align-items:center;justify-content:center;background:#141414;border:2px solid #555;border-radius:10px;color:#ccc;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:1.02rem;transition:all .25s}
+.iv-cell .idx{position:absolute;bottom:-1.35rem;left:0;right:0;text-align:center;color:#666;font-size:0.7rem;font-weight:500}
+.iv-cell.sorted{border-color:#76B900;background:#16240a;color:#d9f7b8}
+.iv-cell.cmp{border-color:#FF5252;box-shadow:0 0 0 3px rgba(255,82,82,0.28)}
+.iv-cell.hole{border-style:dashed;border-color:#FFB800;background:#171204;color:#FFB800}
+.iv-cell.done{border-color:#76B900;background:#76B900;color:#fff}
+.iv-cell.keycell{border-color:#FFB800;background:#FFB800;color:#111;animation:ivpop .45s ease}
+@keyframes ivpop{0%{transform:scale(0.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.iv-legend{text-align:center;color:#888;font-size:0.76rem;margin-top:0.2rem}
+.iv-phases{display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.9rem}
+.iv-phases span{background:#141414;border:1px solid #333;color:#777;border-radius:100px;padding:0.2rem 0.8rem;font-size:0.78rem;font-weight:600;transition:all .2s}
+.iv-phases span.on{background:#1a2e0a;border-color:#76B900;color:#9BE34A;box-shadow:0 0 0 2px rgba(118,185,0,0.2)}
+.iv-note{margin-top:0.9rem;background:#141414;border:1px solid #333;border-left:3px solid #76B900;border-radius:6px;padding:0.65rem 0.85rem;font-size:0.9rem;color:#ddd;min-height:3.2em;line-height:1.6}
+.iv-note b{color:#FFB800}
+.iv-controls{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;align-items:center}
+.iv-btn{background:#1f1f1f;border:1px solid #444;color:#E0E0E0;border-radius:8px;padding:0.42rem 0.85rem;font-size:0.85rem;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;font-family:'Noto Sans JP',sans-serif}
+.iv-btn:hover:not(:disabled){background:#2a2a2a;border-color:#76B900}
+.iv-btn:disabled{opacity:0.35;cursor:not-allowed}
+.iv-btn.play{background:#1a2e0a;border-color:#4A7A00;color:#9BE34A}
+.iv-prog{margin-left:auto;color:#888;font-size:0.8rem;font-family:'JetBrains Mono',monospace}
+.iv-presets{display:flex;gap:0.45rem;flex-wrap:wrap;align-items:center;margin-bottom:0.9rem;justify-content:center}
+.iv-presets .lbl{color:#888;font-size:0.8rem}
+.iv-btn.preset{font-size:0.78rem;padding:0.28rem 0.7rem}
+.iv-btn.preset.sel{border-color:#76B900;background:#1a2e0a;color:#9BE34A}
+.iv-stats{display:flex;gap:0.8rem;justify-content:center;margin-top:0.2rem;font-family:'JetBrains Mono',monospace;font-size:0.84rem;flex-wrap:wrap}
+.iv-stats span{background:#141414;border:1px solid #333;border-radius:8px;padding:0.25rem 0.8rem;color:#aaa}
+.iv-stats b{color:#FFB800}
+.iv-swap{display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.4rem}
+.iv-swapbox{text-align:center}
+.iv-swapbox .lbl{color:#888;font-size:0.8rem;margin-bottom:0.3rem;font-weight:600}
+.iv-swapbox .val{width:92px;height:58px;display:flex;align-items:center;justify-content:center;background:#141414;border:2px solid #555;border-radius:10px;font-size:1.45rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:#ccc;transition:all .25s}
+.iv-swapbox .val.hl{border-color:#FFB800;box-shadow:0 0 0 3px rgba(255,184,0,0.25);color:#FFB800}
+.iv-bars{display:flex;gap:10px;align-items:flex-end;justify-content:center;height:165px;margin-bottom:0.6rem}
+.iv-bar{width:42px;border-radius:6px 6px 0 0;background:#2c4a12;border:1.5px solid #76B900;display:flex;align-items:flex-end;justify-content:center;color:#fff;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:0.85rem;transition:height .3s,background .3s;padding-bottom:3px}
+.iv-bar.unsorted{background:#1c1c1c;border-color:#555;color:#888}
+.iv-bar.keybar{background:#FFB800;border-color:#FFB800;color:#111}
+.iv-gap{width:20px;height:46px;border-radius:6px;border:2px dashed #4a4a4a;background:transparent;cursor:pointer;transition:all .15s;flex:0 0 auto;padding:0}
+.iv-gap:hover{border-color:#FFB800;background:rgba(255,184,0,0.12)}
+.iv-gap.good{border-color:#76B900;background:rgba(118,185,0,0.3)}
+.iv-gap.bad{border-color:#FF5252;background:rgba(255,82,82,0.22)}
+.iv-gap.tall{height:78px}
+.iv-feedback{text-align:center;margin-top:0.7rem;font-weight:700;min-height:1.6em;font-size:0.92rem}
+.iv-card{position:relative;width:56px;height:78px;border-radius:9px;background:#f5f2e9;border:2px solid #bbb;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:1.25rem;color:#1c1c1c;transition:all .25s}
+.iv-card .pip{position:absolute;top:3px;left:6px;font-size:0.7rem;font-weight:700}
+.iv-card.red{color:#c62828}
+.iv-card.back{background:repeating-linear-gradient(45deg,#1d2b0c,#1d2b0c 6px,#2c4a12 6px,#2c4a12 12px);border-color:#4A7A00;color:transparent}
+.iv-card.back .pip{color:transparent}
+.iv-card.holec{background:transparent;border-style:dashed;border-color:#FFB800}
+.iv-card.cmpc{border-color:#FF5252;box-shadow:0 0 0 3px rgba(255,82,82,0.28)}
+.iv-card.insc{border-color:#FFB800;box-shadow:0 0 0 3px rgba(255,184,0,0.4);animation:ivpop .45s ease}
+
 
 .submission-box {
   background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
@@ -184,7 +242,7 @@ a.sub-item:hover {
   <div class="container">
     <div class="hero-badge">アルゴリズム論及び演習I ─ 2026年度前期</div>
     <h1>第8回: 挿入ソート（直接挿入法）</h1>
-    <p>トランプの手札を並べる感覚 ── 1枚ずつ正しい位置に差し込むソートアルゴリズム</p>
+    <p>トランプの手札を並べる感覚 ── 1枚ずつ正しい位置に差し込むソートアルゴリズム。各図はボタンで操作して、挿入の動きを自分のペースで確かめよう。</p>
   </div>
 </header>
 
@@ -194,7 +252,7 @@ a.sub-item:hover {
     <div class="submission-box">
       <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
         <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
         <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
@@ -216,12 +274,47 @@ a.sub-item:hover {
 
     <div class="concept-box">
       <h4>1.1 なぜソートが重要なのか</h4>
-      <ul class="point-list">
-        <li><strong>検索の高速化</strong>: ソート済みデータなら二分探索 O(log n) が使える</li>
-        <li><strong>データ分析</strong>: 中央値、最大値、最小値が簡単に見つかる</li>
-        <li><strong>重複の検出</strong>: ソート済みなら隣同士を比較するだけ</li>
-        <li><strong>表示の整理</strong>: 名前順、日付順、成績順など</li>
-      </ul>
+      <p style="font-size:0.95rem;margin-bottom:0.8rem"><strong>ソート（sort）</strong>とは、データを決まった順序（小さい順・大きい順・五十音順・日付順など）に<strong>並べ替える</strong>ことです。スマホの連絡先（五十音順）、LINEのトーク一覧（新着順）、通販サイトの「安い順」、ゲームのランキング ── あなたが毎日見ている画面のほとんどは、裏でソートが動いた結果です。なぜそこまでソートが使われるのか。理由は「<strong>並んでいるデータは、その後のあらゆる処理が圧倒的に楽になる</strong>」からです。</p>
+      <table>
+        <tr><th style="width:22%">ソートの効果</th><th style="width:39%">ソートされていないと…</th><th>ソート済みなら…</th></tr>
+        <tr><td><strong>検索の高速化</strong></td><td>100万件の名簿から1人を探すのに、先頭から1件ずつ最大100万回確認</td><td>二分探索（第4回）が使えて<strong>約20回</strong>で見つかる ── O(n) が O(log n) になる</td></tr>
+        <tr><td><strong>データ分析</strong></td><td>100人のテストの中央値を出すには全員分を何度も見比べる</td><td>並べて<strong>50番目を見るだけ</strong>。最高点・最低点も両端を見るだけ</td></tr>
+        <tr><td><strong>重複の検出</strong></td><td>名簿に同じ人が2回いないか、全ペア約5000通りを比較</td><td><strong>隣どうしを99回</strong>見るだけ ── 同じ値は必ず隣に並ぶから</td></tr>
+        <tr><td><strong>表示の整理</strong></td><td>バラバラの順で表示され、目で探すしかない</td><td>名前順・日付順・点数順で<strong>一目で見つかる</strong></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#aaa;margin-bottom:1rem">つまりソートは「それ自体が目的」というより、<strong>検索・分析・整理を速くするための土台</strong>。だからこそ、コンピュータ科学では昔からソートのアルゴリズムが徹底的に研究されてきました。</p>
+
+      <div style="background:#1a1700;border-left:3px solid #FFB800;border-radius:8px;padding:0.9rem 1.1rem;margin:1rem 0">
+        <p style="color:#FFB800;font-weight:700;font-size:0.92rem;margin-bottom:0.5rem">今回なぜ「挿入ソート」を学ぶのか</p>
+        <ul class="point-list" style="font-size:0.9rem">
+          <li>ソートには挿入・選択・バブル・クイック・マージなど多くの方式があるが、挿入ソートは<strong>人間がトランプの手札を並べるときに自然にやる動きそのもの</strong>。直感と1対1で対応するので、「アルゴリズムをコードにする」練習の入口に最適</li>
+          <li>「ほぼ並んでいる」データには <strong>O(n) と非常に速い</strong>。実際、Python の <code>sort()</code>（Timsort）や多くの言語の標準ソートは、内部の小さな区間の処理に<strong>今も挿入ソートを使っている</strong>現役のアルゴリズム</li>
+          <li>同じ値の元の順序が保たれる<strong>安定ソート</strong>の代表例で、「ソートの性質を比べる目」を養える</li>
+          <li>同じコードでも<strong>データの並び方しだいで速さが100倍以上変わる</strong>（O(n) ⇔ O(n²)）。「計算量はデータに依存する」というアルゴリズム論の核心を、初めて数字で体感できる教材</li>
+        </ul>
+      </div>
+
+      <div style="background:#0a1a2e;border-left:3px solid #4FC3F7;border-radius:8px;padding:0.9rem 1.1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.92rem;margin-bottom:0.5rem">この回で具体的に考えること（4つの問い）</p>
+        <ul class="point-list" style="font-size:0.9rem">
+          <li><strong>「正しい位置」はどう決まる？</strong> ── どの要素と比較して、いつ止まるか（while の条件と break）</li>
+          <li><strong>比較とずらしは何回起きる？</strong> ── 操作の回数を数える「計算量の目」を持つ</li>
+          <li><strong>データの並び方で回数はどう変わる？</strong> ── ソート済み・逆順・ランダムで実験して比べる</li>
+          <li><strong>同じ値が2つあったらどちらが先？</strong> ── 安定ソートの意味を確かめる（発展課題につながる）</li>
+        </ul>
+        <p style="font-size:0.85rem;color:#9bc8e8;margin-top:0.5rem">この4つは、以降のシミュレーター・例題・課題のすべてがこの順で答えていく問いです。迷子になったらここに戻ってください。</p>
+      </div>
+
+      <div class="analogy">
+        <strong>日常生活でどう生きるか:</strong> 挿入ソートの考え方は「<strong>すでに並んでいる列に、新しいものを追加する</strong>」場面でそのまま使えます。
+        <ul class="point-list" style="margin-top:0.5rem;font-size:0.9rem">
+          <li><strong>本棚に新しい本を1冊入れる</strong> ── 全部並べ直さず、正しい場所を探して1冊分ずらして差し込む</li>
+          <li><strong>提出されたプリントを学籍番号順に揃える</strong> ── 1枚取っては、整った束の正しい位置へ差し込む（枚数が少なければ人間にはこれが最速）</li>
+          <li><strong>予定表に新しい予定を入れる</strong> ── 時刻順に並んだ予定の間の正しい位置に挿入する</li>
+          <li><strong>ゲームのハイスコアランキングに新記録を追加</strong> ── 既存の順位を1つずつ下にずらして自分のスコアを入れる ── これはプログラムでも実際に挿入ソートの1パスそのもの</li>
+        </ul>
+        共通点は「<strong>大部分はすでに整っていて、少しだけ追加・修正する</strong>」こと。この状況では挿入ソートが理論上も実用上も最良に近い選択になります。逆に、完全にバラバラの大量データを一からソートするなら別の方式（第10回で学ぶ度数分布法など）が有利になることもあります ── 「状況によって最適な道具を選ぶ」のがアルゴリズムを学ぶ意味です。
+      </div>
     </div>
 
     <div class="concept-box">
@@ -231,66 +324,34 @@ a.sub-item:hover {
         最初のカードは「整列済み」（1枚だけなので）。
         2枚目を取り、手札の中で正しい位置を見つけて差し込む。3枚目以降も同様。
       </div>
+      <div class="iv-root" id="iv-cards">
+        <div class="iv-title">🖱 トランプ手札ゲーム ── カードを引いて、自分で「すき間」をクリックして差し込もう</div>
+        <div class="iv-keyline" id="iv-cards-key"></div>
+        <div class="iv-row" id="iv-cards-row" style="padding-bottom:0.6rem"></div>
+        <div class="iv-feedback" id="iv-cards-fb"></div>
+        <div class="iv-controls">
+          <button class="iv-btn play" id="iv-cards-draw" type="button">🂠 次のカードを引く</button>
+          <button class="iv-btn" id="iv-cards-shuffle" type="button">🔀 シャッフルしてやり直す</button>
+          <span class="iv-prog" id="iv-cards-prog"></span>
+        </div>
+        <div class="iv-legend">表向き = 手札（整列済み・小さい順）　緑の裏面 = 山札（まだ引いていない）　破線のすき間をクリックで差し込み</div>
+      </div>
     </div>
 
     <div class="concept-box">
       <h4>1.3 アルゴリズムの手順</h4>
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 360" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
-          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">挿入ソートのステップ</text>
-
-          <!-- Initial -->
-          <text x="30" y="60" fill="#888" font-size="12">初期:</text>
-          <rect x="100" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/><text x="125" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-          <rect x="155" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="180" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="210" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="235" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="265" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="290" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-          <rect x="320" y="42" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="63" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
-
-          <!-- Step 1 -->
-          <text x="30" y="115" fill="#FFB800" font-weight="700" font-size="12">Step 1:</text>
-          <text x="420" y="115" fill="#888" font-size="11">34 &lt; 64 → 64の前に挿入</text>
-          <rect x="100" y="97" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="155" y="97" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-          <rect x="210" y="97" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="235" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="265" y="97" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="290" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-          <rect x="320" y="97" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="118" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
-
-          <!-- Step 2 -->
-          <text x="30" y="170" fill="#FFB800" font-weight="700" font-size="12">Step 2:</text>
-          <text x="420" y="170" fill="#888" font-size="11">25 &lt; 64, 25 &lt; 34 → 先頭に挿入</text>
-          <rect x="100" y="152" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="155" y="152" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="210" y="152" width="50" height="32" rx="6" fill="#76B900"/><text x="235" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-          <rect x="265" y="152" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="290" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-          <rect x="320" y="152" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="173" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
-
-          <!-- Step 3 -->
-          <text x="30" y="225" fill="#FFB800" font-weight="700" font-size="12">Step 3:</text>
-          <text x="420" y="225" fill="#888" font-size="11">12 は最小 → 先頭に挿入</text>
-          <rect x="100" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-          <rect x="155" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="210" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="235" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="265" y="207" width="50" height="32" rx="6" fill="#76B900"/><text x="290" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-          <rect x="320" y="207" width="50" height="32" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="345" y="228" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
-
-          <!-- Step 4 -->
-          <text x="30" y="280" fill="#FFB800" font-weight="700" font-size="12">Step 4:</text>
-          <text x="420" y="280" fill="#888" font-size="11">22 &gt; 12 → 12の後に挿入</text>
-          <rect x="100" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="125" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-          <rect x="155" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="180" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">22</text>
-          <rect x="210" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="235" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="265" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="290" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="320" y="262" width="50" height="32" rx="6" fill="#76B900"/><text x="345" y="283" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-
-          <!-- Legend -->
-          <rect x="100" y="310" width="14" height="14" rx="3" fill="#76B900"/>
-          <text x="120" y="322" fill="#aaa" font-size="11">整列済み</text>
-          <rect x="190" y="310" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
-          <text x="210" y="322" fill="#aaa" font-size="11">未整列</text>
-          <rect x="270" y="310" width="14" height="14" rx="3" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
-          <text x="290" y="322" fill="#aaa" font-size="11">最初の1枚</text>
-        </svg>
+      <p style="font-size:0.92rem;color:#bbb;margin-bottom:0.5rem">1.2のカードゲームであなたの手がやっていたことを、プログラムの手順に分解すると <strong>「① key を取り出す → ② 左隣と比較 → ③ 大きければ右へずらす → ④ 穴に挿入」</strong> の繰り返しになります。下のシミュレーターをボタンで進めると、<strong>いまどの操作を実行中か</strong>が上のバッジで光ります。カードゲームの「手に持つ」が ①、「すき間をクリック」が ④ に対応します。</p>
+      <div class="iv-root" id="iv-sim">
+        <div class="iv-title">🖱 挿入ソートの手順 ── 「取り出す→比較→ずらす→挿入」の繰り返しを確かめよう</div>
+        <div class="iv-phases" id="iv-sim-ph">
+          <span data-ph="pick">① key を取り出す</span>
+          <span data-ph="cmp">② 左隣と比較</span>
+          <span data-ph="shift">③ 大きければ右へずらす</span>
+          <span data-ph="ins">④ 穴に挿入</span>
+        </div>
+        <div class="iv-keyline" id="iv-sim-key"></div>
+        <div class="iv-row" id="iv-sim-row"></div>
+        <div class="iv-legend">🟩 整列済み　黄色の破線 = 穴（key が抜けた場所）　赤枠 = 比較した要素　🟨 挿入した位置</div>
       </div>
     </div>
 
@@ -407,45 +468,22 @@ a.sub-item:hover {
       </table>
     </div>
 
-    <!-- SVG: Card insertion analogy -->
+    <!-- Interactive: insert-position click quiz -->
     <div class="card concept" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
-        <span class="tag" style="background:rgba(118,185,0,0.15);color:#76B900">図解</span>
-        <h3>挿入ソート: カードを正しい位置に差し込む</h3>
+        <span class="tag" style="background:rgba(118,185,0,0.15);color:#76B900">クイズ</span>
+        <h3>挿入位置クリッククイズ ── key はどの「すき間」に入る？</h3>
       </div>
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
-          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">key=12 を整列済み [25, 34, 64] に挿入する</text>
-
-          <!-- Before: sorted part + key -->
-          <text x="30" y="65" fill="#888" font-size="12">整列済み:</text>
-          <rect x="120" y="47" width="55" height="32" rx="6" fill="#76B900"/><text x="147" y="68" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="180" y="47" width="55" height="32" rx="6" fill="#76B900"/><text x="207" y="68" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="240" y="47" width="55" height="32" rx="6" fill="#76B900"/><text x="267" y="68" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-
-          <text x="330" y="65" fill="#FFB800" font-weight="700" font-size="12">key =</text>
-          <rect x="380" y="47" width="55" height="32" rx="6" fill="#FFB800"/><text x="407" y="68" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-
-          <!-- Comparison arrows -->
-          <text x="30" y="115" fill="#888" font-size="11">比較:</text>
-          <text x="120" y="115" fill="#ccc" font-size="11">12 &lt; 64? Yes → 64を右へ</text>
-          <text x="120" y="135" fill="#ccc" font-size="11">12 &lt; 34? Yes → 34を右へ</text>
-          <text x="120" y="155" fill="#ccc" font-size="11">12 &lt; 25? Yes → 25を右へ</text>
-          <text x="120" y="175" fill="#76B900" font-weight="700" font-size="11">先頭に到達 → ここに挿入!</text>
-
-          <!-- After -->
-          <text x="30" y="220" fill="#76B900" font-weight="700" font-size="12">結果:</text>
-          <rect x="120" y="202" width="55" height="32" rx="6" fill="#FFB800"/><text x="147" y="223" text-anchor="middle" fill="white" font-weight="700" font-size="12">12</text>
-          <rect x="180" y="202" width="55" height="32" rx="6" fill="#76B900"/><text x="207" y="223" text-anchor="middle" fill="white" font-weight="700" font-size="12">25</text>
-          <rect x="240" y="202" width="55" height="32" rx="6" fill="#76B900"/><text x="267" y="223" text-anchor="middle" fill="white" font-weight="700" font-size="12">34</text>
-          <rect x="300" y="202" width="55" height="32" rx="6" fill="#76B900"/><text x="327" y="223" text-anchor="middle" fill="white" font-weight="700" font-size="12">64</text>
-
-          <!-- Legend -->
-          <rect x="120" y="250" width="14" height="14" rx="3" fill="#FFB800"/>
-          <text x="140" y="262" fill="#aaa" font-size="11">挿入された要素</text>
-          <rect x="260" y="250" width="14" height="14" rx="3" fill="#76B900"/>
-          <text x="280" y="262" fill="#aaa" font-size="11">右にずらされた要素</text>
-        </svg>
+      <p style="font-size:0.92rem;color:#bbb;margin-bottom:0.5rem">整列済みの列に新しい値（key）を挿入するとき、どの「すき間」に入るかをクリックで答えてください。挿入位置の感覚をつかむのが目的です。</p>
+      <div class="iv-root" id="iv-qz">
+        <div class="iv-title" id="iv-qz-title"></div>
+        <div class="iv-keyline" id="iv-qz-key"></div>
+        <div class="iv-row" id="iv-qz-row"></div>
+        <div class="iv-feedback" id="iv-qz-fb"></div>
+        <div class="iv-controls">
+          <button class="iv-btn" id="iv-qz-next" type="button">次の問題 ▶</button>
+          <span class="iv-prog" id="iv-qz-score"></span>
+        </div>
       </div>
     </div>
 
@@ -454,6 +492,7 @@ a.sub-item:hover {
         <span class="tag tag-example">例題 1</span>
         <h3>2つの変数を交換する</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 挿入ソートの出発点となる<strong>「上書きすると元の値は消える。だから先に別の場所へ退避する」</strong>という感覚をつかむ。<code>temp</code> に退避してから上書きする手順は、挿入ソートで key を <code>key = data[i]</code> と取り出してから要素をずらす動きの<strong>ミニチュア版</strong>。ここが分かれば、後の例題3・4の「なぜ key を取り出すのか」が自然に理解できる。</p>
       <pre><span class="code-label">Python</span>
 <span class="cmt"># --- 方法1: 一時変数を使う ---</span>
 value_a = <span class="num">30</span>
@@ -469,116 +508,13 @@ value_b = temp
 value_x, value_y = <span class="num">50</span>, <span class="num">20</span>
 value_x, value_y = value_y, value_x  <span class="cmt"># 一行で交換!</span></pre>
 
-      <!-- Example 1: animated swap diagram -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">一時変数 temp を使った変数交換のステップ</text>
-
-          <!-- Step badge (top right) -->
-          <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ① 初期状態
-          </text>
-          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ② temp = value_a
-          </text>
-          <text x="580" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ③ value_a = value_b
-          </text>
-          <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ④ value_b = temp（完了!）
-          </text>
-
-          <!-- Box labels -->
-          <text x="135" y="110" text-anchor="middle" fill="#888" font-size="13" font-weight="600">value_a</text>
-          <text x="340" y="110" text-anchor="middle" fill="#888" font-size="13" font-weight="600">temp</text>
-          <text x="545" y="110" text-anchor="middle" fill="#888" font-size="13" font-weight="600">value_b</text>
-
-          <!-- Box outlines (fixed) -->
-          <rect x="80" y="125" width="110" height="60" rx="10" fill="#141414" stroke="#76B900" stroke-width="2"/>
-          <rect x="285" y="125" width="110" height="60" rx="10" fill="#141414" stroke="#FFB800" stroke-width="2"/>
-          <rect x="490" y="125" width="110" height="60" rx="10" fill="#141414" stroke="#4FC3F7" stroke-width="2"/>
-
-          <!-- value_a content: 30 → 30 → 10 → 10 -->
-          <text x="135" y="166" text-anchor="middle" fill="#76B900" font-size="26" font-weight="900" opacity="0">
-            <animate attributeName="opacity" values="1;1;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            30
-          </text>
-          <text x="135" y="166" text-anchor="middle" fill="#4FC3F7" font-size="26" font-weight="900" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            10
-          </text>
-
-          <!-- temp content: empty → 30 → 30 → empty(used) -->
-          <text x="340" y="166" text-anchor="middle" fill="#666" font-size="20" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ─
-          </text>
-          <text x="340" y="166" text-anchor="middle" fill="#FFB800" font-size="26" font-weight="900" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            30
-          </text>
-          <text x="340" y="166" text-anchor="middle" fill="#666" font-size="20" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ─
-          </text>
-
-          <!-- value_b content: 10 → 10 → 10 → 30 -->
-          <text x="545" y="166" text-anchor="middle" fill="#4FC3F7" font-size="26" font-weight="900" opacity="0">
-            <animate attributeName="opacity" values="1;1;1;1;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            10
-          </text>
-          <text x="545" y="166" text-anchor="middle" fill="#76B900" font-size="26" font-weight="900" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            30
-          </text>
-
-          <!-- Highlight ring moving between boxes -->
-          <rect x="76" y="121" width="118" height="68" rx="12" fill="none" stroke="#FFB800" stroke-width="3" stroke-dasharray="6,4" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-          </rect>
-          <rect x="281" y="121" width="118" height="68" rx="12" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-dasharray="6,4" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-          </rect>
-          <rect x="486" y="121" width="118" height="68" rx="12" fill="none" stroke="#76B900" stroke-width="3" stroke-dasharray="6,4" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-          </rect>
-
-          <!-- Step-specific explanation text (middle area) -->
-          <text x="340" y="235" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            value_a = 30, value_b = 10（交換前）
-          </text>
-          <text x="340" y="235" text-anchor="middle" fill="#FFB800" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            value_a の値 30 を temp に退避
-          </text>
-          <text x="340" y="235" text-anchor="middle" fill="#4FC3F7" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            value_b の 10 を value_a に上書き
-          </text>
-          <text x="340" y="235" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            temp の 30 を value_b に → 交換完了!
-          </text>
-
-          <!-- Result panel - appears at step 4 -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            <rect x="180" y="260" width="320" height="40" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-            <text x="340" y="285" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">value_a = 10, value_b = 30</text>
-          </g>
-
-          <!-- Bottom legend with O notation -->
-          <rect x="60" y="320" width="560" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-          <text x="340" y="341" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
-            変数交換: O(1) ── 挿入ソートでも要素のずらしの基礎となる操作
-          </text>
-        </svg>
+      <div class="iv-root" id="iv-ex1">
+        <div class="iv-title">🖱 変数交換をステップ実行 ── temp（一時変数）の役割を確かめよう</div>
+        <div class="iv-swap">
+          <div class="iv-swapbox"><div class="lbl">value_a</div><div class="val" id="iv-ex1-a">30</div></div>
+          <div class="iv-swapbox"><div class="lbl">temp</div><div class="val" id="iv-ex1-t">─</div></div>
+          <div class="iv-swapbox"><div class="lbl">value_b</div><div class="val" id="iv-ex1-b">10</div></div>
+        </div>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -593,6 +529,7 @@ value_x, value_y = value_y, value_x  <span class="cmt"># 一行で交換!</span>
         <span class="tag tag-example">例題 2</span>
         <h3>挿入位置を見つけて要素を挿入する</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 挿入は<strong>「① 入る場所を探す → ② ずらして入れる」の2段階</strong>でできている。この例題ではまず①の<strong>「探す」だけ</strong>を切り出して練習する。ポイントは<strong>右端から左へ</strong>比較し、key 以下の値に出会った瞬間 <code>break</code> で打ち切ること ── この「むだな比較をしない」工夫が、ソート済みデータで挿入ソートが O(n) と速くなる理由（例題4で確認）につながる。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">find_insert_position</span>(sorted_part, new_value):
     <span class="cmt"># 右端から左に向かって比較</span>
@@ -611,91 +548,17 @@ position = <span class="fn">find_insert_position</span>(sorted_part, new_value)
 <span class="fn">print</span>(<span class="str">f"挿入位置: {position}"</span>)  <span class="cmt"># → 1（12の後）</span>
 <span class="cmt"># 要素をずらして挿入 → [12, 22, 25, 34, 64]</span></pre>
 
-      <!-- Example 2: animated insert-position search -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 680 360" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="340" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">右から左へ挿入位置を探す（new_value = 22）</text>
-
-          <!-- Step badge (top right) -->
-          <rect x="500" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ① i=3: 64 &gt; 22
-          </text>
-          <text x="580" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ② i=2: 34 &gt; 22
-          </text>
-          <text x="580" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ③ i=1: 25 &gt; 22
-          </text>
-          <text x="580" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ④ i=0: 12 ≤ 22 → break
-          </text>
-
-          <!-- Array sorted_part = [12, 25, 34, 64] -->
-          <text x="60" y="120" fill="#888" font-size="13" font-weight="600">sorted_part:</text>
-          <rect x="180" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
-          <text x="220" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">12</text>
-          <text x="220" y="172" text-anchor="middle" fill="#666" font-size="12">[0]</text>
-
-          <rect x="270" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
-          <text x="310" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">25</text>
-          <text x="310" y="172" text-anchor="middle" fill="#666" font-size="12">[1]</text>
-
-          <rect x="360" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
-          <text x="400" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">34</text>
-          <text x="400" y="172" text-anchor="middle" fill="#666" font-size="12">[2]</text>
-
-          <rect x="450" y="100" width="80" height="56" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
-          <text x="490" y="135" text-anchor="middle" fill="#aaa" font-size="22" font-weight="700">64</text>
-          <text x="490" y="172" text-anchor="middle" fill="#666" font-size="12">[3]</text>
-
-          <!-- new_value tag -->
-          <rect x="555" y="100" width="80" height="56" rx="8" fill="#2e1a0a" stroke="#FFB800" stroke-width="2.5"/>
-          <text x="595" y="135" text-anchor="middle" fill="#FFB800" font-size="22" font-weight="900">22</text>
-          <text x="595" y="92" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">new_value</text>
-
-          <!-- Highlight ring moving right-to-left through indices 3,2,1,0 -->
-          <rect width="88" height="64" rx="12" x="446" y="96" fill="none" stroke="#FF5252" stroke-width="3" stroke-dasharray="6,4">
-            <animate attributeName="x" values="446;446;356;356;266;266;176;176" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            <animate attributeName="stroke" values="#FF5252;#FF5252;#FF5252;#FF5252;#FF5252;#FF5252;#76B900;#76B900" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-          </rect>
-
-          <!-- Comparison text below array (changes per step) -->
-          <text x="340" y="220" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            sorted_part[3]=64 &gt; 22 → position = 3
-          </text>
-          <text x="340" y="220" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            sorted_part[2]=34 &gt; 22 → position = 2
-          </text>
-          <text x="340" y="220" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            sorted_part[1]=25 &gt; 22 → position = 1
-          </text>
-          <text x="340" y="220" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            sorted_part[0]=12 ≤ 22 → break! 挿入位置 = 1
-          </text>
-
-          <!-- Result panel - appears at step 4 -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            <rect x="120" y="250" width="440" height="56" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-            <text x="340" y="275" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">[12, 22, 25, 34, 64]</text>
-            <text x="340" y="295" text-anchor="middle" fill="#aaa" font-size="13">→ 22 を index=1 に挿入</text>
-          </g>
-
-          <!-- Bottom legend with O notation -->
-          <rect x="60" y="320" width="560" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-          <text x="340" y="341" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
-            位置探索: O(n) ── 右から左への線形走査、break で早期終了
-          </text>
-        </svg>
+      <div class="iv-root" id="iv-ex2">
+        <div class="iv-title">🖱 挿入位置さがしをステップ実行 ── new_value を切り替えて試そう</div>
+        <div class="iv-presets"><span class="lbl">new_value:</span>
+          <button class="iv-btn preset sel" data-val="22" type="button">22</button>
+          <button class="iv-btn preset" data-val="50" type="button">50</button>
+          <button class="iv-btn preset" data-val="5" type="button">5</button>
+          <button class="iv-btn preset" data-val="70" type="button">70</button>
+        </div>
+        <div class="iv-keyline" id="iv-ex2-key"></div>
+        <div class="iv-row" id="iv-ex2-row"></div>
+        <div class="iv-legend">赤枠 = いま比較している要素　🟨 決定した挿入位置</div>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -710,6 +573,7 @@ position = <span class="fn">find_insert_position</span>(sorted_part, new_value)
         <span class="tag tag-example">例題 3</span>
         <h3>挿入ソートの1パス</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> カード<strong>1枚分の挿入（=1パス）</strong>を、コードで通しで実行する。例題1の「退避」と例題2の「探す」がここで合体し、<code>key</code> を取り出す → <code>data[j+1] = data[j]</code> でずらす → 穴に挿入、という流れになる。完成形の挿入ソート（例題4）は<strong>この1パスを for で繰り返しているだけ</strong>なので、ここを理解すれば全体はもう理解できたも同然。「やってみよう」の target_index=4 では、<strong>左側がソート済みという前提</strong>が崩れると正しく動かないことも確かめる。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">insert_one_pass</span>(data, target_index):
     key = data[target_index]
@@ -727,125 +591,15 @@ target_index = <span class="num">3</span>  <span class="cmt"># data[3]=12 を挿
 result = <span class="fn">insert_one_pass</span>(data, target_index)
 <span class="fn">print</span>(<span class="str">f"結果: {result}"</span>)  <span class="cmt"># → [12, 25, 34, 64, 22]</span></pre>
 
-      <!-- Example 3: animated 1-pass insertion -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">挿入ソート 1パス: key=12 を [25, 34, 64] に挿入</text>
-
-          <!-- Step badge (top right) -->
-          <rect x="520" y="50" width="160" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-          <text x="600" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ① key=12 を取り出す
-          </text>
-          <text x="600" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ② 64 を右へずらす
-          </text>
-          <text x="600" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ③ 34, 25 を右へずらす
-          </text>
-          <text x="600" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            ④ 先頭に key=12 を挿入
-          </text>
-
-          <!-- Array index labels (fixed) -->
-          <text x="115" y="225" text-anchor="middle" fill="#666" font-size="12">[0]</text>
-          <text x="185" y="225" text-anchor="middle" fill="#666" font-size="12">[1]</text>
-          <text x="255" y="225" text-anchor="middle" fill="#666" font-size="12">[2]</text>
-          <text x="325" y="225" text-anchor="middle" fill="#666" font-size="12">[3]</text>
-          <text x="395" y="225" text-anchor="middle" fill="#666" font-size="12">[4]</text>
-
-          <!-- Position 0: value 25 - shifts to position 1 in step 3 -->
-          <g>
-            <rect width="60" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5" x="85" y="155">
-              <animate attributeName="x" values="85;85;85;85;155;155;155;155" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            </rect>
-            <text text-anchor="middle" fill="#aaa" font-size="22" font-weight="700" y="187">
-              <animate attributeName="x" values="115;115;115;115;185;185;185;185" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              25
-            </text>
-          </g>
-
-          <!-- Position 1: value 34 - shifts to position 2 in step 3 -->
-          <g>
-            <rect width="60" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5" x="155" y="155">
-              <animate attributeName="x" values="155;155;155;155;225;225;225;225" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            </rect>
-            <text text-anchor="middle" fill="#aaa" font-size="22" font-weight="700" y="187">
-              <animate attributeName="x" values="185;185;185;185;255;255;255;255" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              34
-            </text>
-          </g>
-
-          <!-- Position 2: value 64 - shifts to position 3 in step 2 -->
-          <g>
-            <rect width="60" height="50" rx="8" fill="#141414" stroke="#76B900" stroke-width="1.5" x="225" y="155">
-              <animate attributeName="x" values="225;225;225;225;295;295;295;295" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            </rect>
-            <text text-anchor="middle" fill="#aaa" font-size="22" font-weight="700" y="187">
-              <animate attributeName="x" values="255;255;255;255;325;325;325;325" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              64
-            </text>
-          </g>
-
-          <!-- key=12 floating box - starts at index 3 position, hovers, then lands at index 0 -->
-          <g>
-            <rect width="60" height="50" rx="8" fill="#2e1a0a" stroke="#FFB800" stroke-width="2.5">
-              <animate attributeName="x" values="295;295;295;295;295;295;85;85" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="155;155;90;90;90;90;155;155" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              <animate attributeName="stroke" values="#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            </rect>
-            <text text-anchor="middle" font-size="22" font-weight="900">
-              <animate attributeName="x" values="325;325;325;325;325;325;115;115" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="187;187;122;122;122;122;187;187" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              <animate attributeName="fill" values="#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#FFB800;#76B900;#76B900" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-              12
-            </text>
-          </g>
-
-          <!-- key label above floating box -->
-          <text text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            <animate attributeName="x" values="325;325;325;325;325;325;115;115" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            <animate attributeName="y" values="80;80;80;80;80;80;145;145" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            key
-          </text>
-
-          <!-- Step-specific explanation text below -->
-          <text x="350" y="260" text-anchor="middle" fill="#aaa" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            key = data[3] = 12, j = 2
-          </text>
-          <text x="350" y="260" text-anchor="middle" fill="#FFB800" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            data[2]=64 &gt; 12 → data[3] = data[2], j=1
-          </text>
-          <text x="350" y="260" text-anchor="middle" fill="#4FC3F7" font-size="14" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            34&gt;12, 25&gt;12 → 連続でずらす、j=-1
-          </text>
-          <text x="350" y="260" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            data[j+1] = data[0] = 12 → 挿入完了
-          </text>
-
-          <!-- Result panel - appears at step 4 -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" keyTimes="0;0.10;0.18;0.40;0.45;0.85;0.92;1" dur="14s" repeatCount="indefinite"/>
-            <rect x="130" y="290" width="440" height="56" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-            <text x="350" y="315" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">[12, 25, 34, 64, 22]</text>
-            <text x="350" y="335" text-anchor="middle" fill="#aaa" font-size="13">先頭4要素がソート済み（[4]=22 はまだ未挿入）</text>
-          </g>
-
-          <!-- Bottom legend with O notation -->
-          <rect x="60" y="360" width="580" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-          <text x="350" y="381" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
-            1パスの挿入: 最悪 O(i) ── 「右にずらす」回数 = 比較回数
-          </text>
-        </svg>
+      <div class="iv-root" id="iv-ex3">
+        <div class="iv-title">🖱 1パスの挿入をステップ実行 ── target_index を切り替えて確かめよう</div>
+        <div class="iv-presets"><span class="lbl">target_index:</span>
+          <button class="iv-btn preset sel" data-ti="3" type="button">3（key=12）</button>
+          <button class="iv-btn preset" data-ti="4" type="button">4（key=22）</button>
+        </div>
+        <div class="iv-keyline" id="iv-ex3-key"></div>
+        <div class="iv-row" id="iv-ex3-row"></div>
+        <div class="iv-legend">🟩 ソート済みとみなす範囲　黄色の破線 = 穴（keyの行き先候補）　赤枠 = 比較した要素　🟨 挿入した位置</div>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -860,6 +614,7 @@ result = <span class="fn">insert_one_pass</span>(data, target_index)
         <span class="tag tag-example">例題 4</span>
         <h3>完全な挿入ソート（比較回数カウント付き）</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 例題3の1パスを <code>for i in range(1, n)</code> で繰り返すと<strong>全体がソートされる</strong>ことを確認する。さらに比較回数・移動回数を<strong>数字で数える</strong>ことで、「アルゴリズムの速さはデータの並び方で変わる」ことを体感する ── ソート済みなら比較 n−1 回（O(n)）、逆順なら n(n−1)/2 回（O(n²)）。1.4 の計算量の表を<strong>自分の実験で裏づける</strong>のがこの例題のゴール。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">insertion_sort</span>(data):
     n = <span class="fn">len</span>(data)
@@ -888,135 +643,18 @@ result = <span class="fn">insert_one_pass</span>(data, target_index)
 test_data = [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>]
 <span class="fn">insertion_sort</span>(test_data[:])</pre>
 
-      <!-- Example 4: animated full insertion sort (5 passes) -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">挿入ソート全パス: [64, 34, 25, 12, 22] → [12, 22, 25, 34, 64]</text>
-
-          <!-- Step badge (top right) -->
-          <rect x="510" y="50" width="170" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            ① i=1: key=34
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            ② i=2: key=25
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            ③ i=3: key=12
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            ④ i=4: key=22
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            ⑤ ソート完了!
-          </text>
-
-          <!-- Initial state row -->
-          <text x="50" y="120" fill="#888" font-size="12" font-weight="600">初期:</text>
-          <g font-size="18" font-weight="700" text-anchor="middle">
-            <rect x="110" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/><text x="135" y="124" fill="white">64</text>
-            <rect x="165" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="190" y="124" fill="white">34</text>
-            <rect x="220" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="245" y="124" fill="white">25</text>
-            <rect x="275" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="300" y="124" fill="white">12</text>
-            <rect x="330" y="100" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="124" fill="white">22</text>
-          </g>
-
-          <!-- Pass 1: [34, 64, 25, 12, 22] (visible during step 1) -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <text x="50" y="170" fill="#FFB800" font-size="12" font-weight="700">i=1:</text>
-            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
-            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
-            <rect x="220" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
-            <rect x="275" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
-            <rect x="330" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
-            <text x="395" y="172" fill="#aaa" font-size="11">key=34 を 64 の前へ</text>
-          </g>
-
-          <!-- Pass 2: [25, 34, 64, 12, 22] -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <text x="50" y="170" fill="#FFB800" font-size="12" font-weight="700">i=2:</text>
-            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
-            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
-            <rect x="220" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
-            <rect x="275" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
-            <rect x="330" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
-            <text x="395" y="172" fill="#aaa" font-size="11">key=25 を先頭へ</text>
-          </g>
-
-          <!-- Pass 3: [12, 25, 34, 64, 22] -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <text x="50" y="170" fill="#FFB800" font-size="12" font-weight="700">i=3:</text>
-            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
-            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
-            <rect x="220" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
-            <rect x="275" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
-            <rect x="330" y="150" width="50" height="36" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
-            <text x="395" y="172" fill="#aaa" font-size="11">key=12 を最先頭へ（3回ずらし）</text>
-          </g>
-
-          <!-- Pass 4: [12, 22, 25, 34, 64] -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <text x="50" y="170" fill="#76B900" font-size="12" font-weight="700">i=4:</text>
-            <rect x="110" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="135" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">12</text>
-            <rect x="165" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="190" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">22</text>
-            <rect x="220" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="245" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">25</text>
-            <rect x="275" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="300" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">34</text>
-            <rect x="330" y="150" width="50" height="36" rx="6" fill="#76B900"/><text x="355" y="174" text-anchor="middle" fill="white" font-size="18" font-weight="700">64</text>
-            <text x="395" y="172" fill="#76B900" font-weight="700" font-size="11">key=22 を 25 の前へ → 完了!</text>
-          </g>
-
-          <!-- Highlight ring showing current key position -->
-          <rect width="58" height="44" rx="8" fill="none" stroke="#FFB800" stroke-width="3" stroke-dasharray="6,4" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <animate attributeName="x" values="106;106;106;106;106;106;106;106;106;106" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <animate attributeName="y" values="146;146;146;146;146;146;146;146;146;146" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-          </rect>
-
-          <!-- Counter / explanation strip -->
-          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            初期: data[0]=64 だけが整列済み区間
-          </text>
-          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            i=1: 34 と 64 を比較 → 1回ずらす
-          </text>
-          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            i=2: 25 を 34, 64 と比較 → 2回ずらす
-          </text>
-          <text x="350" y="240" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            i=3: 12 は最小 → 3回ずらす
-          </text>
-          <text x="350" y="240" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            i=4: 22 は 25 の前へ → 全体ソート完了
-          </text>
-
-          <!-- Result panel - appears at step 5 -->
-          <g opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.15;0.20;0.40;0.45;0.65;0.70;0.85;0.92;1" dur="20s" repeatCount="indefinite"/>
-            <rect x="120" y="280" width="460" height="60" rx="10" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-            <text x="350" y="305" text-anchor="middle" fill="#76B900" font-size="15" font-weight="700">[12, 22, 25, 34, 64]</text>
-            <text x="350" y="325" text-anchor="middle" fill="#aaa" font-size="13">比較回数: 7, 移動回数: 7</text>
-          </g>
-
-          <!-- Bottom legend with O notation -->
-          <rect x="60" y="358" width="580" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-          <text x="350" y="379" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
-            挿入ソート: 最悪 O(n²) ── 各 i パスで最大 i 回の比較・移動
-          </text>
-        </svg>
+      <div class="iv-root" id="iv-ex4">
+        <div class="iv-title">🖱 挿入ソート全体をステップ実行 ── データを変えて比較・移動回数を観察しよう</div>
+        <div class="iv-presets"><span class="lbl">データ:</span>
+          <button class="iv-btn preset sel" data-d="moto" type="button">[64,34,25,12,22]</button>
+          <button class="iv-btn preset" data-d="sorted" type="button">ソート済み [1,2,3,4,5]</button>
+          <button class="iv-btn preset" data-d="rev" type="button">逆順 [5,4,3,2,1]</button>
+          <button class="iv-btn preset" data-d="rand" type="button">🎲 ランダム</button>
+        </div>
+        <div class="iv-keyline" id="iv-ex4-key"></div>
+        <div class="iv-row" id="iv-ex4-row"></div>
+        <div class="iv-stats" id="iv-ex4-stats"></div>
+        <div class="iv-legend">🟩 整列済み　黄色の破線 = 穴　赤枠 = 比較した要素　🟨 挿入した位置</div>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -1031,6 +669,7 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
         <span class="tag tag-example">例題 5</span>
         <h3>テキストベースのソート可視化</h3>
       </div>
+      <p style="background:#0a1a0a;border-left:4px solid #76B900;border-radius:6px;padding:0.5rem 0.9rem;font-size:0.9rem;color:#93D500;margin:0 0 0.8rem"><strong>🎯 演習の目的:</strong> 数字の列だけでは「ソートが進んでいる感じ」がつかみにくいので、<strong>棒グラフの形に変えて目で見る</strong>。左下がりの形（逆順=最悪ケース）が1パスごとに右上がりに直っていく様子を観察すると、挿入中の値（<code>@</code>）が毎回左端まで突き抜ける＝移動回数が最大になる理由が直感で分かる。あわせて、<strong>print で動きを見える化するデバッグ技術</strong>そのものも、今後どのアルゴリズムでも使える道具として身につける。</p>
       <p>棒グラフ風のテキストで、挿入ソートの過程を可視化します。整列済み部分を <code>#</code>、挿入中を <code>@</code>、未整列を <code>-</code> で表示します。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">visualize_sort</span>(data):
@@ -1059,189 +698,16 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
 
 <span class="fn">visualize_sort</span>([<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">50</span>, <span class="num">15</span>])</pre>
 
-      <!-- Example 5: animated bar chart visualization (逆順データの4パス) -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">棒グラフ可視化: [5, 4, 3, 2, 1] が左下がりから右上がりへ</text>
-
-          <!-- Step badge (top right) -->
-          <rect x="510" y="50" width="170" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            ① 初期: [5,4,3,2,1]
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            ② i=1: 4を先頭へ
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            ③ i=2: 3を先頭へ
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            ④ i=3: 2を先頭へ
-          </text>
-          <text x="595" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            ⑤ i=4: 1を先頭へ → ソート完了
-          </text>
-
-          <!-- Bar chart - 5 bars, height scaled, animated -->
-          <!-- Bar 1 (position 0): values [5, 4, 3, 2, 1] (becomes min over passes) -->
-          <g>
-            <rect x="80" y="100" width="80" height="0" fill="#FFB800" rx="4">
-              <animate attributeName="height" values="150;150;120;120;90;90;60;60;30;30" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="100;100;130;130;160;160;190;190;220;220" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              <animate attributeName="fill" values="#FFB800;#FFB800;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900;#76B900" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white">
-              <animate attributeName="fill" values="white;white;white;white;white;white;white;white;white;white" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            </text>
-            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              5
-            </text>
-            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              4
-            </text>
-            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              3
-            </text>
-            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              2
-            </text>
-            <text x="120" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              1
-            </text>
-          </g>
-
-          <!-- Bar 2 (position 1): values [4, 5, 4, 3, 2] -->
-          <g>
-            <rect x="170" y="130" width="80" height="0" fill="#76B900" rx="4">
-              <animate attributeName="height" values="120;120;150;150;120;120;90;90;60;60" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="130;130;100;100;130;130;160;160;190;190" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              4
-            </text>
-            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              5
-            </text>
-            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              4
-            </text>
-            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              3
-            </text>
-            <text x="210" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              2
-            </text>
-          </g>
-
-          <!-- Bar 3 (position 2): values [3, 3, 5, 4, 3] -->
-          <g>
-            <rect x="260" y="160" width="80" height="0" fill="#76B900" rx="4">
-              <animate attributeName="height" values="90;90;90;90;150;150;120;120;90;90" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="160;160;160;160;100;100;130;130;160;160" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="1;1;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              3
-            </text>
-            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              5
-            </text>
-            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              4
-            </text>
-            <text x="300" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              3
-            </text>
-          </g>
-
-          <!-- Bar 4 (position 3): values [2, 2, 2, 5, 4] -->
-          <g>
-            <rect x="350" y="190" width="80" height="0" fill="#76B900" rx="4">
-              <animate attributeName="height" values="60;60;60;60;60;60;150;150;120;120" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="190;190;190;190;190;190;100;100;130;130" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-            <text x="390" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="1;1;1;1;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              2
-            </text>
-            <text x="390" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              5
-            </text>
-            <text x="390" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              4
-            </text>
-          </g>
-
-          <!-- Bar 5 (position 4): values [1, 1, 1, 1, 5] -->
-          <g>
-            <rect x="440" y="220" width="80" height="30" fill="#76B900" rx="4">
-              <animate attributeName="height" values="30;30;30;30;30;30;30;30;150;150" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              <animate attributeName="y" values="220;220;220;220;220;220;220;220;100;100" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-            <text x="480" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="1;1;1;1;1;1;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              1
-            </text>
-            <text x="480" y="275" text-anchor="middle" font-size="20" font-weight="900" fill="white" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-              5
-            </text>
-          </g>
-
-          <!-- Baseline -->
-          <line x1="70" y1="250" x2="540" y2="250" stroke="#333" stroke-width="1"/>
-
-          <!-- Step explanation -->
-          <text x="350" y="310" text-anchor="middle" fill="#aaa" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            最悪ケース（逆順）: 各パスで先頭まで戻る
-          </text>
-          <text x="350" y="310" text-anchor="middle" fill="#FFB800" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            @ = 挿入中の値（4 が左端へ）
-          </text>
-          <text x="350" y="310" text-anchor="middle" fill="#4FC3F7" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            # = 整列済み部分（[3, 4, 5] と 2つの未整列）
-          </text>
-          <text x="350" y="310" text-anchor="middle" fill="#FF5252" font-size="13" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            2 を先頭へ → 3 ずつ移動
-          </text>
-          <text x="350" y="310" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.18;0.34;0.40;0.56;0.62;0.78;0.86;1" dur="18s" repeatCount="indefinite"/>
-            完了: [1, 2, 3, 4, 5]（合計移動 1+2+3+4=10回）
-          </text>
-
-          <!-- Bottom legend with O notation -->
-          <rect x="60" y="340" width="580" height="40" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-          <text x="350" y="358" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
-            逆順データ = 最悪ケース O(n²) ── 合計移動回数 = n(n-1)/2
-          </text>
-          <text x="350" y="374" text-anchor="middle" fill="#666" font-size="11">
-            n=5 → 4+3+2+1 = 10回、n=7 → 21回
-          </text>
-        </svg>
+      <div class="iv-root" id="iv-ex5">
+        <div class="iv-title">🖱 棒グラフでソートの動きを観察 ── 逆順（最悪ケース）と比べてみよう</div>
+        <div class="iv-presets"><span class="lbl">データ:</span>
+          <button class="iv-btn preset sel" data-d="moto" type="button">[64,34,25,12,22,50,15]</button>
+          <button class="iv-btn preset" data-d="rev" type="button">逆順 [7,6,5,4,3,2,1]</button>
+          <button class="iv-btn preset" data-d="rand" type="button">🎲 ランダム</button>
+        </div>
+        <div class="iv-bars" id="iv-ex5-bars"></div>
+        <div class="iv-stats" id="iv-ex5-stats"></div>
+        <div class="iv-legend">🟩 整列済み　🟨 挿入中の key　⬛ 未整列</div>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
@@ -1253,7 +719,7 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
   </div>
 </section>
 
-<!-- ============ 3. GROUP ORAL EXAM ============ -->
+<!-- ============ 3. GROUP DISCUSSION ============ -->
 <section id="sec-group-disc">
   <div class="container">
     <div class="section-header">
@@ -1279,7 +745,7 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
       </div>
       <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバーの氏名と、議論した質問・回答の要点を記録してください。</div></div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。挿入ソートの各パスでの要素の移動を口頭で追跡する練習をしておくと、標準課題がスムーズに解けるはずです。
+        <strong>ヒント:</strong> このディスカッションで話し合った内容は、次の「標準課題」を解くのに役立ちます。挿入ソートの各パスでの要素の移動を口頭で追跡する練習をしておくと、標準課題がスムーズに解けるはずです。
       </div>
     </div>
 
@@ -1305,12 +771,11 @@ test_data = [<span class="num">64</span>, <span class="num">34</span>, <span cla
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
         <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記録する内容</p>
         <ul class="point-list">
-          <li><strong>グループメンバー全員の氏名</strong></li>
-          <li>各ラウンド: <strong>誰が</strong>（出題者）→ <strong>誰に</strong>（回答者）→ <strong>何を</strong>質問したか</li>
-          <li>回答の要点</li>
-          <li>評価（A / B / C）</li>
+          <li>パス1（i=1）〜パス5（i=5）それぞれの<strong>後のリストの状態</strong></li>
+          <li>各パスで取り出した <strong>key の値</strong></li>
+          <li>各パスで<strong>ずらした要素の個数</strong></li>
         </ul>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「出題: 田中 → 回答: 鈴木 ／ 質問: ○○を△△に変えたら？ ／ 要点: □□になる ／ 評価: A」</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「パス1: key=3 → [3, 7, 5, 1, 9, 2]（ずらし1個）」</p>
       </div>
     </div>
 
@@ -1421,7 +886,7 @@ comparisons = <span class="num">0</span>
 ---
 
 ## 標準課題 1: 挿入ソートのトレースを手で追う
-（回答を記入）
+（パス1〜5それぞれの後のリストの状態・key・ずらした個数を記入）
 
 ---
 
@@ -1437,20 +902,20 @@ comparisons = <span class="num">0</span>
 
 ---
 
-## グループ口頭試問
+## グループディスカッション
 **グループメンバー:**
 
-| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
-|--------|-------------|--------|------|------|
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
+| 質問（概要） | 回答の要点 |
+|-------------|-----------|
+|             |           |
+|             |           |
+|             |           |
 
 ---
 
 ## 発展課題: 挿入ソートの安定性を確認する
 ### コード
-（AL08-?.py のコードを貼り付け）
+（AL08-4.py のコードを貼り付け）
 ### 音声説明
 （1〜2分の音声ファイルを添付）
 </pre>
@@ -1550,6 +1015,425 @@ data[4] = 22  (そのまま)
 </footer>
 
 <script src="answer-gate.js"></script>
+
+<script>
+// ===== インタラクティブ・ステップウィジェット =====
+(function(){
+'use strict';
+function $(id){ return document.getElementById(id); }
+
+// 汎用ステッププレイヤー（説明欄と操作ボタンを自動生成する）
+function ivStepper(rootId, cfg){
+  var root = $(rootId);
+  if(!root) return null;
+  var note = document.createElement('div'); note.className = 'iv-note'; root.appendChild(note);
+  var ctr = document.createElement('div'); ctr.className = 'iv-controls';
+  function mk(label, cls){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'iv-btn' + (cls ? ' ' + cls : ''); b.textContent = label;
+    ctr.appendChild(b); return b;
+  }
+  var bReset = mk('↺ 最初から'), bPrev = mk('◀ 戻る'), bPlay = mk('▶ 再生', 'play'), bNext = mk('次へ ▶');
+  var prog = document.createElement('span'); prog.className = 'iv-prog'; ctr.appendChild(prog);
+  root.appendChild(ctr);
+  var steps = cfg.steps, idx = 0, timer = null;
+  function render(){
+    var st = steps[idx];
+    cfg.render(st, idx);
+    note.innerHTML = st.note || '';
+    prog.textContent = '(' + idx + '/' + (steps.length - 1) + ')' + (st.title ? ' ' + st.title : '');
+    bPrev.disabled = (idx === 0);
+    bNext.disabled = (idx === steps.length - 1);
+  }
+  function stop(){ if(timer){ clearInterval(timer); timer = null; } bPlay.textContent = '▶ 再生'; }
+  function go(n){ idx = Math.max(0, Math.min(steps.length - 1, n)); render(); if(idx === steps.length - 1) stop(); }
+  function play(){
+    if(idx >= steps.length - 1) idx = 0;
+    bPlay.textContent = '⏸ 停止';
+    timer = setInterval(function(){ if(idx >= steps.length - 1){ stop(); render(); return; } go(idx + 1); }, cfg.interval || 1500);
+    render();
+  }
+  bNext.addEventListener('click', function(){ stop(); go(idx + 1); });
+  bPrev.addEventListener('click', function(){ stop(); go(idx - 1); });
+  bReset.addEventListener('click', function(){ stop(); go(0); });
+  bPlay.addEventListener('click', function(){ if(timer) stop(); else play(); });
+  go(0);
+  return { setSteps: function(s){ steps = s; stop(); go(0); } };
+}
+
+// 配列を箱の列として描画（null = 穴）
+function renderArray(rowEl, st){
+  rowEl.innerHTML = '';
+  for(var k = 0; k < st.arr.length; k++){
+    var c = document.createElement('div'); c.className = 'iv-cell';
+    var v = st.arr[k];
+    if(v === null){ c.className += ' hole'; }
+    else {
+      c.textContent = v;
+      if(st.done) c.className += ' done';
+      else if(st.region >= 0 && k <= st.region) c.className += ' sorted';
+      if(st.cmp === k) c.className += ' cmp';
+      if(st.ins === k) c.className += ' keycell';
+    }
+    var ix = document.createElement('span'); ix.className = 'idx'; ix.textContent = '[' + k + ']';
+    c.appendChild(ix);
+    rowEl.appendChild(c);
+  }
+}
+
+function renderKeyline(el, st, label){
+  if(st.key != null){ el.innerHTML = (label || 'key') + ' = <span class="iv-keybadge">' + st.key + '</span>'; }
+  else if(st.done){ el.innerHTML = '<span style="color:#76B900">✓ 手元は空（すべて挿入済み）</span>'; }
+  else { el.innerHTML = '<span style="color:#666;font-weight:500">手元: ─</span>'; }
+}
+
+function renderStats(el, st){
+  el.innerHTML = '<span>比較: <b>' + st.comp + '</b> 回</span><span>移動(ずらし): <b>' + st.mov + '</b> 回</span>';
+}
+
+// 挿入ソート全体のマイクロステップ列を生成する
+function buildSortSteps(data){
+  var arr = data.slice(), n = arr.length, steps = [], comp = 0, mov = 0;
+  function snap(o){ o.arr = arr.slice(); o.comp = comp; o.mov = mov; steps.push(o); }
+  snap({ region: 0, ph: 'init', title: '初期', note: '初期状態。先頭の data[0] = <b>' + arr[0] + '</b> の1個だけを「整列済み」と考える。「次へ ▶」か「▶ 再生」で進めよう。' });
+  for(var i = 1; i < n; i++){
+    var key = arr[i], j = i - 1;
+    arr[i] = null;
+    snap({ region: i, key: key, ph: 'pick', title: 'i=' + i + ' key取り出し', note: '<b>i=' + i + '</b>: key = data[' + i + '] = <b>' + key + '</b> を取り出して手に持つ。元の場所は「穴」（黄色の破線）になる。' });
+    while(j >= 0){
+      comp++;
+      if(arr[j] > key){
+        var moved = arr[j];
+        arr[j + 1] = moved; arr[j] = null; mov++;
+        snap({ region: i, key: key, cmp: j + 1, ph: 'shift', title: '比較→ずらす', note: 'data[' + j + '] = ' + moved + ' は key(' + key + ') より<b>大きい</b> → ' + moved + ' を右へ1つずらす。穴が左に動く。' });
+        j--;
+      } else {
+        snap({ region: i, key: key, cmp: j, ph: 'stop', title: '比較→停止', note: 'data[' + j + '] = ' + arr[j] + ' は key(' + key + ') <b>以下</b> → ここで停止（break）。穴の位置が挿入先に決定。' });
+        break;
+      }
+    }
+    arr[j + 1] = key;
+    snap({ region: i, ins: j + 1, ph: 'ins', title: '挿入', note: 'data[' + (j + 1) + '] = key(<b>' + key + '</b>) を穴に挿入' + (j < 0 ? '（先頭まで到達＝この中で最小だった）' : '') + '。先頭 ' + (i + 1) + ' 個が整列済みになった。' });
+  }
+  snap({ region: n - 1, done: true, ph: 'done', title: '完了', note: '<b>ソート完了！</b> 比較 <b>' + comp + '</b> 回、移動 <b>' + mov + '</b> 回。データの並びを変えると回数がどう変わるか、上のボタンで試そう。' });
+  return steps;
+}
+
+function randData(n){
+  var a = [], used = {};
+  while(a.length < n){
+    var v = Math.floor(Math.random() * 90) + 10;
+    if(!used[v]){ used[v] = 1; a.push(v); }
+  }
+  return a;
+}
+
+function wirePresets(rootId, fn){
+  var root = $(rootId);
+  if(!root) return;
+  var btns = root.querySelectorAll('.iv-btn.preset');
+  Array.prototype.forEach.call(btns, function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(btns, function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel');
+      fn(b);
+    });
+  });
+}
+
+// --- 1.3 手順シミュレーター（4操作のどれを実行中かバッジで表示） ---
+(function(){
+  var row = $('iv-sim-row'); if(!row) return;
+  var keyl = $('iv-sim-key');
+  var phEl = $('iv-sim-ph');
+  var chips = {};
+  Array.prototype.forEach.call(phEl.querySelectorAll('span'), function(s){ chips[s.getAttribute('data-ph')] = s; });
+  // ステップの種類 → 光らせるバッジ（「ずらす」は比較とずらしを同時に行う）
+  var MAP = { pick: ['pick'], shift: ['cmp', 'shift'], stop: ['cmp'], ins: ['ins'] };
+  ivStepper('iv-sim', { steps: buildSortSteps([64, 34, 25, 12, 22]), interval: 1600, render: function(st){
+    renderKeyline(keyl, st);
+    renderArray(row, st);
+    var on = MAP[st.ph] || [];
+    for(var k in chips){ chips[k].className = (on.indexOf(k) >= 0) ? 'on' : ''; }
+  } });
+})();
+
+// --- クイズ: 挿入位置クリック ---
+(function(){
+  var row = $('iv-qz-row'); if(!row) return;
+  var QS = [
+    { arr: [25,34,64], key: 12, ans: 0, exp: '12 はどの要素より小さい → 全部を右にずらして先頭（すき間0）へ。' },
+    { arr: [12,25,34,64], key: 22, ans: 1, exp: '12 &lt; 22 &lt; 25 → 12 の後ろ（すき間1）。25, 34, 64 が右へずれる。' },
+    { arr: [12,25,34,64], key: 50, ans: 3, exp: '34 &lt; 50 &lt; 64 → すき間3。ずれるのは 64 の1個だけ。' },
+    { arr: [12,25,34,64], key: 99, ans: 4, exp: '99 は最大 → 末尾（すき間4）。比較1回で while にも入らない＝最良ケース。' },
+    { arr: [5,5,9], key: 5, ans: 2, exp: '挿入ソートは data[j] &gt; key のときだけずらす。9 だけが右へずれ、新しい 5 は既存の 5 の<b>後ろ</b>へ → これが「安定ソート」。' }
+  ];
+  var qi = 0, score = 0, tries = 0, answered = false;
+  var fb = $('iv-qz-fb'), title = $('iv-qz-title'), keyl = $('iv-qz-key'), scoreEl = $('iv-qz-score');
+  function build(){
+    var q = QS[qi]; answered = false;
+    fb.textContent = ''; fb.style.color = '#ccc';
+    title.textContent = '🖱 クイズ ' + (qi + 1) + ' / ' + QS.length + ' ── key はどの「すき間」に入る？';
+    keyl.innerHTML = '整列済みの列に key = <span class="iv-keybadge">' + q.key + '</span> を挿入。正しいすき間をクリック！';
+    row.innerHTML = '';
+    for(var g = 0; g <= q.arr.length; g++){
+      (function(gi){
+        var gap = document.createElement('button');
+        gap.type = 'button'; gap.className = 'iv-gap'; gap.title = 'すき間' + gi;
+        gap.addEventListener('click', function(){ answer(gi, gap); });
+        row.appendChild(gap);
+      })(g);
+      if(g < q.arr.length){
+        var c = document.createElement('div'); c.className = 'iv-cell sorted'; c.textContent = q.arr[g];
+        var ix = document.createElement('span'); ix.className = 'idx'; ix.textContent = '[' + g + ']';
+        c.appendChild(ix);
+        row.appendChild(c);
+      }
+    }
+    scoreEl.textContent = '正解 ' + score + ' / ' + tries;
+  }
+  function answer(gi, gapEl){
+    if(answered) return;
+    answered = true; tries++;
+    var q = QS[qi], gaps = row.querySelectorAll('.iv-gap');
+    if(gi === q.ans){
+      score++;
+      gapEl.className = 'iv-gap good';
+      fb.innerHTML = '⭕ 正解！ ' + q.exp;
+      fb.style.color = '#76B900';
+    } else {
+      gapEl.className = 'iv-gap bad';
+      gaps[q.ans].className = 'iv-gap good';
+      fb.innerHTML = '❌ おしい！ 正解は緑の位置。' + q.exp;
+      fb.style.color = '#FF5252';
+    }
+    var res = q.arr.slice(); res.splice(q.ans, 0, q.key);
+    var line = document.createElement('div');
+    line.style.cssText = 'width:100%;text-align:center;color:#aaa;font-size:0.85rem;margin-top:1.4rem;font-family:JetBrains Mono,monospace';
+    line.textContent = '挿入後: [' + res.join(', ') + ']';
+    row.appendChild(line);
+    scoreEl.textContent = '正解 ' + score + ' / ' + tries;
+  }
+  $('iv-qz-next').addEventListener('click', function(){ qi = (qi + 1) % QS.length; build(); });
+  build();
+})();
+
+// --- 例題1: 変数交換 ---
+(function(){
+  var a = $('iv-ex1-a'); if(!a) return;
+  var t = $('iv-ex1-t'), b = $('iv-ex1-b');
+  var steps = [
+    { a: 30, t: '─', b: 10, hl: '', title: '交換前', note: 'value_a = 30, value_b = 10。temp はまだ空。ここから3行で交換する。' },
+    { a: 30, t: 30, b: 10, hl: 't', title: 'temp = value_a', note: '<code>temp = value_a</code> → 30 を temp に<b>退避</b>。これをしないと、次の行で 30 が消えてしまう。' },
+    { a: 10, t: 30, b: 10, hl: 'a', title: 'value_a = value_b', note: '<code>value_a = value_b</code> → value_a に 10 を上書き。元の 30 は temp に避難してあるので失われない。' },
+    { a: 10, t: 30, b: 30, hl: 'b', title: 'value_b = temp', note: '<code>value_b = temp</code> → 退避していた 30 を value_b へ。<b>交換完了！</b>（a=10, b=30）挿入ソートの「ずらし」も、この退避のアイデアの応用。' }
+  ];
+  ivStepper('iv-ex1', { steps: steps, interval: 1800, render: function(st){
+    a.textContent = st.a; t.textContent = st.t; b.textContent = st.b;
+    a.className = 'val' + (st.hl === 'a' ? ' hl' : '');
+    t.className = 'val' + (st.hl === 't' ? ' hl' : '');
+    b.className = 'val' + (st.hl === 'b' ? ' hl' : '');
+  } });
+})();
+
+// --- 例題2: 挿入位置さがし ---
+(function(){
+  var row = $('iv-ex2-row'); if(!row) return;
+  var keyl = $('iv-ex2-key'), SP = [12, 25, 34, 64];
+  function build(val){
+    var steps = [], pos = SP.length;
+    steps.push({ arr: SP.slice(), region: -1, key: val, title: '開始', note: 'new_value = <b>' + val + '</b>。<b>右端</b>（i=' + (SP.length - 1) + '）から左へ比較していく。position の初期値は ' + SP.length + '（どれよりも大きければ末尾に入る）。' });
+    for(var i = SP.length - 1; i >= 0; i--){
+      if(SP[i] > val){
+        pos = i;
+        steps.push({ arr: SP.slice(), region: -1, key: val, cmp: i, title: 'i=' + i, note: 'sorted_part[' + i + '] = ' + SP[i] + ' &gt; ' + val + ' → position = <b>' + i + '</b> に更新して、さらに左へ。' });
+      } else {
+        steps.push({ arr: SP.slice(), region: -1, key: val, cmp: i, title: 'i=' + i + ' で停止', note: 'sorted_part[' + i + '] = ' + SP[i] + ' ≦ ' + val + ' → これより左はすべて ' + val + ' 以下なので <b>break</b>（むだな比較をしない）。' });
+        break;
+      }
+    }
+    var res = SP.slice(); res.splice(pos, 0, val);
+    steps.push({ arr: res, region: -1, key: val, ins: pos, title: '挿入位置 = ' + pos, note: '<b>挿入位置 = ' + pos + '</b>。要素を右にずらして挿入すると [' + res.join(', ') + '] になる。' });
+    return steps;
+  }
+  var api = ivStepper('iv-ex2', { steps: build(22), interval: 1600, render: function(st){
+    renderKeyline(keyl, st, 'new_value'); renderArray(row, st);
+  } });
+  wirePresets('iv-ex2', function(btn){ api.setSteps(build(parseInt(btn.dataset.val, 10))); });
+})();
+
+// --- 例題3: 1パスの挿入 ---
+(function(){
+  var row = $('iv-ex3-row'); if(!row) return;
+  var keyl = $('iv-ex3-key'), BASE = [25, 34, 64, 12, 22];
+  function build(ti){
+    var arr = BASE.slice(), steps = [], key = arr[ti], j = ti - 1;
+    steps.push({ arr: arr.slice(), region: ti - 1, title: '開始', note: 'data = [' + arr.join(', ') + ']。このコードは「data[0]〜data[' + (ti - 1) + '] はソート済み」という<b>前提</b>で、data[' + ti + '] を正しい位置に挿入する。' + (ti === 4 ? '<b>※ 今回は前提が崩れている（[25, 34, 64, 12] は未整列）ことに注目！</b>' : '') });
+    arr[ti] = null;
+    steps.push({ arr: arr.slice(), region: ti, key: key, title: 'key取り出し', note: 'key = data[' + ti + '] = <b>' + key + '</b> を取り出す。j = ' + j + ' から左へ比較する。' });
+    while(j >= 0){
+      if(arr[j] > key){
+        var mv = arr[j];
+        arr[j + 1] = mv; arr[j] = null;
+        steps.push({ arr: arr.slice(), region: ti, key: key, cmp: j + 1, title: 'ずらす', note: 'data[' + j + '] = ' + mv + ' &gt; key(' + key + ') → 右へずらす。穴が左に動く。' });
+        j--;
+      } else {
+        steps.push({ arr: arr.slice(), region: ti, key: key, cmp: j, title: '停止', note: 'data[' + j + '] = ' + arr[j] + ' ≦ key(' + key + ') → ここで停止（break）。' });
+        break;
+      }
+    }
+    arr[j + 1] = key;
+    var doneNote;
+    if(ti === 3) doneNote = '結果: [' + arr.join(', ') + ']。先頭4要素が整列済みになった（data[4]=22 はまだ未処理）。';
+    else doneNote = '結果: [' + arr.join(', ') + '] ── <b>1つも動かない！</b> data[3]=12 &gt; 22 が偽なので即 break。左側がソートされていない（前提が崩れている）と正しく整列できない。だから本物の挿入ソートは i=1 から順に全パスを実行する（例題4へ）。';
+    steps.push({ arr: arr.slice(), region: ti, ins: j + 1, title: '挿入', note: 'data[' + (j + 1) + '] = key(<b>' + key + '</b>) を挿入。' + doneNote });
+    return steps;
+  }
+  var api = ivStepper('iv-ex3', { steps: build(3), interval: 1700, render: function(st){
+    renderKeyline(keyl, st); renderArray(row, st);
+  } });
+  wirePresets('iv-ex3', function(btn){ api.setSteps(build(parseInt(btn.dataset.ti, 10))); });
+})();
+
+// --- 例題4: 完全な挿入ソート（カウント付き） ---
+(function(){
+  var row = $('iv-ex4-row'); if(!row) return;
+  var keyl = $('iv-ex4-key'), stats = $('iv-ex4-stats');
+  var P = { moto: [64,34,25,12,22], sorted: [1,2,3,4,5], rev: [5,4,3,2,1] };
+  var api = ivStepper('iv-ex4', { steps: buildSortSteps(P.moto), interval: 1400, render: function(st){
+    renderKeyline(keyl, st); renderArray(row, st); renderStats(stats, st);
+  } });
+  wirePresets('iv-ex4', function(btn){
+    var d = btn.dataset.d;
+    api.setSteps(buildSortSteps(d === 'rand' ? randData(5) : P[d]));
+  });
+})();
+
+// --- 例題5: 棒グラフ可視化 ---
+(function(){
+  var bars = $('iv-ex5-bars'); if(!bars) return;
+  var stats = $('iv-ex5-stats');
+  var P = { moto: [64,34,25,12,22,50,15], rev: [7,6,5,4,3,2,1] };
+  function renderBars(st){
+    var arr = st.arr, max = 1, k, v;
+    for(k = 0; k < arr.length; k++){
+      v = (arr[k] === null ? st.key : arr[k]);
+      if(v > max) max = v;
+    }
+    bars.innerHTML = '';
+    for(k = 0; k < arr.length; k++){
+      var b = document.createElement('div'); b.className = 'iv-bar';
+      v = arr[k];
+      if(v === null){ v = st.key; b.className += ' keybar'; }
+      else if(!st.done && st.region >= 0 && k > st.region){ b.className += ' unsorted'; }
+      if(st.ins === k) b.className += ' keybar';
+      b.style.height = Math.max(20, Math.round(v / max * 150)) + 'px';
+      b.textContent = v;
+      bars.appendChild(b);
+    }
+  }
+  var api = ivStepper('iv-ex5', { steps: buildSortSteps(P.moto), interval: 1000, render: function(st){
+    renderBars(st); renderStats(stats, st);
+  } });
+  wirePresets('iv-ex5', function(btn){
+    var d = btn.dataset.d;
+    api.setSteps(buildSortSteps(d === 'rand' ? randData(7) : P[d]));
+  });
+})();
+
+// --- 1.2 トランプ手札ゲーム（自分でクリックして差し込む） ---
+(function(){
+  var row = $('iv-cards-row'); if(!row) return;
+  var keyl = $('iv-cards-key'), fb = $('iv-cards-fb'), prog = $('iv-cards-prog');
+  var bDraw = $('iv-cards-draw'), bShuf = $('iv-cards-shuffle');
+  var BASE = [{v:7,s:'♠'},{v:3,s:'♥'},{v:9,s:'♣'},{v:4,s:'♦'},{v:8,s:'♥'}];
+  var deck, hand, held, mistakes, placed, lastIns = -1;
+  function lbl(c){ return c.s + c.v; }
+  function isRed(c){ return c.s === '♥' || c.s === '♦'; }
+  function shuffle(a){
+    a = a.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var r = Math.floor(Math.random() * (i + 1)), t = a[i];
+      a[i] = a[r]; a[r] = t;
+    }
+    return a;
+  }
+  function mkCard(c, extra){
+    var d = document.createElement('div'); d.className = 'iv-card' + (extra || '');
+    if(isRed(c)) d.className += ' red';
+    d.textContent = c.v;
+    var pip = document.createElement('span'); pip.className = 'pip'; pip.textContent = c.s;
+    d.appendChild(pip);
+    return d;
+  }
+  function render(){
+    row.innerHTML = '';
+    if(held){
+      // 手に持っている間は、差し込めるすき間（破線）を表示する
+      for(var g = 0; g <= hand.length; g++){
+        (function(gi){
+          var gap = document.createElement('button');
+          gap.type = 'button'; gap.className = 'iv-gap tall'; gap.title = 'ここに差し込む';
+          gap.addEventListener('click', function(){ drop(gi, gap); });
+          row.appendChild(gap);
+        })(g);
+        if(g < hand.length) row.appendChild(mkCard(hand[g]));
+      }
+    } else {
+      for(var k = 0; k < hand.length; k++) row.appendChild(mkCard(hand[k], (placed > 0 && k === lastIns) ? ' insc' : ''));
+    }
+    if(deck.length){
+      var sep = document.createElement('span'); sep.style.cssText = 'width:26px;flex:0 0 auto';
+      row.appendChild(sep);
+      for(var d2 = 0; d2 < deck.length; d2++){
+        var back = document.createElement('div'); back.className = 'iv-card back';
+        if(d2 > 0) back.style.marginLeft = '-40px';
+        row.appendChild(back);
+      }
+    }
+    if(held) keyl.innerHTML = '手に持ったカード: <span class="iv-keybadge"' + (isRed(held) ? ' style="color:#c62828"' : '') + '>' + lbl(held) + '</span> ── 入るべき「すき間」をクリック！';
+    else if(deck.length) keyl.innerHTML = '「🂠 次のカードを引く」を押して、カードを1枚手に取ろう';
+    else keyl.innerHTML = '<span style="color:#76B900">🎉 完成！ 手札が小さい順に並んだ ── これが挿入ソート</span>';
+    bDraw.disabled = !!held || !deck.length;
+    prog.textContent = '差し込み ' + placed + ' / ' + (BASE.length - 1) + '　ミス ' + mistakes + ' 回';
+  }
+  function drop(gi, gapEl){
+    var correct = 0;
+    for(var k = 0; k < hand.length; k++) if(hand[k].v < held.v) correct++;
+    if(gi === correct){
+      hand.splice(gi, 0, held);
+      lastIns = gi; placed++;
+      fb.innerHTML = '⭕ 正解！ ' + lbl(held) + ' を差し込んだ。' + (gi < hand.length - 1 ? '右どなりのカードが1つずつ右にずれた ── プログラムではこれが data[j+1] = data[j] の「ずらし」。' : 'いちばん右（最大）なので、ずらしは0回。');
+      fb.style.color = '#76B900';
+      held = null;
+      render();
+      if(!deck.length && !held) fb.innerHTML += ' 全カード整列、挿入ソート完了！';
+    } else {
+      mistakes++;
+      gapEl.className = 'iv-gap tall bad';
+      var nb = (gi < correct) ? hand[gi] : hand[gi - 1];
+      fb.innerHTML = '❌ そこではない！ ' + lbl(held) + ' は ' + lbl(nb) + ' より' + ((gi < correct) ? '大きい' : '小さい') + 'ので、もっと' + ((gi < correct) ? '<b>右</b>' : '<b>左</b>') + '。';
+      fb.style.color = '#FF5252';
+      prog.textContent = '差し込み ' + placed + ' / ' + (BASE.length - 1) + '　ミス ' + mistakes + ' 回';
+    }
+  }
+  function reset(shuf){
+    deck = shuf ? shuffle(BASE) : BASE.slice();
+    hand = [deck.shift()];
+    held = null; mistakes = 0; placed = 0; lastIns = -1;
+    fb.textContent = '';
+    render();
+  }
+  bDraw.addEventListener('click', function(){
+    held = deck.shift();
+    fb.textContent = '';
+    render();
+  });
+  bShuf.addEventListener('click', function(){ reset(true); });
+  reset(false);
+})();
+})();
+</script>
 
 <script>
 // Copy button for pre blocks
