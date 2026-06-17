@@ -1311,22 +1311,53 @@ reversed_data = <span class="fn">list</span>(<span class="fn">range</span>(<span
 
     <div class="card" style="border-left:4px solid #4FC3F7">
       <div class="card-header">
-        <span class="tag tag-group">グループワーク</span>
-        <h3>質問し合って理解を深める（15分）</h3>
+        <span class="tag tag-group">口頭試問</span>
+        <h3>3つのソートを「自分の言葉」で説明する（15分）</h3>
       </div>
-      <p>以下の質問例を参考に、グループ内で互いに質問し合ってください。質問例をそのまま使ってもOKです。</p>
+      <p>このグループワークのゴールは、<strong>二分挿入ソート・バブルソート・シェルソート</strong>の3つを、教科書の言葉を丸暗記するのではなく<strong>自分の言葉で、聞き手にわかりやすく説明できる</strong>ようになることです。</p>
+
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">質問の切り口（参考）</p>
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">進め方</p>
+        <ol style="padding-left:1.4rem;font-size:0.92rem;line-height:1.9;color:#ccc;margin:0">
+          <li><strong>説明役を1人決める</strong>。残りのメンバーは聞き手（採点役）になる。</li>
+          <li>説明役は3つのうち<strong>1つのソート</strong>を選び、下の「説明に必ず入れたいポイント」を手がかりに、<strong>1〜2分・自分の言葉</strong>で説明する（コードの丸読みはNG）。</li>
+          <li>聞き手は「<strong>どこが分かりにくかったか</strong>」を1つ以上フィードバックし、評価（A/B/C）をつける。</li>
+          <li>説明役と担当ソートを交代し、<strong>3つ全部が誰かに説明される</strong>まで繰り返す。</li>
+        </ol>
+      </div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">説明に必ず入れたいポイント（カンペにせず、確認用に）</p>
         <table>
-          <tr><th style="width:25%">カテゴリ</th><th>質問例</th></tr>
-          <tr><td><strong style="color:#76B900">出力予測</strong></td><td>「<code>data = [5, 2, 8, 2, 1]</code> にバブルソートを適用するとき、1パス目で何回の交換が行われる？」</td></tr>
-          <tr><td><strong style="color:#FFB800">理由説明</strong></td><td>「二分挿入ソートは比較回数を減らせるのに、全体の計算量は挿入ソートと同じ O(n^2) なのはなぜ？」</td></tr>
-          <tr><td><strong style="color:#FF5252">改造提案</strong></td><td>「バブルソートに『1パスで交換が0回なら終了する』最適化を加えると、最良ケースの計算量はいくつになる？」</td></tr>
+          <tr><th style="width:24%">ソート</th><th>説明でおさえる点</th></tr>
+          <tr>
+            <td><strong style="color:#76B900">二分挿入ソート</strong></td>
+            <td>挿入位置を<strong>二分探索</strong>で探す挿入ソート／比較は <strong>O(log n)</strong> に減る／でも<strong>ずらし（シフト）が O(n)</strong> なので全体は <strong>O(n²)</strong> のまま／たとえ（辞書を真ん中から引く）</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#FFB800">バブルソート</strong></td>
+            <td><strong>隣どうしを比較</strong>して大きい方を後ろへ送る／1パスごとに<strong>最大値が右端に確定</strong>（泡が浮かぶ）／<strong>早期終了</strong>すると最良 <strong>O(n)</strong>／ふつうは <strong>O(n²)</strong></td>
+          </tr>
+          <tr>
+            <td><strong style="color:#4FC3F7">シェルソート</strong></td>
+            <td><strong>離れた要素</strong>を gap 間隔で先にざっくり整列／<strong>gap を徐々に縮める</strong>（最後は gap=1＝ふつうの挿入ソート）／そのときには<strong>ほぼ整列済みなので速い</strong>／挿入ソートより速い</td>
+          </tr>
         </table>
       </div>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバーの氏名と、議論した質問・回答の要点を記録してください。</div></div>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">評価の目安</p>
+        <table>
+          <tr><th style="width:18%">評価</th><th>基準</th></tr>
+          <tr><td><strong style="color:#76B900">A</strong></td><td>仕組みと計算量を自分の言葉で説明でき、たとえや具体例で<strong>初めて聞く人にも伝わる</strong></td></tr>
+          <tr><td><strong style="color:#FFB800">B</strong></td><td>仕組みは説明できるが、計算量の理由やたとえが弱い／少し詰まる</td></tr>
+          <tr><td><strong style="color:#FF5252">C</strong></td><td>用語を並べるだけ、またはコードを読み上げるだけで<strong>自分の理解になっていない</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバー全員の氏名と、各ラウンドの「説明役 → 担当ソート → 聞き手のフィードバック要点 → 評価（A/B/C）」を記録してください。</div></div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。各ソートアルゴリズムの動作の違いを口頭で比較する練習をしておくと、標準課題がスムーズに解けるはずです。
+        <strong>ヒント:</strong> 「自分の言葉で説明できる ＝ 本当に理解している」のサインです。ここで3つのソートを口で説明できるようになっておくと、標準課題のトレースや発展課題の考察がぐっと楽になります。
       </div>
     </div>
 
@@ -1500,14 +1531,14 @@ bisect_left と bisect_right の違い:
 
 ---
 
-## グループ口頭試問
+## グループ口頭試問（3つのソートを自分の言葉で説明）
 **グループメンバー:**
 
-| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
-|--------|-------------|--------|------|------|
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
+| 説明役 | 担当ソート | 聞き手のフィードバック要点 | 評価 |
+|--------|-----------|---------------------------|------|
+|        | 二分挿入ソート |                        | A/B/C |
+|        | バブルソート   |                        | A/B/C |
+|        | シェルソート   |                        | A/B/C |
 
 ---
 
