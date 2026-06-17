@@ -1175,11 +1175,12 @@ bub_time = time.<span class="fn">time</span>() - start
 <span class="cmt"># ランダムデータ</span>
 random_data = [random.<span class="fn">randint</span>(<span class="num">0</span>, <span class="num">10000</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2000</span>)]
 
-<span class="cmt"># ほぼ整列済み（10%入れ替え）</span>
+<span class="cmt"># ほぼ整列済み（近くの要素を少しだけ乱し、大きな値を1つ先頭に紛れ込ませる）</span>
 nearly = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">2000</span>))
-<span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">200</span>):
-    a, b = random.<span class="fn">randint</span>(<span class="num">0</span>,<span class="num">1999</span>), random.<span class="fn">randint</span>(<span class="num">0</span>,<span class="num">1999</span>)
-    nearly[a], nearly[b] = nearly[b], nearly[a]
+<span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):              <span class="cmt"># 隣どうしを軽く入れ替え</span>
+    a = random.<span class="fn">randint</span>(<span class="num">0</span>, <span class="num">1998</span>)
+    nearly[a], nearly[a + <span class="num">1</span>] = nearly[a + <span class="num">1</span>], nearly[a]
+nearly.<span class="fn">insert</span>(<span class="num">0</span>, nearly.<span class="fn">pop</span>())     <span class="cmt"># 最大値を先頭へ（挿入は軽いがバブルには最悪の turtle）</span>
 
 <span class="cmt"># 逆順</span>
 reversed_data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">2000</span>, <span class="num">0</span>, -<span class="num">1</span>))
@@ -1593,9 +1594,9 @@ data_size = 5000:
         <p>3パターン（n=2000）で <code>insertion_sort_count</code> と <code>bubble_sort_count</code> を実行した結果例:</p>
         <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">パターン            挿入ソート比較   バブルソート比較
 ランダム            約 100万回       約 200万回
-ほぼ整列済み(10%)   約 4千回         約 200万回
+ほぼ整列済み        約 4千回         約 200万回
 逆順                約 200万回       約 200万回</pre>
-        <p>差が最も大きいのは <strong>「ほぼ整列済み」</strong>パターン。挿入ソートは <code>data[j] &gt; key</code> が早めに偽になり <code>break</code> で内側ループを抜けられるため、比較回数が <strong>O(n)</strong> に近づく。一方、バブルソートは早期終了フラグがあっても、わずかな逆転ペアが残っているうちは全範囲を走査するため <strong>O(n²)</strong> のまま。<strong>「ほぼ整列済み」データでは挿入ソートが圧倒的に有利</strong>になるのは、現実のデータ（追加更新でほぼ並んでいる）に強いという、挿入ソートの実用的な長所そのもの。逆順は両方の最悪ケースで、比較回数も実行時間もほぼ同じになる。</p>
+        <p>差が最も大きいのは <strong>「ほぼ整列済み」</strong>パターン。挿入ソートは <code>data[j] &gt; key</code> が早めに偽になり <code>break</code> で内側ループを抜けられるため、比較回数が <strong>O(n)</strong> に近づく。一方、バブルソートは<strong>先頭に紛れた大きな値（turtle）が1パスにつき1マスしか右へ進めない</strong>ため、早期終了フラグがあってもその値が定位置に着くまで約 n 回のパスが必要になり、<strong>O(n²)</strong> のまま。<strong>「ほぼ整列済み」データでは挿入ソートが圧倒的に有利</strong>になるのは、現実のデータ（追加更新でほぼ並んでいる）に強いという、挿入ソートの実用的な長所そのもの。逆順は両方の最悪ケースで、比較回数も実行時間もほぼ同じになる。</p>
       </div>
     </details>
     </div>
