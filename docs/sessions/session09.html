@@ -173,6 +173,7 @@ a.sub-item:hover {
   <a href="#sec-submission">提出</a>
   <a href="#sec-explanation">説明</a>
   <a href="#sec-examples">例題</a>
+  <a href="#sec-compare">見比べ</a>
   <a href="#sec-group-disc" class="nav-advanced">議論</a>
   <a href="#sec-standard" class="nav-assignment">標準</a>
   <a href="#sec-advanced" class="nav-advanced">発展</a>
@@ -1297,6 +1298,129 @@ reversed_data = <span class="fn">list</span>(<span class="fn">range</span>(<span
         <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 3パターンの比較結果と、「ほぼ整列済み」で挿入ソートが有利な理由を書いてください。</div></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ============ 2.5 COMPARE 3 SORTS (animated) ============ -->
+<section id="sec-compare">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#4FC3F7">⚖️</div>
+      <h2>3つのソートを見比べる</h2>
+    </div>
+    <p style="margin-bottom:1rem">グループワークの前に、<strong>まったく同じデータ <code>[5, 2, 8, 1, 4]</code></strong> を <strong>二分挿入ソート・バブルソート・シェルソート</strong>の3つで並べ替えると、手順がどう違うかをアニメーションで見比べましょう。3つともゴールは同じ <code>[1, 2, 4, 5, 8]</code> ですが、<strong>そこへたどり着くやり方が違う</strong>のがポイントです。</p>
+    <p style="margin-bottom:1rem;font-size:0.9rem;color:#aaa"><strong>「▶ 再生」</strong>で自動再生、<strong>「次へ／前へ」</strong>で1ステップずつ確認できます。3つのパネルは同じステップ番号で並んで進みます。</p>
+
+    <style>
+      .sc-wrap{background:#0A0A0A;border:1px solid #333;border-radius:14px;padding:1rem;margin:1rem 0}
+      .sc-controls{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin-bottom:0.8rem;justify-content:center}
+      .sc-controls button{background:#1a2e0a;color:#93D500;border:1px solid #4A7A00;border-radius:8px;padding:0.45rem 1rem;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background 0.15s}
+      .sc-controls button:hover{background:#244010}
+      .sc-controls #sc-play{background:#76B900;color:#0a0a0a;border-color:#76B900}
+      .sc-controls #sc-play:hover{background:#8fd400}
+      .sc-step{color:#888;font-size:0.8rem;margin-left:0.3rem}
+      .sc-panel{margin:0.7rem 0;padding:0.8rem 1rem;background:#111;border-radius:10px;border:1px solid #2a2a2a}
+      .sc-head{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem}
+      .sc-badge{font-weight:800;font-size:0.9rem;padding:0.18rem 0.7rem;border-radius:6px}
+      .sc-boxes{display:flex;gap:0.4rem;flex-wrap:wrap}
+      .sc-box{width:46px;height:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.05rem;background:#141414;border:1.5px solid #3a5a00;color:#aaa;transition:all 0.25s}
+      .sc-box.key{border-color:#FFB800;background:#2e1a0a;color:#FFB800}
+      .sc-box.cmp{border-color:#4FC3F7;background:#0d2a3a;color:#4FC3F7}
+      .sc-box.placed{border-color:#FF5252;background:#3a1414;color:#FF5252}
+      .sc-box.sorted{border-color:#76B900;background:#15240a;color:#76B900}
+      .sc-box.done{border-color:#76B900;border-width:3px;background:#1a2e0a;color:#76B900}
+      .sc-note{margin-top:0.55rem;font-size:0.85rem;color:#ccc;min-height:2.6em;line-height:1.5}
+      .sc-legend{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;font-size:0.76rem;color:#999;margin-top:0.4rem}
+      .sc-legend span{display:flex;align-items:center;gap:0.3rem}
+      .sc-legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+    </style>
+
+    <div class="sc-wrap">
+      <div class="sc-controls">
+        <button id="sc-restart">↺ 最初へ</button>
+        <button id="sc-prev">◀ 前へ</button>
+        <button id="sc-play">▶ 再生</button>
+        <button id="sc-next">次へ ▶</button>
+        <span class="sc-step" id="sc-step"></span>
+      </div>
+      <div id="sc-panels"></div>
+      <div class="sc-legend">
+        <span><i style="background:#FFB800"></i>注目中(key)</span>
+        <span><i style="background:#4FC3F7"></i>比較中</span>
+        <span><i style="background:#FF5252"></i>挿入した</span>
+        <span><i style="background:#76B900"></i>確定／ソート済み</span>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-top:1.2rem">
+      <h4>手順のひとことまとめ</h4>
+      <table>
+        <tr><th style="width:22%">ソート</th><th>並べ替えのやり方</th><th style="width:24%">計算量</th></tr>
+        <tr><td><strong style="color:#FFB800">二分挿入ソート</strong></td><td>入れる<strong>場所を二分探索で先に決めて</strong>から、後ろをずらして挿入する</td><td>O(n²)<br><span style="color:#888;font-size:0.8rem">比較はO(n log n)</span></td></tr>
+        <tr><td><strong style="color:#4FC3F7">バブルソート</strong></td><td><strong>隣どうしを比べて大きい方を右へ</strong>。1パスごとに最大値が右端に浮かぶ</td><td>O(n²)<br><span style="color:#888;font-size:0.8rem">最良O(n)</span></td></tr>
+        <tr><td><strong style="color:#76B900">シェルソート</strong></td><td><strong>離れた要素から先に整列</strong>し、間隔(gap)を縮める。最後はほぼ整列済みの挿入ソート</td><td>約O(n<sup>1.25</sup>)<br><span style="color:#888;font-size:0.8rem">gapの取り方次第</span></td></tr>
+      </table>
+      <p style="margin-top:0.8rem;font-size:0.9rem;color:#93D500">💡 この3つの違いを見たうえで、次のグループワークでは<strong>自分の言葉で説明</strong>してみましょう。</p>
+    </div>
+
+    <script>
+    (function(){
+      var A0=[5,2,8,1,4];
+      function rng(a,b,t){var o={};for(var i=a;i<=b;i++)o[i]=t;return o;}
+      function asg(){var o={};for(var i=0;i<arguments.length;i++){var s=arguments[i];for(var k in s)o[k]=s[k];}return o;}
+      function bl(a,x,hi){var lo=0;while(lo<hi){var m=(lo+hi)>>1;if(a[m]<x)lo=m+1;else hi=m;}return lo;}
+      function fBin(){var a=A0.slice(),f=[],n=a.length;
+        f.push({arr:a.slice(),marks:{0:'sorted'},note:'先頭の [0] だけを「ソート済み」とみなしてスタート。'});
+        for(var i=1;i<n;i++){var key=a[i],pos=bl(a,key,i);
+          f.push({arr:a.slice(),marks:asg(rng(0,i-1,'sorted'),{[i]:'key'}),note:'key='+key+'：ソート済みの [0..'+(i-1)+'] を二分探索 → 入る位置は '+pos});
+          for(var j=i;j>pos;j--)a[j]=a[j-1];a[pos]=key;
+          f.push({arr:a.slice(),marks:asg(rng(0,i,'sorted'),{[pos]:'placed'}),note:'位置 '+pos+' へ '+key+' を挿入（後ろをずらして空ける）'});}
+        f.push({arr:a.slice(),marks:rng(0,n-1,'done'),note:'完成！場所探しは速い(O(log n))が、ずらしがO(n)なので全体はO(n²)。'});return f;}
+      function fBub(){var a=A0.slice(),f=[],n=a.length;
+        f.push({arr:a.slice(),marks:{},note:'隣どうしを比べ、大きい方を右へ。1パスで最大値が右端に浮かぶ。'});
+        for(var i=0;i<n-1;i++){var sw=false;
+          for(var j=0;j<n-1-i;j++){var m=rng(n-i,n-1,'done');m[j]='cmp';m[j+1]='cmp';
+            if(a[j]>a[j+1]){var tt=a[j];a[j]=a[j+1];a[j+1]=tt;sw=true;
+              f.push({arr:a.slice(),marks:m,note:'a['+j+'] と a['+(j+1)+'] を比較：左が大きい → 交換'});}
+            else f.push({arr:a.slice(),marks:m,note:'a['+j+'] と a['+(j+1)+'] を比較：そのまま'});}
+          f.push({arr:a.slice(),marks:rng(n-1-i,n-1,'done'),note:'パス'+(i+1)+'完了：'+a[n-1-i]+' が右端に確定'});
+          if(!sw){f.push({arr:a.slice(),marks:rng(0,n-1,'done'),note:'このパスは交換ゼロ → 早期終了！'});break;}}
+        f.push({arr:a.slice(),marks:rng(0,n-1,'done'),note:'完成！基本はO(n²)、すでに整列済みなら早期終了で最良O(n)。'});return f;}
+      function fShell(){var a=A0.slice(),f=[],n=a.length,gaps=[2,1];
+        f.push({arr:a.slice(),marks:{},note:'まず離れた要素(gap=2)からざっくり、次にgap=1で仕上げる。'});
+        for(var g=0;g<gaps.length;g++){var gap=gaps[g];
+          for(var i=gap;i<n;i++){var t=a[i],j=i,m={};m[i]='key';m[i-gap]='cmp';
+            f.push({arr:a.slice(),marks:m,note:'gap='+gap+'：a['+i+']='+t+' と '+gap+'個前の a['+(i-gap)+']='+a[i-gap]+' を比べる'});
+            while(j>=gap&&a[j-gap]>t){a[j]=a[j-gap];j-=gap;}a[j]=t;
+            f.push({arr:a.slice(),marks:{[j]:'placed'},note:'gap='+gap+'：'+t+' を '+gap+'間隔の正しい位置へ移動'});}
+          f.push({arr:a.slice(),marks:{},note:gap===2?'gap=2 終了：大まかに整列できた。次は gap=1。':'gap=1 終了：このときには ほぼ整列済みなので一瞬。'});}
+        f.push({arr:a.slice(),marks:rng(0,n-1,'done'),note:'完成！gap=1の時点でほぼ整列済みなので、ふつうの挿入ソートより速い。'});return f;}
+
+      var panels=[
+        {name:'二分挿入ソート',color:'#FFB800',frames:fBin()},
+        {name:'バブルソート',color:'#4FC3F7',frames:fBub()},
+        {name:'シェルソート',color:'#76B900',frames:fShell()}
+      ];
+      var maxLen=Math.max(panels[0].frames.length,panels[1].frames.length,panels[2].frames.length);
+      var wrap=document.getElementById('sc-panels');
+      panels.forEach(function(p,pi){var d=document.createElement('div');d.className='sc-panel';
+        d.innerHTML='<div class="sc-head"><span class="sc-badge" style="background:'+p.color+'22;color:'+p.color+';border:1px solid '+p.color+'">'+p.name+'</span></div><div class="sc-boxes" id="sc-b'+pi+'"></div><div class="sc-note" id="sc-n'+pi+'"></div>';
+        wrap.appendChild(d);});
+      var t=0,timer=null;
+      function render(){panels.forEach(function(p,pi){var fr=p.frames[Math.min(t,p.frames.length-1)];
+        document.getElementById('sc-b'+pi).innerHTML=fr.arr.map(function(v,idx){return '<div class="sc-box '+(fr.marks[idx]||'')+'">'+v+'</div>';}).join('');
+        document.getElementById('sc-n'+pi).textContent=fr.note;});
+        document.getElementById('sc-step').textContent='ステップ '+(t+1)+' / '+maxLen;}
+      function stop(){if(timer){clearInterval(timer);timer=null;document.getElementById('sc-play').textContent='▶ 再生';}}
+      function play(){if(timer){stop();return;}document.getElementById('sc-play').textContent='⏸ 停止';
+        timer=setInterval(function(){if(t<maxLen-1){t++;render();}else{stop();}},1300);}
+      document.getElementById('sc-play').onclick=play;
+      document.getElementById('sc-next').onclick=function(){stop();if(t<maxLen-1){t++;render();}};
+      document.getElementById('sc-prev').onclick=function(){stop();if(t>0){t--;render();}};
+      document.getElementById('sc-restart').onclick=function(){stop();t=0;render();};
+      render();
+    })();
+    </script>
   </div>
 </section>
 
