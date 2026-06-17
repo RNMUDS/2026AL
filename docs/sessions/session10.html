@@ -220,7 +220,7 @@ a.sub-item:hover {
         <strong style="color:#76B900">読み方:</strong> <code>counting sort</code> = <strong>カウンティング・ソート</strong>（直訳すると「数えてソート」）。日本語では<strong>「分布数えソート」「度数分布法によるソート」</strong>とも呼ぶ。
         関連語: <code>frequency</code>＝フリークエンシー（度数）、<code>cumulative</code>＝キュムレイティブ（累積）、<code>stable sort</code>＝ステイブル・ソート（安定ソート）。
       </p>
-      <p>これまで学んだソートアルゴリズム（挿入ソート、バブルソート）は<strong>要素同士を比較</strong>して順序を決めていました。比較ベースのソートの下限は O(n log n) です。</p>
+      <p>これまで学んだ<strong>挿入ソート</strong>は、「この2枚のカードはどちらが大きい？」と<strong>要素同士を比較</strong>しながら順序を決めていました。じつは、こうした<strong>比較を繰り返すソートは、どんなに工夫しても最速で O(n log n) より速くできない</strong>ことが数学的に証明されています（これを<strong>比較ベースのソートの下限</strong>と呼びます）。</p>
       <p style="margin-top:0.5rem">分布数えソート（Counting Sort）は<strong>比較を一切使いません</strong>。代わりに、<strong>各値が何回出現するかを数える</strong>ことでソートします。</p>
 
       <table>
@@ -230,7 +230,8 @@ a.sub-item:hover {
       </table>
 
       <div class="analogy">
-        図書館で返却された本を、ジャンル別の棚に戻す作業を想像してください。本を1冊ずつ「これは小説」「これは絵本」と<strong>分類した個数を数える</strong>だけで、本同士を比較せずに棚の容量を準備できます。これが「比較を使わないソート」のアイデアです。
+        郵便局で、大量のハガキを<strong>郵便番号順に並べる</strong>場面を想像してください。係員はハガキ同士を「どっちが先？」と見比べたりしません。<strong>番号ごとに用意した仕切り棚（マス）に、ハガキをそのまま放り込む</strong>だけ。全部入れ終えたら、棚を番号の小さい順に取り出せば、もう並び替えは完了しています。<br>
+        ── <strong>比べるのではなく、値そのものを「住所」にして置き場所を決める</strong>。これが分布数えソートの発想です。同じ番号のハガキが複数あっても、同じマスに重ねて入れておけば「その番号が何枚あったか（＝度数）」も自然に分かります。
       </div>
     </div>
 
@@ -260,14 +261,126 @@ a.sub-item:hover {
           <li>RGB値（0〜255）でピクセルをソート（画像処理）</li>
         </ul>
       </p>
+
+      <!-- Q3: animated illustration — narrow range (k small) + many items (n large) = fast -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="350" y="30" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="15">得意な理由 ── マス（値の種類 k）が少なく、件数（n）が多いから</text>
+
+          <!-- LEFT: incoming data pile -->
+          <text x="95" y="78" text-anchor="middle" fill="#888" font-size="12" font-weight="600">入力データ</text>
+          <text x="95" y="96" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">n は何万件でもOK</text>
+          <g>
+            <circle cx="60" cy="130" r="7" fill="#76B900"/><circle cx="82" cy="124" r="7" fill="#FFB800"/>
+            <circle cx="104" cy="134" r="7" fill="#4FC3F7"/><circle cx="72" cy="148" r="7" fill="#FFB800"/>
+            <circle cx="96" cy="152" r="7" fill="#76B900"/><circle cx="118" cy="146" r="7" fill="#FFB800"/>
+            <circle cx="58" cy="168" r="7" fill="#4FC3F7"/><circle cx="84" cy="172" r="7" fill="#76B900"/>
+            <circle cx="108" cy="170" r="7" fill="#FFB800"/><circle cx="74" cy="190" r="7" fill="#FFB800"/>
+            <circle cx="100" cy="192" r="7" fill="#4FC3F7"/><circle cx="124" cy="186" r="7" fill="#76B900"/>
+          </g>
+
+          <!-- flowing dots: pile -> bins -->
+          <circle r="7" fill="#FFB800">
+            <animate attributeName="cx" values="95;430;430" keyTimes="0;0.5;1" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="150;150;225" keyTimes="0;0.5;1" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="7" fill="#76B900">
+            <animate attributeName="cx" values="95;322;322" keyTimes="0;0.5;1" dur="3s" begin="0.7s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="150;150;225" keyTimes="0;0.5;1" dur="3s" begin="0.7s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3s" begin="0.7s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="7" fill="#4FC3F7">
+            <animate attributeName="cx" values="95;538;538" keyTimes="0;0.5;1" dur="3s" begin="1.4s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="150;150;225" keyTimes="0;0.5;1" dur="3s" begin="1.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3s" begin="1.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="7" fill="#FFB800">
+            <animate attributeName="cx" values="95;376;376" keyTimes="0;0.5;1" dur="3s" begin="2.1s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="150;150;225" keyTimes="0;0.5;1" dur="3s" begin="2.1s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3s" begin="2.1s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- RIGHT: few bins (narrow range k) -->
+          <text x="430" y="100" text-anchor="middle" fill="#888" font-size="12" font-weight="600">マス＝とりうる値（k は少しだけ）</text>
+          <!-- baseline -->
+          <line x1="285" y1="300" x2="595" y2="300" stroke="#444" stroke-width="2"/>
+          <!-- bins with growing bars -->
+          <g>
+            <!-- bin 0 -->
+            <rect x="290" y="240" width="42" height="60" fill="#1a2e0a" stroke="#4A7A00"/>
+            <rect x="290" width="42" fill="#76B900" opacity="0.85">
+              <animate attributeName="height" values="0;40;40;0" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="300;260;260;300" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <text x="311" y="318" text-anchor="middle" fill="#888" font-size="12">0</text>
+
+            <rect x="344" y="240" width="42" height="60" fill="#1a2e0a" stroke="#4A7A00"/>
+            <rect x="344" width="42" fill="#76B900" opacity="0.85">
+              <animate attributeName="height" values="0;58;58;0" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="300;242;242;300" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <text x="365" y="318" text-anchor="middle" fill="#888" font-size="12">1</text>
+
+            <rect x="398" y="240" width="42" height="60" fill="#1a2e0a" stroke="#4A7A00"/>
+            <rect x="398" width="42" fill="#FFB800" opacity="0.85">
+              <animate attributeName="height" values="0;50;50;0" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="300;250;250;300" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <text x="419" y="318" text-anchor="middle" fill="#888" font-size="12">2</text>
+
+            <rect x="452" y="240" width="42" height="60" fill="#1a2e0a" stroke="#4A7A00"/>
+            <rect x="452" width="42" fill="#FFB800" opacity="0.85">
+              <animate attributeName="height" values="0;38;38;0" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="300;262;262;300" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <text x="473" y="318" text-anchor="middle" fill="#888" font-size="12">3</text>
+
+            <rect x="506" y="240" width="42" height="60" fill="#1a2e0a" stroke="#4A7A00"/>
+            <rect x="506" width="42" fill="#4FC3F7" opacity="0.85">
+              <animate attributeName="height" values="0;30;30;0" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="y" values="300;270;270;300" keyTimes="0;0.5;0.9;1" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <text x="527" y="318" text-anchor="middle" fill="#888" font-size="12">4</text>
+
+            <text x="575" y="280" text-anchor="middle" fill="#666" font-size="16">…</text>
+          </g>
+
+          <!-- caption -->
+          <g>
+            <rect x="40" y="338" width="620" height="48" rx="10" fill="#111" stroke="#333"/>
+            <text x="350" y="359" text-anchor="middle" fill="#93D500" font-size="12.5" font-weight="700">値の種類（k）が少ない＝マスが少ない／件数（n）が多い → 1件あたりは「マスに入れるだけ」</text>
+            <text x="350" y="377" text-anchor="middle" fill="#aaa" font-size="11.5">だから合計 O(n + k) ≈ O(n) ── 比較ソートの O(n log n) よりずっと速い</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Q3: three concrete use-case chips -->
+      <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.4rem">
+        <div style="flex:1;min-width:180px;background:#141414;border:1px solid #333;border-radius:10px;padding:0.7rem 0.9rem">
+          <div style="font-size:1.4rem">📝</div>
+          <div style="color:#76B900;font-weight:700;font-size:0.9rem">テストの点数</div>
+          <div style="color:#aaa;font-size:0.82rem">0〜100点 → マスは <strong>101個だけ</strong>。10万人ぶんでも一瞬。</div>
+        </div>
+        <div style="flex:1;min-width:180px;background:#141414;border:1px solid #333;border-radius:10px;padding:0.7rem 0.9rem">
+          <div style="font-size:1.4rem">🎂</div>
+          <div style="color:#76B900;font-weight:700;font-size:0.9rem">年齢</div>
+          <div style="color:#aaa;font-size:0.82rem">0〜120歳 → マスは <strong>121個だけ</strong>。国民全員でも余裕。</div>
+        </div>
+        <div style="flex:1;min-width:180px;background:#141414;border:1px solid #333;border-radius:10px;padding:0.7rem 0.9rem">
+          <div style="font-size:1.4rem">🎨</div>
+          <div style="color:#76B900;font-weight:700;font-size:0.9rem">色（RGBの各値）</div>
+          <div style="color:#aaa;font-size:0.82rem">0〜255 → マスは <strong>256個だけ</strong>。画像の何百万画素でも高速。</div>
+        </div>
+      </div>
     </div>
 
     <div class="concept-box">
       <h4>1.2 分布数えソートの3ステップ</h4>
 
       <div class="analogy">
-        テストの答案用紙を点数別に仕分けする作業を想像してください。
-        まず点数ごとの山を作り（度数を数える）、次に「60点以下は何人？」と累計を出し（累積度数）、最後に答案を正しい順番に並べる（配置）。
+        <strong>10点満点の小テスト</strong>の答案を、点数順に並べる作業を想像してください（下の図の入力 [4, 2, 2, 8, 3, 3, 1] は7人ぶんの点数です）。
+        まず点数ごとに山を作り（<strong>度数を数える</strong>）、次に「<strong>3点以下は何人？</strong>」と下の点数から人数を足していき（<strong>累積度数</strong>）、最後にその人数を手がかりに答案を点数順へ置いていきます（<strong>配置</strong>）。
       </div>
 
       <div class="diagram-container">
@@ -331,6 +444,52 @@ a.sub-item:hover {
           </g>
         </svg>
       </div>
+    </div>
+
+    <div class="concept-box" style="border-left:4px solid #4FC3F7">
+      <h4 style="color:#4FC3F7">補足: なぜ「累積度数」をわざわざ計算するの？</h4>
+      <p>度数（count）を数えると「<strong>値3は2個ある</strong>」ことは分かります。でも、その2個を<strong>出力配列の何番目に書けばいいか</strong>までは、度数だけでは分かりません。そこで累積度数の出番です。</p>
+      <p style="margin-top:0.6rem">累積度数は「<strong>自分以下の値が、全部で何個あるか</strong>」を表します。<br>
+      たとえば「<strong>値3以下は5個</strong>」と分かれば、値3より小さい数で output の前のほうが5個ぶん埋まり、<strong>値3はちょうど5個目まで（= output[3], output[4]）に収まる</strong>と、置き場所が計算だけで一発で決まります。比較は一切いりません。</p>
+
+      <div class="diagram-container" style="margin:1rem 0">
+        <svg viewBox="0 0 660 230" width="660" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="330" y="28" text-anchor="middle" fill="#4FC3F7" font-weight="700" font-size="14">累積度数が「置く場所」を教えてくれる（値3の例）</text>
+
+          <!-- count row -->
+          <text x="40" y="74" fill="#888" font-size="12" font-weight="600">度数 count</text>
+          <text x="40" y="92" fill="#666" font-size="11">「値3は2個」＝個数は分かる…</text>
+          <g font-size="13" font-weight="700" text-anchor="middle">
+            <rect x="180" y="58" width="40" height="38" rx="5" fill="#141414" stroke="#444"/><text x="200" y="83" fill="#aaa">…</text>
+            <rect x="222" y="58" width="40" height="38" rx="5" fill="#1a1700" stroke="#FFB800"/><text x="242" y="83" fill="#FFB800">2</text>
+            <rect x="264" y="58" width="40" height="38" rx="5" fill="#141414" stroke="#444"/><text x="284" y="83" fill="#aaa">…</text>
+            <text x="242" y="112" fill="#666" font-size="10">値3</text>
+          </g>
+          <text x="470" y="82" fill="#FFB800" font-size="13" font-weight="700">→ でも「どこに置く？」は不明</text>
+
+          <!-- cumulative row -->
+          <text x="40" y="168" fill="#888" font-size="12" font-weight="600">累積度数</text>
+          <text x="40" y="186" fill="#666" font-size="11">「値3以下は5個」</text>
+          <g font-size="13" font-weight="700" text-anchor="middle">
+            <rect x="180" y="150" width="40" height="38" rx="5" fill="#141414" stroke="#444"/><text x="200" y="175" fill="#aaa">…</text>
+            <rect x="222" y="150" width="40" height="38" rx="5" fill="#0a1a2e" stroke="#4FC3F7"/><text x="242" y="175" fill="#4FC3F7">5</text>
+            <rect x="264" y="150" width="40" height="38" rx="5" fill="#141414" stroke="#444"/><text x="284" y="175" fill="#aaa">…</text>
+            <text x="242" y="204" fill="#666" font-size="10">値3</text>
+          </g>
+          <text x="470" y="167" fill="#76B900" font-size="13" font-weight="700">→ output[3], output[4] に決定！</text>
+          <line x1="328" y1="169" x2="392" y2="169" stroke="#76B900" stroke-width="2" marker-end="url(#cum-arr)"/>
+          <defs><marker id="cum-arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#76B900"/></marker></defs>
+        </svg>
+      </div>
+
+      <table>
+        <tr><th>配列</th><th>役割</th><th>教えてくれること</th></tr>
+        <tr><td>度数 count</td><td>数える</td><td>各値が<strong>何個</strong>あるか</td></tr>
+        <tr><td>累積度数 cumulative</td><td>位置を決める</td><td>各値を<strong>どこに置く</strong>か</td></tr>
+      </table>
+      <p style="background:#0a1a2e;border-left:4px solid #4FC3F7;padding:0.6rem 1rem;border-radius:6px;font-size:0.95rem;margin-top:0.4rem">
+        ひとことで言うと: <strong>度数＝「何個？」</strong>、<strong>累積度数＝「どこに置く？」</strong>。比較せずに置き場所を“計算”できるのが、累積度数のすごいところです。
+      </p>
     </div>
 
     <div class="concept-box">
@@ -967,15 +1126,15 @@ result = <span class="fn">counting_sort_basic</span>(data)
           </text>
           <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
-            cumulative[3]=4 → output[3]=3
+            cumulative[3]=5 → output[4]=3
           </text>
           <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
-            cumulative[3]=3 → output[2]→ あれ？(末尾から)
+            cumulative[3]=4 → output[3]=3
           </text>
           <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
-            cumulative[8]=6 → output[5]=8
+            cumulative[8]=7 → output[6]=8
           </text>
           <text x="350" y="180" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.12;0.16;0.32;0.36;0.52;0.56;0.72;0.76;1" dur="20s" repeatCount="indefinite"/>
@@ -1340,12 +1499,11 @@ max_val = <span class="num">100</span>
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
         <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記録する内容</p>
         <ul class="point-list">
-          <li><strong>グループメンバー全員の氏名</strong></li>
-          <li>各ラウンド: <strong>誰が</strong>（出題者）→ <strong>誰に</strong>（回答者）→ <strong>何を</strong>質問したか</li>
-          <li>回答の要点</li>
-          <li>評価（A / B / C）</li>
+          <li><strong>度数配列</strong>（各値 0〜5 が何回出現したか）</li>
+          <li><strong>累積度数配列</strong>（度数を前から足し合わせた配列）</li>
+          <li>どう数えて、どう累積したか（途中経過）が分かるように書く</li>
         </ul>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「出題: 田中 → 回答: 鈴木 ／ 質問: ○○を△△に変えたら？ ／ 要点: □□になる ／ 評価: A」</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「度数 = [&hellip;] ／ 累積 = [&hellip;]」のように配列で示す</p>
       </div>
     </div>
 
@@ -1562,11 +1720,11 @@ output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
       <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
       <div class="answer-content">
         <p><code>num_students = 1000</code> に変えて実行した結果例（<code>random.seed(42)</code> 固定）:</p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">平均点: 49.8
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">平均点: 50.6
 最低点: 0
 最高点: 100
-中央値 (sorted_scores[499]): 50</pre>
-        <p>0〜100 の一様乱数なので、<strong>平均値も中央値も理論値 50 付近</strong>に集まる。100人のときよりも 1000人のほうが理論値に近づく（大数の法則）。<strong>平均と中央値が近い</strong>場合はデータが対称に分布している証拠で、逆に大きくズレるときは外れ値や偏った分布（例: 一部の極端な値）の存在を疑える。分布数えソートは <code>O(n + k)</code> なので、<code>k=101</code>（点数範囲）が固定なら <code>n</code> が10倍になっても処理時間はほぼ10倍で済む。</p>
+中央値 (sorted_scores[499]): 51</pre>
+        <p>0〜100 の一様乱数なので、<strong>平均値も中央値も理論値 50 付近</strong>に集まる。100人のとき（平均約47.9）よりも 1000人のほう（平均約50.6）が理論値に近づく（大数の法則）。<strong>平均と中央値が近い</strong>場合はデータが対称に分布している証拠で、逆に大きくズレるときは外れ値や偏った分布（例: 一部の極端な値）の存在を疑える。分布数えソートは <code>O(n + k)</code> なので、<code>k=101</code>（点数範囲）が固定なら <code>n</code> が10倍になっても処理時間はほぼ10倍で済む。</p>
       </div>
     </details>
 
