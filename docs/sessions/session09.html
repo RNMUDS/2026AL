@@ -1363,6 +1363,63 @@ reversed_data = <span class="fn">list</span>(<span class="fn">range</span>(<span
       <p style="margin-top:0.8rem;font-size:0.9rem;color:#93D500">💡 この3つの違いを見たうえで、次のグループワークでは<strong>自分の言葉で説明</strong>してみましょう。</p>
     </div>
 
+    <h3 style="font-size:1.15rem;font-weight:800;margin:2rem 0 0.5rem">それぞれが役立つ場面（数列の例つき）</h3>
+    <p style="margin-bottom:1rem;font-size:0.92rem;color:#aaa">3つとも O(n²) 級ですが、<strong>得意な状況がそれぞれ違います</strong>。「どんなデータのときに選ぶと得か」を数列の例と実測値で見てみましょう。</p>
+
+    <!-- 二分挿入が役立つ例 -->
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag" style="background:#2e1a0a;color:#FFB800">二分挿入ソートが役立つ例</span>
+        <h3>「比較」そのものが重いとき</h3>
+      </div>
+      <p>長い文字列や複雑な条件で大小を判定するなど、<strong>1回の比較コストが高い</strong>場面では、挿入位置を二分探索で先に決めて<strong>比較回数を減らす</strong>のが効きます。</p>
+      <p style="margin-top:0.6rem"><strong>数列の例：</strong> 逆順に並んだ <code>[12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code> を昇順に並べ替える</p>
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:0.9rem 1.1rem;margin:0.8rem 0">
+        <table style="margin:0">
+          <tr><th>方法</th><th>比較回数</th><th>ずらし回数</th></tr>
+          <tr><td>通常の挿入ソート（線形探索）</td><td><strong style="color:#FF5252">66回</strong></td><td>66回</td></tr>
+          <tr><td>二分挿入ソート（二分探索）</td><td><strong style="color:#76B900">33回</strong></td><td>66回</td></tr>
+        </table>
+      </div>
+      <p style="font-size:0.9rem;color:#93D500">→ <strong>比較が約半分</strong>に。ずらし回数は同じなので速度の桁は変わらないが、<strong>「比較が高コスト」な場面ほど効果が大きい</strong>。</p>
+    </div>
+
+    <!-- バブルが役立つ例 -->
+    <div class="card" style="border-left:4px solid #4FC3F7">
+      <div class="card-header">
+        <span class="tag" style="background:#0d2a3a;color:#4FC3F7">バブルソートが役立つ例</span>
+        <h3>ほぼ整列済みの列の「最終チェック」</h3>
+      </div>
+      <p>すでに ほぼ並んでいて、<strong>隣どうしが少しだけ入れ替わっている</strong>だけの列を仕上げる用途に向きます。<strong>早期終了</strong>のおかげで「もう揃っている」を検知して即止まれ、実装も一番簡単です。</p>
+      <p style="margin-top:0.6rem"><strong>数列の例：</strong> <code>[1, 2, 4, 3, 5, 6, 8, 7]</code>（<code>4↔3</code> と <code>8↔7</code> がズレているだけ）</p>
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:0.9rem 1.1rem;margin:0.8rem 0">
+        <table style="margin:0">
+          <tr><th>列の状態</th><th>比較</th><th>交換</th><th>パス数</th></tr>
+          <tr><td>ほぼ整列 <code>[1,2,4,3,5,6,8,7]</code></td><td><strong style="color:#76B900">13回</strong></td><td>2回</td><td><strong style="color:#76B900">2</strong>（2パス目で早期終了）</td></tr>
+          <tr><td>参考：逆順 <code>[8,7,…,1]</code></td><td>28回</td><td>28回</td><td>7</td></tr>
+        </table>
+      </div>
+      <p style="font-size:0.9rem;color:#93D500">→ 1パス目で2回だけ直し、2パス目で<strong>「交換ゼロ」を検知して即終了</strong>。<strong>「並んでいるか確かめる／少しだけ直す」</strong>のが得意。</p>
+    </div>
+
+    <!-- シェルが役立つ例 -->
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#15240a;color:#76B900">シェルソートが役立つ例</span>
+        <h3>要素が最終位置から大きく離れている列</h3>
+      </div>
+      <p>値が本来の位置から<strong>遠くに散らばっている</strong>中〜大きめの列では、大きな gap で<strong>離れた要素を一気に近づける</strong>ので、1マスずつしか動かせない挿入ソートより総手数がぐっと少なくなります。</p>
+      <p style="margin-top:0.6rem"><strong>数列の例：</strong> 逆順 <code>[16, 15, …, 2, 1]</code> を、gap を <code>8 → 4 → 2 → 1</code> と縮めて並べ替える</p>
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:0.9rem 1.1rem;margin:0.8rem 0">
+        <table style="margin:0">
+          <tr><th>方法</th><th>比較</th><th>移動</th><th>合計手数</th></tr>
+          <tr><td>通常の挿入ソート</td><td>120回</td><td>120回</td><td><strong style="color:#FF5252">240手</strong></td></tr>
+          <tr><td>シェルソート（gap 8→4→2→1）</td><td>66回</td><td>32回</td><td><strong style="color:#76B900">98手</strong></td></tr>
+        </table>
+      </div>
+      <p style="font-size:0.9rem;color:#93D500">→ 総手数が <strong>約2.4倍</strong>少ない。<strong>大きく散らばったデータほど</strong>、gap のジャンプで近づける効果が大きい。</p>
+    </div>
+
     <script>
     (function(){
       var A0=[5,2,8,1,4];
