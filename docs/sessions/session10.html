@@ -272,13 +272,15 @@ a.sub-item:hover {
       </table>
 
       <p style="font-weight:700;color:#93D500;margin:0.8rem 0 0.3rem">なぜソートが n × log n になる？（n=8で実演）</p>
-      <p style="font-size:0.95rem">賢いソート（マージソート）は「半分ずつに分けて → 各段で全部を整える」をします。</p>
-      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333;font-size:0.85rem">[5,3,8,1,9,2,7,4]          ← 8個
-[5,3,8,1] [9,2,7,4]        ← 半分に分割（1段目）
-[5,3][8,1] [9,2][7,4]      ← さらに分割（2段目）
-[5][3][8][1][9][2][7][4]   ← バラバラ（3段目）
-                        └─ 8→4→2→1 で 3段 ＝ log₂8</pre>
-      <p style="font-size:0.95rem;margin-top:0.4rem">分けた数を整えながらくっつけ直すとき、<strong>各段で8個すべてを1回ずつ</strong>見ます（＝1段あたり n 手）。それが <strong>3段（log n 段）</strong>ぶん。</p>
+      <p style="font-size:0.95rem">賢いソート（マージソート）は「束を<strong>半分ずつに分けて</strong> → 各段で全部を整える」をします。右側の数字は<strong>「1かたまりに入っている個数」</strong>で、割るたびに半分になります。</p>
+      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333;font-size:0.85rem">[5,3,8,1,9,2,7,4]          ← 1かたまり 8個
+[5,3,8,1] [9,2,7,4]        ← 半分に分割：1かたまり 4個（1段目）
+[5,3][8,1] [9,2][7,4]      ← また半分：1かたまり 2個（2段目）
+[5][3][8][1][9][2][7][4]   ← また半分：1かたまり 1個（3段目）
+
+  1かたまりの個数：8 → 4 → 2 → 1（半分にした回数＝3回）
+  この「半分にした回数 3」＝ 3段 ＝ log₂8</pre>
+      <p style="font-size:0.95rem;margin-top:0.4rem">そのあと、整えながらくっつけ直すとき、<strong>各段で8個すべてを1回ずつ</strong>見ます（＝1段あたり n 手）。それが <strong>3段（log n 段）</strong>ぶん。</p>
       <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.6rem 1rem;border-radius:6px;margin-top:0.5rem;text-align:center;font-weight:700">
         8（n個）× 3（log n 段）= 24手 ≒ <span style="color:#76B900">n × log n</span>
       </p>
