@@ -235,6 +235,30 @@ a.sub-item:hover {
       </div>
     </div>
 
+    <div class="concept-box" style="border-left:4px solid #4FC3F7">
+      <h4>1.1+ 「比較ベースのソートの下限」って何？</h4>
+      <p>「<strong>比較ベースのソートの下限</strong>」とは、ひとことで言うと<br>
+      <strong style="color:#4FC3F7">「2つを比べて並べるやり方では、どんなに頭をひねっても、これより速くはならない」という"速さの限界ライン"</strong>のことです。そのラインが <strong>O(n log n)</strong> です。</p>
+
+      <p style="margin-top:0.8rem;font-weight:700;color:#4FC3F7">なぜ限界ができるのか（イメージ）</p>
+      <p>比較ソートは「AとB、どっちが大きい?」という<strong>はい / いいえ の質問</strong>を繰り返して並び順を当てていくゲームだと考えてください。</p>
+      <ul class="point-list" style="margin-top:0.4rem">
+        <li>n 個の要素の並び方は全部で <strong>n!（n の階乗）通り</strong>あります（例: 3個なら 3×2×1 = 6通り）。</li>
+        <li>1回の質問（比較）で、候補をせいぜい<strong>半分</strong>にしか絞れません（はい/いいえの2択だから）。</li>
+        <li>「全部で n! 通り」を「半分ずつ」絞って1つに特定するには、最低でも <strong>log₂(n!) ≒ n log n 回</strong>の質問が必要になります。</li>
+      </ul>
+      <p style="margin-top:0.5rem">つまり「比べて並べる」という方法をとる限り、<strong>n log n 回より少ない比較では絶対に並べ替えられない</strong>。これが「下限（＝最低でもこれだけかかるライン）」です。挿入ソートもバブルソートも、どんな新しい比較ソートを考えても、このラインは超えられません。</p>
+
+      <div class="analogy" style="margin-top:0.8rem">
+        <strong>たとえ：</strong> 「Yes/No で答える質問」だけで相手の思い浮かべた数を当てるゲーム。1回の質問で選択肢は半分にしか減らないので、候補が多いほど質問回数は増えます。<strong>比較ソートはこの"質問ゲーム"そのもの</strong>。だから比較に頼る限り、回数（＝速さ）に超えられない壁ができるのです。
+      </div>
+
+      <p style="margin-top:0.8rem;background:#0a2a3a;border-left:4px solid #4FC3F7;padding:0.6rem 1rem;border-radius:6px">
+        <strong style="color:#4FC3F7">では矛盾しない？</strong> 「O(n log n) より速くできない」のに分布数えソートが <strong>O(n+k)</strong> で速いのは、<strong>分布数えソートが"比べていない"から</strong>です。下限のルールは<strong>「比べて並べる人」だけに適用される</strong>ルール。分布数えソートは「値を数えて置くだけ」で別の土俵にいるので、このルールに縛られず壁を回避できます。<br>
+        <span style="color:#aaa;font-size:0.9em">（徒競走の世界記録は自転車には関係ない、のと同じイメージ）</span>
+      </p>
+    </div>
+
     <div class="concept-box" style="border-left:4px solid #FFB800">
       <h4>❓ Q&amp;A: よくある質問</h4>
 
