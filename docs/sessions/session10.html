@@ -291,6 +291,51 @@ a.sub-item:hover {
         <tr><td>1,000,000</td><td>約 20,000,000</td><td>約 1,000,100</td></tr>
       </table>
       <p style="font-size:0.9rem;color:#aaa;margin-top:0.4rem">n が増えるほど差が開く。比較ソートはどんなに工夫してもこの <code>n log n</code> が限界です。</p>
+
+      <p style="font-weight:700;color:#93D500;margin:1rem 0 0.3rem">グラフで見ると（横軸＝件数 n、縦軸＝手数）</p>
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <!-- title -->
+          <text x="350" y="30" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">データが増えたときの「手数」の伸び方</text>
+
+          <!-- axes -->
+          <line x1="80" y1="50" x2="80" y2="330" stroke="#666" stroke-width="2"/>
+          <line x1="80" y1="330" x2="650" y2="330" stroke="#666" stroke-width="2"/>
+          <!-- y arrow / label -->
+          <polygon points="80,46 76,56 84,56" fill="#666"/>
+          <text x="92" y="62" fill="#888" font-size="12">手数（処理回数）が多い ↑</text>
+          <!-- x arrow / label -->
+          <polygon points="654,330 644,326 644,334" fill="#666"/>
+          <text x="648" y="352" text-anchor="end" fill="#888" font-size="12">データ件数 n が多い →</text>
+
+          <!-- gridlines (subtle) -->
+          <line x1="80" y1="200" x2="650" y2="200" stroke="#1c1c1c" stroke-width="1"/>
+          <line x1="80" y1="120" x2="650" y2="120" stroke="#1c1c1c" stroke-width="1"/>
+
+          <!-- O(n log n): curve bending upward -->
+          <polyline points="80,322 192,300 304,262 416,210 528,140 628,72" fill="none" stroke="#FF5252" stroke-width="3.5"/>
+          <circle cx="628" cy="72" r="4" fill="#FF5252"/>
+          <text x="624" y="62" text-anchor="end" fill="#FF5252" font-size="14" font-weight="700">比較ソート O(n log n)</text>
+
+          <!-- O(n+k): nearly straight gentle line -->
+          <polyline points="80,322 192,304 304,286 416,268 528,250 628,236" fill="none" stroke="#76B900" stroke-width="3.5"/>
+          <circle cx="628" cy="236" r="4" fill="#76B900"/>
+          <text x="624" y="254" text-anchor="end" fill="#93D500" font-size="14" font-weight="700">分布数えソート O(n+k)</text>
+
+          <!-- gap annotation at right -->
+          <line x1="640" y1="78" x2="640" y2="230" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="660" y="158" fill="#FFB800" font-size="12" writing-mode="tb">差が開く</text>
+
+          <!-- caption box -->
+          <rect x="40" y="366" width="620" height="26" rx="8" fill="#111" stroke="#333"/>
+          <text x="350" y="383" text-anchor="middle" fill="#aaa" font-size="12">n が増えるほど赤（n log n）は急に上へ、緑（n+k）はほぼ直線 ── だから件数が多いほど緑が下＝速い</text>
+        </svg>
+      </div>
+      <p style="font-size:0.95rem;margin-top:0.5rem">
+        <strong style="color:#76B900">緑（O(n+k)）はほぼ直線</strong>＝件数 n が2倍になれば手数も約2倍（線形）。<br>
+        <strong style="color:#FF5252">赤（O(n log n)）は上にそり返る曲線</strong>＝件数が増えると、1件あたりの手間（log n）も少しずつ増えるので、手数の伸びが直線より速くなる。<br>
+        2本は左（データが少ない）ではほぼ重なっていますが、<strong>右に行く（データが増える）ほど差が開きます</strong>。値の範囲 k が小さいなら、件数が多い場面では分布数えソート（緑）が圧勝、というのがこのグラフの読み方です。
+      </p>
     </div>
 
     <div class="concept-box" style="border-left:4px solid #FFB800">
