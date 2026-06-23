@@ -373,10 +373,27 @@ a.sub-item:hover {
           <!-- caption -->
           <g>
             <rect x="40" y="338" width="620" height="48" rx="10" fill="#111" stroke="#333"/>
-            <text x="350" y="359" text-anchor="middle" fill="#93D500" font-size="12.5" font-weight="700">値の種類（k）が少ない＝マスが少ない／件数（n）が多い → 1件あたりは「マスに入れるだけ」</text>
-            <text x="350" y="377" text-anchor="middle" fill="#aaa" font-size="11.5">だから合計 O(n + k) ≈ O(n) ── 比較ソートの O(n log n) よりずっと速い</text>
+            <text x="350" y="359" text-anchor="middle" fill="#93D500" font-size="12.5" font-weight="700">1件ずつ「その値のマス」に入れるだけ ── 大小を比べないので1件は一瞬（n件で O(n)）</text>
+            <text x="350" y="377" text-anchor="middle" fill="#aaa" font-size="11.5">マスの数（値の種類 k）も少なければ、合計 O(n+k) ≒ O(n) ── 比較ソートの O(n log n) より速い</text>
           </g>
         </svg>
+      </div>
+
+      <div style="background:#141414;border:1px solid #333;border-left:4px solid #93D500;border-radius:10px;padding:0.9rem 1.1rem;margin-top:0.6rem">
+        <p style="font-weight:700;color:#93D500;margin-bottom:0.5rem">↑ 上の図のキャプションをかみ砕くと</p>
+        <p style="font-size:0.95rem;margin-bottom:0.6rem">まず言葉の確認です。</p>
+        <ul class="point-list" style="margin-bottom:0.6rem">
+          <li><strong>マス</strong>＝「値ごとの置き場所」。値0用のマス、値1用のマス…と並んでいる。</li>
+          <li><strong>マスの数 ＝ 値の種類 ＝ k</strong>。点数（0〜100）なら 101個のマス。</li>
+          <li><strong>n</strong>＝並べたいデータの件数（人数など）。</li>
+        </ul>
+        <p style="font-size:0.95rem;margin-bottom:0.4rem">分布数えソートのやることは、たった2つです。</p>
+        <ol class="point-list" style="margin-bottom:0.6rem">
+          <li><strong>① 配る</strong>：データを1件ずつ「その値のマス」に入れる。<strong>大小を比べないので1件はほぼ一瞬（手間1）</strong>。n件あっても <strong>n回</strong>で終わる → <strong>O(n)</strong>。</li>
+          <li><strong>② 回収する</strong>：マスを0番から順に取り出して並べる。<strong>マスの数 k だけ</strong>手間がかかる → <strong>O(k)</strong>。</li>
+        </ol>
+        <p style="font-size:0.95rem">合わせて <strong>O(n + k)</strong>。ここで <strong>k（マスの数）が n より小さければ</strong>、ほぼ <strong>O(n)</strong> の一直線で終わります。<br>
+        逆に言うと、<strong>「マス＝値の種類が少なくて、データ件数が多い」ほど</strong>、配る作業（O(n)）が主役になり、比較ソートの O(n log n) よりずっと速くなる、というのが図の言いたいことです。</p>
       </div>
 
       <!-- Q3: three concrete use-case chips -->
