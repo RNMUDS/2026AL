@@ -405,6 +405,69 @@ a.sub-item:hover {
         renderBars();
       })();
       </script>
+
+      <p style="font-weight:700;color:#FFB800;margin:1.4rem 0 0.3rem">逆に「マスが多すぎる」例（<code>n = 1000</code>・<code>k = 1000</code>、値が入らない空マスも出る）</p>
+      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">こんどは値の範囲が 0〜999。マスを<strong>1000個</strong>用意しますが、データも1000個なので、<strong>同じ値はあまり重ならず、ほとんどのマスは0個か1個</strong>。しかも<strong>1度も使われない「空マス」</strong>がたくさん出ます。それでも数える手順は同じです。</p>
+      <div class="diagram-container">
+        <canvas id="csbig-canvas" width="1000" height="240" style="width:100%;display:block;background:#0A0A0A;border-radius:14px;border:1px solid #333"></canvas>
+      </div>
+      <div id="csbig-status" style="font-size:0.9rem;color:#93D500;font-weight:700;margin-top:0.5rem">処理済み 0 / 1000 ｜ 使ったマス 0 ｜ 空マス 1000</div>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.5rem">
+        <button id="csbig-play" type="button" style="cursor:pointer;background:#FFB800;color:#0A0A0A;border:none;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">▶ 再生</button>
+        <button id="csbig-step" type="button" style="cursor:pointer;background:#332600;color:#FFB800;border:1px solid #7a5e00;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">⏭ ステップ（+50件）</button>
+        <button id="csbig-reset" type="button" style="cursor:pointer;background:#222;color:#ccc;border:1px solid #444;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">↺ リセット</button>
+      </div>
+      <p style="font-size:0.92rem;color:#aaa;margin-top:0.5rem;background:#2a2400;border-left:4px solid #FFB800;padding:0.6rem 1rem;border-radius:6px">
+        <strong style="color:#FFB800">ここがポイント:</strong> グラフがスカスカで、<strong>すき間（＝空マス）がたくさん</strong>あります。空マスにも「<strong>マスを作る・順番に調べる</strong>」手間がかかるので、<code>k</code> が大きいほど <code>+k</code> の負担が増えます。<strong>k が n と同じくらい大きい（今回のような）場合は、カウンティングソートのうま味が薄れます</strong> ── だから「値の範囲が狭い整数」向きなのです（くわしくは発展課題で）。
+      </p>
+      <script>
+      (function(){
+        var N=1000, K=1000;
+        var cv=document.getElementById('csbig-canvas');
+        if(!cv) return;
+        var ctx=cv.getContext('2d'); var W=cv.width, H=cv.height;
+        var seed=987654321;
+        function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+        var data=[];
+        for(var t=0;t<N;t++){ var v=Math.floor(rnd()*K); if(v>=K)v=K-1; if(v<0)v=0; data.push(v); }
+        var finalCounts=new Array(K).fill(0); data.forEach(function(v){finalCounts[v]++;});
+        var maxC=Math.max.apply(null,finalCounts); if(maxC<1)maxC=1;
+        var scale=(H-30)/maxC;
+        var colW=W/K;
+        var statusEl=document.getElementById('csbig-status');
+        var i=0, counts=new Array(K).fill(0), used=0, done=false, timer=null;
+        function draw(){
+          ctx.clearRect(0,0,W,H);
+          // baseline
+          ctx.strokeStyle='#333'; ctx.beginPath(); ctx.moveTo(0,H-1); ctx.lineTo(W,H-1); ctx.stroke();
+          for(var v=0; v<K; v++){
+            var c=counts[v]; if(c<=0) continue;
+            var h=c*scale; var x=v*colW;
+            var hue=Math.round(v/K*300);
+            ctx.fillStyle='hsl('+hue+',70%,55%)';
+            ctx.fillRect(x, H-h, Math.max(1,colW), h);
+          }
+          var empty=K-used;
+          statusEl.innerHTML = done
+            ? ('数え終わり！ 使ったマス <strong>'+used+'</strong> ／ 空マス <strong style="color:#FF8A65">'+empty+'</strong>（マスは全部で '+K+' 個 ＝ 整列に <code>O(n+k)</code> ぶんの手間）')
+            : ('処理済み '+i+' / '+N+' ｜ 使ったマス '+used+' ｜ 空マス '+empty);
+        }
+        function stepBatch(b){
+          if(done) return;
+          for(var s=0;s<b && i<N;s++){ var v=data[i]; if(counts[v]===0)used++; counts[v]++; i++; }
+          if(i>=N){ done=true; stop(); }
+          draw();
+        }
+        var playBtn=document.getElementById('csbig-play');
+        function stop(){ if(timer){ clearInterval(timer); timer=null; } playBtn.textContent='▶ 再生'; }
+        function play(){ if(done){ reset(); } timer=setInterval(function(){ stepBatch(15); }, 40); playBtn.textContent='⏸ 一時停止'; }
+        function reset(){ stop(); i=0; counts=new Array(K).fill(0); used=0; done=false; draw(); }
+        playBtn.addEventListener('click', function(){ if(timer){ stop(); } else { play(); } });
+        document.getElementById('csbig-step').addEventListener('click', function(){ stop(); stepBatch(50); });
+        document.getElementById('csbig-reset').addEventListener('click', reset);
+        draw();
+      })();
+      </script>
     </div>
 
     <div class="concept-box">
