@@ -305,86 +305,106 @@ a.sub-item:hover {
         ボールが <strong>上の入力</strong>から <strong>真ん中のマス</strong>へ落ちる＝<strong>①数える</strong>。同じ値（緑の 2）は同じマスに重なります。そのあとマスを <strong>0番から順に</strong>取り出して <strong>下の出力</strong>へ＝<strong>②取り出す</strong>。これだけで <code>[0, 1, 2, 2, 3]</code> が完成します。詳しい手順（度数配列・累積度数）は <strong>1.2</strong> で説明します。
       </p>
 
-      <p style="font-weight:700;color:#76B900;margin:1rem 0 0.3rem">もっと数が多い例（12個 ＝ <code>[3,1,4,1,5,2,3,1,4,2,0,3]</code>）</p>
-      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">件数が増えても、やることは同じ。各マスの<strong>高さ＝その値の個数</strong>として数え（①）、マスを0番から順に取り出して並べる（②）だけです。</p>
+      <p style="font-weight:700;color:#76B900;margin:1rem 0 0.3rem">もっと数が多い例（<code>n = 1000</code> 個・値の種類 <code>k = 10</code>）を自分で動かす</p>
+      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">件数が1000個に増えても、やることは同じ。データを1個ずつ「その値のマス」に入れて数える（①）と、各マスの<strong>高さ＝その値の個数</strong>になります。<strong>再生</strong>で自動、<strong>ステップ</strong>で少しずつ、<strong>リセット</strong>で最初に戻せます。</p>
       <div class="diagram-container">
-        <svg viewBox="0 0 720 470" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="360" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">件数 n=12・値の種類 k=6（マスは6個だけ）</text>
-
-          <!-- ===== INPUT row (static) ===== -->
-          <text x="40" y="64" fill="#888" font-size="12" font-weight="600">入力</text>
-          <g font-size="12" font-weight="700" fill="#777" text-anchor="middle">
-            <rect x="60"  y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="73"  y="64">3</text>
-            <rect x="108" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="121" y="64">1</text>
-            <rect x="156" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="169" y="64">4</text>
-            <rect x="204" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="217" y="64">1</text>
-            <rect x="252" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="265" y="64">5</text>
-            <rect x="300" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="313" y="64">2</text>
-            <rect x="348" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="361" y="64">3</text>
-            <rect x="396" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="409" y="64">1</text>
-            <rect x="444" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="457" y="64">4</text>
-            <rect x="492" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="505" y="64">2</text>
-            <rect x="540" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="553" y="64">0</text>
-            <rect x="588" y="48" width="26" height="24" rx="4" fill="none" stroke="#333"/><text x="601" y="64">3</text>
-          </g>
-
-          <text x="40" y="118" fill="#76B900" font-size="13" font-weight="700">① 数える ── マスの高さ＝その値の個数</text>
-
+        <svg id="cs1k-svg" viewBox="0 0 720 410" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="360" y="26" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">① 数える ── 1000個を1つずつマスへ（高さ＝個数）</text>
+          <text id="cs1k-status" x="360" y="48" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">処理済み 0 / 1000</text>
           <!-- baseline -->
-          <line x1="70" y1="300" x2="660" y2="300" stroke="#444" stroke-width="2"/>
-
-          <!-- ===== BIN bars (grow) ===== -->
-          <!-- v0 count1 H26 c110 | v1 count3 H78 c210 | v2 count2 H52 c310 | v3 count3 H78 c410 | v4 count2 H52 c510 | v5 count1 H26 c610 -->
-          <g>
-            <rect x="85"  width="50" fill="#4FC3F7" rx="4"><animate attributeName="height" values="0;0;26;26" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/><animate attributeName="y" values="300;300;274;274" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/></rect>
-            <rect x="185" width="50" fill="#FFB800" rx="4"><animate attributeName="height" values="0;0;78;78" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/><animate attributeName="y" values="300;300;222;222" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/></rect>
-            <rect x="285" width="50" fill="#76B900" rx="4"><animate attributeName="height" values="0;0;52;52" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/><animate attributeName="y" values="300;300;248;248" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/></rect>
-            <rect x="385" width="50" fill="#FF5252" rx="4"><animate attributeName="height" values="0;0;78;78" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/><animate attributeName="y" values="300;300;222;222" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/></rect>
-            <rect x="485" width="50" fill="#BA68C8" rx="4"><animate attributeName="height" values="0;0;52;52" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/><animate attributeName="y" values="300;300;248;248" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/></rect>
-            <rect x="585" width="50" fill="#FF8A65" rx="4"><animate attributeName="height" values="0;0;26;26" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/><animate attributeName="y" values="300;300;274;274" keyTimes="0;0.1;0.45;1" dur="12s" repeatCount="indefinite"/></rect>
-          </g>
-          <!-- count numbers -->
-          <g font-size="13" font-weight="700" text-anchor="middle">
-            <text x="110" y="266" fill="#4FC3F7" opacity="0">1<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="12s" repeatCount="indefinite"/></text>
-            <text x="210" y="214" fill="#FFB800" opacity="0">3<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="12s" repeatCount="indefinite"/></text>
-            <text x="310" y="240" fill="#76B900" opacity="0">2<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="12s" repeatCount="indefinite"/></text>
-            <text x="410" y="214" fill="#FF5252" opacity="0">3<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="12s" repeatCount="indefinite"/></text>
-            <text x="510" y="240" fill="#BA68C8" opacity="0">2<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="12s" repeatCount="indefinite"/></text>
-            <text x="610" y="266" fill="#FF8A65" opacity="0">1<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="12s" repeatCount="indefinite"/></text>
-          </g>
-          <!-- bin value labels -->
-          <g font-size="12" fill="#aaa" text-anchor="middle" font-weight="700">
-            <text x="110" y="318">マス0</text><text x="210" y="318">マス1</text><text x="310" y="318">マス2</text>
-            <text x="410" y="318">マス3</text><text x="510" y="318">マス4</text><text x="610" y="318">マス5</text>
-          </g>
-
-          <text x="40" y="372" fill="#4FC3F7" font-size="13" font-weight="700">② 0番から順に取り出して並べる →</text>
-
-          <!-- ===== OUTPUT row (appears left→right) sorted [0,1,1,1,2,2,3,3,3,4,4,5] ===== -->
-          <text x="40" y="406" fill="#888" font-size="12" font-weight="600">出力</text>
-          <g font-size="12" font-weight="700" fill="#fff" text-anchor="middle">
-            <g opacity="0"><rect x="60"  y="390" width="26" height="26" rx="4" fill="#4FC3F7"/><text x="73"  y="408">0</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.50;0.52;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="108" y="390" width="26" height="26" rx="4" fill="#FFB800"/><text x="121" y="408">1</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.553;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="156" y="390" width="26" height="26" rx="4" fill="#FFB800"/><text x="169" y="408">1</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.567;0.587;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="204" y="390" width="26" height="26" rx="4" fill="#FFB800"/><text x="217" y="408">1</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.60;0.62;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="252" y="390" width="26" height="26" rx="4" fill="#76B900"/><text x="265" y="408">2</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.633;0.653;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="300" y="390" width="26" height="26" rx="4" fill="#76B900"/><text x="313" y="408">2</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.667;0.687;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="348" y="390" width="26" height="26" rx="4" fill="#FF5252"/><text x="361" y="408">3</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.70;0.72;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="396" y="390" width="26" height="26" rx="4" fill="#FF5252"/><text x="409" y="408">3</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.733;0.753;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="444" y="390" width="26" height="26" rx="4" fill="#FF5252"/><text x="457" y="408">3</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.767;0.787;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="492" y="390" width="26" height="26" rx="4" fill="#BA68C8"/><text x="505" y="408">4</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.80;0.82;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="540" y="390" width="26" height="26" rx="4" fill="#BA68C8"/><text x="553" y="408">4</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.833;0.853;1" dur="12s" repeatCount="indefinite"/></g>
-            <g opacity="0"><rect x="588" y="390" width="26" height="26" rx="4" fill="#FF8A65"/><text x="601" y="408">5</text><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.867;0.887;1" dur="12s" repeatCount="indefinite"/></g>
-          </g>
-
-          <!-- caption -->
-          <rect x="40" y="436" width="640" height="26" rx="8" fill="#111" stroke="#333"/>
-          <text x="360" y="453" text-anchor="middle" fill="#93D500" font-size="12">件数 n が増えてもマス（k=6）は同じ ── 数えて取り出すだけで [0,1,1,1,2,2,3,3,3,4,4,5] に整列</text>
+          <line x1="60" y1="320" x2="680" y2="320" stroke="#444" stroke-width="2"/>
+          <!-- bars + labels are filled by JS; placeholders below -->
+          <g id="cs1k-bars"></g>
+          <g id="cs1k-counts" font-size="11" font-weight="700" text-anchor="middle"></g>
+          <g id="cs1k-vlabels" font-size="11" fill="#aaa" text-anchor="middle" font-weight="700"></g>
+          <!-- output stacked bar (appears when counting done) -->
+          <text x="60" y="360" fill="#4FC3F7" font-size="12" font-weight="700" opacity="0" id="cs1k-outlabel">② 0番から順に取り出すと整列（色の区切り＝値の境目）</text>
+          <g id="cs1k-out"></g>
         </svg>
       </div>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.6rem">
+        <button id="cs1k-play" type="button" style="cursor:pointer;background:#76B900;color:#0A0A0A;border:none;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">▶ 再生</button>
+        <button id="cs1k-step" type="button" style="cursor:pointer;background:#1a2e0a;color:#93D500;border:1px solid #4A7A00;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">⏭ ステップ（+20件）</button>
+        <button id="cs1k-reset" type="button" style="cursor:pointer;background:#222;color:#ccc;border:1px solid #444;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">↺ リセット</button>
+      </div>
       <p style="font-size:0.92rem;color:#aaa;margin-top:0.5rem">
-        要素が12個に増えても、<strong>マスの数は6個のまま</strong>。各マスの<strong>高さ＝その値が何個あったか</strong>を表します（例: 値1は3個なのでマス1が3段）。最後にマス0→マス5の順に、高さのぶんだけ取り出せば整列完了。<strong>件数 n が何百・何千に増えても手順は同じ</strong>で、これが <code>O(n+k)</code> の速さにつながります。
+        要素が1000個でも、<strong>マスの数は10個のまま</strong>。1個ずつ「その値のマス」に入れて数えるだけ（比べていない！）。数え終わったらマス0→マス9の順に取り出せば整列完了 ── 下に色分けの帯で結果が出ます。<strong>件数 n が増えても手順は同じ</strong>、これが <code>O(n+k)</code> の速さです。
       </p>
+      <script>
+      (function(){
+        var N=1000, K=10;
+        var colors=['#4FC3F7','#FFB800','#76B900','#FF5252','#BA68C8','#FF8A65','#26C6DA','#FFD54F','#9CCC65','#F06292'];
+        // 決定的な乱数（毎回同じデータ）。中央が多い山なりの分布。
+        var seed=20260627;
+        function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+        var data=[];
+        for(var t=0;t<N;t++){ var v=Math.floor(((rnd()+rnd()+rnd())/3)*K); if(v>=K)v=K-1; if(v<0)v=0; data.push(v); }
+        var finalCounts=new Array(K).fill(0); data.forEach(function(v){finalCounts[v]++;});
+        var maxC=Math.max.apply(null,finalCounts);
+        var baseY=320, maxBarH=150, scale=maxBarH/maxC;
+        var SVGNS='http://www.w3.org/2000/svg';
+        var barsG=document.getElementById('cs1k-bars');
+        var cntG=document.getElementById('cs1k-counts');
+        var vG=document.getElementById('cs1k-vlabels');
+        var outG=document.getElementById('cs1k-out');
+        var outLabel=document.getElementById('cs1k-outlabel');
+        var statusEl=document.getElementById('cs1k-status');
+        var bars=[], cnts=[], outsegs=[];
+        function cx(j){ return 90 + j*62; }   // 90,152,...,648
+        for(var j=0;j<K;j++){
+          var r=document.createElementNS(SVGNS,'rect');
+          r.setAttribute('x', cx(j)-22); r.setAttribute('width',44);
+          r.setAttribute('y',baseY); r.setAttribute('height',0);
+          r.setAttribute('rx',4); r.setAttribute('fill',colors[j]);
+          barsG.appendChild(r); bars.push(r);
+          var c=document.createElementNS(SVGNS,'text');
+          c.setAttribute('x',cx(j)); c.setAttribute('y',baseY-4);
+          c.setAttribute('fill',colors[j]); c.textContent='0';
+          cntG.appendChild(c); cnts.push(c);
+          var vl=document.createElementNS(SVGNS,'text');
+          vl.setAttribute('x',cx(j)); vl.setAttribute('y',336);
+          vl.textContent=j; vG.appendChild(vl);
+        }
+        var i=0, counts=new Array(K).fill(0), done=false, timer=null;
+        function renderBars(){
+          for(var j=0;j<K;j++){
+            var h=counts[j]*scale;
+            bars[j].setAttribute('height',h);
+            bars[j].setAttribute('y',baseY-h);
+            cnts[j].setAttribute('y', baseY-h-4);
+            cnts[j].textContent=counts[j];
+          }
+          statusEl.textContent = done ? ('数え終わり！ → 整列結果は下の帯（合計 '+N+' 個）') : ('処理済み '+i+' / '+N);
+        }
+        function showOutput(){
+          outLabel.setAttribute('opacity',1);
+          var x=60, W=620, y=372, hh=22;
+          for(var j=0;j<K;j++){
+            var w=finalCounts[j]/N*W;
+            var seg=document.createElementNS(SVGNS,'rect');
+            seg.setAttribute('x',x); seg.setAttribute('y',y);
+            seg.setAttribute('width',Math.max(0,w-0.5)); seg.setAttribute('height',hh);
+            seg.setAttribute('fill',colors[j]); outG.appendChild(seg); outsegs.push(seg);
+            x+=w;
+          }
+        }
+        function clearOutput(){ outLabel.setAttribute('opacity',0); outsegs.forEach(function(s){outG.removeChild(s);}); outsegs=[]; }
+        function stepBatch(b){
+          if(done) return;
+          for(var c=0;c<b && i<N;c++){ counts[data[i]]++; i++; }
+          if(i>=N){ done=true; showOutput(); stop(); }
+          renderBars();
+        }
+        var playBtn=document.getElementById('cs1k-play');
+        function stop(){ if(timer){ clearInterval(timer); timer=null; } playBtn.textContent='▶ 再生'; }
+        function play(){ if(done){ reset(); } timer=setInterval(function(){ stepBatch(7); }, 40); playBtn.textContent='⏸ 一時停止'; }
+        function reset(){ stop(); i=0; counts=new Array(K).fill(0); done=false; clearOutput(); renderBars(); }
+        playBtn.addEventListener('click', function(){ if(timer){ stop(); } else { play(); } });
+        document.getElementById('cs1k-step').addEventListener('click', function(){ stop(); stepBatch(20); });
+        document.getElementById('cs1k-reset').addEventListener('click', reset);
+        renderBars();
+      })();
+      </script>
     </div>
 
     <div class="concept-box">
