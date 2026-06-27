@@ -1544,6 +1544,27 @@ result = <span class="fn">counting_sort_basic</span>(data)
       <pre><span class="code-label">Python</span>
 <span class="kw">import</span> random
 
+<span class="cmt"># 例題3で作った counting_sort_basic を再掲（このファイル単体で動かすため）</span>
+<span class="kw">def</span> <span class="fn">counting_sort_basic</span>(data):
+    <span class="kw">if</span> <span class="fn">len</span>(data) <= <span class="num">1</span>:
+        <span class="kw">return</span> data[:]
+
+    max_val = <span class="fn">max</span>(data)
+    count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)
+    <span class="kw">for</span> value <span class="kw">in</span> data:
+        count[value] += <span class="num">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)):
+        count[i] += count[i - <span class="num">1</span>]
+
+    output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
+        value = data[i]
+        position = count[value] - <span class="num">1</span>
+        output[position] = value
+        count[value] -= <span class="num">1</span>
+    <span class="kw">return</span> output
+
+
 random.<span class="fn">seed</span>(<span class="num">42</span>)  <span class="cmt"># 再現性のためシード固定</span>
 num_students = <span class="num">100</span>
 scores = [random.<span class="fn">randint</span>(<span class="num">0</span>, <span class="num">100</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(num_students)]
@@ -2031,7 +2052,7 @@ Q3（改造提案）: 小数点以下1桁の数に対応するには
 
 ## 発展課題: 分布数えソートと比較ソートの使い分け
 ### コード
-（AL10-?.py のコードを貼り付け）
+（AL10-4.py のコードを貼り付け）
 ### 音声説明
 （1〜2分の音声ファイルを添付）
 </pre>
