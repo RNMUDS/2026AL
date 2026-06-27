@@ -214,6 +214,98 @@ a.sub-item:hover {
       <h2>説明</h2>
     </div>
 
+    <div class="concept-box" style="border-left:4px solid #76B900">
+      <h4>1.0 まず全体像 ── カウンティングソートって何をするの？</h4>
+
+      <p>カウンティングソート（分布数えソート）は、数を<strong>「比べて」並べるのではなく</strong>、<strong>「数えて」並べる</strong>方法です。やることはたった3つ。</p>
+      <ol class="point-list" style="margin:0.6rem 0">
+        <li><strong>① マスを用意する</strong>：出てくる値の数だけ「置き場所（マス）」を並べる。値が0〜3なら、0番・1番・2番・3番の<strong>4つのマス</strong>。</li>
+        <li><strong>② 配って数える</strong>：データを1個ずつ「その値のマス」に入れていく。<strong>大小は比べない</strong>。終わると、各マスに「その値が何個あったか」が貯まる。</li>
+        <li><strong>③ 取り出す</strong>：マスを<strong>0番から順番に</strong>取り出して並べる。それだけで<strong>もう整列済み</strong>。</li>
+      </ol>
+      <div class="analogy" style="margin:0.6rem 0">
+        <strong>たとえ（郵便局）：</strong> 大量のハガキを郵便番号順に並べるとき、係員はハガキ同士を見比べません。<strong>番号ごとの仕切り棚に放り込む</strong>だけ。全部入れたら棚を番号順に取り出す ── これでもう並んでいます。マス＝仕切り棚、というわけです。
+      </div>
+
+      <p style="font-weight:700;color:#76B900;margin:0.8rem 0 0.3rem">アニメーションで見る（入力 [2, 0, 3, 1, 2] を並べ替える）</p>
+      <div class="diagram-container">
+        <svg viewBox="0 0 720 430" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <!-- ===== INPUT (top) ===== -->
+          <text x="40" y="48" fill="#888" font-size="13" font-weight="600">入力</text>
+          <g font-size="14" font-weight="700" fill="#fff" text-anchor="middle">
+            <rect x="107" y="57" width="26" height="26" rx="5" fill="none" stroke="#333"/><text x="120" y="75" fill="#555">2</text>
+            <rect x="197" y="57" width="26" height="26" rx="5" fill="none" stroke="#333"/><text x="210" y="75" fill="#555">0</text>
+            <rect x="287" y="57" width="26" height="26" rx="5" fill="none" stroke="#333"/><text x="300" y="75" fill="#555">3</text>
+            <rect x="377" y="57" width="26" height="26" rx="5" fill="none" stroke="#333"/><text x="390" y="75" fill="#555">1</text>
+            <rect x="467" y="57" width="26" height="26" rx="5" fill="none" stroke="#333"/><text x="480" y="75" fill="#555">2</text>
+          </g>
+
+          <!-- phase labels -->
+          <text x="40" y="150" fill="#76B900" font-size="13" font-weight="700">① 値ごとのマスに入れて数える</text>
+          <text x="40" y="318" fill="#4FC3F7" font-size="13" font-weight="700">② マスを 0番 → 1番 → 2番 → 3番 の順に取り出す</text>
+
+          <!-- ===== BINS (middle) ===== -->
+          <g>
+            <rect x="145" y="160" width="70" height="95" rx="6" fill="#111" stroke="#4A7A00"/>
+            <rect x="265" y="160" width="70" height="95" rx="6" fill="#111" stroke="#4A7A00"/>
+            <rect x="385" y="160" width="70" height="95" rx="6" fill="#111" stroke="#4A7A00"/>
+            <rect x="505" y="160" width="70" height="95" rx="6" fill="#111" stroke="#4A7A00"/>
+          </g>
+          <g font-size="13" fill="#aaa" text-anchor="middle" font-weight="700">
+            <text x="180" y="277">マス0</text><text x="300" y="277">マス1</text>
+            <text x="420" y="277">マス2</text><text x="540" y="277">マス3</text>
+          </g>
+
+          <!-- ===== OUTPUT slots (bottom) ===== -->
+          <text x="40" y="370" fill="#888" font-size="13" font-weight="600">出力</text>
+          <g>
+            <rect x="168" y="345" width="26" height="26" rx="5" fill="none" stroke="#333" stroke-dasharray="3 3"/>
+            <rect x="238" y="345" width="26" height="26" rx="5" fill="none" stroke="#333" stroke-dasharray="3 3"/>
+            <rect x="308" y="345" width="26" height="26" rx="5" fill="none" stroke="#333" stroke-dasharray="3 3"/>
+            <rect x="378" y="345" width="26" height="26" rx="5" fill="none" stroke="#333" stroke-dasharray="3 3"/>
+            <rect x="448" y="345" width="26" height="26" rx="5" fill="none" stroke="#333" stroke-dasharray="3 3"/>
+          </g>
+
+          <!-- ===== moving balls: in -> bin -> out ===== -->
+          <!-- keyTimes: 0 hold-input .1 | move .35 | hold-bin .55 | move .8 | hold-output 1 -->
+          <!-- b1 value2: in(120,70) bin(408,238) out(321,358) -->
+          <g font-size="13" font-weight="700" fill="#fff" text-anchor="middle">
+            <g>
+              <circle r="13" fill="#76B900"><animate attributeName="cx" values="120;120;408;408;321;321" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="cy" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/></circle>
+              <text dy="5"><animate attributeName="x" values="120;120;408;408;321;321" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="y" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/>2</text>
+            </g>
+            <!-- b2 value0: in(210,70) bin(180,238) out(181,358) -->
+            <g>
+              <circle r="13" fill="#4FC3F7"><animate attributeName="cx" values="210;210;180;180;181;181" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="cy" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/></circle>
+              <text dy="5"><animate attributeName="x" values="210;210;180;180;181;181" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="y" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/>0</text>
+            </g>
+            <!-- b3 value3: in(300,70) bin(540,238) out(461,358) -->
+            <g>
+              <circle r="13" fill="#FF5252"><animate attributeName="cx" values="300;300;540;540;461;461" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="cy" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/></circle>
+              <text dy="5"><animate attributeName="x" values="300;300;540;540;461;461" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="y" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/>3</text>
+            </g>
+            <!-- b4 value1: in(390,70) bin(300,238) out(251,358) -->
+            <g>
+              <circle r="13" fill="#FFB800"><animate attributeName="cx" values="390;390;300;300;251;251" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="cy" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/></circle>
+              <text dy="5"><animate attributeName="x" values="390;390;300;300;251;251" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="y" values="70;70;238;238;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/>1</text>
+            </g>
+            <!-- b5 value2: in(480,70) bin(432,214) out(391,358) -->
+            <g>
+              <circle r="13" fill="#76B900"><animate attributeName="cx" values="480;480;432;432;391;391" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="cy" values="70;70;214;214;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/></circle>
+              <text dy="5"><animate attributeName="x" values="480;480;432;432;391;391" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/><animate attributeName="y" values="70;70;214;214;358;358" keyTimes="0;0.1;0.35;0.55;0.8;1" dur="14s" repeatCount="indefinite"/>2</text>
+            </g>
+          </g>
+
+          <!-- caption -->
+          <rect x="40" y="396" width="640" height="26" rx="8" fill="#111" stroke="#333"/>
+          <text x="360" y="413" text-anchor="middle" fill="#93D500" font-size="12">入力をマスに配って数える → マスを順に取り出すだけで [0, 1, 2, 2, 3] に整列（比べていない！）</text>
+        </svg>
+      </div>
+      <p style="font-size:0.92rem;color:#aaa;margin-top:0.5rem">
+        ボールが <strong>上の入力</strong>から <strong>真ん中のマス</strong>へ落ちる＝<strong>①数える</strong>。同じ値（緑の 2）は同じマスに重なります。そのあとマスを <strong>0番から順に</strong>取り出して <strong>下の出力</strong>へ＝<strong>②取り出す</strong>。これだけで <code>[0, 1, 2, 2, 3]</code> が完成します。詳しい手順（度数配列・累積度数）は <strong>1.2</strong> で説明します。
+      </p>
+    </div>
+
     <div class="concept-box">
       <h4>1.1 これまでのソートとの違い</h4>
       <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.6rem 1rem;margin-bottom:1rem;border-radius:6px;font-size:0.95rem">
