@@ -217,17 +217,18 @@ a.sub-item:hover {
     <div class="concept-box" style="border-left:4px solid #76B900">
       <h4>1.0 まず全体像 ── カウンティングソートって何をするの？</h4>
 
-      <p>カウンティングソート（分布数えソート）は、数を<strong>「比べて」並べるのではなく</strong>、<strong>「数えて」並べる</strong>方法です。やることはたった3つ。</p>
+      <p>これまでのソートは「2つを<strong>比べて</strong>大きいほうを後ろへ」という作業の繰り返しでした。カウンティングソート（分布数えソート）はまったく違う発想で、<strong>1つも比べません</strong>。代わりに<strong>「どの値が何個あるかを数える」</strong>だけで並べ替えます。手順はたったの3ステップです。</p>
       <ol class="point-list" style="margin:0.6rem 0">
-        <li><strong>① マスを用意する</strong>：出てくる値の数だけ「置き場所（マス）」を並べる。値が0〜3なら、0番・1番・2番・3番の<strong>4つのマス</strong>。</li>
-        <li><strong>② 配って数える</strong>：データを1個ずつ「その値のマス」に入れていく。<strong>大小は比べない</strong>。終わると、各マスに「その値が何個あったか」が貯まる。</li>
-        <li><strong>③ 取り出す</strong>：マスを<strong>0番から順番に</strong>取り出して並べる。それだけで<strong>もう整列済み</strong>。</li>
+        <li><strong>① マスを用意する</strong>：出てくる値の種類ぶんだけ「置き場所（マス）」を並べます。たとえば値が 0〜3 の4種類なら、<strong>0番・1番・2番・3番の4つのマス</strong>。</li>
+        <li><strong>② 配って数える</strong>：データを1個ずつ「その値と同じ番号のマス」に入れていきます。<strong>大小はいっさい比べません</strong>。配り終えると、各マスには「その値が何個あったか」がたまっています。</li>
+        <li><strong>③ 取り出す</strong>：マスを<strong>0番から順番に</strong>取り出して並べるだけ。番号の小さいマスから出すので、<strong>取り出した時点でもう整列済み</strong>です。</li>
       </ol>
       <div class="analogy" style="margin:0.6rem 0">
-        <strong>たとえ（郵便局）：</strong> 大量のハガキを郵便番号順に並べるとき、係員はハガキ同士を見比べません。<strong>番号ごとの仕切り棚に放り込む</strong>だけ。全部入れたら棚を番号順に取り出す ── これでもう並んでいます。マス＝仕切り棚、というわけです。
-      </div>
+        <strong>たとえ（郵便局の仕分け）：</strong> 大量のハガキを郵便番号順に並べる係員は、ハガキ同士を見比べたりしません。<strong>番号ごとの仕切り棚にポンポン放り込む</strong>だけ。全部入れ終えたら、棚を番号の小さい順に取り出す ── それだけでもう並んでいます。この<strong>「仕切り棚」がマス</strong>にあたります。</div>
 
-      <p style="font-weight:700;color:#76B900;margin:0.8rem 0 0.3rem">アニメーションで見る（入力 [2, 0, 3, 1, 2] を並べ替える）</p>
+      <p style="font-size:0.95rem;margin:0.6rem 0">では実際の動きを、<strong>3つの例</strong>で順に見ていきましょう。<strong>(1)</strong> まず小さな例で仕組みを、<strong>(2)</strong> 次に件数の多い例で「データが増えても速い」ことを、<strong>(3)</strong> 最後に「マスが多すぎる」例で<strong>苦手な場面</strong>を確認します。</p>
+
+      <p style="font-weight:700;color:#76B900;margin:0.8rem 0 0.3rem">(1) 仕組みを見る ── 入力 [2, 0, 3, 1, 2] を並べ替える</p>
       <div class="diagram-container">
         <svg viewBox="0 0 720 430" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
           <!-- ===== INPUT (top) ===== -->
@@ -302,11 +303,11 @@ a.sub-item:hover {
         </svg>
       </div>
       <p style="font-size:0.92rem;color:#aaa;margin-top:0.5rem">
-        ボールが <strong>上の入力</strong>から <strong>真ん中のマス</strong>へ落ちる＝<strong>①数える</strong>。同じ値（緑の 2）は同じマスに重なります。そのあとマスを <strong>0番から順に</strong>取り出して <strong>下の出力</strong>へ＝<strong>②取り出す</strong>。これだけで <code>[0, 1, 2, 2, 3]</code> が完成します。詳しい手順（度数配列・累積度数）は <strong>1.2</strong> で説明します。
+        <strong>上の入力</strong>のボールが <strong>真ん中のマス</strong>へ落ちていくのが <strong>①数える</strong>。値2が2個あるので、緑のボールは同じ「マス2」に重なります。配り終えたら、マスを <strong>0番→1番→2番→3番の順</strong>に取り出して <strong>下の出力</strong>へ並べる ── これが <strong>②取り出す</strong>。一度も大小を比べないまま <code>[0, 1, 2, 2, 3]</code> が完成します。この「数える→並べる」を配列で実際にどう書くか（度数配列・累積度数）は <strong>1.2</strong> で説明します。
       </p>
 
-      <p style="font-weight:700;color:#76B900;margin:1rem 0 0.3rem">もっと数が多い例（<code>n = 1000</code> 個・値の種類 <code>k = 10</code>）を自分で動かす</p>
-      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">件数が1000個に増えても、やることは同じ。データを1個ずつ「その値のマス」に入れて数える（①）と、各マスの<strong>高さ＝その値の個数</strong>になります。<strong>再生</strong>で自動、<strong>ステップ</strong>で少しずつ、<strong>リセット</strong>で最初に戻せます。</p>
+      <p style="font-weight:700;color:#76B900;margin:1rem 0 0.3rem">(2) データが多くても速い ── <code>n = 1000</code> 個・値の種類 <code>k = 10</code> を自分で動かす</p>
+      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">こんどは件数を1000個に増やします。それでもやることは同じで、1個ずつ「その値のマス」に入れて数えるだけ。今回は数えた結果を棒の高さで表すので、各マスの<strong>高さ＝その値が何個あったか</strong>になります。<strong>再生</strong>で自動、<strong>ステップ</strong>で少しずつ進み、<strong>リセット</strong>で最初に戻ります。実際に動かして、マスがどんどん埋まっていく様子を見てください。</p>
       <div class="diagram-container">
         <svg id="cs1k-svg" viewBox="0 0 720 410" width="720" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
           <text x="360" y="26" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">① 数える ── 1000個を1つずつマスへ（高さ＝個数）</text>
@@ -328,7 +329,7 @@ a.sub-item:hover {
         <button id="cs1k-reset" type="button" style="cursor:pointer;background:#222;color:#ccc;border:1px solid #444;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">↺ リセット</button>
       </div>
       <p style="font-size:0.92rem;color:#aaa;margin-top:0.5rem">
-        要素が1000個でも、<strong>マスの数は10個のまま</strong>。1個ずつ「その値のマス」に入れて数えるだけ（比べていない！）。数え終わったらマス0→マス9の順に取り出せば整列完了 ── 下に色分けの帯で結果が出ます。<strong>件数 n が増えても手順は同じ</strong>、これが <code>O(n+k)</code> の速さです。
+        ポイントは、要素が1000個でも<strong>マスの数は10個のまま</strong>だということ。やるのは「1個ずつマスに入れて数える」だけで（やはり比べていません）、数え終わったらマス0→マス9の順に取り出すと整列完了 ── 下に色分けの帯で結果が出ます。<strong>件数 n が10倍・100倍に増えても、手数はそれに比例して増えるだけ</strong>。これが <code>O(n+k)</code>、つまり「データ量に正比例（線形）」の速さです。
       </p>
       <script>
       (function(){
@@ -406,8 +407,8 @@ a.sub-item:hover {
       })();
       </script>
 
-      <p style="font-weight:700;color:#FFB800;margin:1.4rem 0 0.3rem">逆に「マスが多すぎる」例（<code>n = 1000</code>・<code>k = 1000</code>、値が入らない空マスも出る）</p>
-      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">こんどは値の範囲が 0〜999。マスを<strong>1000個</strong>用意しますが、データも1000個なので、<strong>同じ値はあまり重ならず、ほとんどのマスは0個か1個</strong>。しかも<strong>1度も使われない「空マス」</strong>がたくさん出ます。それでも数える手順は同じです。</p>
+      <p style="font-weight:700;color:#FFB800;margin:1.4rem 0 0.3rem">(3) 苦手な場面 ── 「マスが多すぎる」例（<code>n = 1000</code>・<code>k = 1000</code>、空マスが出る）</p>
+      <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.4rem">最後は、わざと苦手な条件を作ります。値の範囲を 0〜999 に広げると、マスは<strong>1000個</strong>必要。でもデータは1000個しかないので、<strong>同じ値はめったに重ならず、ほとんどのマスは0個か1個</strong>です。さらに<strong>1度も使われない「空マス」</strong>が大量に出ます。それでも手順は (1)(2) と同じ ── 動かして、グラフがどれだけスカスカになるか見てください。</p>
       <div class="diagram-container">
         <canvas id="csbig-canvas" width="1000" height="240" style="width:100%;display:block;background:#0A0A0A;border-radius:14px;border:1px solid #333"></canvas>
       </div>
@@ -418,7 +419,7 @@ a.sub-item:hover {
         <button id="csbig-reset" type="button" style="cursor:pointer;background:#222;color:#ccc;border:1px solid #444;border-radius:8px;padding:0.5rem 1.1rem;font-weight:700;font-size:0.95rem">↺ リセット</button>
       </div>
       <p style="font-size:0.92rem;color:#aaa;margin-top:0.5rem;background:#2a2400;border-left:4px solid #FFB800;padding:0.6rem 1rem;border-radius:6px">
-        <strong style="color:#FFB800">ここがポイント:</strong> グラフがスカスカで、<strong>すき間（＝空マス）がたくさん</strong>あります。空マスにも「<strong>マスを作る・順番に調べる</strong>」手間がかかるので、<code>k</code> が大きいほど <code>+k</code> の負担が増えます。<strong>k が n と同じくらい大きい（今回のような）場合は、カウンティングソートのうま味が薄れます</strong> ── だから「値の範囲が狭い整数」向きなのです（くわしくは発展課題で）。
+        <strong style="color:#FFB800">ここがポイント:</strong> グラフはスカスカで、<strong>すき間（＝空マス）だらけ</strong>です。ところが空マスも、用意する（作る）・最後に順番に調べる、という手間からは逃れられません。つまり <code>k</code> が大きいほど <code>+k</code> の負担がそのまま増えます。<strong>k が n と同じくらい大きいと、この空マスの手間が効いてきて、カウンティングソートの「速さ」のうま味が薄れます</strong>。だからこの方法は <strong>「値の範囲（k）が狭い整数」</strong>のときにこそ強い、と覚えておきましょう（くわしくは発展課題で確かめます）。
       </p>
       <script>
       (function(){
