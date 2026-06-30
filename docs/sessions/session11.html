@@ -387,9 +387,9 @@ a.sub-item:hover {
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
+      <h3>📋 提出ガイド（この回の提出物: 計7項目）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
+        <a class="sub-item" href="#sec-group-disc"><span class="sub-count">3</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</a>
         <a class="sub-item" href="#sec-standard"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</a>
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</a>
         <a class="sub-item" href="#sec-group-disc"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</a>
@@ -411,7 +411,6 @@ a.sub-item:hover {
     <ul class="point-list">
       <li><strong>CSVファイルの読み書き</strong>を Python で行える</li>
       <li><strong>安定ソート</strong>（Stable Sort）の概念を理解し、なぜ重要かを説明できる</li>
-      <li>大規模データ（10,000~100,000件）に対して分布数えソートを適用できる</li>
       <li><strong>基数ソート</strong>（Radix Sort）の基本的な考え方を理解する</li>
     </ul>
   </div>
@@ -543,7 +542,7 @@ a.sub-item:hover {
         </tr>
       </table>
       <p style="margin-top:1rem;font-size:0.95rem;color:#93D500">
-        💡 <strong>まとめ:</strong> 累積度数 <code>count[key]</code> は「そのキーの<strong>最後に入る位置 + 1</strong>」を表すため、末尾から見ていけば「最後 → 後ろから2番目 → …」と<strong>右から左へ詰めていく</strong>ことになり、元の順序が保たれます。例題3で実際に体験できます。
+        💡 <strong>まとめ:</strong> 累積度数 <code>count[key]</code> は「そのキーの<strong>最後に入る位置 + 1</strong>」を表すため、末尾から見ていけば「最後 → 後ろから2番目 → …」と<strong>右から左へ詰めていく</strong>ことになり、元の順序が保たれます。例題2で実際に体験できます。
       </p>
     </div>
 
@@ -659,10 +658,8 @@ a.sub-item:hover {
         <strong>ファイル名のルール:</strong> 例題ごとにファイルを分けます。以下の名前で保存してください。
         <table style="margin-top:0.5rem;font-size:0.85rem">
           <tr><td>例題 1</td><td><code>AL11-ex1.py</code></td><td style="color:#888">CSV読み書き</td></tr>
-          <tr><td>例題 2</td><td><code>AL11-ex2.py</code></td><td style="color:#888">ソート結果書き出し</td></tr>
-          <tr><td>例題 3</td><td><code>AL11-ex3.py</code></td><td style="color:#888">安定ソート確認</td></tr>
-          <tr><td>例題 4</td><td><code>AL11-ex4.py</code></td><td style="color:#888">大規模データ</td></tr>
-          <tr><td>例題 5</td><td><code>AL11-ex5.py</code></td><td style="color:#888">基数ソート</td></tr>
+          <tr><td>例題 2</td><td><code>AL11-ex2.py</code></td><td style="color:#888">安定ソート確認</td></tr>
+          <tr><td>例題 3</td><td><code>AL11-ex3.py</code></td><td style="color:#888">基数ソート</td></tr>
         </table>
       </div>
     </div>
@@ -858,138 +855,6 @@ loaded = read_scores_csv(<span class="str">"scores.csv"</span>)
     <div class="card example">
       <div class="card-header">
         <span class="tag tag-example">例題 2</span>
-        <h3>CSVファイルにソート結果を書き出す</h3>
-      </div>
-      <pre><span class="code-label">Python</span>
-<span class="kw">import</span> csv
-<span class="kw">import</span> random
-
-<span class="kw">def</span> <span class="fn">counting_sort_records</span>(records, key_index, max_val):
-    <span class="str">"""レコードのリストを指定キーで分布数えソートする"""</span>
-    count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)  <span class="cmt"># 度数配列を初期化</span>
-    <span class="kw">for</span> record <span class="kw">in</span> records:
-        count[record[key_index]] += <span class="num">1</span>
-
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)):  <span class="cmt"># 累積度数を計算</span>
-        count[i] += count[i - <span class="num">1</span>]
-
-    output = [<span class="kw">None</span>] * <span class="fn">len</span>(records)  <span class="cmt"># 出力配列</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(records) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):  <span class="cmt"># 末尾から配置</span>
-        key = records[i][key_index]
-        position = count[key] - <span class="num">1</span>
-        output[position] = records[i]
-        count[key] -= <span class="num">1</span>
-
-    <span class="kw">return</span> output</pre>
-
-      <!-- Example 2: read → sort → write pipeline animated diagram -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">CSV → ソート → CSV の3ステップパイプライン</text>
-
-          <!-- Step badge -->
-          <g>
-            <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-              ① scores.csv 読込
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-              ② 数学列でソート（key_index=1）
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-              ③ 累積度数で位置決定
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-              ④ scores_sorted.csv 書込
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-              ⑤ 完了！
-            </text>
-          </g>
-
-          <!-- Input CSV box -->
-          <g>
-            <rect x="30" y="90" width="190" height="220" rx="10" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
-            <text x="125" y="112" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">scores.csv (入力)</text>
-            <text x="45" y="138" fill="#888" font-size="10" font-family="JetBrains Mono">name,math,english</text>
-            <text x="45" y="160" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Tanaka, <tspan fill="#FFB800" font-weight="700">85</tspan>, 72</text>
-            <text x="45" y="180" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Sato,   <tspan fill="#FFB800" font-weight="700">92</tspan>, 88</text>
-            <text x="45" y="200" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Suzuki, <tspan fill="#FFB800" font-weight="700">78</tspan>, 95</text>
-            <text x="45" y="220" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Yamada, <tspan fill="#FFB800" font-weight="700">65</tspan>, 80</text>
-            <text x="125" y="260" text-anchor="middle" fill="#888" font-size="10">数学の点数:</text>
-            <text x="125" y="278" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" font-family="JetBrains Mono">[85, 92, 78, 65]</text>
-            <text x="125" y="296" text-anchor="middle" fill="#888" font-size="10">→ ソート対象キー</text>
-          </g>
-
-          <!-- Sort engine (center) -->
-          <g>
-            <rect x="245" y="120" width="210" height="160" rx="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
-            <text x="350" y="145" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">counting_sort_records</text>
-            <text x="350" y="167" text-anchor="middle" fill="#888" font-size="11">key_index=1, max_val=100</text>
-            <text x="260" y="195" fill="#aaa" font-size="11">① 度数を数える</text>
-            <text x="260" y="215" fill="#aaa" font-size="11">② 累積度数を作る</text>
-            <text x="260" y="235" fill="#aaa" font-size="11">③ 末尾から配置</text>
-            <text x="260" y="255" fill="#76B900" font-size="11" font-weight="700">→ 安定ソート完了</text>
-            <rect x="245" y="120" width="210" height="160" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0">
-              <animate attributeName="opacity" values="0;0;1;1;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-          </g>
-
-          <!-- Output CSV box -->
-          <g>
-            <rect x="480" y="90" width="200" height="220" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
-            <text x="580" y="112" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">scores_sorted.csv</text>
-            <text x="495" y="138" fill="#888" font-size="10" font-family="JetBrains Mono">name,math,english</text>
-            <text x="495" y="160" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Yamada, <tspan fill="#76B900" font-weight="700">65</tspan>, 80</text>
-            <text x="495" y="180" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Suzuki, <tspan fill="#76B900" font-weight="700">78</tspan>, 95</text>
-            <text x="495" y="200" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Tanaka, <tspan fill="#76B900" font-weight="700">85</tspan>, 72</text>
-            <text x="495" y="220" fill="#E0E0E0" font-size="11" font-family="JetBrains Mono">Sato,   <tspan fill="#76B900" font-weight="700">92</tspan>, 88</text>
-            <text x="580" y="260" text-anchor="middle" fill="#888" font-size="10">数学の点数:</text>
-            <text x="580" y="278" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" font-family="JetBrains Mono">[65, 78, 85, 92]</text>
-            <text x="580" y="296" text-anchor="middle" fill="#888" font-size="10">→ 昇順</text>
-            <rect x="480" y="90" width="200" height="220" rx="10" fill="none" stroke="#4FC3F7" stroke-width="3" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.42;0.46;0.66;0.70;0.88;0.92;1" dur="18s" repeatCount="indefinite"/>
-            </rect>
-          </g>
-
-          <!-- Arrow 1 -->
-          <line x1="225" y1="200" x2="240" y2="200" stroke="#FFB800" stroke-width="2"/>
-          <polygon points="240,195 250,200 240,205" fill="#FFB800"/>
-          <!-- Arrow 2 -->
-          <line x1="460" y1="200" x2="475" y2="200" stroke="#76B900" stroke-width="2"/>
-          <polygon points="475,195 485,200 475,205" fill="#76B900"/>
-
-          <!-- Bottom legend -->
-          <g>
-            <rect x="30" y="340" width="650" height="46" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-            <text x="45" y="358" fill="#76B900" font-size="12" font-weight="700">凡例:</text>
-            <rect x="100" y="349" width="16" height="14" fill="#1A1A1A" stroke="#4FC3F7"/>
-            <text x="122" y="360" fill="#aaa" font-size="11">入力 CSV</text>
-            <rect x="200" y="349" width="16" height="14" fill="#1A1A1A" stroke="#FFB800"/>
-            <text x="222" y="360" fill="#aaa" font-size="11">ソート処理</text>
-            <rect x="305" y="349" width="16" height="14" fill="#1A1A1A" stroke="#76B900"/>
-            <text x="327" y="360" fill="#aaa" font-size="11">出力 CSV (昇順)</text>
-            <text x="45" y="380" fill="#93D500" font-size="11" font-weight="600">計算量 O(n+k): n=件数, k=max_val ／ 元の CSV は変更されず別ファイルに保存（安全）</text>
-          </g>
-        </svg>
-      </div>
-
-      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
-        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">例題1のデータを読み込み、<code>counting_sort_records</code> で数学の点数順にソートして、結果を新しい CSV に書き出してみよう。</p>
-        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> ソート後の CSV の中身を貼り付けてください。</div></div>
-      </div>
-    </div>
-
-    <!-- 例題3 -->
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
         <h3>安定ソートの動作を確認する</h3>
       </div>
       <pre><span class="code-label">Python</span>
@@ -1131,173 +996,15 @@ score_80 = [name <span class="kw">for</span> name, score <span class="kw">in</sp
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">Step 3 の末尾から配置する部分を <code>for i in range(len(data)):</code>（先頭から）に変えて実行し、80点の3人の順序がどうなるか確認してみよう。</p>
+        <p style="color:#ccc;font-size:0.9rem">末尾から配置する部分 <code>for i in range(len(data) - 1, -1, -1):</code> を <code>for i in range(len(data)):</code>（先頭から）に変えて実行し、80点の3人の順序がどうなるか確認してみよう。</p>
         <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 先頭から配置した場合と末尾から配置した場合の80点グループの順序の違いを書いてください。</div></div>
       </div>
     </div>
 
-    <!-- 例題4 -->
+    <!-- 例題3 -->
     <div class="card example">
       <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>大規模データ（10万件）を分布数えソートする</h3>
-      </div>
-      <pre><span class="code-label">Python</span>
-<span class="kw">import</span> random
-<span class="kw">import</span> time
-
-<span class="kw">def</span> <span class="fn">counting_sort_large</span>(data, max_val):
-    <span class="str">"""大規模データ用の分布数えソート"""</span>
-    count = [<span class="num">0</span>] * (max_val + <span class="num">1</span>)
-    <span class="kw">for</span> value <span class="kw">in</span> data:
-        count[value] += <span class="num">1</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(count)):
-        count[i] += count[i - <span class="num">1</span>]
-    output = [<span class="num">0</span>] * <span class="fn">len</span>(data)
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data) - <span class="num">1</span>, -<span class="num">1</span>, -<span class="num">1</span>):
-        output[count[data[i]] - <span class="num">1</span>] = data[i]
-        count[data[i]] -= <span class="num">1</span>
-    <span class="kw">return</span> output
-
-<span class="cmt"># --- 大規模データで速度計測 ---</span>
-random.<span class="fn">seed</span>(<span class="num">42</span>)
-sizes = [<span class="num">10000</span>, <span class="num">50000</span>, <span class="num">100000</span>]
-
-<span class="kw">for</span> size <span class="kw">in</span> sizes:
-    data = [random.<span class="fn">randint</span>(<span class="num">0</span>, <span class="num">999</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(size)]
-    start = time.<span class="fn">time</span>()
-    counting_sort_large(data, <span class="num">999</span>)
-    counting_time = time.<span class="fn">time</span>() - start
-    start = time.<span class="fn">time</span>()
-    <span class="fn">sorted</span>(data)
-    builtin_time = time.<span class="fn">time</span>() - start
-    <span class="fn">print</span>(<span class="str">f"{size:>8} {counting_time:>13.4f}s {builtin_time:>9.4f}s"</span>)</pre>
-
-      <!-- Example 4: large-data benchmark animated diagram -->
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 420" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="350" y="32" text-anchor="middle" fill="#76B900" font-weight="700" font-size="16">大規模データ（10万件）の処理時間と n,k のスケール</text>
-
-          <!-- Step badge -->
-          <g>
-            <rect x="510" y="50" width="170" height="24" rx="12" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
-            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-              ① n=10,000 件 (k=999)
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-              ② n=50,000 件
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-              ③ n=100,000 件
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-              ④ k を巨大化 (k=10⁶)
-            </text>
-            <text x="595" y="67" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">
-              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-              ⑤ 使い分けの基準
-            </text>
-          </g>
-
-          <!-- Chart frame -->
-          <line x1="80" y1="320" x2="640" y2="320" stroke="#444" stroke-width="1.5"/>
-          <line x1="80" y1="100" x2="80" y2="320" stroke="#444" stroke-width="1.5"/>
-          <text x="80" y="345" text-anchor="middle" fill="#888" font-size="10">10,000</text>
-          <text x="260" y="345" text-anchor="middle" fill="#888" font-size="10">50,000</text>
-          <text x="440" y="345" text-anchor="middle" fill="#888" font-size="10">100,000</text>
-          <text x="620" y="345" text-anchor="middle" fill="#888" font-size="10">+大きなk</text>
-          <text x="360" y="365" text-anchor="middle" fill="#aaa" font-size="11" font-weight="700">データ件数 n</text>
-          <text x="40" y="220" fill="#aaa" font-size="11" font-weight="700" transform="rotate(-90 40 220)">処理時間</text>
-
-          <!-- Counting sort bar 1: n=10k -->
-          <rect x="100" y="305" width="40" height="0" fill="#76B900" opacity="0.8">
-            <animate attributeName="height" values="0;0;15;15;15;15;15;15;15;15" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            <animate attributeName="y" values="320;320;305;305;305;305;305;305;305;305" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-          </rect>
-          <text x="120" y="295" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            0.01s
-          </text>
-
-          <!-- Counting sort bar 2: n=50k -->
-          <rect x="280" y="320" width="40" height="0" fill="#76B900" opacity="0.8">
-            <animate attributeName="height" values="0;0;0;0;40;40;40;40;40;40" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            <animate attributeName="y" values="320;320;320;320;280;280;280;280;280;280" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-          </rect>
-          <text x="300" y="270" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            0.05s
-          </text>
-
-          <!-- Counting sort bar 3: n=100k -->
-          <rect x="460" y="320" width="40" height="0" fill="#76B900" opacity="0.8">
-            <animate attributeName="height" values="0;0;0;0;0;0;80;80;80;80" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            <animate attributeName="y" values="320;320;320;320;320;320;240;240;240;240" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-          </rect>
-          <text x="480" y="230" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            0.09s
-          </text>
-
-          <!-- Counting sort bar 4: k=10⁶ (huge spike) -->
-          <rect x="600" y="320" width="40" height="0" fill="#FF5252" opacity="0.8">
-            <animate attributeName="height" values="0;0;0;0;0;0;0;0;200;200" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            <animate attributeName="y" values="320;320;320;320;320;320;320;320;120;120" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-          </rect>
-          <text x="620" y="110" text-anchor="middle" fill="#FF5252" font-size="10" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            急に遅く！
-          </text>
-
-          <!-- Description text -->
-          <text x="350" y="135" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            n が小さい：分布数えソートは sorted() より高速
-          </text>
-          <text x="350" y="135" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            件数 5倍 → 時間も約5倍（線形に増加）
-          </text>
-          <text x="350" y="135" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            10万件でも約0.09秒 — 高速！
-          </text>
-          <text x="350" y="135" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            k=10⁶ になると度数配列が巨大化 → 遅延
-          </text>
-          <text x="350" y="135" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0">
-            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1" keyTimes="0;0.18;0.22;0.44;0.48;0.66;0.70;0.86;0.90;1" dur="18s" repeatCount="indefinite"/>
-            k が n と同程度のときだけ使う！
-          </text>
-
-          <!-- Bottom legend -->
-          <g>
-            <rect x="30" y="380" width="650" height="32" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
-            <rect x="45" y="389" width="14" height="14" fill="#76B900" opacity="0.8"/>
-            <text x="65" y="400" fill="#aaa" font-size="11">分布数えソート (O(n+k))</text>
-            <rect x="230" y="389" width="14" height="14" fill="#FF5252" opacity="0.8"/>
-            <text x="250" y="400" fill="#aaa" font-size="11">k が大きすぎるケース</text>
-            <text x="420" y="400" fill="#93D500" font-size="11" font-weight="600">→ sorted() は O(n log n) で k に依存しない</text>
-          </g>
-        </svg>
-      </div>
-
-      <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
-        <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">値の範囲を <code>0~9</code> と <code>0~999999</code> でそれぞれ10万件ソートし、分布数えソートの速度がどう変わるか比較してみよう。</p>
-        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 値の範囲による速度の違いと、その理由（メモリとの関係）を書いてください。</div></div>
-      </div>
-    </div>
-
-    <!-- 例題5 -->
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 5</span>
+        <span class="tag tag-example">例題 3</span>
         <h3>基数ソートの基本実装</h3>
       </div>
       <pre><span class="code-label">Python</span>
@@ -1627,16 +1334,10 @@ result2 = <span class="fn">sorted</span>(students, key=<span class="kw">lambda</
 ## 例題 1: CSVファイルの読み書き
 作成された CSV ファイルの中身:
 
-## 例題 2: ソート結果の書き出し
-ソート後の CSV の中身:
-
-## 例題 3: 安定ソートの動作確認
+## 例題 2: 安定ソートの動作確認
 先頭から vs 末尾から配置した場合の順序の違い:
 
-## 例題 4: 大規模データのソート
-値の範囲による速度の違いと理由:
-
-## 例題 5: 基数ソートの基本実装
+## 例題 3: 基数ソートの基本実装
 各桁ソート後のリストの変化と考察:
 
 ---
@@ -1711,19 +1412,6 @@ Nakamura,88,76</pre>
     <details>
       <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題2 やってみよう 解答</summary>
       <div class="answer-content">
-        <p>例題1の <code>scores.csv</code> を <code>read_scores_csv</code> で読み込み、<code>counting_sort_records(records, key_index=1, max_val=100)</code> で数学（インデックス1）の点数順にソートし、<code>write_scores_csv("scores_sorted.csv", sorted_records)</code> で書き出した結果:</p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">name,math,english
-Yamada,65,80
-Suzuki,78,95
-Tanaka,85,72
-Sato,92,88</pre>
-        <p>数学の点数が <strong>昇順</strong>（65 → 78 → 85 → 92）に並ぶ。<code>counting_sort_records</code> は <code>key_index</code> で「どの列を基準にソートするか」を切り替えられるので、<code>key_index=2</code> にすれば英語の点数順に並べ替えられる。読み込み → 計算 → 書き出しという<strong>ファイル入出力の3ステップ</strong>を実感しよう。ソート結果は元のファイルを壊さず別ファイルに保存するのが安全な使い方。</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
-      <div class="answer-content">
         <p>末尾から配置するループ <code>for i in range(len(data) - 1, -1, -1):</code> を <code>for i in range(len(data)):</code>（先頭から）に変えると、80点グループの順序が<strong>逆転</strong>する:</p>
         <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">末尾から配置（元のコード）:
   80点の順序: ['Sato', 'Suzuki', 'Ito']
@@ -1732,31 +1420,19 @@ Sato,92,88</pre>
 先頭から配置（変更後）:
   80点の順序: ['Ito', 'Suzuki', 'Sato']
   元の順序保持: False ← 不安定になる</pre>
-        <p>分布数えソートが安定であるためには、<strong>累積度数を「右端の次に入る位置」として使い、入力を末尾から走査する</strong>必要がある。先頭から走査すると、同じキーの要素のうち <em>先に出てきたもの</em> が累積度数の <em>後ろ</em> の位置に置かれてしまい、入力順が反転する。安定性は単独データでは差が出ないが、<strong>多段ソート（基数ソートや「数学順 → 同点なら英語順」など）</strong>では結果を大きく左右する。例題5の基数ソートが正しく動く前提でもあるので、ここでの「末尾から」は省略不可。</p>
+        <p>分布数えソートが安定であるためには、<strong>累積度数を「右端の次に入る位置」として使い、入力を末尾から走査する</strong>必要がある。先頭から走査すると、同じキーの要素のうち <em>先に出てきたもの</em> が累積度数の <em>後ろ</em> の位置に置かれてしまい、入力順が反転する。安定性は単独データでは差が出ないが、<strong>多段ソート（基数ソートや「数学順 → 同点なら英語順」など）</strong>では結果を大きく左右する。例題3の基数ソートが正しく動く前提でもあるので、ここでの「末尾から」は省略不可。</p>
       </div>
     </details>
 
     <details>
-      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題4 やってみよう 解答</summary>
-      <div class="answer-content">
-        <p>10万件のデータについて、値の範囲だけを変えて <code>counting_sort_large</code> を実行した結果例:</p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">値の範囲     度数配列サイズ   分布数えソート    sorted()
-0 ~ 9              10要素        約 0.010 秒    約 0.020 秒
-0 ~ 999          1,000要素       約 0.012 秒    約 0.020 秒
-0 ~ 999999   1,000,000要素      約 0.090 秒    約 0.020 秒</pre>
-        <p>値の範囲 <code>k</code> が小さいときは、<code>counting_sort_large</code> は <code>sorted()</code> よりも速い。しかし範囲を <code>0~999999</code> まで広げると、<strong>長さ100万の度数配列を初期化・累積する時間とメモリ</strong>が支配的になり、データが10万件しかなくても急に遅くなる。これが分布数えソートの計算量 <strong>O(n + k)</strong> の意味で、<code>k ≫ n</code> になると優位性を失う。一方 <code>sorted()</code>（Timsort, O(n log n)）は値の範囲に依存せず安定。<strong>使い分けの基準</strong>: 値の範囲が「データ件数と同程度かそれ以下」のときだけ分布数えソートを選ぶ。範囲が非常に大きい整数や、実数・文字列をソートしたいときは Timsort や基数ソートを使う。</p>
-      </div>
-    </details>
-
-    <details>
-      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
+      <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題3 やってみよう 解答</summary>
       <div class="answer-content">
         <p>入力を <code>test_data = [329, 457, 657, 839, 436, 720, 355]</code> に変えて <code>radix_sort</code> を実行したときの、各桁ソート後の状態:</p>
         <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">  1の位でソート: [329, 457, 657, 839, 436, 720, 355]...
   10の位でソート: [720, 355, 436, 457, 657, 329, 839]...
   100の位でソート: [720, 329, 436, 839, 355, 457, 657]...
 結果: [329, 355, 436, 457, 657, 720, 839]</pre>
-        <p>各桁の動きを追うと、<strong>1の位ソート後</strong>は末尾が <code>0,5,6,7,9,9</code> のように1の位で昇順、<strong>10の位ソート後</strong>は <code>20,29,36,55,57,57,39</code>（十の位）で並び替えられ、<strong>100の位ソート後</strong>に最終結果 <code>[329, 355, 436, 457, 657, 720, 839]</code> が得られる。基数ソートが正しく動く鍵は、<strong>各桁の分布数えソートが「安定」であること</strong>（例題3）。下位の桁で揃えた順序を、上位の桁で「同点ならその順を保ったまま」並べ直すから、桁を順に処理するだけで全体が完全にソートされる。最大値の桁数を <code>d</code>、データ数を <code>n</code> とすると計算量は <strong>O(d × n)</strong>。整数キーで <code>d</code> が小さければ Timsort より高速になる。</p>
+        <p>各桁の動きを追うと、<strong>1の位ソート後</strong>は <code>[720, 355, 436, 457, 657, 329, 839]</code> となり1の位が <code>0,5,6,7,7,9,9</code> と昇順、<strong>10の位ソート後</strong>は <code>[720, 329, 436, 839, 355, 457, 657]</code> となり十の位が <code>2,2,3,3,5,5,5</code> と昇順に並び替えられ、<strong>100の位ソート後</strong>に最終結果 <code>[329, 355, 436, 457, 657, 720, 839]</code> が得られる。基数ソートが正しく動く鍵は、<strong>各桁の分布数えソートが「安定」であること</strong>（例題2）。下位の桁で揃えた順序を、上位の桁で「同点ならその順を保ったまま」並べ直すから、桁を順に処理するだけで全体が完全にソートされる。最大値の桁数を <code>d</code>、データ数を <code>n</code> とすると計算量は <strong>O(d × n)</strong>。整数キーで <code>d</code> が小さければ Timsort より高速になる。</p>
       </div>
     </details>
     </div>
