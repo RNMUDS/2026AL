@@ -123,6 +123,14 @@ table {
   overflow: hidden;
   border: 1px solid #333;
 }
+table caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #93D500;
+  padding: 0 0.2rem 0.5rem;
+}
 th {
   background: #1A1A1A;
   font-weight: 700;
@@ -175,6 +183,32 @@ pre .op { color: #89dceb; }
 .concept-box h4 {
   font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem;
 }
+.kw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.kw-card {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 0.9rem;
+}
+.kw-card h5 {
+  color: #76B900;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+.kw-card p {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-top: 0.6rem;
+  line-height: 1.6;
+}
+.kw-card .diagram-container { margin: 0; }
+.kw-card .diagram-container svg { width: 100%; height: auto; }
 .analogy {
   background: #1a1700;
   border-radius: 10px;
@@ -381,7 +415,6 @@ a.sub-item:hover {
       <h2>学習目標</h2>
     </div>
     <ul class="point-list">
-      <li><strong>Big O 記法</strong>で主要な計算量を理解し、アルゴリズムの効率を比較できる</li>
       <li><strong>幅優先探索</strong>（BFS）をキューを使って実装し、最短経路を見つけられる</li>
       <li><strong>深さ優先探索</strong>（DFS）をスタック/再帰で実装できる</li>
       <li>BFS と DFS の違いを迷路探索で体感する</li>
@@ -400,16 +433,20 @@ a.sub-item:hover {
     <!-- 1.1 Big O -->
     <div class="concept-box">
       <h4>1.1 Big O 記法（計算量の表し方）</h4>
-      <p>アルゴリズムの効率を表すために <strong>Big O 記法</strong> を使います。データ量 n が増えたとき、処理時間がどのように増加するかを示します。</p>
+      <p>これまでの回で、挿入ソート・バブルソート・選択ソート・シェルソート・分布数えソートなど、たくさんの並べ替えアルゴリズムを実装してきました。では「結局どれが一番速いアルゴリズムなの？」と聞かれたら、どう答えればよいでしょうか。</p>
+      <p>実際にコードを実行して時間を測る、という方法も考えられますが、それだとパソコンの性能やその時のデータ量によって結果が変わってしまい、公平な比較になりません。そこで使うのが<strong>Big O 記法</strong>です。Big O は、データ量 n が増えたときに処理時間（や必要なメモリ）が<strong>どんな"増え方"をするか</strong>を、コンピュータの性能に左右されない形で表す共通のものさしです。</p>
+      <p>この後の<strong>1.2節</strong>で、これまで学んだアルゴリズムの計算量をBig Oで一覧にして振り返ります。そして<strong>1.3節</strong>からは、今回新しく学ぶ<strong>BFS（幅優先探索）</strong>と<strong>DFS（深さ優先探索）</strong>という2つの探索アルゴリズムについても、同じBig Oのものさしを使って「どちらがどれくらい効率的か」を比較していきます。つまりBig O記法は、今回のタイトルである「アルゴリズムの効率比較」を実際に行うための道具です。</p>
       <table>
-        <tr><th>Big O</th><th>名前</th><th>例</th><th>n=1000 のとき</th></tr>
-        <tr><td>O(1)</td><td>定数時間</td><td>配列のインデックスアクセス</td><td>1回</td></tr>
-        <tr><td>O(log n)</td><td>対数時間</td><td>二分探索</td><td>約10回</td></tr>
-        <tr><td>O(n)</td><td>線形時間</td><td>配列の全要素走査</td><td>1,000回</td></tr>
-        <tr><td>O(n log n)</td><td>線形対数時間</td><td>マージソート、Timsort</td><td>約10,000回</td></tr>
-        <tr><td>O(n^2)</td><td>二乗時間</td><td>挿入ソート、バブルソート</td><td>1,000,000回</td></tr>
-        <tr><td>O(2^n)</td><td>指数時間</td><td>全組み合わせ探索</td><td>天文学的数字</td></tr>
+        <caption>表1.1: Big O 記法の一覧</caption>
+        <tr><th>Big O</th><th>名前</th><th>意味（データが2倍になると処理時間は？）</th><th>n=1000 のとき</th></tr>
+        <tr><td>O(1)</td><td>定数時間</td><td>データ量が増えても処理時間は<strong>変わらない</strong></td><td>1回</td></tr>
+        <tr><td>O(log n)</td><td>対数時間</td><td>データが2倍になっても、処理時間は<strong>わずかしか増えない</strong></td><td>約10回</td></tr>
+        <tr><td>O(n)</td><td>線形時間</td><td>データが2倍になれば、処理時間も<strong>ほぼ2倍</strong>になる</td><td>1,000回</td></tr>
+        <tr><td>O(n log n)</td><td>線形対数時間</td><td>データが2倍になると、処理時間は<strong>2倍よりわずかに多く</strong>増える</td><td>約10,000回</td></tr>
+        <tr><td>O(n^2)</td><td>二乗時間</td><td>データが2倍になると、処理時間は<strong>4倍</strong>になる</td><td>1,000,000回</td></tr>
+        <tr><td>O(2^n)</td><td>指数時間</td><td>データが<strong>1個増えるだけ</strong>で、処理時間が2倍に膨れ上がる</td><td>天文学的数字</td></tr>
       </table>
+      <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">※ 具体的にどのアルゴリズムがどのBig Oになるかは、次の<strong>表1.2</strong>で確認します。</p>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 380" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
@@ -443,11 +480,11 @@ a.sub-item:hover {
 
           <!-- Tick marks -->
           <line x1="200" y1="330" x2="200" y2="335" stroke="#555" stroke-width="1.5"/>
-          <text x="200" y="350" text-anchor="middle" fill="#888" font-size="11">100</text>
+          <text x="200" y="350" text-anchor="middle" fill="#888" font-size="11">1,000</text>
           <line x1="350" y1="330" x2="350" y2="335" stroke="#555" stroke-width="1.5"/>
-          <text x="350" y="350" text-anchor="middle" fill="#888" font-size="11">500</text>
+          <text x="350" y="350" text-anchor="middle" fill="#888" font-size="11">5,000</text>
           <line x1="500" y1="330" x2="500" y2="335" stroke="#555" stroke-width="1.5"/>
-          <text x="500" y="350" text-anchor="middle" fill="#888" font-size="11">1000</text>
+          <text x="500" y="350" text-anchor="middle" fill="#888" font-size="11">10,000</text>
         </svg>
       </div>
     </div>
@@ -456,79 +493,304 @@ a.sub-item:hover {
     <div class="concept-box">
       <h4>1.2 これまで学んだアルゴリズムの計算量</h4>
       <table>
+        <caption>表1.2: これまで学んだアルゴリズムの計算量</caption>
         <tr><th>アルゴリズム</th><th>最良</th><th>平均</th><th>最悪</th><th>空間</th></tr>
         <tr><td>挿入ソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>二分挿入ソート</td><td>O(n log n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>バブルソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>選択ソート</td><td>O(n^2)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
-        <tr><td>シェルソート</td><td>O(n log n)</td><td>O(n^1.3)</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>シェルソート</td><td>O(n log n)</td><td>O(n^1.3)*</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>分布数えソート</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td></tr>
         <tr><td>Python sorted()</td><td>O(n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td></tr>
       </table>
+      <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">* シェルソートの平均計算量は使用する<strong>ギャップ列によって変わり、厳密には未解明</strong>。実用上 O(n^1.3) 程度とされることが多い、という目安の値。</p>
     </div>
 
     <!-- 1.3 BFS vs DFS -->
     <div class="concept-box">
       <h4>1.3 グラフ探索: BFS と DFS</h4>
-      <p>迷路を解くなどの「経路探索」には、2つの基本的な方法があります。</p>
+      <p>迷路の分かれ道で「どっちに進むか」を決めるとき、大きく分けて2つの考え方があります。1つずつ、身近なたとえで見ていきましょう。</p>
+
+      <div style="background:#0a1a2e;border:1px solid #4FC3F7;border-radius:10px;padding:1rem 1.2rem;margin:1rem 0">
+        <p style="color:#4FC3F7;font-weight:700;margin-bottom:0.6rem">🌊 たとえ話で考えてみよう</p>
+        <p style="font-size:0.92rem;color:#ccc;margin-bottom:0.6rem"><strong style="color:#76B900">BFS（幅優先探索）</strong>は、池に石を投げ入れたときに広がる<strong>波紋</strong>のようなもの。スタート地点から全方向に同時に、1歩・2歩・3歩…と均等に広がっていきます。だから波紋が最初に届いた場所までの道のりは、必ず最短になります。</p>
+        <p style="font-size:0.92rem;color:#ccc">一方<strong style="color:#FF5252">DFS（深さ優先探索）</strong>は、洞窟探検で<strong>壁に手をつけたまま一本道を進み続ける</strong>ようなもの。1つの道をとにかく突き進み、行き止まったら引き返して別の道を試します。ゴールにはたどり着けますが、遠回りした分だけ余計に歩いてしまうことがあります。</p>
+      </div>
+
+      <p style="font-size:0.9rem;color:#ccc">下の同じ迷路を、BFS（左）とDFSくん（右）がそれぞれ探索するようすを見てみましょう。<strong>数字はマスを調べた順番</strong>、<span style="color:#FFB800">✗</span>は「行き止まりだった」マスです。</p>
 
       <div class="diagram-container">
-        <svg viewBox="0 0 700 400" width="700" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif">
-          <text x="350" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="14">BFS vs DFS の探索パターン</text>
+        <svg viewBox="0 0 760 470" width="760" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
+          <text x="380" y="25" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じ迷路をBFSとDFSで探索してみる</text>
 
-          <!-- BFS Side -->
-          <rect x="20" y="40" width="310" height="340" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
-          <text x="175" y="65" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">BFS（幅優先探索）</text>
-          <text x="175" y="85" text-anchor="middle" fill="#888" font-size="11">キュー（FIFO）を使う</text>
+          <!-- BFS panel -->
+          <rect x="20" y="45" width="350" height="390" rx="14" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+          <text x="195" y="72" text-anchor="middle" fill="#76B900" font-weight="700" font-size="13">BFS（幅優先探索）</text>
+          <text x="195" y="90" text-anchor="middle" fill="#888" font-size="11">みんなで一斉に一歩ずつ広がる（キュー）</text>
 
-          <!-- BFS Grid -->
-          <rect x="55" y="100" width="40" height="40" rx="6" fill="#76B900"/><text x="75" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">1</text>
-          <rect x="105" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="125" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">2</text>
-          <rect x="155" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="175" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">3</text>
-          <rect x="205" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="225" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">4</text>
-          <rect x="255" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="275" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">5</text>
+          <rect x="91" y="135" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="137" y="135" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="183" y="135" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="45" y="181" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="91" y="181" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="137" y="181" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="183" y="181" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="45" y="227" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="91" y="227" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="137" y="227" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="183" y="227" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="45" y="273" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="91" y="273" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="137" y="273" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="45" y="135" width="40" height="40" rx="6" fill="#76B900"/>
+          <text x="65" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="14">S</text>
+          <rect x="183" y="273" width="40" height="40" rx="6" fill="none" stroke="#FF5252" stroke-width="2" stroke-dasharray="4,3"/>
+          <rect x="183" y="273" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="203" y="298" text-anchor="middle" fill="white" font-weight="700" font-size="14">G</text>
+          <rect x="91" y="135" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="111" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            2
+          </text>
+          <rect x="137" y="135" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="157" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            3
+          </text>
+          <rect x="137" y="181" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="157" y="206" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            4
+          </text>
+          <rect x="183" y="135" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="203" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            5
+          </text>
+          <rect x="137" y="227" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="157" y="252" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            6
+          </text>
+          <rect x="137" y="273" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="157" y="298" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            7
+          </text>
+          <rect x="91" y="227" width="40" height="40" rx="6" fill="#76B900" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="111" y="252" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            8
+          </text>
+          <path d="M 65 155 L 111 155 L 157 155 L 157 201 L 157 247 L 157 293 L 203 293" stroke="#FFB800" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;0.3;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </path>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ここがスタート地点
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ① 1歩で行けるマスを同時にチェック
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ② さらにその隣へ
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ③ 分かれ道→ 2方向を同時にチェック
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ④ 進めるマスだけ広がる
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑤ また分かれ道→ 2方向同時に
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑥ ゴール発見！（9マス調べた）
+          </text>
+          <text x="220" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ✓ 最短経路が保証される（6歩）
+          </text>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.10;0.22;0.34;0.46;0.58;0.70;0.82;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="35" y="330" width="330" height="34" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
+            <text x="200" y="352" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">✓ 最短経路(6歩) / 調べたマス: 9個</text>
+          </g>
+          <text x="195" y="400" text-anchor="middle" fill="#666" font-size="10">波紋のように同心円状に広がる → 最短を保証</text>
 
-          <rect x="55" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="75" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">3</text>
-          <rect x="105" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="125" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">5</text>
-          <rect x="155" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="175" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">6</text>
-          <rect x="205" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="225" y="175" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">7</text>
-          <rect x="255" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="275" y="175" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">8</text>
+          <!-- DFS panel -->
+          <rect x="390" y="45" width="350" height="390" rx="14" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+          <text x="565" y="72" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="13">DFS（深さ優先探索）</text>
+          <text x="565" y="90" text-anchor="middle" fill="#888" font-size="11">一人で一本道をどんどん進む（スタック）</text>
 
-          <text x="175" y="220" text-anchor="middle" fill="#E0E0E0" font-size="11">近い場所から順に広がる</text>
-          <rect x="40" y="240" width="280" height="50" rx="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
-          <text x="175" y="260" text-anchor="middle" fill="#76B900" font-weight="700" font-size="12">最短経路を保証する</text>
-          <text x="175" y="278" text-anchor="middle" fill="#888" font-size="11">メモリ使用量: 多い</text>
-
-          <text x="175" y="315" text-anchor="middle" fill="#E0E0E0" font-size="11">キュー: [S] -> [近傍1, 近傍2]</text>
-          <text x="175" y="335" text-anchor="middle" fill="#E0E0E0" font-size="11">-> [近傍2, 近傍1の近傍]</text>
-          <text x="175" y="355" text-anchor="middle" fill="#E0E0E0" font-size="11">-> ...</text>
-
-          <!-- DFS Side -->
-          <rect x="370" y="40" width="310" height="340" rx="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
-          <text x="525" y="65" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="13">DFS（深さ優先探索）</text>
-          <text x="525" y="85" text-anchor="middle" fill="#888" font-size="11">スタック（LIFO）を使う</text>
-
-          <!-- DFS Grid -->
-          <rect x="405" y="100" width="40" height="40" rx="6" fill="#76B900"/><text x="425" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">1</text>
-          <rect x="455" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="475" y="125" text-anchor="middle" fill="white" font-weight="700" font-size="12">2</text>
-          <rect x="505" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="525" y="125" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">6</text>
-          <rect x="555" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="575" y="125" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">7</text>
-          <rect x="605" y="100" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/><text x="625" y="125" text-anchor="middle" fill="#E0E0E0" font-weight="700" font-size="12">8</text>
-
-          <rect x="405" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="425" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">5</text>
-          <rect x="455" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="475" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">3</text>
-          <rect x="505" y="150" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="525" y="175" text-anchor="middle" fill="white" font-weight="700" font-size="12">4</text>
-
-          <text x="525" y="220" text-anchor="middle" fill="#E0E0E0" font-size="11">深く深く進んでから戻る</text>
-          <rect x="390" y="240" width="280" height="50" rx="8" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
-          <text x="525" y="260" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="12">最短経路とは限らない</text>
-          <text x="525" y="278" text-anchor="middle" fill="#888" font-size="11">メモリ使用量: 少ない</text>
-
-          <text x="525" y="315" text-anchor="middle" fill="#E0E0E0" font-size="11">スタック: [S] -> [近傍1]</text>
-          <text x="525" y="335" text-anchor="middle" fill="#E0E0E0" font-size="11">-> [近傍1の近傍] -> ...</text>
-          <text x="525" y="355" text-anchor="middle" fill="#E0E0E0" font-size="11">行き止まりで戻る</text>
+          <rect x="461" y="135" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="507" y="135" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="553" y="135" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="415" y="181" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="461" y="181" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="507" y="181" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="553" y="181" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="415" y="227" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="461" y="227" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="507" y="227" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="553" y="227" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="415" y="273" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="461" y="273" width="40" height="40" rx="6" fill="#0a0a0a" stroke="#333" stroke-width="1.5"/>
+          <rect x="507" y="273" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#FF5252" stroke-width="1" stroke-opacity="0.4"/>
+          <rect x="415" y="135" width="40" height="40" rx="6" fill="#76B900"/>
+          <text x="435" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="14">S</text>
+          <rect x="553" y="273" width="40" height="40" rx="6" fill="none" stroke="#FF5252" stroke-width="2" stroke-dasharray="4,3"/>
+          <rect x="553" y="273" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="573" y="298" text-anchor="middle" fill="white" font-weight="700" font-size="14">G</text>
+          <rect x="461" y="135" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;1;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="481" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;1;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            2
+          </text>
+          <rect x="507" y="135" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="527" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            3
+          </text>
+          <rect x="553" y="135" width="40" height="40" rx="6" fill="#FFB800" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="573" y="160" text-anchor="middle" fill="white" font-weight="700" font-size="11" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            4✗
+          </text>
+          <rect x="507" y="181" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="527" y="206" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            5
+          </text>
+          <rect x="507" y="227" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="527" y="252" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            6
+          </text>
+          <rect x="461" y="227" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="481" y="252" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            7
+          </text>
+          <rect x="415" y="227" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="435" y="252" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            8
+          </text>
+          <rect x="415" y="273" width="40" height="40" rx="6" fill="#FFB800" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="435" y="298" text-anchor="middle" fill="white" font-weight="700" font-size="11" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            9✗
+          </text>
+          <rect x="507" y="273" width="40" height="40" rx="6" fill="#FF5252" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </rect>
+          <text x="527" y="298" text-anchor="middle" fill="white" font-weight="700" font-size="13" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;1;1;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            10
+          </text>
+          <path d="M 435 155 L 481 155 L 527 155 L 527 201 L 527 247 L 527 293 L 573 293" stroke="#FFB800" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;1;1;0.3;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+          </path>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ここがスタート地点
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;1;1;0;0;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ① まず1方向に進む
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ② そのまま真っ直ぐ進む
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1;0;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ③ 行き止まり！✗ ここは違った
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ④ 戻って別の道へ
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;1;1;0;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑤ また真っ直ぐ進む
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑥ 分かれ道は先に1つを選ぶ
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;0;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑦ 選んだ道の先へ
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑧ また行き止まり！✗
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;1;1;0;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑨ 戻ってもう一方の道へ
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1;0;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ⑩ ゴール発見！（11マス調べた）
+          </text>
+          <text x="590" y="116" text-anchor="middle" fill="#FFB800" font-weight="700" font-size="12" opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            ✓ 実は同じ経路だった（6歩）
+          </text>
+          <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;1;1;0;0" keyTimes="0;0.08;0.16;0.24;0.32;0.40;0.48;0.56;0.64;0.72;0.80;0.88;0.94;0.97;1" dur="18s" repeatCount="indefinite"/>
+            <rect x="405" y="330" width="330" height="34" rx="8" fill="#2e1a0a" stroke="#FF5252" stroke-width="1.5"/>
+            <text x="570" y="352" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">✓ 同じ経路(6歩) / 調べたマス: 11個（2回行き止まり）</text>
+          </g>
+          <text x="565" y="400" text-anchor="middle" fill="#666" font-size="10">行き止まりで引き返す（✗ = 行き止まり）→ 最短とは限らない</text>
         </svg>
       </div>
+
+      <p style="font-size:0.9rem;color:#ccc;margin-top:0.8rem">この例では、同じ道（6歩）にたどり着きましたが、DFSは2回行き止まりに入ったぶん、調べたマスの数がBFSより多くなりました（9マス→11マス）。分かれ道が多い迷路では、DFSが見つける経路そのものがBFSより長くなることもあります（例題4で実際に確認します）。</p>
+      <p style="font-size:0.85rem;color:#888;margin-top:0.4rem">※ これから例題1〜5で実際にコードを書いて動かす5x5迷路は、分かれ道のない一本道なので、BFSとDFSの結果は同じになります。ここで見た「探索の仕方の違い」を頭に入れたうえで、コードを読んでいきましょう。</p>
     </div>
 
     <!-- 1.4 迷路の表現 -->
@@ -610,38 +872,196 @@ maze = [
       </div>
     </div>
 
-    <!-- キーワード解説 -->
+    <!-- キーワード解説（図とアニメーション） -->
     <div class="concept-box" style="margin-bottom:1.5rem">
       <h4>この回のキーワード（読み方つき）</h4>
-      <table>
-        <tr><th>用語（読み方）</th><th>説明</th></tr>
-        <tr><td><strong style="color:#76B900">BFS（ビーエフエス／幅優先探索: はばゆうせんたんさく）</strong></td><td><strong>Breadth-First Search</strong>。キュー（FIFO: 先入れ先出し）を使い、近い場所から順番に広がるように探索する方法。<strong>最短経路を保証</strong>する。計算量は O(V+E)（V=マス数、E=隣接関係の数）。</td></tr>
-        <tr><td><strong style="color:#76B900">DFS（ディーエフエス／深さ優先探索: ふかさゆうせんたんさく）</strong></td><td><strong>Depth-First Search</strong>。スタック（LIFO: 後入れ先出し）や再帰を使い、一つの方向に深く進んでから戻る探索方法。最短経路とは限らない。計算量は同じく O(V+E)。</td></tr>
-        <tr><td><strong style="color:#76B900">deque（デック／両端キュー: りょうたんきゅー）</strong></td><td><strong>double-ended queue</strong> の略。両端から高速に <code>append</code> / <code>popleft</code> できるPython標準ライブラリのデータ構造。BFSのキューに使う。<code>list.pop(0)</code> は O(n) だが <code>deque.popleft()</code> は O(1)。</td></tr>
-        <tr><td><strong style="color:#76B900">キュー（queue: 待ち行列）／スタック（stack: 積み重ね）</strong></td><td>キューは「列に並ぶ」（先に入った人が先に出る = FIFO）、スタックは「積み重ねた皿」（最後に置いた皿から取る = LIFO）。この違いがBFSとDFSの探索順序の違いを生む。</td></tr>
-        <tr><td><strong style="color:#76B900">Big O 記法（ビッグオーきほう）</strong></td><td>アルゴリズムの効率を表す記法。データ量nが増えたとき処理時間がどう増えるかを示す。O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n^2) &lt; O(2^n) の順に遅くなる。</td></tr>
-        <tr><td><strong style="color:#76B900">parent マップ（親: おや）</strong></td><td>各マスについて「どこから来たか」を記録する2次元配列。ゴール到達後にこれを逆順にたどると経路を復元できる。</td></tr>
-      </table>
-    </div>
+      <div class="kw-grid">
 
-    <!-- Q&A box -->
-    <div class="concept-box" style="margin-bottom:1.5rem;border:1px solid #4FC3F7">
-      <h4 style="color:#4FC3F7">よくある質問（Q&amp;A）</h4>
-      <div style="background:#0a1a2e;border-radius:8px;padding:0.8rem 1rem;margin-bottom:0.6rem">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.3rem">Q1. なぜBFSは最短経路を保証するの？</p>
-        <p style="font-size:0.9rem;color:#ccc">A. BFSは「スタートから1歩で行けるマス」→「2歩で行けるマス」→「3歩で行けるマス」…と<strong>距離が近い順</strong>に展開するからです。ゴールに最初に到達したときの歩数が、その迷路で必ず最小になります。</p>
-      </div>
-      <div style="background:#0a1a2e;border-radius:8px;padding:0.8rem 1rem;margin-bottom:0.6rem">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.3rem">Q2. DFSは最短ではないのに、なぜ使うの？</p>
-        <p style="font-size:0.9rem;color:#ccc">A. DFSは<strong>メモリ使用量が少なく、実装も簡単</strong>です。「ゴールに到達できるか？」だけ知りたい場合、迷路全体を均等に広げるBFSよりも、深く突き進むDFSの方が早くゴールに出会うことが多いです。</p>
-      </div>
-      <div style="background:#0a1a2e;border-radius:8px;padding:0.8rem 1rem;margin-bottom:0.6rem">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.3rem">Q3. <code>list</code> をキューにすればいいのに、なぜ <code>deque</code> を使うの？</p>
-        <p style="font-size:0.9rem;color:#ccc">A. <code>list.pop(0)</code> は先頭を取り出すたびに残り全要素を1つずつ前にずらすため <strong>O(n)</strong> 必要です。<code>deque.popleft()</code> は <strong>O(1)</strong>。マスが10,000個ある迷路では、この差で実行時間が数十倍変わります。</p>
-      </div>
-      <div style="background:#0a1a2e;border-radius:8px;padding:0.8rem 1rem">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.9rem;margin-bottom:0.3rem">Q4. <code>parent</code> マップって何のため？</p>
-        <p style="font-size:0.9rem;color:#ccc">A. BFS/DFS は<strong>「ゴールに到達した瞬間」だけ知れる</strong>ので、そのままだと「どの道を通ったか」がわかりません。各マスについて「直前のマス」を記録しておけば、ゴールから親をたどって逆向きに復元できます（最後に <code>reverse()</code> でスタート→ゴール順に並べ直す）。</p>
+        <div class="kw-card">
+          <h5>BFS（ビーエフエス／幅優先探索: はばゆうせんたんさく）</h5>
+          <div class="diagram-container">
+            <svg viewBox="0 0 300 175" width="300" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:12px;border:1px solid #333">
+              <circle cx="70" cy="85" r="16" fill="none" stroke="#4FC3F7" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;1;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <text x="83" y="72" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;1;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>1歩</text>
+              <circle cx="70" cy="85" r="32" fill="none" stroke="#4FC3F7" stroke-width="2" stroke-dasharray="4,3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <text x="106" y="84" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>2歩</text>
+              <circle cx="70" cy="85" r="48" fill="none" stroke="#4FC3F7" stroke-width="1.5" stroke-dasharray="3,3" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <text x="122" y="106" text-anchor="middle" fill="#4FC3F7" font-size="10" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>3歩</text>
+              <circle cx="70" cy="85" r="7" fill="#76B900"/>
+              <text x="70" y="113" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">S</text>
+              <text x="150" y="158" text-anchor="middle" fill="#666" font-size="10">波紋のように同時に広がる → 最短を保証</text>
+            </svg>
+          </div>
+          <p>キュー（FIFO）を使い、近い場所から同時に広がる探索方法。ゴールに最初に着いた歩数が必ず最短になる。計算量 O(V+E)。</p>
+        </div>
+
+        <div class="kw-card">
+          <h5>DFS（ディーエフエス／深さ優先探索: ふかさゆうせんたんさく）</h5>
+          <div class="diagram-container">
+            <svg viewBox="0 0 300 175" width="300" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:12px;border:1px solid #333">
+              <circle cx="40" cy="25" r="7" fill="#76B900"/>
+              <text x="40" y="15" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">S</text>
+              <path d="M 40 25 L 40 100" stroke="#FF5252" stroke-width="4" fill="none" stroke-linecap="round" opacity="0"><animate attributeName="opacity" values="0;1;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></path>
+              <text x="40" y="122" text-anchor="middle" fill="#FFB800" font-size="16" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;1;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>✗</text>
+              <path d="M 42 100 Q 68 128 96 102" stroke="#888" stroke-width="2" fill="none" stroke-dasharray="3,3" marker-end="url(#dfs-a3)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></path>
+              <text x="120" y="120" text-anchor="middle" fill="#888" font-size="10" opacity="0"><animate attributeName="opacity" values="0;0;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>戻る</text>
+              <path d="M 100 100 L 100 55 L 215 55" stroke="#FFB800" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></path>
+              <circle cx="230" cy="55" r="10" fill="none" stroke="#FF5252" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <text x="230" y="40" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>G</text>
+              <text x="150" y="158" text-anchor="middle" fill="#666" font-size="10">一本道を深く進み、行き止まったら戻る</text>
+              <defs>
+                <marker id="dfs-a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4FC3F7"/></marker>
+              </defs>
+            </svg>
+          </div>
+          <p>スタック（LIFO）や再帰で一方向に深く進み、行き止まったら戻る探索方法。最短経路とは限らないが、実装がシンプル。計算量 O(V+E)。</p>
+        </div>
+
+        <div class="kw-card">
+          <h5>deque（デック／両端キュー: りょうたんきゅー）</h5>
+          <div class="diagram-container">
+            <svg viewBox="0 0 300 180" width="300" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:12px;border:1px solid #333">
+              <text x="20" y="18" fill="#76B900" font-size="11" font-weight="700">deque</text>
+              <rect x="70" y="35" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+              <rect x="106" y="35" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+              <rect x="142" y="35" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+              <rect x="178" y="35" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+              <path d="M 65 50 L 50 50" stroke="#76B900" stroke-width="2" fill="none" marker-end="url(#dq-a1)"/>
+              <text x="30" y="66" text-anchor="middle" fill="#76B900" font-size="9">O(1)</text>
+              <path d="M 213 50 L 228 50" stroke="#76B900" stroke-width="2" fill="none" marker-end="url(#dq-a1)"/>
+              <text x="250" y="66" text-anchor="middle" fill="#76B900" font-size="9">O(1)</text>
+              <text x="150" y="88" text-anchor="middle" fill="#666" font-size="9">両端どちらもすぐ出し入れできる</text>
+
+              <text x="20" y="103" fill="#FF5252" font-size="11" font-weight="700">list</text>
+              <rect x="70" y="120" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5" opacity="1"><animate attributeName="opacity" values="1;1;0;0;0;0;1" keyTimes="0;0.2;0.35;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></rect>
+              <g>
+                <animateTransform attributeName="transform" type="translate" values="0,0;0,0;0,0;-36,0;-36,0;-36,0;0,0" keyTimes="0;0.2;0.35;0.5;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+                <rect x="106" y="120" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+                <rect x="142" y="120" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+                <rect x="178" y="120" width="30" height="30" rx="5" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+              </g>
+              <path d="M 65 135 L 50 135" stroke="#FF5252" stroke-width="2.5" fill="none" marker-end="url(#dq-a2)"/>
+              <text x="30" y="151" text-anchor="middle" fill="#FF5252" font-size="9" font-weight="700">O(n)</text>
+              <text x="30" y="164" text-anchor="middle" fill="#888" font-size="8">全部ずれる</text>
+              <path d="M 213 135 L 228 135" stroke="#888" stroke-width="2" fill="none" marker-end="url(#dq-a1)"/>
+              <text x="250" y="151" text-anchor="middle" fill="#888" font-size="9">O(1)</text>
+              <defs>
+                <marker id="dq-a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#76B900"/></marker>
+                <marker id="dq-a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF5252"/></marker>
+              </defs>
+            </svg>
+          </div>
+          <p>両端からO(1)で出し入れできるデータ構造。<code>list.pop(0)</code>は残り全部をずらすのでO(n)。だからBFSのキューにはdequeを使う。</p>
+        </div>
+
+        <div class="kw-card">
+          <h5>キュー（queue）／スタック（stack）</h5>
+          <div class="diagram-container">
+            <svg viewBox="0 0 300 180" width="300" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:12px;border:1px solid #333">
+              <text x="85" y="20" text-anchor="middle" fill="#4FC3F7" font-size="12" font-weight="700">キュー (FIFO)</text>
+              <circle cx="40" cy="70" r="13" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+              <circle cx="70" cy="70" r="13" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+              <circle cx="100" cy="70" r="13" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+              <circle cx="130" cy="70" r="13" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+              <circle cx="40" cy="70" r="16" fill="none" stroke="#FFB800" stroke-width="2" opacity="0">
+                <animate attributeName="opacity" values="0;1;0.3;1;0.3;0;0" keyTimes="0;0.15;0.3;0.45;0.6;0.75;1" dur="6s" repeatCount="indefinite"/>
+              </circle>
+              <path d="M 155 70 L 138 70" stroke="#4FC3F7" stroke-width="2" fill="none" marker-end="url(#qs-a3)"/>
+              <text x="163" y="65" fill="#4FC3F7" font-size="9">入る</text>
+              <path d="M 24 70 L 8 70" stroke="#FFB800" stroke-width="2" fill="none" marker-end="url(#qs-a4)"/>
+              <text x="0" y="60" fill="#FFB800" font-size="9">出る</text>
+              <text x="85" y="105" text-anchor="middle" fill="#666" font-size="9">先に入った人が先に出る</text>
+
+              <line x1="150" y1="10" x2="150" y2="170" stroke="#333" stroke-width="1"/>
+
+              <text x="228" y="20" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">スタック (LIFO)</text>
+              <rect x="190" y="120" width="80" height="20" rx="4" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+              <rect x="190" y="97" width="80" height="20" rx="4" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+              <rect x="190" y="74" width="80" height="20" rx="4" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+              <rect x="190" y="51" width="80" height="20" rx="4" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0">
+                <animate attributeName="opacity" values="0;1;0.3;1;0.3;0;0" keyTimes="0;0.15;0.3;0.45;0.6;0.75;1" dur="6s" repeatCount="indefinite"/>
+              </rect>
+              <rect x="190" y="51" width="80" height="20" rx="4" fill="#1A1A1A" stroke="#FF5252" stroke-width="1.5"/>
+              <path d="M 230 45 L 230 30" stroke="#FF5252" stroke-width="2" fill="none" marker-end="url(#qs-a2)"/>
+              <text x="255" y="38" fill="#FF5252" font-size="9">置く/取る</text>
+              <text x="230" y="155" text-anchor="middle" fill="#666" font-size="9">最後に置いた皿を先に取る</text>
+              <defs>
+                <marker id="qs-a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF5252"/></marker>
+                <marker id="qs-a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4FC3F7"/></marker>
+                <marker id="qs-a4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FFB800"/></marker>
+              </defs>
+            </svg>
+          </div>
+          <p>キューは「列に並ぶ」（先に入った人が先に出る=FIFO）、スタックは「皿の重なり」（最後に置いた皿から取る=LIFO）。この違いがBFSとDFSの探索順序の違いを生む。</p>
+        </div>
+
+        <div class="kw-card">
+          <h5>Big O 記法（ビッグオーきほう）</h5>
+          <div class="diagram-container">
+            <svg viewBox="0 0 300 175" width="300" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:12px;border:1px solid #333">
+              <text x="150" y="22" text-anchor="middle" fill="#888" font-size="10">同じ n でも増え方でこれだけ差がつく</text>
+              <line x1="20" y1="150" x2="280" y2="150" stroke="#555" stroke-width="2"/>
+              <rect x="20" y="150" width="50" height="0" fill="#76B900" opacity="0.85">
+                <animate attributeName="height" values="0;0;12;12;12;12;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+                <animate attributeName="y" values="150;150;138;138;138;138;150" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+              </rect>
+              <text x="45" y="168" text-anchor="middle" fill="#888" font-size="10">O(1)</text>
+              <rect x="90" y="150" width="50" height="0" fill="#76B900" opacity="0.85">
+                <animate attributeName="height" values="0;0;32;32;32;32;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+                <animate attributeName="y" values="150;150;118;118;118;118;150" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+              </rect>
+              <text x="115" y="168" text-anchor="middle" fill="#888" font-size="10">O(log n)</text>
+              <rect x="160" y="150" width="50" height="0" fill="#4FC3F7" opacity="0.85">
+                <animate attributeName="height" values="0;0;70;70;70;70;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+                <animate attributeName="y" values="150;150;80;80;80;80;150" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+              </rect>
+              <text x="185" y="168" text-anchor="middle" fill="#888" font-size="10">O(n)</text>
+              <rect x="230" y="150" width="50" height="0" fill="#FF5252" opacity="0.85">
+                <animate attributeName="height" values="0;0;132;132;132;132;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+                <animate attributeName="y" values="150;150;18;18;18;18;150" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+              </rect>
+              <text x="255" y="168" text-anchor="middle" fill="#888" font-size="10">O(n^2)</text>
+            </svg>
+          </div>
+          <p>データ量nが増えたとき処理時間がどう増えるかを表す記法。O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n^2) &lt; O(2^n) の順に遅くなる。</p>
+        </div>
+
+        <div class="kw-card">
+          <h5>parent マップ（親: おや）</h5>
+          <div class="diagram-container">
+            <svg viewBox="0 0 300 180" width="300" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:12px;border:1px solid #333">
+              <text x="150" y="20" text-anchor="middle" fill="#4FC3F7" font-size="10">parent: 各マスが「一つ前」を覚えている</text>
+              <path d="M 96 45 L 40 45" stroke="#4FC3F7" stroke-width="2" fill="none" marker-end="url(#pm-a3)" opacity="0.85"/>
+              <path d="M 152 45 L 96 45" stroke="#4FC3F7" stroke-width="2" fill="none" marker-end="url(#pm-a3)" opacity="0.85"/>
+              <path d="M 208 45 L 152 45" stroke="#4FC3F7" stroke-width="2" fill="none" marker-end="url(#pm-a3)" opacity="0.85"/>
+              <path d="M 264 45 L 208 45" stroke="#4FC3F7" stroke-width="2" fill="none" marker-end="url(#pm-a3)" opacity="0.85"/>
+              <rect x="20" y="65" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="40" y="90" text-anchor="middle" fill="white" font-weight="700" font-size="13">S</text>
+              <rect x="76" y="65" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="96" y="90" text-anchor="middle" fill="white" font-weight="700" font-size="13">A</text>
+              <rect x="132" y="65" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="152" y="90" text-anchor="middle" fill="white" font-weight="700" font-size="13">B</text>
+              <rect x="188" y="65" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="208" y="90" text-anchor="middle" fill="white" font-weight="700" font-size="13">C</text>
+              <rect x="244" y="65" width="40" height="40" rx="6" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/><text x="264" y="90" text-anchor="middle" fill="white" font-weight="700" font-size="13">G</text>
+              <circle cx="264" cy="85" r="22" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="1;1;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <circle cx="208" cy="85" r="22" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;1;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <circle cx="152" cy="85" r="22" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <circle cx="96" cy="85" r="22" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <circle cx="40" cy="85" r="22" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;0;0;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/></circle>
+              <path d="M 20 135 L 280 135" stroke="#FFB800" stroke-width="3" fill="none" marker-end="url(#pm-a4)" opacity="0">
+                <animate attributeName="opacity" values="0;0;0;0;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+              </path>
+              <text x="150" y="155" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="700" opacity="0">
+                <animate attributeName="opacity" values="0;0;0;0;1;0.3;0" keyTimes="0;0.2;0.45;0.7;0.9;0.95;1" dur="9s" repeatCount="indefinite"/>
+                復元した経路: S→A→B→C→G
+              </text>
+              <text x="150" y="170" text-anchor="middle" fill="#666" font-size="9">Gから逆にたどって経路を復元する</text>
+              <defs>
+                <marker id="pm-a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4FC3F7"/></marker>
+                <marker id="pm-a4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FFB800"/></marker>
+              </defs>
+            </svg>
+          </div>
+          <p>各マスの「一つ前のマス」を記録する2次元配列。ゴールから逆にたどって経路を復元するのに使う（Q&amp;A: なぜ必要かはこの図の通り、道順を覚えていないと復元できないため）。</p>
+        </div>
+
       </div>
     </div>
 
@@ -1533,7 +1953,7 @@ maze = [
           </g>
 
           <!-- Bottom legend -->
-          <text x="340" y="390" text-anchor="middle" fill="#666" font-size="11">時間計算量: O(V+E) ／ 空間計算量: O(深さ)（BFSより少ない）</text>
+          <text x="340" y="390" text-anchor="middle" fill="#666" font-size="10">時間計算量: O(V+E) ／ 空間計算量: スタックはO(深さ)だが、visited・parent含む実装全体ではO(V)</text>
         </svg>
       </div>
 
@@ -1550,35 +1970,64 @@ maze = [
         <span class="tag tag-example">例題 5</span>
         <h3>大きな迷路でBFS vs DFS のベンチマーク</h3>
       </div>
-      <p>100x100のランダム迷路を生成し、BFS と DFS の経路長・探索マス数・実行時間を比較します。</p>
+      <p>100x100のランダム迷路を生成し、BFS と DFS の経路長・探索マス数・実行時間を比較します。以下の実行結果は<code>seed=42</code>で固定した場合の値です（<code>start</code>行・<code>goal</code>列は経路確保のため必ず開通されるので、実際の壁密度は0.3よりわずかに低くなります）。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">import</span> random
 <span class="kw">import</span> time
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
+<span class="kw">def</span> <span class="fn">generate_maze</span>(size, wall_prob=<span class="num">0.3</span>):
+    <span class="str">"""size x size のランダム迷路を生成する（0=通路, 1=壁）"""</span>
+    maze = []
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(size):
+        row = []
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(size):
+            <span class="kw">if</span> random.<span class="fn">random</span>() &lt; wall_prob:
+                row.<span class="fn">append</span>(<span class="num">1</span>)
+            <span class="kw">else</span>:
+                row.<span class="fn">append</span>(<span class="num">0</span>)
+        maze.<span class="fn">append</span>(row)
+    <span class="kw">return</span> maze
+
+<span class="kw">def</span> <span class="fn">ensure_path</span>(maze, start, goal):
+    <span class="str">"""start→goal の少なくとも1本の通路を確保する（L字形にマスを開通）"""</span>
+    sr, sc = start
+    gr, gc = goal
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">min</span>(sc, gc), <span class="fn">max</span>(sc, gc) + <span class="num">1</span>):
+        maze[sr][c] = <span class="num">0</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">min</span>(sr, gr), <span class="fn">max</span>(sr, gr) + <span class="num">1</span>):
+        maze[r][gc] = <span class="num">0</span>
+
 random.<span class="fn">seed</span>(<span class="num">42</span>)
 size = <span class="num">100</span>
-maze = generate_maze(size, <span class="num">0.3</span>)
-ensure_path(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>, size-<span class="num">1</span>))
+maze = <span class="fn">generate_maze</span>(size, <span class="num">0.3</span>)
+<span class="fn">ensure_path</span>(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>, size-<span class="num">1</span>))
 
-<span class="cmt"># --- BFS ---</span>
+<span class="cmt"># --- BFS（例題2のbfs_solveを再利用: path, explored_countを返す） ---</span>
 start_time = time.<span class="fn">time</span>()
-bfs_path, bfs_explored = bfs_benchmark(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>,size-<span class="num">1</span>))
+bfs_path, bfs_explored = <span class="fn">bfs_solve</span>(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>,size-<span class="num">1</span>))
 bfs_time = time.<span class="fn">time</span>() - start_time
 
-<span class="cmt"># --- DFS ---</span>
+<span class="cmt"># --- DFS（例題4のdfs_solveを再利用） ---</span>
 start_time = time.<span class="fn">time</span>()
-dfs_path, dfs_explored = dfs_benchmark(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>,size-<span class="num">1</span>))
+dfs_path, dfs_explored = <span class="fn">dfs_solve</span>(maze, (<span class="num">0</span>,<span class="num">0</span>), (size-<span class="num">1</span>,size-<span class="num">1</span>))
 dfs_time = time.<span class="fn">time</span>() - start_time
 
-<span class="fn">print</span>(<span class="str">f"{'指標':>10} {'BFS':>10} {'DFS':>10}"</span>)
-<span class="fn">print</span>(<span class="str">f"{'経路長':>10} {len(bfs_path):>10} {len(dfs_path):>10}"</span>)
-<span class="fn">print</span>(<span class="str">f"{'探索マス':>10} {bfs_explored:>10} {dfs_explored:>10}"</span>)
-<span class="fn">print</span>(<span class="str">f"{'時間(秒)':>10} {bfs_time:>10.4f} {dfs_time:>10.4f}"</span>)</pre>
+<span class="cmt"># ensure_pathで経路の存在を保証しているのでNoneにはならないが、念のためガードする</span>
+<span class="kw">if</span> bfs_path <span class="kw">and</span> dfs_path:
+    <span class="fn">print</span>(<span class="str">f"{'指標':&gt;10} {'BFS':&gt;10} {'DFS':&gt;10}"</span>)
+    <span class="fn">print</span>(<span class="str">f"{'経路長':&gt;10} {len(bfs_path):&gt;10} {len(dfs_path):&gt;10}"</span>)
+    <span class="fn">print</span>(<span class="str">f"{'探索マス':&gt;10} {bfs_explored:&gt;10} {dfs_explored:&gt;10}"</span>)
+    <span class="fn">print</span>(<span class="str">f"{'時間(秒)':&gt;10} {bfs_time:&gt;10.4f} {dfs_time:&gt;10.4f}"</span>)</pre>
+      <p style="color:#ccc;font-size:0.85rem">この実行には <code>bfs_solve</code>（例題2）と <code>dfs_solve</code>（例題4）がすでに定義されている必要があります。1つの <code>.py</code> ファイルにまとめて実行してください。実行結果は次の通りです（時間は環境により変動します）:</p>
+      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">      指標        BFS        DFS
+     経路長        199        783
+   探索マス       6986       1797
+  時間(秒)     0.0029     0.0008</pre>
 
       <div class="diagram-container">
         <svg viewBox="0 0 680 420" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
-          <text x="340" y="28" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">大規模迷路でBFS vs DFS を並べて比較（100x100, 壁率0.3）</text>
+          <text x="340" y="28" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">大規模迷路でBFS vs DFS を並べて比較（100x100, 壁率0.3, 実行例）</text>
 
           <!-- Step label -->
           <rect x="240" y="44" width="200" height="22" rx="11" fill="#1a2e0a" stroke="#76B900" stroke-width="1"/>
@@ -1651,15 +2100,15 @@ dfs_time = time.<span class="fn">time</span>() - start_time
           <text x="200" y="200" fill="#888" font-size="11">探索マス:</text>
           <text x="200" y="220" fill="#76B900" font-size="14" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;0;0" keyTimes="0;0.16;0.20;0.36;0.40;0.56;0.60;0.76;0.80;0.94;0.97;1" dur="20s" repeatCount="indefinite"/>
-            6840
+            6986
           </text>
           <text x="200" y="240" fill="#888" font-size="11">時間:</text>
           <text x="200" y="260" fill="#76B900" font-size="14" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;0;0" keyTimes="0;0.16;0.20;0.36;0.40;0.56;0.60;0.76;0.80;0.94;0.97;1" dur="20s" repeatCount="indefinite"/>
-            0.0185s
+            0.0029s
           </text>
           <text x="180" y="295" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">✓ 最短経路</text>
-          <text x="180" y="312" text-anchor="middle" fill="#888" font-size="10">メモリ: 多い</text>
+          <text x="180" y="312" text-anchor="middle" fill="#888" font-size="10">メモリ: 多い傾向</text>
 
           <!-- DFS side panel -->
           <rect x="360" y="80" width="320" height="240" rx="10" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
@@ -1689,26 +2138,26 @@ dfs_time = time.<span class="fn">time</span>() - start_time
           <text x="540" y="160" fill="#888" font-size="11">経路長:</text>
           <text x="540" y="180" fill="#FF5252" font-size="14" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;0;0" keyTimes="0;0.16;0.20;0.36;0.40;0.56;0.60;0.76;0.80;0.94;0.97;1" dur="20s" repeatCount="indefinite"/>
-            612 歩
+            783 歩
           </text>
           <text x="540" y="200" fill="#888" font-size="11">探索マス:</text>
           <text x="540" y="220" fill="#FF5252" font-size="14" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;0;0" keyTimes="0;0.16;0.20;0.36;0.40;0.56;0.60;0.76;0.80;0.94;0.97;1" dur="20s" repeatCount="indefinite"/>
-            5410
+            1797
           </text>
           <text x="540" y="240" fill="#888" font-size="11">時間:</text>
           <text x="540" y="260" fill="#FF5252" font-size="14" font-weight="700" opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1;0;0" keyTimes="0;0.16;0.20;0.36;0.40;0.56;0.60;0.76;0.80;0.94;0.97;1" dur="20s" repeatCount="indefinite"/>
-            0.0142s
+            0.0008s
           </text>
           <text x="520" y="295" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">✗ 経路は最短でない</text>
-          <text x="520" y="312" text-anchor="middle" fill="#888" font-size="10">メモリ: 少ない</text>
+          <text x="520" y="312" text-anchor="middle" fill="#888" font-size="10">メモリ: 少ない傾向</text>
 
           <!-- Final summary panel -->
           <g opacity="0">
             <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.16;0.20;0.36;0.40;0.56;0.60;0.76;0.80;0.94;0.97;1" dur="20s" repeatCount="indefinite"/>
             <rect x="40" y="340" width="600" height="48" rx="8" fill="#1a2e0a" stroke="#76B900" stroke-width="1.5"/>
-            <text x="340" y="362" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">どちらも O(V+E) = O(行×列) で計算可能 → 面積4倍（50→100）で探索マスも約4倍</text>
+            <text x="340" y="362" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">どちらも最悪 O(V+E) = O(行×列) ／ BFSは面積に応じ増加、DFSはゴールまでの運次第でばらつく</text>
             <text x="340" y="380" text-anchor="middle" fill="#888" font-size="11">使い分け: 最短経路が必要 → BFS ／ 到達可能性のみ・メモリ節約 → DFS</text>
           </g>
 
@@ -2035,23 +2484,23 @@ queue = <span class="fn">deque</span>([<span class="str">"A"</span>])
     <details>
       <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題5 やってみよう 解答</summary>
       <div class="answer-content">
-        <p>ランダム迷路（壁率0.3、<code>seed=42</code>）で <code>size=50</code> と <code>size=100</code> を比較した結果の例:</p>
+        <p>ランダム迷路（壁率0.3、<code>seed=42</code>）で <code>size=50</code> と <code>size=100</code> を比較した結果（本文のコードをそのまま実行した値）:</p>
         <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">size=50:
        指標        BFS        DFS
-     経路長         99        173
-   探索マス       1620       1280
-  時間(秒)     0.0042     0.0031
+     経路長         99        245
+   探索マス       1796       1183
+  時間(秒)     0.0009     0.0004
 
 size=100:
        指標        BFS        DFS
-     経路長        199        612
-   探索マス       6840       5410
-  時間(秒)     0.0185     0.0142</pre>
-        <p>数値は乱数や環境により変動するが、傾向としては次のことが読み取れる:</p>
+     経路長        199        783
+   探索マス       6986       1797
+  時間(秒)     0.0029     0.0008</pre>
+        <p>数値は乱数のシードや壁率、環境により変動するが、傾向としては次のことが読み取れる:</p>
         <ul class="point-list">
-          <li><strong>経路長</strong>: BFSは常に最短（size×2付近）。DFSは大幅に長くなる（最短の数倍）。</li>
-          <li><strong>探索マス数</strong>: マスが <code>size²</code> に比例して増えるため、面積が4倍（50→100）になると探索マスも約4倍になる → <strong>O(n) = O(行×列)</strong>。</li>
-          <li><strong>実行時間</strong>: 探索マス数と同じく約4倍に増える。</li>
+          <li><strong>経路長</strong>: BFSは常に最短（size×2付近）。DFSは大幅に長くなる（最短の数倍）。ただしDFSの経路長は「たまたまどの分岐を先に選んだか」に強く左右されるため、実行のたびに大きくばらつく。</li>
+          <li><strong>探索マス数</strong>: BFSは近い順にほぼ均等に広がるため、マス数は概ね<code>size²</code>（面積）に比例して増える → <strong>O(V) = O(行×列)</strong>。一方DFSの探索マス数は「ゴールに偶然出会うまでの寄り道の量」次第で、面積に比例するとは限らない（この実行例では面積4倍でもDFSの探索マスは4倍未満）。</li>
+          <li><strong>実行時間</strong>: 探索マス数にほぼ比例して増える。</li>
         </ul>
         <p>BFSとDFSは「最短性」を犠牲にできるかどうかが選択基準で、「最短経路が必要 → BFS」「メモリ節約・到達可能性のみ確認 → DFS」と使い分ける。</p>
       </div>
