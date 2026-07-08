@@ -499,11 +499,11 @@ a.sub-item:hover {
         <tr><td>二分挿入ソート</td><td>O(n log n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>バブルソート</td><td>O(n)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>選択ソート</td><td>O(n^2)</td><td>O(n^2)</td><td>O(n^2)</td><td>O(1)</td></tr>
-        <tr><td>シェルソート</td><td>O(n log n)</td><td>O(n^1.3)*</td><td>O(n^2)</td><td>O(1)</td></tr>
+        <tr><td>シェルソート</td><td>O(n log n)</td><td>O(n^1.25)*</td><td>O(n^2)</td><td>O(1)</td></tr>
         <tr><td>分布数えソート</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td></tr>
         <tr><td>Python sorted()</td><td>O(n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td></tr>
       </table>
-      <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">* シェルソートの平均計算量は使用する<strong>ギャップ列によって変わり、厳密には未解明</strong>。実用上 O(n^1.3) 程度とされることが多い、という目安の値。</p>
+      <p style="font-size:0.8rem;color:#888;margin-top:0.4rem">* シェルソートの平均計算量は使用する<strong>ギャップ列によって変わり、厳密には未解明</strong>。本講義では第9回に合わせ、目安として O(n^1.25) 程度としている。</p>
     </div>
 
     <!-- 1.3 BFS vs DFS -->
@@ -1102,7 +1102,20 @@ maze = [
                 line += <span class="str">"\U0001f7eb"</span>     <span class="cmt"># 壁</span>
             <span class="kw">else</span>:
                 line += <span class="str">"\U0001f7e9"</span>     <span class="cmt"># 通路</span>
-        <span class="fn">print</span>(line)</pre>
+        <span class="fn">print</span>(line)
+
+
+<span class="cmt"># =============================================</span>
+<span class="cmt">#  ここから下が「実行パート」</span>
+<span class="cmt">#  関数は定義しただけでは動かない。</span>
+<span class="cmt">#  呼び出して（＝使って）はじめて結果が表示される。</span>
+<span class="cmt"># =============================================</span>
+maze = <span class="fn">create_maze</span>()          <span class="cmt"># ① 迷路データを作る</span>
+start = (<span class="num">0</span>, <span class="num">0</span>)                 <span class="cmt"># ② スタート地点（左上）</span>
+goal = (<span class="num">4</span>, <span class="num">4</span>)                  <span class="cmt"># ③ ゴール地点（右下）</span>
+
+<span class="fn">print</span>(<span class="str">"=== 迷路 ==="</span>)
+<span class="fn">display_maze</span>(maze, start, goal)  <span class="cmt"># ④ 迷路を絵文字で表示する</span></pre>
 
       <div class="diagram-container">
         <svg viewBox="0 0 680 380" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
@@ -1260,6 +1273,37 @@ maze = [
       <pre><span class="code-label">Python</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
+<span class="cmt"># ===== 例題1の関数を再掲（迷路の作成と表示）=====</span>
+<span class="kw">def</span> <span class="fn">create_maze</span>():
+    <span class="str">"""5x5の迷路を2次元リストで作成する"""</span>
+    maze = [
+        [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+        [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>],
+        [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+        [<span class="num">0</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+        [<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>],
+    ]
+    <span class="kw">return</span> maze
+
+<span class="kw">def</span> <span class="fn">display_maze</span>(maze, start, goal, path=<span class="kw">None</span>):
+    <span class="str">"""迷路を絵文字で表示する（path を渡すと通った道を🐾で表示）"""</span>
+    path_set = <span class="fn">set</span>() <span class="kw">if</span> path <span class="kw">is</span> <span class="kw">None</span> <span class="kw">else</span> <span class="fn">set</span>(path)
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze)):
+        line = <span class="str">""</span>
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze[<span class="num">0</span>])):
+            <span class="kw">if</span> (r, c) == start:
+                line += <span class="str">"\U0001f6b6"</span>     <span class="cmt"># 🚶 歩く人</span>
+            <span class="kw">elif</span> (r, c) == goal:
+                line += <span class="str">"\U0001f3c1"</span>     <span class="cmt"># 🏁 チェッカーフラグ</span>
+            <span class="kw">elif</span> (r, c) <span class="kw">in</span> path_set:
+                line += <span class="str">"\U0001f43e"</span>     <span class="cmt"># 🐾 足跡</span>
+            <span class="kw">elif</span> maze[r][c] == <span class="num">1</span>:
+                line += <span class="str">"\U0001f7eb"</span>     <span class="cmt"># 🟫 壁</span>
+            <span class="kw">else</span>:
+                line += <span class="str">"\U0001f7e9"</span>     <span class="cmt"># 🟩 通路</span>
+        <span class="fn">print</span>(line)
+
+<span class="cmt"># ===== ここからが今回の本題：BFS =====</span>
 <span class="kw">def</span> <span class="fn">bfs_solve</span>(maze, start, goal):
     <span class="str">"""BFSで迷路を解いて最短経路を返す"""</span>
     rows = <span class="fn">len</span>(maze)
@@ -1304,7 +1348,28 @@ maze = [
                     parent[nx][ny] = (x, y)
                     queue.<span class="fn">append</span>((nx, ny))  <span class="cmt"># キューの末尾に追加</span>
 
-    <span class="kw">return</span> <span class="kw">None</span>, explored_count</pre>
+    <span class="kw">return</span> <span class="kw">None</span>, explored_count
+
+
+<span class="cmt"># =============================================</span>
+<span class="cmt">#  ここから下が「実行パート」</span>
+<span class="cmt">#  3つの関数を組み合わせて、迷路を作り→解き→表示する。</span>
+<span class="cmt"># =============================================</span>
+maze = <span class="fn">create_maze</span>()
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (<span class="num">4</span>, <span class="num">4</span>)
+
+path, explored_count = <span class="fn">bfs_solve</span>(maze, start, goal)  <span class="cmt"># BFSで解く</span>
+
+<span class="kw">if</span> path <span class="kw">is</span> <span class="kw">None</span>:
+    <span class="fn">print</span>(<span class="str">"ゴールに到達できませんでした"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"最短経路の長さ: {len(path)}マス（{len(path) - 1}歩）"</span>)
+    <span class="fn">print</span>(<span class="str">f"探索したマス数: {explored_count}"</span>)
+    <span class="fn">print</span>(<span class="str">"経路:"</span>, path)
+    <span class="fn">print</span>()
+    <span class="fn">print</span>(<span class="str">"=== 経路を迷路上に表示（🐾＝通った道）==="</span>)
+    <span class="fn">display_maze</span>(maze, start, goal, path)</pre>
 
       <div class="diagram-container">
         <svg viewBox="0 0 680 400" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
