@@ -176,6 +176,7 @@ a.sub-item:hover {
 <!-- ============ SECTION NAV ============ -->
 <nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
   <a href="#sec-submission">提出</a>
+  <a href="#sec-warmup" style="color:#FFB800">ふりかえり</a>
   <a href="#sec-explanation">説明</a>
   <a href="#sec-examples">例題</a>
   <a href="#sec-group-disc" class="nav-advanced">議論</a>
@@ -207,6 +208,59 @@ a.sub-item:hover {
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0. ウォームアップ（前回のふりかえり） ============ -->
+<section id="sec-warmup">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">0</div>
+      <h2>ウォームアップ：前回のふりかえり</h2>
+    </div>
+
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag" style="background:#2e1a0a;color:#FFB800">考えてみよう（5分）</span>
+        <h3>BFS と DFS、どちらが「良い」の？</h3>
+      </div>
+
+      <p>前回（第12回）の例題5で、100×100のランダム迷路を <strong>BFS</strong>（幅優先探索）と <strong>DFS</strong>（深さ優先探索）の両方で解いたら、次の結果になりました。</p>
+
+      <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">      指標        BFS        DFS
+     経路長        199        783
+   探索マス       6986       1797
+  時間(秒)     0.0029     0.0008</pre>
+
+      <p style="font-size:0.9rem;color:#aaa;margin-top:-0.3rem">※「経路長」＝見つかった道のマス数、「探索マス」＝ゴールに着くまでに調べたマス数。</p>
+
+      <p style="margin-top:1rem">この数字を見て、次の3つを<strong>自分の言葉で</strong>考えてみましょう（となりの人と話してもOK）。答えを1〜2文ずつ書いてみてください。</p>
+
+      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem 1.2rem;margin:1rem 0">
+        <p style="margin-bottom:0.6rem"><strong style="color:#FFB800">Q1.</strong> BFSの経路長（199）は DFS（783）より<strong>ずっと短い</strong>。なぜBFSは短い道を見つけられるのだろう？</p>
+        <p style="margin-bottom:0.6rem"><strong style="color:#FFB800">Q2.</strong> 逆に「探索マス」は BFS（6986）の方が DFS（1797）より<strong>多い</strong>。なぜBFSはたくさんのマスを調べることになるのだろう？</p>
+        <p style="margin-bottom:0"><strong style="color:#FFB800">Q3.</strong> 今日のテーマは「アイテムを全部集めてゴールする<strong>最短</strong>経路」を求めること。土台にするなら BFS と DFS のどちらがよい？ それはなぜ？</p>
+      </div>
+
+      <details style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:10px;padding:0.8rem 1.2rem;margin:1rem 0">
+        <summary style="color:#93D500;font-weight:700;cursor:pointer;font-size:0.95rem">▶ 考え方のヒント（まず自分で考えてから開こう）</summary>
+        <div style="margin-top:0.8rem;font-size:0.95rem;color:#ddd">
+          <div class="analogy" style="margin-top:0">
+            <strong>BFS＝池に石を投げた「波紋」</strong>：中心（スタート）からどの方向にも<strong>同じ速さで丸く広がる</strong>。<br>
+            <strong>DFS＝一本道をどんどん奥へ進む「探検」</strong>：行き止まりで少し戻り、また別の道へ。くねくね進む。
+          </div>
+          <p style="margin:0.8rem 0 0.4rem"><strong style="color:#FFB800">Q1（なぜBFSは最短？）:</strong> 波紋は近い所から順に届くので、<strong>ゴールに最初に届いた瞬間が必ず最短</strong>。これが「BFSは最短を<u>保証</u>する」という意味（＝どんな迷路でも必ず、例外なし）。DFSは奥へ突き進む性格上、遠回りの道で先にゴールに着くことが多く、最短とは限らない。</p>
+          <p style="margin:0 0 0.4rem"><strong style="color:#FFB800">Q2（なぜBFSは調べる数が多い？）:</strong> 波紋は<strong>あらゆる方向へ均等に広がる</strong>ので、反対の角のゴールに届くころには迷路の広い範囲を調べ尽くしている（6986マス）。DFSは細く深く1本の道をたどるだけなので、たまたまゴールにつながる道（1797マス）しか触らずに済む。つまり <strong>BFS＝広く浅く（最短だが調べる量が多い）／DFS＝狭く深く（速いが遠回り）</strong> というトレードオフ。</p>
+          <p style="margin:0"><strong style="color:#FFB800">Q3（今日はどっち？）:</strong> <strong>BFS</strong>。今日ほしいのは「全アイテムを集める<strong>最短</strong>経路」。最短を保証してくれるのはBFSだけだから、これを土台にする。調べる量が多くなる短所は、あとで「訪問済み管理」で無駄をおさえる。</p>
+        </div>
+      </details>
+
+      <p style="background:#1a2e0a;border-left:4px solid #76B900;padding:0.7rem 1rem;border-radius:6px;font-size:0.95rem;margin-top:1rem">
+        <strong style="color:#76B900">今日への橋渡し:</strong> だから今回は <strong>BFSを土台</strong>にします。ただし「位置」だけでなく <strong>「位置＋集めたアイテム」</strong>を1つの状態として広げていく、という発展をさせます。BFSが最短を保証する性質は、そのまま「全アイテム収集の最短経路」を求めるのに使えます。
+      </p>
+
+      <div class="notion-submit"><div><strong>Notionにメモ（任意）:</strong> Q1〜Q3への自分の答え（各1〜2文）を書きとめておくと、あとの「グループディスカッション」で役立ちます。※これはウォームアップなので、提出物9項目には含みません。</div></div>
     </div>
   </div>
 </section>
