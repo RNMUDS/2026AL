@@ -1072,9 +1072,6 @@ maze = [
         <h3>2次元グリッドで迷路を表現して表示する</h3>
       </div>
       <pre><span class="code-label">Python</span>
-<span class="kw">import</span> sys
-sys.stdout.<span class="fn">reconfigure</span>(encoding=<span class="str">"utf-8"</span>)  <span class="cmt"># Windowsでも絵文字を表示するため</span>
-
 <span class="kw">def</span> <span class="fn">create_maze</span>():
     <span class="str">"""5x5の迷路を2次元リストで作成する"""</span>
     maze = [
@@ -1087,24 +1084,22 @@ sys.stdout.<span class="fn">reconfigure</span>(encoding=<span class="str">"utf-8
     <span class="kw">return</span> maze
 
 <span class="kw">def</span> <span class="fn">display_maze</span>(maze, start, goal, path=<span class="kw">None</span>):
-    <span class="str">"""迷路を絵文字で表示する"""</span>
-    <span class="kw">if</span> path <span class="kw">is</span> <span class="kw">None</span>:
-        path_set = <span class="fn">set</span>()
-    <span class="kw">else</span>:
-        path_set = <span class="fn">set</span>(path)
+    <span class="str">"""迷路を文字で表示する（S=スタート G=ゴール #=壁 .=通路 *=通った道）"""</span>
+    path_set = <span class="fn">set</span>() <span class="kw">if</span> path <span class="kw">is</span> <span class="kw">None</span> <span class="kw">else</span> <span class="fn">set</span>(path)
     <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze)):
         line = <span class="str">""</span>
         <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze[<span class="num">0</span>])):
             <span class="kw">if</span> (r, c) == start:
-                line += <span class="str">"\U0001f6b6"</span>     <span class="cmt"># 歩く人</span>
+                mark = <span class="str">"S"</span>          <span class="cmt"># スタート</span>
             <span class="kw">elif</span> (r, c) == goal:
-                line += <span class="str">"\U0001f3c1"</span>     <span class="cmt"># チェッカーフラグ</span>
+                mark = <span class="str">"G"</span>          <span class="cmt"># ゴール</span>
             <span class="kw">elif</span> (r, c) <span class="kw">in</span> path_set:
-                line += <span class="str">"\U0001f43e"</span>     <span class="cmt"># 足跡</span>
+                mark = <span class="str">"*"</span>          <span class="cmt"># 通った道</span>
             <span class="kw">elif</span> maze[r][c] == <span class="num">1</span>:
-                line += <span class="str">"\U00002b1b"</span>     <span class="cmt"># ⬛ 壁（どの環境でも表示できる記号）</span>
+                mark = <span class="str">"#"</span>          <span class="cmt"># 壁</span>
             <span class="kw">else</span>:
-                line += <span class="str">"\U00002b1c"</span>     <span class="cmt"># ⬜ 通路</span>
+                mark = <span class="str">"."</span>          <span class="cmt"># 通路</span>
+            line += mark + <span class="str">" "</span>       <span class="cmt"># 1文字＋空白で列をきれいにそろえる</span>
         <span class="fn">print</span>(line)
 
 
@@ -1118,7 +1113,7 @@ start = (<span class="num">0</span>, <span class="num">0</span>)                
 goal = (<span class="num">4</span>, <span class="num">4</span>)                  <span class="cmt"># ③ ゴール地点（右下）</span>
 
 <span class="fn">print</span>(<span class="str">"=== 迷路 ==="</span>)
-<span class="fn">display_maze</span>(maze, start, goal)  <span class="cmt"># ④ 迷路を絵文字で表示する</span></pre>
+<span class="fn">display_maze</span>(maze, start, goal)  <span class="cmt"># ④ 迷路を文字で表示する</span></pre>
 
       <div class="diagram-container">
         <svg viewBox="0 0 680 380" width="680" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;background:#0A0A0A;border-radius:14px;border:1px solid #333">
@@ -1274,9 +1269,6 @@ goal = (<span class="num">4</span>, <span class="num">4</span>)                 
         <h3>deque を使った BFS の基本実装</h3>
       </div>
       <pre><span class="code-label">Python</span>
-<span class="kw">import</span> sys
-sys.stdout.<span class="fn">reconfigure</span>(encoding=<span class="str">"utf-8"</span>)  <span class="cmt"># Windowsでも絵文字を表示するため</span>
-
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
 <span class="cmt"># ===== 例題1の関数を再掲（迷路の作成と表示）=====</span>
@@ -1292,21 +1284,22 @@ sys.stdout.<span class="fn">reconfigure</span>(encoding=<span class="str">"utf-8
     <span class="kw">return</span> maze
 
 <span class="kw">def</span> <span class="fn">display_maze</span>(maze, start, goal, path=<span class="kw">None</span>):
-    <span class="str">"""迷路を絵文字で表示する（path を渡すと通った道を🐾で表示）"""</span>
+    <span class="str">"""迷路を文字で表示する（S=スタート G=ゴール #=壁 .=通路 *=通った道）"""</span>
     path_set = <span class="fn">set</span>() <span class="kw">if</span> path <span class="kw">is</span> <span class="kw">None</span> <span class="kw">else</span> <span class="fn">set</span>(path)
     <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze)):
         line = <span class="str">""</span>
         <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(maze[<span class="num">0</span>])):
             <span class="kw">if</span> (r, c) == start:
-                line += <span class="str">"\U0001f6b6"</span>     <span class="cmt"># 🚶 歩く人</span>
+                mark = <span class="str">"S"</span>          <span class="cmt"># スタート</span>
             <span class="kw">elif</span> (r, c) == goal:
-                line += <span class="str">"\U0001f3c1"</span>     <span class="cmt"># 🏁 チェッカーフラグ</span>
+                mark = <span class="str">"G"</span>          <span class="cmt"># ゴール</span>
             <span class="kw">elif</span> (r, c) <span class="kw">in</span> path_set:
-                line += <span class="str">"\U0001f43e"</span>     <span class="cmt"># 🐾 足跡</span>
+                mark = <span class="str">"*"</span>          <span class="cmt"># 通った道</span>
             <span class="kw">elif</span> maze[r][c] == <span class="num">1</span>:
-                line += <span class="str">"\U00002b1b"</span>     <span class="cmt"># ⬛ 壁（どの環境でも表示できる記号）</span>
+                mark = <span class="str">"#"</span>          <span class="cmt"># 壁</span>
             <span class="kw">else</span>:
-                line += <span class="str">"\U00002b1c"</span>     <span class="cmt"># ⬜ 通路</span>
+                mark = <span class="str">"."</span>          <span class="cmt"># 通路</span>
+            line += mark + <span class="str">" "</span>       <span class="cmt"># 1文字＋空白で列をきれいにそろえる</span>
         <span class="fn">print</span>(line)
 
 <span class="cmt"># ===== ここからが今回の本題：BFS =====</span>
@@ -1374,7 +1367,7 @@ path, explored_count = <span class="fn">bfs_solve</span>(maze, start, goal)  <sp
     <span class="fn">print</span>(<span class="str">f"探索したマス数: {explored_count}"</span>)
     <span class="fn">print</span>(<span class="str">"経路:"</span>, path)
     <span class="fn">print</span>()
-    <span class="fn">print</span>(<span class="str">"=== 経路を迷路上に表示（🐾＝通った道）==="</span>)
+    <span class="fn">print</span>(<span class="str">"=== 経路を迷路上に表示（*＝通った道）==="</span>)
     <span class="fn">display_maze</span>(maze, start, goal, path)</pre>
 
       <div class="diagram-container">
@@ -2595,13 +2588,13 @@ queue = <span class="fn">deque</span>([<span class="str">"A"</span>])
     <details>
       <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
       <div class="answer-content">
-        <p>元の5x5迷路（<code>0</code>=通路、<code>1</code>=壁）を <code>display_maze</code> で表示すると、絵文字で次のようになる:</p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">🚶⬜⬜⬜⬜
-⬛⬛⬛⬛⬜
-⬜⬜⬜⬜⬜
-⬜⬛⬛⬛⬛
-⬜⬜⬜⬜🏁</pre>
-        <p><code>maze[1][4] = 1</code> に変えると、行1の右端（唯一の通路）が壁になる。表示上は「⬜」が「⬛」に変わるだけだが、<strong>これは「行0と行2をつなぐ唯一の通路」を塞ぐ</strong>ことを意味する。<code>bfs_solve</code> を実行すると経路が見つからず <code>None</code> が返る。マップ上の1マスを変えただけで「解ける迷路」から「解けない迷路」になることを体験できる。</p>
+        <p>元の5x5迷路（<code>0</code>=通路、<code>1</code>=壁）を <code>display_maze</code> で表示すると、次のようになる（<code>S</code>=スタート <code>G</code>=ゴール <code>#</code>=壁 <code>.</code>=通路）:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">S . . . .
+# # # # .
+. . . . .
+. # # # #
+. . . . G</pre>
+        <p><code>maze[1][4] = 1</code> に変えると、行1の右端（唯一の通路）が壁になる。表示上は「<code>.</code>」が「<code>#</code>」に変わるだけだが、<strong>これは「行0と行2をつなぐ唯一の通路」を塞ぐ</strong>ことを意味する。<code>bfs_solve</code> を実行すると経路が見つからず <code>None</code> が返る。マップ上の1マスを変えただけで「解ける迷路」から「解けない迷路」になることを体験できる。</p>
       </div>
     </details>
 
