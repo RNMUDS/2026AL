@@ -742,19 +742,19 @@ now == frozenset({(2, 0)})         <span style="color:#888"># 中身が同じか
         <span class="tag tag-example">例題 1</span>
         <h3>迷路の表示</h3>
       </div>
-      <p>迷路を2次元リストで定義し、絵文字で見やすく表示します。</p>
+      <p>迷路を2次元リストで定義し、文字で見やすく表示します。</p>
       <pre><span class="code-label">Python</span>
 <span class="kw">def</span> <span class="fn">display_maze</span>(maze):
-    <span class="str">"""迷路を絵文字で表示する関数"""</span>
+    <span class="str">"""迷路を文字で表示する関数"""</span>
     rows = <span class="fn">len</span>(maze)
     cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
     <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
         line = <span class="str">""</span>
         <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
             <span class="kw">if</span> maze[r][c] == <span class="num">1</span>:
-                line += <span class="str">"\U0001f7eb"</span>  <span class="cmt"># 壁</span>
+                line += <span class="str">"＃"</span>  <span class="cmt"># 壁</span>
             <span class="kw">else</span>:
-                line += <span class="str">"\U0001f7e9"</span>  <span class="cmt"># 通路</span>
+                line += <span class="str">"〇"</span>  <span class="cmt"># 通路</span>
         <span class="fn">print</span>(line)
 
 maze = [
@@ -780,7 +780,7 @@ display_maze(maze)</pre>
             <text x="55" y="161" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 0, 0, 1, 0],</text>
             <text x="55" y="184" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 1, 1, 0, 0],</text>
             <text x="55" y="207" fill="#aaa" font-family="JetBrains Mono,monospace" font-size="13">[0, 0, 0, 0, 0],</text>
-            <text x="55" y="240" fill="#888" font-family="JetBrains Mono,monospace" font-size="12">0=通路(🟩) 1=壁(🟫)</text>
+            <text x="55" y="240" fill="#888" font-family="JetBrains Mono,monospace" font-size="12">0=通路(〇) 1=壁(＃)</text>
           </g>
 
           <!-- Arrow -->
@@ -792,27 +792,27 @@ display_maze(maze)</pre>
             <!-- Row 0: [0,0,1,0,0] - appears at step 1 -->
             <text x="340" y="115" font-size="28" opacity="0">
               <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
-              🟩🟩🟫🟩🟩
+              〇〇＃〇〇
             </text>
             <!-- Row 1: [0,1,0,0,0] - step 2 -->
             <text x="340" y="148" font-size="28" opacity="0">
               <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
-              🟩🟫🟩🟩🟩
+              〇＃〇〇〇
             </text>
             <!-- Row 2: [0,0,0,1,0] - step 3 -->
             <text x="340" y="181" font-size="28" opacity="0">
               <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
-              🟩🟩🟩🟫🟩
+              〇〇〇＃〇
             </text>
             <!-- Row 3: [0,1,1,0,0] - step 4 -->
             <text x="340" y="214" font-size="28" opacity="0">
               <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.70;0.85;1" dur="16s" repeatCount="indefinite"/>
-              🟩🟫🟫🟩🟩
+              〇＃＃〇〇
             </text>
             <!-- Row 4: [0,0,0,0,0] - step 5 -->
             <text x="340" y="247" font-size="28" opacity="0">
               <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1;1;1" keyTimes="0;0.08;0.16;0.30;0.32;0.48;0.50;0.62;0.64;0.78;0.80;0.85;0.90;1" dur="16s" repeatCount="indefinite"/>
-              🟩🟩🟩🟩🟩
+              〇〇〇〇〇
             </text>
           </g>
 
@@ -866,7 +866,7 @@ display_maze(maze)</pre>
           <g>
             <rect x="60" y="320" width="560" height="36" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
             <text x="340" y="344" text-anchor="middle" fill="#93D500" font-size="13" font-weight="600">
-              ループで2次元リストを読む → 各セルを🟩/🟫に変換 → 行ごとにprint  ／ O(rows × cols)
+              ループで2次元リストを読む → 各セルを〇/＃に変換 → 行ごとにprint  ／ O(rows × cols)
             </text>
           </g>
         </svg>
@@ -2052,12 +2052,12 @@ else:
     <details>
       <summary><span class="tag tag-example" style="font-size:0.7rem">例題</span> 例題1 やってみよう 解答</summary>
       <div class="answer-content">
-        <p>5×5の迷路を <code>display_maze(maze)</code> で表示した結果（0=🟩 通路、1=🟫 壁）:</p>
-        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">🟩🟩🟫🟩🟩
-🟩🟫🟩🟩🟩
-🟩🟩🟩🟫🟩
-🟩🟫🟫🟩🟩
-🟩🟩🟩🟩🟩</pre>
+        <p>5×5の迷路を <code>display_maze(maze)</code> で表示した結果（0=〇 通路、1=＃ 壁）:</p>
+        <pre style="background:#1a1a1a;color:#e0e0e0;border:1px solid #333">〇〇＃〇〇
+〇＃〇〇〇
+〇〇〇＃〇
+〇＃＃〇〇
+〇〇〇〇〇</pre>
         <p>例えば <code>maze[0][1]</code> を <code>1</code> に変えると、左上付近に壁が追加され <code>(0,0)</code> から右へ進めなくなる。<strong>迷路は単なる2次元リストで表現でき、値を書き換えるだけで地形を変えられる</strong>のがポイント。BFS で経路を解く前に、まずデータ構造を可視化して正しく読み込めていることを確認するのが重要。</p>
       </div>
     </details>
