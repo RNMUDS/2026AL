@@ -66,6 +66,10 @@ pre .op { color: #89dceb; }
 .point-list { list-style: none; padding: 0; }
 .point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
 .point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
 .diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
 .diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
 footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
@@ -168,11 +172,8 @@ pre { position: relative; }
   <a href="#sec-summary">総整理</a>
   <a href="#sec-examples">例題</a>
   <a href="#sec-complexity">計算量</a>
-  <a href="#sec-next-semester">後期</a>
-  <a href="#sec-group-disc" class="nav-advanced">議論</a>
   <a href="#sec-standard" class="nav-assignment">標準</a>
-  <a href="#sec-advanced" class="nav-advanced">発展</a>
-  <a href="#sec-notion" style="color:#76B900">Notion</a>
+  <a href="#sec-notion" style="color:#76B900">提出</a>
   <a href="#answers-section">解答</a>
 </nav>
 
@@ -188,12 +189,10 @@ pre { position: relative; }
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>📋 提出ガイド（この回の提出物: 計9項目）</h3>
+      <h3>📋 提出ガイド（この回の提出物: 計7項目）</h3>
       <div class="submission-items">
-        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-code-exp">コード体験</span>例題の観察記録</div>
+        <div class="sub-item"><span class="sub-count">5</span><span class="tag tag-example">コード体験</span>例題の観察記録</div>
         <div class="sub-item"><span class="sub-count">2</span><span class="tag tag-standard">標準課題</span>解答を記述</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag tag-advanced">発展課題</span>考察 + 音声添付</div>
-        <div class="sub-item"><span class="sub-count">1</span><span class="tag" style="background:#1a2e0a;color:#76B900;border:1px solid #4A7A00">ディスカッション</span>グループ記録</div>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
@@ -220,8 +219,8 @@ pre { position: relative; }
         <tr><td>挿入ソート</td><td>O(n^2)</td><td>小規模・ほぼ整列データのソート</td><td>第8-9回</td></tr>
         <tr><td>バブルソート</td><td>O(n^2)</td><td>教育目的・小規模データのソート</td><td>第9回</td></tr>
         <tr><td>カウントソート</td><td>O(n+k)</td><td>限定範囲の整数ソート</td><td>第10-11回</td></tr>
-        <tr><td>BFS（幅優先探索）</td><td>O(V+E)</td><td>最短経路・迷路探索</td><td>第12回</td></tr>
-        <tr><td>DFS（深さ優先探索）</td><td>O(V+E)</td><td>全探索・連結判定</td><td>第12回</td></tr>
+        <tr><td>BFS（幅優先探索）</td><td>O(V+E)</td><td>最短経路・迷路探索</td><td>第12-13回</td></tr>
+        <tr><td>DFS（深さ優先探索）</td><td>O(V+E)</td><td>全探索・連結判定</td><td>第12-13回</td></tr>
       </table>
     </div>
 
@@ -318,7 +317,7 @@ pre { position: relative; }
       <h2>例題</h2>
     </div>
 
-    <p style="margin-bottom:1.5rem">各例題のコードを実際に実行し、「🖐 やってみよう」に取り組んでください。まず作業フォルダを準備します。</p>
+    <p style="margin-bottom:1.5rem">すべての例題で「🖐 やってみよう」に取り組んでください。コードがある例題（例題1・2・4・5）は、実際にファイルに保存して実行し、ページに載せた「▶ 実行結果」と同じ表示になるかを確かめます。まず作業フォルダを準備します。</p>
 
     <!-- VS Code Setup Guide -->
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
@@ -361,7 +360,7 @@ pre { position: relative; }
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">例題ごとにファイルを分けましょう: <code>AL15-ex1.py</code>, <code>AL15-ex2.py</code>, <code>AL15-ex3.py</code>, ...</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">例題ごとにファイルを分けましょう: <code>AL15-ex1.py</code>（例題1）, <code>AL15-ex2.py</code>（例題2）, <code>AL15-ex4.py</code>（例題4）, <code>AL15-ex5.py</code>（例題5）, <code>AL15-std2.py</code>（標準課題2）</p>
       </div>
     </div>
 
@@ -434,22 +433,80 @@ pre { position: relative; }
         <h4>アルゴリズム特定のキーワード</h4>
         <table>
           <tr><th>キーワード</th><th>アルゴリズム</th></tr>
-          <tr><td><code>low, high, mid</code></td><td>二分探索</td></tr>
-          <tr><td><code>deque, popleft, queue</code></td><td>BFS（幅優先探索）</td></tr>
-          <tr><td><code>stack, pop (LIFO)</code></td><td>DFS（深さ優先探索）</td></tr>
-          <tr><td><code>key = arr[i], j = i-1</code></td><td>挿入ソート</td></tr>
-          <tr><td><code>arr[j], arr[j+1]</code> の交換</td><td>バブルソート</td></tr>
-          <tr><td><code>count配列, 範囲k</code></td><td>カウントソート</td></tr>
-          <tr><td><code>dict, hash, キー検索</code></td><td>ハッシュ探索</td></tr>
-          <tr><td><code>for i in range(len(data))</code></td><td>逐次探索</td></tr>
+          <tr><td><code>left, right, mid</code>（<code>low, high, mid</code> とも書く）</td><td>二分探索</td></tr>
+          <tr><td><code>deque</code>, <code>popleft()</code>（先に入れたものから取り出す）</td><td>BFS（幅優先探索）</td></tr>
+          <tr><td><code>stack</code>, <code>pop()</code>（後に入れたものから取り出す）</td><td>DFS（深さ優先探索）</td></tr>
+          <tr><td><code>key = □□[i]</code> と <code>j = i - 1</code> があり、<code>while</code> で後ろへずらす</td><td>挿入ソート</td></tr>
+          <tr><td>隣どうし（<code>□□[j]</code> と <code>□□[j+1]</code>）を交換する</td><td>バブルソート</td></tr>
+          <tr><td>数え上げ用の <code>count</code> リスト＋値の範囲 k</td><td>カウントソート</td></tr>
+          <tr><td><code>dict</code>（辞書）や <code>set</code> でキーから引く</td><td>ハッシュ探索</td></tr>
+          <tr><td>先頭から順に <code>== target</code> を1つずつ確かめる<br><span style="color:#888;font-size:0.85em"><code>for x in data:</code> でも <code>for i in range(len(data)):</code> でも書ける</span></td><td>逐次探索</td></tr>
         </table>
       </div>
 
+      <p style="margin-top:1rem">では実際にやってみましょう。次の3つの関数は、わざと <code>mystery_a</code> のような<strong>意味のない名前</strong>にしてあります。中身のキーワードから、どのアルゴリズムかを当ててください。</p>
+      <pre><span class="code-label">Python ── AL15-ex1.py</span>
+data = [<span class="num">3</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">4</span>, <span class="num">7</span>, <span class="num">2</span>]
+target = <span class="num">9</span>
+
+<span class="kw">def</span> <span class="fn">mystery_a</span>(data, target):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(data)):
+        <span class="kw">if</span> data[i] == target:
+            <span class="kw">return</span> i        <span class="cmt"># 見つかった場所（何番目か）を返す</span>
+    <span class="kw">return</span> -<span class="num">1</span>           <span class="cmt"># 見つからなければ -1 を返す</span>
+
+<span class="kw">def</span> <span class="fn">mystery_b</span>(data):
+    result = data.<span class="fn">copy</span>()
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(result)):
+        key = result[i]
+        j = i - <span class="num">1</span>
+        <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> result[j] > key:
+            result[j + <span class="num">1</span>] = result[j]
+            j -= <span class="num">1</span>
+        result[j + <span class="num">1</span>] = key
+    <span class="kw">return</span> result
+
+<span class="kw">def</span> <span class="fn">mystery_c</span>(sorted_data, target):
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(sorted_data) - <span class="num">1</span>
+    <span class="kw">while</span> left <= right:
+        mid = (left + right) // <span class="num">2</span>
+        <span class="kw">if</span> sorted_data[mid] == target:
+            <span class="kw">return</span> mid
+        <span class="kw">elif</span> sorted_data[mid] < target:
+            left = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            right = mid - <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>           <span class="cmt"># 見つからなければ -1 を返す</span>
+
+<span class="fn">print</span>(<span class="str">"mystery_a の結果:"</span>, <span class="fn">mystery_a</span>(data, target))
+sorted_data = <span class="fn">mystery_b</span>(data)
+<span class="fn">print</span>(<span class="str">"mystery_b の結果:"</span>, sorted_data)
+<span class="fn">print</span>(<span class="str">"mystery_c の結果:"</span>, <span class="fn">mystery_c</span>(sorted_data, target))</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/s15_ex1_result.png" alt="AL15-ex1.py の実行結果。mystery_a の結果: 3 / mystery_b の結果: [1, 2, 3, 4, 7, 8, 9] / mystery_c の結果: 6" width="380" height="108" loading="lazy">
+      </div>
+      <p class="run-note"><code>mystery_a</code> と <code>mystery_c</code> はどちらも「9 を探す」処理ですが、返ってきた番号が違います（3 と 6）。これは <code>mystery_b</code> で並べ替えたあとのリストを <code>mystery_c</code> に渡しているためで、<strong>同じ 9 でも並べ替え前後で位置が変わる</strong>からです。</p>
+
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">過去の授業で書いたコードを1つ開いて、上のキーワード表を見ながらどのアルゴリズムかを特定してみよう。</p>
-        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 選んだコードのファイル名と、特定したアルゴリズム名・根拠となるキーワードを書いてください。</div></div>
+        <p style="color:#ccc;font-size:0.9rem">上のキーワード表を見ながら、<code>mystery_a</code> / <code>mystery_b</code> / <code>mystery_c</code> がそれぞれどのアルゴリズムかを当てよう。<strong>当ててから</strong>下のトグルを開いて答え合わせをしてください。</p>
+        <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 3つの関数それぞれについて、アルゴリズム名・根拠にしたキーワード・計算量を書いてください。</div></div>
       </div>
+
+      <details style="margin-top:1rem;background:#1A1A1A;border:1px solid #333;border-radius:12px;padding:0.2rem 1rem">
+        <summary style="cursor:pointer;color:#76B900;font-weight:700;font-size:0.95rem;padding:0.7rem 0">答えと根拠を見る</summary>
+        <div style="padding:0.3rem 0 0.8rem">
+          <table>
+            <tr><th>関数</th><th>アルゴリズム</th><th>計算量</th><th>根拠にできるキーワード</th></tr>
+            <tr><td><code>mystery_a</code></td><td style="color:#76B900;font-weight:700">逐次探索</td><td>O(n)</td><td>先頭から1つずつ <code>data[i] == target</code> を確かめている</td></tr>
+            <tr><td><code>mystery_b</code></td><td style="color:#76B900;font-weight:700">挿入ソート</td><td>O(n^2)</td><td><code>key = result[i]</code> と <code>j = i - 1</code> があり、<code>while</code> で後ろへずらしている</td></tr>
+            <tr><td><code>mystery_c</code></td><td style="color:#76B900;font-weight:700">二分探索</td><td>O(log n)</td><td><code>left</code> / <code>right</code> / <code>mid</code> があり、探す範囲を半分にしている</td></tr>
+          </table>
+          <p style="font-size:0.9rem;color:#ccc;margin-top:0.8rem"><code>mystery_c</code> は<strong>並べ替え済みのリストしか受け取れない</strong>点に注意。だからコードでは <code>mystery_b</code> の結果を渡しています。もとの <code>data</code> をそのまま渡すと、正しい答えが返りません。</p>
+        </div>
+      </details>
     </div>
 
     <!-- 例題2 -->
@@ -465,33 +522,43 @@ pre { position: relative; }
           <tr><th>パターン</th><th>計算量</th><th>コード例</th></tr>
           <tr><td>ループなし</td><td><strong>O(1)</strong></td><td><code>value = data[0]</code></td></tr>
           <tr><td>1重ループ</td><td><strong>O(n)</strong></td><td><code>for i in range(n): ...</code></td></tr>
-          <tr><td>2重ループ</td><td><strong>O(n^2)</strong></td><td><code>for i: for j: ...</code></td></tr>
+          <tr><td>2重ループ</td><td><strong>O(n^2)</strong></td><td><code>for i in range(n):</code> の中で <code>for j in range(n):</code></td></tr>
           <tr><td>半分にする</td><td><strong>O(log n)</strong></td><td><code>while n > 1: n //= 2</code></td></tr>
         </table>
       </div>
-      <pre><span class="code-label">Python</span>
-<span class="cmt"># --- 実測による確認 ---</span>
-sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span class="num">4000</span>, <span class="num">8000</span>]
+      <p style="margin-top:1rem">表のとおりになるかを、実際に時間を測って確かめてみましょう。<code>time.perf_counter()</code> は「今の時刻」を秒で返す関数で、処理の前後で呼んで引き算すると、かかった時間が分かります。</p>
+      <pre><span class="code-label">Python ── AL15-ex2.py</span>
+<span class="kw">import</span> time
+
+sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span class="num">4000</span>]
 
 <span class="kw">for</span> n <span class="kw">in</span> sizes:
     data = <span class="fn">list</span>(<span class="fn">range</span>(n))
 
-    <span class="cmt"># O(n) の処理</span>
-    start_time = time.<span class="fn">perf_counter</span>()
+    <span class="cmt"># O(n) の処理: リストを1回だけなぞる</span>
+    start = time.<span class="fn">perf_counter</span>()
     total = <span class="num">0</span>
-    <span class="kw">for</span> val <span class="kw">in</span> data:
-        total += val
-    time_n = time.<span class="fn">perf_counter</span>() - start_time
+    <span class="kw">for</span> value <span class="kw">in</span> data:
+        total += value
+    time_n = time.<span class="fn">perf_counter</span>() - start
 
-    <span class="cmt"># O(n^2) の処理</span>
-    start_time = time.<span class="fn">perf_counter</span>()
+    <span class="cmt"># O(n^2) の処理: 2重ループ</span>
+    start = time.<span class="fn">perf_counter</span>()
     count = <span class="num">0</span>
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
         <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
             count += <span class="num">1</span>
-    time_n2 = time.<span class="fn">perf_counter</span>() - start_time
+    time_n2 = time.<span class="fn">perf_counter</span>() - start
+
+    <span class="fn">print</span>(<span class="str">f"n={n}: O(n)は{time_n:.6f}秒, O(n^2)は{time_n2:.6f}秒"</span>)
 
 <span class="cmt"># nが2倍 → O(n)は約2倍、O(n^2)は約4倍になる</span></pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/s15_ex2_result.png" alt="AL15-ex2.py の実行結果。n=1000: O(n)は0.000035秒, O(n^2)は0.035662秒 / n=2000: O(n)は0.000072秒, O(n^2)は0.137366秒 / n=4000: O(n)は0.000148秒, O(n^2)は0.538488秒" width="380" height="108" loading="lazy">
+      </div>
+      <p class="run-note">n が2倍になるたびに、O(n) の時間は<strong>約2倍</strong>ずつ、O(n^2) の時間は<strong>約4倍</strong>ずつ増えています。同じ「n が2倍」でも増え方がまるで違うことに注目してください。なお秒数そのものはパソコンの性能で変わるので、自分の結果が上の画像と一致しなくても問題ありません。大事なのは<strong>増え方の倍率</strong>です。</p>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
@@ -511,12 +578,12 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
         <tr><td>1000人のソート済み名簿から名前を探す</td><td style="color:#76B900;font-weight:700">二分探索 O(log n)</td><td>最大10回の比較で見つかる</td></tr>
         <tr><td>ユーザーIDから情報を即座に取得する</td><td style="color:#4FC3F7;font-weight:700">ハッシュ探索 O(1)</td><td>キー→値はハッシュが最速</td></tr>
         <tr><td>10万人の点数(0-100)をソートする</td><td style="color:#93D500;font-weight:700">カウントソート O(n+k)</td><td>整数+範囲限定で最速</td></tr>
-        <tr><td>迷路の最短経路を求める</td><td style="color:#76B900;font-weight:700">BFS O(V+E)</td><td>最短経路を保証する唯一の方法</td></tr>
+        <tr><td>迷路の最短経路を求める</td><td style="color:#76B900;font-weight:700">BFS O(V+E)</td><td>1歩ずつ均等に広がるので最短を保証できる</td></tr>
       </table>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">「SNSで友達の友達を探す」にはどのアルゴリズムが最適か、グループで話し合ってみよう。</p>
+        <p style="color:#ccc;font-size:0.9rem">「SNSで友達の友達を探す」にはどのアルゴリズムが最適か、上の表を参考に自分で考えてみよう。</p>
         <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 選んだアルゴリズムと理由を書いてください。</div></div>
       </div>
     </div>
@@ -528,7 +595,9 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
         <h3>同じ問題を2つのアルゴリズムで解く</h3>
       </div>
       <p>「リスト内の重複要素を見つける」問題を2通りで解き、性能を比較します。</p>
-      <pre><span class="code-label">Python</span>
+      <pre><span class="code-label">Python ── AL15-ex4.py</span>
+<span class="kw">import</span> time
+
 <span class="kw">def</span> <span class="fn">find_duplicates_bruteforce</span>(data):
     <span class="str">"""総当たり版 O(n^2)"""</span>
     duplicates = []
@@ -547,9 +616,31 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
             duplicates.<span class="fn">add</span>(item)
         <span class="kw">else</span>:
             seen.<span class="fn">add</span>(item)
-    <span class="kw">return</span> <span class="fn">list</span>(duplicates)</pre>
+    <span class="kw">return</span> <span class="fn">list</span>(duplicates)
+
+<span class="cmt"># --- 2つの方法の速度を比べる ---</span>
+data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">2000</span>)) + <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1000</span>))  <span class="cmt"># 0〜999 が2回ずつ出てくる</span>
+
+start = time.<span class="fn">perf_counter</span>()
+result_bf = <span class="fn">find_duplicates_bruteforce</span>(data)
+time_bf = time.<span class="fn">perf_counter</span>() - start
+
+start = time.<span class="fn">perf_counter</span>()
+result_hs = <span class="fn">find_duplicates_hashset</span>(data)
+time_hs = time.<span class="fn">perf_counter</span>() - start
+
+<span class="fn">print</span>(<span class="str">f"総当たり版: 重複{len(result_bf)}個, {time_bf:.6f}秒"</span>)
+<span class="fn">print</span>(<span class="str">f"ハッシュ版: 重複{len(result_hs)}個, {time_hs:.6f}秒"</span>)
+<span class="fn">print</span>(<span class="str">f"ハッシュ版のほうが約{time_bf / time_hs:.0f}倍速い"</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/s15_ex4_result.png" alt="AL15-ex4.py の実行結果。総当たり版: 重複1000個, 0.064219秒 / ハッシュ版: 重複1000個, 0.000085秒 / ハッシュ版のほうが約756倍速い" width="380" height="108" loading="lazy">
+      </div>
+      <p class="run-note"><strong>どちらも「重複1000個」という同じ答え</strong>にたどり着いていますが、かかった時間は<strong>数百倍</strong>違います。答えが同じでも、アルゴリズム次第で速さがまったく変わるということです。倍率はパソコンの性能で変わるので、自分の結果と一致しなくても構いません。</p>
+
       <div class="concept-box" style="margin-top:1rem">
-        <h4>速度比較結果</h4>
+        <h4>速度比較結果（参考値）</h4>
         <table>
           <tr><th>データ数</th><th>総当たり O(n^2)</th><th>ハッシュ O(n)</th><th>速度比</th></tr>
           <tr><td>500</td><td>0.023秒</td><td>0.000042秒</td><td>548倍</td></tr>
@@ -557,11 +648,12 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
           <tr><td>2,000</td><td>0.356秒</td><td>0.000163秒</td><td>2,184倍</td></tr>
           <tr><td>5,000</td><td>2.234秒</td><td>0.000412秒</td><td>5,422倍</td></tr>
         </table>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">秒数はパソコンの性能で変わります（自分の環境ではもっと速いこともあります）。注目するのは<strong>絶対的な秒数ではなく、データ数が増えたときの伸び方と速度比</strong>です。</p>
       </div>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">両方の関数を <code>data = list(range(2000)) + list(range(1000))</code> で実行し、速度差を体感しよう。</p>
+        <p style="color:#ccc;font-size:0.9rem">コードを実行し、どちらも重複1000個を見つけるのに、かかる時間が大きく違うことを確認しよう。余裕があれば <code>range(2000)</code> と <code>range(1000)</code> を<strong>それぞれ2倍</strong>（<code>4000</code> と <code>2000</code>）にして、総当たり版だけ時間が3〜4倍に増えること（O(n^2) なので理論上は4倍）も確かめよう。</p>
         <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 総当たり版とハッシュ版の実行時間を比較して書いてください。</div></div>
       </div>
     </div>
@@ -579,29 +671,60 @@ sizes = [<span class="num">1000</span>, <span class="num">2000</span>, <span cla
         <tr><td>著者検索</td><td>ハッシュ探索（辞書）</td><td>O(1)</td><td>著者名→書籍リストの対応</td></tr>
         <tr><td>出版年順一覧</td><td>挿入ソート</td><td>O(n^2)</td><td>蔵書数が少なければ十分</td></tr>
       </table>
-      <pre><span class="code-label">Python</span>
+      <p style="margin-top:1rem"><strong>インデックス</strong>とは「探しやすくするために先に作っておく索引」のことです。ここでは辞書（ハッシュテーブル）で索引を作り、あとから O(1) で引けるようにします。</p>
+      <pre><span class="code-label">Python ── AL15-ex5.py</span>
 books = [
     {<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"title"</span>: <span class="str">"Python入門"</span>, <span class="str">"author"</span>: <span class="str">"田中太郎"</span>, <span class="str">"year"</span>: <span class="num">2024</span>},
     {<span class="str">"id"</span>: <span class="num">2</span>, <span class="str">"title"</span>: <span class="str">"アルゴリズム基礎"</span>, <span class="str">"author"</span>: <span class="str">"鈴木花子"</span>, <span class="str">"year"</span>: <span class="num">2023</span>},
-    <span class="cmt"># ...</span>
+    {<span class="str">"id"</span>: <span class="num">3</span>, <span class="str">"title"</span>: <span class="str">"データ構造入門"</span>, <span class="str">"author"</span>: <span class="str">"田中太郎"</span>, <span class="str">"year"</span>: <span class="num">2022</span>},
+    {<span class="str">"id"</span>: <span class="num">4</span>, <span class="str">"title"</span>: <span class="str">"機械学習の基礎"</span>, <span class="str">"author"</span>: <span class="str">"佐藤次郎"</span>, <span class="str">"year"</span>: <span class="num">2024</span>},
+    {<span class="str">"id"</span>: <span class="num">5</span>, <span class="str">"title"</span>: <span class="str">"統計学入門"</span>, <span class="str">"author"</span>: <span class="str">"鈴木花子"</span>, <span class="str">"year"</span>: <span class="num">2021</span>},
 ]
 
-<span class="cmt"># ハッシュテーブルでID検索用インデックスを作る</span>
+<span class="cmt"># ID から本を引くための辞書（ハッシュテーブル）を作る</span>
 id_index = {}
 <span class="kw">for</span> book <span class="kw">in</span> books:
-    id_index[book[<span class="str">"id"</span>]] = book  <span class="cmt"># O(1) で検索可能に</span>
+    id_index[book[<span class="str">"id"</span>]] = book          <span class="cmt"># キー: ID → 値: 本</span>
 
-<span class="cmt"># 著者名で検索用インデックスを作る</span>
+<span class="cmt"># 著者名から本のリストを引くための辞書を作る</span>
 author_index = {}
 <span class="kw">for</span> book <span class="kw">in</span> books:
     author = book[<span class="str">"author"</span>]
     <span class="kw">if</span> author <span class="kw">not in</span> author_index:
-        author_index[author] = []
-    author_index[author].<span class="fn">append</span>(book)</pre>
+        author_index[author] = []        <span class="cmt"># その著者の入れ物を用意</span>
+    author_index[author].<span class="fn">append</span>(book)
+
+<span class="cmt"># --- 検索してみる（どちらも O(1) で見つかる）---</span>
+<span class="fn">print</span>(<span class="str">"ID=3 の本:"</span>, id_index[<span class="num">3</span>][<span class="str">"title"</span>])
+
+<span class="fn">print</span>(<span class="str">"鈴木花子 の本:"</span>)
+<span class="kw">for</span> book <span class="kw">in</span> author_index[<span class="str">"鈴木花子"</span>]:
+    <span class="fn">print</span>(<span class="str">"  -"</span>, book[<span class="str">"title"</span>], book[<span class="str">"year"</span>])
+
+<span class="cmt"># --- 出版年が古い順に並べる（挿入ソート）---</span>
+sorted_books = books.<span class="fn">copy</span>()   <span class="cmt"># 元の books を壊さないようにコピーしてから並べ替える</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(sorted_books)):
+    key_book = sorted_books[i]
+    j = i - <span class="num">1</span>
+    <span class="kw">while</span> j >= <span class="num">0</span> <span class="kw">and</span> sorted_books[j][<span class="str">"year"</span>] > key_book[<span class="str">"year"</span>]:
+        sorted_books[j + <span class="num">1</span>] = sorted_books[j]
+        j -= <span class="num">1</span>
+    sorted_books[j + <span class="num">1</span>] = key_book
+
+<span class="fn">print</span>(<span class="str">"出版年が古い順:"</span>)
+<span class="kw">for</span> book <span class="kw">in</span> sorted_books:
+    <span class="fn">print</span>(<span class="str">"  -"</span>, book[<span class="str">"year"</span>], book[<span class="str">"title"</span>])</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/s15_ex5_result.png" alt="AL15-ex5.py の実行結果。ID=3 の本: データ構造入門 / 鈴木花子 の本: / - アルゴリズム基礎 2023 / - 統計学入門 2021 / 出版年が古い順: / - 2021 統計学入門 / - 2022 データ構造入門 / - 2023 アルゴリズム基礎 / - 2024 Python入門 / - 2024 機械学習の基礎" width="380" height="248" loading="lazy">
+      </div>
+      <p class="run-note">ID=3 も「鈴木花子」も、リストを1件ずつ調べることなく<strong>辞書から直接</strong>取り出せています（O(1)）。いちばん下の一覧は、そのあと挿入ソートで出版年順に並べ替えた結果です。</p>
 
       <div style="background:#111;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem">
         <p style="color:#93D500;font-weight:600;font-size:0.9rem;margin-bottom:0.4rem">🖐 やってみよう（1分）</p>
-        <p style="color:#ccc;font-size:0.9rem">蔵書データを5冊に増やして、ID検索と著者検索がO(1)で動くことを確認しよう。</p>
+        <p style="color:#ccc;font-size:0.9rem">まず実行して出力を確認しよう。次に <code>books</code> に6冊目（<code>"id": 6</code>、著者は <strong>"鈴木花子"</strong>）を追加して保存・実行し、<strong>ID検索で引ける</strong>ことと、<strong>著者検索の結果が2冊から3冊に増える</strong>ことを確かめよう。</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">ヒント: 出版年が同じ2024年の2冊は、元のリストの順番（Python入門 → 機械学習の基礎）のまま並びます。これが第11回で学んだ<strong>安定ソート</strong>の性質です。</p>
         <div class="notion-submit" style="margin-top:0.8rem"><div><strong>Notionに記録:</strong> 追加した蔵書データと、検索結果を書いてください。</div></div>
       </div>
     </div>
@@ -665,101 +788,59 @@ author_index = {}
   </div>
 </section>
 
-<!-- ============ 4. 後期への橋渡し ============ -->
-<section id="sec-next-semester">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#FF5252">4</div>
-      <h2>後期（アルゴリズム論及び演習II）への橋渡し</h2>
-    </div>
-
-    <div class="concept-box">
-      <h4>後期で学ぶ予定のトピック</h4>
-      <table>
-        <tr><th>トピック</th><th>概要</th><th>前期の基礎</th></tr>
-        <tr><td>クイックソート</td><td>分割統治法による高速ソート O(n log n)</td><td>ソートの基本概念</td></tr>
-        <tr><td>マージソート</td><td>安定な分割統治ソート O(n log n)</td><td>安定ソートの重要性</td></tr>
-        <tr><td>ヒープソート</td><td>ヒープデータ構造によるソート</td><td>選択ソートの発展</td></tr>
-        <tr><td>グラフアルゴリズム</td><td>ダイクストラ法、最小全域木</td><td>BFS・DFSの基礎</td></tr>
-        <tr><td>動的計画法</td><td>部分問題の解を再利用する手法</td><td>探索の効率化</td></tr>
-        <tr><td>木構造</td><td>二分探索木、AVL木</td><td>二分探索の概念</td></tr>
-      </table>
-    </div>
-
-    <div class="analogy">
-      前期で学んだことは「料理の基本」のようなもの。包丁の使い方（探索）、火加減の調整（ソート）、レシピの読み方（計算量の理解）。後期ではこれらを組み合わせて、もっと複雑な料理（アルゴリズム）に挑戦します。
-    </div>
-  </div>
-</section>
-
-<!-- ============ 5. GROUP ORAL EXAM ============ -->
-<section id="sec-group-disc">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#4A7A00">5</div>
-      <h2>グループディスカッション</h2>
-    </div>
-    <p style="margin-bottom:1rem">2〜4人のグループで議論してください。</p>
-
-    <div class="card" style="border-left:4px solid #4FC3F7">
-      <div class="card-header">
-        <span class="tag tag-group">グループワーク</span>
-        <h3>質問し合って理解を深める（15分）</h3>
-      </div>
-      <p>以下の質問例を参考に、グループ内で互いに質問し合ってください。質問例をそのまま使ってもOKです。</p>
-      <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">質問の切り口（参考）</p>
-        <table>
-          <tr><th style="width:25%">カテゴリ</th><th>質問例</th></tr>
-          <tr><td><strong style="color:#76B900">出力予測</strong></td><td>「データ数100万件のソート済みリストで二分探索するとき、最大比較回数はおよそ何回？（ヒント: log2(1000000)）」</td></tr>
-          <tr><td><strong style="color:#FFB800">理由説明</strong></td><td>「計算量 O(n log n) のアルゴリズムが O(n^2) より速いと言えるのは、具体的にどのくらいのデータ数から？」</td></tr>
-          <tr><td><strong style="color:#FF5252">改造提案</strong></td><td>「今学期学んだアルゴリズムの中で、現実世界の問題に最も応用しやすいと思うものは何？ その理由は？」</td></tr>
-        </table>
-      </div>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> グループメンバーの氏名と、議論した質問・回答の要点を記録してください。</div></div>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>ヒント:</strong> この口頭試問で話し合った内容は、次の「標準課題」を解くのに役立ちます。各アルゴリズムの特徴と計算量を口頭で整理する練習をしておくと、標準課題の総合問題がスムーズに解けるはずです。
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ============ 6. STANDARD TASKS ============ -->
+<!-- ============ 4. STANDARD TASKS ============ -->
 <section id="sec-standard">
   <div class="container">
     <div class="section-header">
-      <div class="section-num" style="background:#76B900">6</div>
+      <div class="section-num" style="background:#76B900">4</div>
       <h2>標準課題 <span style="display:inline-block;background:#555;color:#fff;font-size:0.6em;padding:0.15em 0.5em;border-radius:4px;vertical-align:middle;margin-left:0.5em">宿題</span></h2>
     </div>
 
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題 1</span>
-        <h3>アルゴリズムの特徴を整理する</h3>
+        <h3>8つのアルゴリズムを「どんな場面で使うか」自分の言葉で説明する</h3>
       </div>
-      <p>以下のアルゴリズムについて、計算量と特徴を埋めなさい。</p>
-      <table style="margin:0.5rem 0">
-        <tr><th>アルゴリズム</th><th>計算量</th><th>特徴・適用場面</th></tr>
-        <tr><td>逐次探索</td><td></td><td></td></tr>
-        <tr><td>二分探索</td><td></td><td></td></tr>
-        <tr><td>ハッシュ探索</td><td></td><td></td></tr>
-        <tr><td>挿入ソート</td><td></td><td></td></tr>
-        <tr><td>バブルソート</td><td></td><td></td></tr>
-        <tr><td>分布数えソート</td><td></td><td></td></tr>
-        <tr><td>BFS</td><td></td><td></td></tr>
-      </table>
-      <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の内容を自分のNotionノートに記録してください。</div></div>
+      <p>この授業で学んだ <strong>逐次探索から DFS まで</strong>の8つのアルゴリズムについて、<strong>どんな場面で使うのがよいか</strong>を自分の言葉で説明しなさい。</p>
+
       <div style="background:#1A1A1A;border:1px solid #333;border-radius:10px;padding:1rem;margin:1rem 0">
-        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記録する内容</p>
-        <ul class="point-list">
-          <li><strong>グループメンバー全員の氏名</strong></li>
-          <li>各ラウンド: <strong>誰が</strong>（出題者）→ <strong>誰に</strong>（回答者）→ <strong>何を</strong>質問したか</li>
-          <li>回答の要点</li>
-          <li>評価（A / B / C）</li>
-        </ul>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">記録例: 「出題: 田中 → 回答: 鈴木 ／ 質問: ○○を△△に変えたら？ ／ 要点: □□になる ／ 評価: A」</p>
+        <p style="color:#4FC3F7;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">説明する8つのアルゴリズム</p>
+        <p style="font-size:0.9rem;color:#ccc">① 逐次探索 ／ ② 二分探索 ／ ③ ハッシュ探索 ／ ④ 挿入ソート ／ ⑤ バブルソート ／ ⑥ カウントソート（分布数えソート） ／ ⑦ BFS（幅優先探索） ／ ⑧ DFS（深さ優先探索）</p>
       </div>
+
+      <p style="margin-top:1rem">それぞれについて、次の3点をすべて書くこと。</p>
+      <table style="margin:0.5rem 0">
+        <tr><th style="width:22%">書くこと</th><th>内容</th></tr>
+        <tr>
+          <td><strong style="color:#76B900">(a) 使う場面</strong></td>
+          <td>「〜のようなときに使うとよい」を<strong>具体例を1つ挙げて</strong>書く。授業で出てきた例（迷路・名簿・図書館など）以外の、身の回りの例だとなおよい。</td>
+        </tr>
+        <tr>
+          <td><strong style="color:#76B900">(b) なぜよいか</strong></td>
+          <td>その場面でなぜ有効なのかを、<strong>計算量やアルゴリズムの性質に触れて</strong>説明する。（例:「データ量が2倍になっても比較回数が1回しか増えないから」）</td>
+        </tr>
+        <tr>
+          <td><strong style="color:#FF5252">(c) 使わない方がよい場面</strong></td>
+          <td>逆に、そのアルゴリズムが<strong>不向きな場面</strong>を1つ挙げ、その理由も書く。</td>
+        </tr>
+      </table>
+
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.9rem 1.1rem;margin:1rem 0">
+        <p style="color:#93D500;font-weight:700;font-size:0.85rem;margin-bottom:0.5rem">記述例（二分探索の場合）</p>
+        <p style="font-size:0.9rem;color:#ccc;line-height:1.9">
+          <strong style="color:#76B900">(a) 使う場面:</strong> 辞書アプリで「あいうえお順に並んだ単語リスト」から単語を引くとき。<br>
+          <strong style="color:#76B900">(b) なぜよいか:</strong> 毎回まん中を見て探す範囲を半分に減らせるので、10万語あっても17回くらいの比較で見つかる。計算量は O(log n) で、データが増えても比較回数がほとんど増えない。<br>
+          <strong style="color:#FF5252">(c) 不向きな場面:</strong> 投稿が新着順にバラバラに並んだSNSのタイムラインから特定の投稿を探すとき。並んでいないと「まん中より前か後ろか」が判断できず、そもそも二分探索が使えない。
+        </p>
+      </div>
+
+      <div style="background:#1a1700;border-left:3px solid #FFB800;border-radius:8px;padding:0.8rem 1rem;margin:1rem 0;font-size:0.9rem;color:#ddd">
+        <strong style="color:#FFB800">注意:</strong> 授業スライドの表をそのまま書き写しただけの解答は評価しません。<strong>自分で考えた具体例</strong>と<strong>自分の言い回し</strong>で書くこと。1つあたり3〜5行が目安です。
+      </div>
+
+      <p style="font-size:0.9rem;color:#999"><strong>迷ったら:</strong> このページ上部の「アルゴリズム選択フローチャート」（第1節）を見返すと、どの分岐でそのアルゴリズムが選ばれるかが分かります。その分岐条件が、そのまま「使う場面」のヒントになります。</p>
+
+      <div class="notion-submit"><div><strong>Notionに記録:</strong> 8つのアルゴリズムそれぞれについて、(a) 使う場面（具体例つき）／(b) なぜよいか（計算量に触れる）／(c) 使わない方がよい場面 の3点を書いてください。</div></div>
     </div>
 
     <div class="card standard">
@@ -767,8 +848,8 @@ author_index = {}
         <span class="tag tag-standard">標準課題 2</span>
         <h3>総合トレース：探索＋ソート＋辞書の組み合わせ</h3>
       </div>
-      <p>以下のコードを<strong>実行せずに</strong>、各ステップの変数変化と最終出力を予測しなさい。<br>予測を書いた後に、<code>AL15-3.py</code> として保存・実行して確かめなさい。</p>
-      <pre><span class="code-label">Python ── AL15-3.py</span>
+      <p>以下のコードを<strong>実行せずに</strong>、各ステップの変数変化と最終出力を予測しなさい。<br>予測を書いた後に、<code>AL15-std2.py</code> として保存・実行して確かめなさい。</p>
+      <pre><span class="code-label">Python ── AL15-std2.py</span>
 data = [<span class="num">4</span>, <span class="num">2</span>, <span class="num">7</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">3</span>, <span class="num">6</span>]
 
 <span class="cmt"># Step 1: 挿入ソート</span>
@@ -798,13 +879,13 @@ count = <span class="num">0</span>
 
 <span class="cmt"># Step 3: 辞書で集計</span>
 groups = {}
-<span class="kw">for</span> d <span class="kw">in</span> data:
-    key = <span class="str">"偶数"</span> <span class="kw">if</span> d % <span class="num">2</span> == <span class="num">0</span> <span class="kw">else</span> <span class="str">"奇数"</span>
-    <span class="kw">if</span> key <span class="kw">not in</span> groups:
-        groups[key] = []
-    groups[key].<span class="fn">append</span>(d)
+<span class="kw">for</span> value <span class="kw">in</span> data:
+    group_name = <span class="str">"偶数"</span> <span class="kw">if</span> value % <span class="num">2</span> == <span class="num">0</span> <span class="kw">else</span> <span class="str">"奇数"</span>
+    <span class="kw">if</span> group_name <span class="kw">not in</span> groups:
+        groups[group_name] = []
+    groups[group_name].<span class="fn">append</span>(value)
 <span class="fn">print</span>(<span class="str">f"分類: {groups}"</span>)</pre>
-      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 3つのステップを順番に追います。Step 1 のソート結果が Step 2 の入力になります。Step 3 は独立した処理です。</p>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#999"><strong>ヒント:</strong> 3つのステップは<strong>同じ <code>data</code> を順に使い回しています</strong>。Step 1 でソートされた <code>data</code> が、Step 2 の探索対象にも Step 3 の集計対象にもなります。つまり Step 1 の結果を間違えると、Step 2・Step 3 も連鎖して外れます。</p>
       <div class="notion-submit"><div><strong>Notionに記録:</strong> 以下の項目を自分のNotionノートに記録してください。
         <ul class="point-list">
           <li><strong>Q1.</strong> Step 1（挿入ソート）の結果の予測</li>
@@ -816,121 +897,30 @@ groups = {}
   </div>
 </section>
 
-<!-- ============ 7. ADVANCED TASK ============ -->
-<section id="sec-advanced">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-num" style="background:#FFB800">7</div>
-      <h2>発展課題 <span style="display:inline-block;background:#555;color:#fff;font-size:0.6em;padding:0.15em 0.5em;border-radius:4px;vertical-align:middle;margin-left:0.5em">宿題</span></h2>
-    </div>
-
-    <div class="card advanced">
-      <div class="card-header">
-        <span class="tag tag-advanced">発展課題</span>
-        <h3>学期の振り返りと今後の展望</h3>
-      </div>
-      <p>今学期で最も印象に残ったアルゴリズムを選び、そのアルゴリズムのデモプログラム（実行すると動作が分かるもの）を作成しなさい。</p>
-      <div style="background:#1A1A1A;border:2px solid #FFB800;border-radius:10px;padding:1.2rem;margin:1.5rem 0">
-        <p style="color:#FFB800;font-weight:700;font-size:1rem;margin-bottom:0.8rem">提出要件（2点セット）</p>
-        <table>
-          <tr><th style="width:30%">提出物</th><th>内容</th></tr>
-          <tr>
-            <td><strong style="color:#76B900">1. コード</strong></td>
-            <td><code>AL15-4.py</code> として作成し、コード全体をNotionノートに貼り付ける</td>
-          </tr>
-          <tr>
-            <td><strong style="color:#76B900">2. 音声説明</strong></td>
-            <td>以下の内容を<strong>1〜2分の音声</strong>で録音し、Notionノートに添付する<br>
-            <span style="color:#999;font-size:0.85rem">スマホの録音アプリやPCの機能で録音 → Notionに <code>/audio</code> で添付</span></td>
-          </tr>
-        </table>
-        <p style="margin-top:0.8rem;font-size:0.9rem;color:#E0E0E0"><strong>音声で説明すること:</strong></p>
-        <ul class="point-list" style="margin-top:0.3rem">
-          <li>どのアルゴリズムを選び、なぜ最も印象に残ったか</li>
-          <li>デモプログラムでそのアルゴリズムの特徴をどう表現したか</li>
-          <li>そのアルゴリズムが実社会でどのように使われているか</li>
-        </ul>
-      </div>
-      <p style="color:#FFB800;font-weight:600;font-size:0.9rem">※ 解答例はありません。自分で考えて作ってください。</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ NOTION TEMPLATE ============ -->
+<!-- ============ SUBMISSION ============ -->
 <section id="sec-notion">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">N</div>
-      <h2>Notionテンプレート</h2>
+      <h2>提出について</h2>
     </div>
 
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
-        <span class="tag" style="background:#1a2e0a;color:#76B900">テンプレート</span>
-        <h3>課題ノートのテンプレート</h3>
+        <span class="tag" style="background:#1a2e0a;color:#76B900">Notionノート</span>
+        <h3>自分でNotionノートを書こう</h3>
       </div>
-      <p>各セクションを埋めていってください。これが提出するPDFの元になります。</p>
-
-      <pre><span class="code-label">Notion テンプレート</span>
-# AL1 第15回
-
-名前:
-学籍番号:
-
----
-
-## 例題 やってみよう
-### 例題1: 特定したアルゴリズム名と根拠のキーワード
-（回答を記入）
-
-### 例題2: 各サイズの実行時間とnが2倍時の増加倍率
-（回答を記入）
-
-### 例題3: 選んだアルゴリズムと理由
-（回答を記入）
-
-### 例題4: 総当たり版 vs ハッシュ版の実行時間の比較
-（回答を記入）
-
-### 例題5: 追加した蔵書データと検索結果
-（回答を記入）
-
----
-
-## 標準課題 1: アルゴリズムの特徴を整理する
-（回答を記入）
-
----
-
-## 標準課題 2: 総合トレース：探索＋ソート＋辞書の組み合わせ
-### Q1.
-（Step 1（挿入ソート）の結果の予測）
-
-### Q2.
-（Step 2（二分探索）と Step 3（辞書集計）の結果の予測）
-
-### Q3.
-（実行結果（予測と合っていたか））
-
----
-
-## グループ口頭試問
-**グループメンバー:**
-
-| 出題者 | 問題（概要） | 回答者 | 要点 | 評価 |
-|--------|-------------|--------|------|------|
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
-|        |             |        |      | A/B/C |
-
----
-
-## 発展課題: 学期の振り返りと今後の展望
-### コード
-（AL15-?.py のコードを貼り付け）
-### 音声説明
-（1〜2分の音声ファイルを添付）
-</pre>
+      <p>決まったテンプレートはありません。<strong>自分でNotionノートを作り、この回の提出物を自分なりに整理して書いてください。</strong>見出しの付け方や順番は自由です。次の内容が入っていればOK:</p>
+      <ul class="point-list" style="margin:0.8rem 0">
+        <li>名前・学籍番号</li>
+        <li><strong>例題1</strong>: mystery_a / mystery_b / mystery_c それぞれのアルゴリズム名・根拠のキーワード・計算量</li>
+        <li><strong>例題2</strong>: 各サイズの実行時間／n が2倍になったときの増加倍率</li>
+        <li><strong>例題3</strong>: 「SNSで友達の友達を探す」に選んだアルゴリズムと理由</li>
+        <li><strong>例題4</strong>: 総当たり版とハッシュ版の実行時間の比較</li>
+        <li><strong>例題5</strong>: 追加した蔵書データと検索結果</li>
+        <li><strong>標準課題1</strong>: 8つのアルゴリズムそれぞれの (a) 使う場面／(b) なぜよいか／(c) 使わない方がよい場面</li>
+        <li><strong>標準課題2</strong>: Step 1〜3 の予測／実行結果／予測と合っていたか</li>
+      </ul>
 
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
         <strong>Notionに書いただけでは提出にならない。</strong>必ずPDFにエクスポートし、Manabaに提出すること。
