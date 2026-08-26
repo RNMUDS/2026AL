@@ -1,0 +1,949 @@
+<!--NAV
+提出 #sec-submission
+考え方 #sec-explanation
+例題 #sec-examples
+標準課題 #sec-standard nav-assignment
+提出まとめ #sec-notion
+解答 #answers-section
+-->
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題1の書き直しの記録</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題3の答えのちがい</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>距離表を手で埋める</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>重みを変えると？</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>ダイクストラ法の考え方</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第4回で、重みの合計を最小にする経路は幅優先探索では求められないことを確かめました。
+      重みの合計を最小にする経路を求めるアルゴリズムが<strong>ダイクストラ法</strong>です。
+      1959年にエドガー・ダイクストラが考えた方法で、今のカーナビや乗換案内の中でも使われています。
+    </p>
+
+    <div class="analogy">
+      出発点から各駅までの所要時間を、鉛筆で表に書いていく場面を思い浮かべてください。
+      最初はどの駅も「わからない」ので空欄です。
+      調べていくうちに「渋谷は7分で行ける」と分かれば書き込み、
+      あとで「もっと早い行き方があった」と分かれば消して書き直します。
+      書き直しがもう起こらないと確信できた駅から順に、ペンでなぞって確定させていく作業がダイクストラ法です。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 242" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">ダイクストラ法は3つの手順のくり返し</text>
+        <rect x="24" y="52" width="204" height="128" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="126" y="78" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">手順1</text>
+        <text x="126" y="104" text-anchor="middle" fill="#ccc" font-size="11">まだ決まっていない駅のうち、</text>
+        <text x="126" y="124" text-anchor="middle" fill="#ccc" font-size="11">今わかっている時間がいちばん</text>
+        <text x="126" y="144" text-anchor="middle" fill="#ccc" font-size="11">小さい駅を1つ選ぶ</text>
+        <rect x="21" y="49" width="210" height="134" rx="14" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.313;0.333;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="236" y="120" text-anchor="middle" fill="#666" font-size="16">▶</text>
+        <rect x="248" y="52" width="204" height="128" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="350" y="78" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">手順2</text>
+        <text x="350" y="104" text-anchor="middle" fill="#ccc" font-size="11">選んだ駅の時間を「もう変わらない」</text>
+        <text x="350" y="124" text-anchor="middle" fill="#ccc" font-size="11">と決める（確定させる）</text>
+        <rect x="245" y="49" width="210" height="134" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.333;0.343;0.647;0.667;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="460" y="120" text-anchor="middle" fill="#666" font-size="16">▶</text>
+        <rect x="472" y="52" width="204" height="128" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="574" y="78" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">手順3</text>
+        <text x="574" y="104" text-anchor="middle" fill="#ccc" font-size="11">選んだ駅のとなりの駅について、</text>
+        <text x="574" y="124" text-anchor="middle" fill="#ccc" font-size="11">より短い行き方が見つかれば</text>
+        <text x="574" y="144" text-anchor="middle" fill="#ccc" font-size="11">時間を書き直す</text>
+        <rect x="469" y="49" width="210" height="134" rx="14" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.667;0.677;0.980;1.000;1" dur="12s" repeatCount="indefinite"/></rect>
+        <path d="M 630 190 L 630 208 L 126 208 L 126 190" fill="none" stroke="#555" stroke-width="2"/>
+        <text x="378" y="226" text-anchor="middle" fill="#888888" font-size="11">すべての駅が確定するまでくり返す</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>ダイクストラ法で使う3つの入れもの</h4>
+      <table>
+        <tr><th>名前</th><th>中身</th><th>最初の状態</th></tr>
+        <tr><td><code>distance</code></td><td>出発点からその駅までの、今わかっているいちばん短い時間</td><td>出発点だけ0、ほかはすべて <code>inf</code>（無限大）</td></tr>
+        <tr><td><code>settled</code></td><td>「もう変わらない」と決まった駅を入れる集合</td><td>空</td></tr>
+        <tr><td><code>came_from</code></td><td>その駅へ来るとき、直前にどの駅にいたか</td><td>すべて <code>None</code></td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        <code>inf</code> は Python で <code>float("inf")</code> と書く「無限大」の値です。
+        どんな数と比べても必ず大きくなるので、「まだ行き方が1つも見つかっていない」ことを表すのに使えます。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">新宿から各駅までの時間が、手順ごとに決まっていく</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">緑の枠 = その手順で確定した駅　／　オレンジの数字 = その手順で書き直された時間</text>
+        <text x="121.0" y="66" text-anchor="middle" fill="#888888" font-size="11">新宿</text>
+        <text x="211.0" y="66" text-anchor="middle" fill="#888888" font-size="11">渋谷</text>
+        <text x="301.0" y="66" text-anchor="middle" fill="#888888" font-size="11">池袋</text>
+        <text x="391.0" y="66" text-anchor="middle" fill="#888888" font-size="11">上野</text>
+        <text x="481.0" y="66" text-anchor="middle" fill="#888888" font-size="11">東京</text>
+        <text x="571.0" y="66" text-anchor="middle" fill="#888888" font-size="11">品川</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.020;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="95" fill="#bbb" font-size="11">はじめ</text>
+          <rect x="76" y="76" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="119.0" y="94" text-anchor="middle" fill="#999" font-size="12" font-weight="400">0</text>
+          <rect x="166" y="76" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="209.0" y="94" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="256" y="76" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="299.0" y="94" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="346" y="76" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="389.0" y="94" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="436" y="76" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="479.0" y="94" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="526" y="76" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="569.0" y="94" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.123;0.143;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="125" fill="#bbb" font-size="11">手順1</text>
+          <rect x="76" y="106" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="119.0" y="124" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">0</text>
+          <rect x="166" y="106" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="209.0" y="124" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">7</text>
+          <rect x="256" y="106" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="299.0" y="124" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">9</text>
+          <rect x="346" y="106" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="389.0" y="124" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="436" y="106" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="479.0" y="124" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="526" y="106" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="569.0" y="124" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">30</text>
+          <text x="622" y="125" fill="#76B900" font-size="10">新宿 確定</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.246;0.266;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="155" fill="#bbb" font-size="11">手順2</text>
+          <rect x="76" y="136" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="119.0" y="154" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">0</text>
+          <rect x="166" y="136" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="209.0" y="154" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">7</text>
+          <rect x="256" y="136" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="299.0" y="154" text-anchor="middle" fill="#999" font-size="12" font-weight="400">9</text>
+          <rect x="346" y="136" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="389.0" y="154" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="436" y="136" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="479.0" y="154" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="526" y="136" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="569.0" y="154" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">16</text>
+          <text x="622" y="155" fill="#76B900" font-size="10">渋谷 確定</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.369;0.389;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="185" fill="#bbb" font-size="11">手順3</text>
+          <rect x="76" y="166" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="119.0" y="184" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">0</text>
+          <rect x="166" y="166" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="209.0" y="184" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">7</text>
+          <rect x="256" y="166" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="299.0" y="184" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">9</text>
+          <rect x="346" y="166" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="389.0" y="184" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">21</text>
+          <rect x="436" y="166" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="479.0" y="184" text-anchor="middle" fill="#999" font-size="12" font-weight="400">－</text>
+          <rect x="526" y="166" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="569.0" y="184" text-anchor="middle" fill="#999" font-size="12" font-weight="400">16</text>
+          <text x="622" y="185" fill="#76B900" font-size="10">池袋 確定</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.491;0.511;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="215" fill="#bbb" font-size="11">手順4</text>
+          <rect x="76" y="196" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="119.0" y="214" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">0</text>
+          <rect x="166" y="196" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="209.0" y="214" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">7</text>
+          <rect x="256" y="196" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="299.0" y="214" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">9</text>
+          <rect x="346" y="196" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="389.0" y="214" text-anchor="middle" fill="#999" font-size="12" font-weight="400">21</text>
+          <rect x="436" y="196" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="479.0" y="214" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">27</text>
+          <rect x="526" y="196" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="569.0" y="214" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">16</text>
+          <text x="622" y="215" fill="#76B900" font-size="10">品川 確定</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.614;0.634;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="245" fill="#bbb" font-size="11">手順5</text>
+          <rect x="76" y="226" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="119.0" y="244" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">0</text>
+          <rect x="166" y="226" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="209.0" y="244" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">7</text>
+          <rect x="256" y="226" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="299.0" y="244" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">9</text>
+          <rect x="346" y="226" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="389.0" y="244" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">21</text>
+          <rect x="436" y="226" width="86" height="26" rx="5" fill="#141414" stroke="#2e2e2e"/>
+          <text x="479.0" y="244" text-anchor="middle" fill="#999" font-size="12" font-weight="400">27</text>
+          <rect x="526" y="226" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="569.0" y="244" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">16</text>
+          <text x="622" y="245" fill="#76B900" font-size="10">上野 確定</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.737;0.757;1" dur="18s" repeatCount="indefinite"/>
+          <text x="16" y="275" fill="#bbb" font-size="11">手順6</text>
+          <rect x="76" y="256" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="119.0" y="274" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">0</text>
+          <rect x="166" y="256" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="209.0" y="274" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">7</text>
+          <rect x="256" y="256" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="299.0" y="274" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">9</text>
+          <rect x="346" y="256" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="389.0" y="274" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">21</text>
+          <rect x="436" y="256" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="479.0" y="274" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">27</text>
+          <rect x="526" y="256" width="86" height="26" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="569.0" y="274" text-anchor="middle" fill="#93D500" font-size="12" font-weight="700">16</text>
+          <text x="622" y="275" fill="#76B900" font-size="10">東京 確定</text>
+        </g>
+        <text x="350" y="312" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">品川は「30分」からいったん決まりかけたが、渋谷経由の16分に書き直された</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>いちばん小さい駅を確定してよい理由</h4>
+      <p style="font-size:0.95rem">
+        手順2で「もう変わらない」と決めてしまってよいのは、<strong>重みがすべて0以上</strong>だからです。
+        まだ確定していない駅のうち、時間がいちばん小さい駅を品川（16分）だとします。
+        品川へ別の行き方でたどり着くには、必ず他の未確定の駅を通ります。
+        他の未確定の駅は、どれも16分以上かかります。
+        そこから品川へ進むと、重みが0以上なのでさらに時間が増えます。
+        つまり<strong>16分より短くなることはありえません</strong>。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 326" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">なぜ「いちばん小さい駅」は、もう変わらないと決めてよいのか</text>
+        <text x="350" y="48" text-anchor="middle" fill="#888888" font-size="11">品川16分と上野21分が未確定のとき、品川を確定させてよい理由</text>
+        <circle cx="80" cy="140" r="30" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="80" y="145" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+        <circle cx="380" cy="96" r="30" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="380" y="101" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+        <circle cx="380" cy="216" r="30" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="380" y="221" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+        <line x1="110" y1="130" x2="350" y2="100" stroke="#76B900" stroke-width="4"/>
+        <text x="230" y="104" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">見つかっている行き方: 16分</text>
+        <line x1="110" y1="152" x2="350" y2="210" stroke="#FFB800" stroke-width="3"/>
+        <text x="230" y="200" text-anchor="middle" fill="#FFB800" font-size="12">見つかっている行き方: 21分</text>
+        <path d="M 400 190 Q 470 150 400 122" fill="none" stroke="#FF5252" stroke-width="3" stroke-dasharray="6 4"/>
+        <text x="500" y="160" fill="#FF5252" font-size="12">上野から品川へ回り道をしても</text>
+        <text x="500" y="180" fill="#FF5252" font-size="12">21分 ＋（0以上）＝ 21分以上</text>
+        <rect x="60" y="256" width="580" height="56" rx="10" fill="#141414" stroke="#76B900"/>
+        <text x="350" y="280" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">重みが0以上なら、遠回りをして時間が減ることはない</text>
+        <text x="350" y="300" text-anchor="middle" fill="#ccc" font-size="11">だから「今いちばん小さい16分」より短い行き方は、もう出てこない</text>
+        </svg>
+      </div>
+
+    <div class="note-warn">
+      <strong>成り立たなくなる場合:</strong> 重みにマイナスの値が混ざると、上の理由が使えなくなります。
+      「遠回りをすると時間が減る」ことが起きてしまうためです。例題3で実際に確かめます。
+    </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No05</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No04/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No05/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第5回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No05</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No05 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No05 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-05-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-05-ex1.py</code>, <code>AL2-05-ex2.py</code>, <code>AL2-05-ex3.py</code>, <code>AL2-05-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">ダイクストラ法</strong><br><span style="color:#888;font-size:0.8rem">Dijkstra法</span></td><td>重みが0以上のグラフで、出発点から各頂点までの最小コストを求めるアルゴリズム。</td></tr>
+        <tr><td><strong style="color:#76B900">確定</strong><br><span style="color:#888;font-size:0.8rem">かくてい / settled</span></td><td>その頂点までの最小コストが「もう変わらない」と決まった状態。確定した頂点は二度と書き直さない。</td></tr>
+        <tr><td><strong style="color:#76B900">緩和</strong><br><span style="color:#888;font-size:0.8rem">かんわ / relaxation</span></td><td>「別の道を通ったほうが短い」と分かったときに、記録してある値を小さく書き直す操作。</td></tr>
+        <tr><td><strong style="color:#76B900">inf</strong><br><span style="color:#888;font-size:0.8rem">infinity / 無限大</span></td><td>Pythonで <code>float("inf")</code> と書く。どんな数より大きいので「まだ行き方が見つかっていない」印として使える。</td></tr>
+        <tr><td><strong style="color:#76B900">負の重み</strong><br><span style="color:#888;font-size:0.8rem">ふのおもみ / negative weight</span></td><td>マイナスの重み。混ざるとダイクストラ法は正しく動かない。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>距離表が決まっていく様子を見る</h3>
+      </div>
+      <p>ダイクストラ法を、手順が目に見える形で書いたプログラムです。
+      1つの手順が終わるたびに、距離表の中身をそのまま表示します。
+      表の中で <code>*</code> が付いている駅は「もう変わらない」と決まった駅です。</p>
+
+<pre><span class="code-label">Python ── AL2-05-ex1.py</span>
+<span class="cmt"># ダイクストラ法（1）: 距離表が1ステップずつ決まっていく様子を見る</span>
+<span class="cmt"># 出発点から各駅までの「合計時間がいちばん短い行き方」を求める。</span>
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)      <span class="cmt"># inf は「まだ行き方が分かっていない」ことを表す無限大</span>
+
+<span class="cmt"># distance = 出発点からその駅までの、今わかっているいちばん短い時間</span>
+distance = {}
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    distance[station] = INF
+distance[start] = <span class="num">0</span>
+
+<span class="cmt"># settled = 「もう変わらないと決まった駅」を入れる集合</span>
+settled = <span class="fn">set</span>()
+
+
+<span class="kw">def</span> <span class="fn">show_table</span>(step, chosen):
+    <span class="str">&quot;&quot;&quot;今の距離表を1行で表示する&quot;&quot;&quot;</span>
+    parts = []
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        value = distance[station]
+        text = <span class="str">&quot;-&quot;</span> <span class="kw">if</span> value == INF <span class="kw">else</span> <span class="fn">str</span>(value)
+        <span class="kw">if</span> station <span class="kw">in</span> settled:
+            text = text + <span class="str">&quot;*&quot;</span>
+        parts.append(<span class="str">f&quot;{station}:{text:&gt;4}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;手順{step}  選んだ駅: {chosen:&lt;4}  &quot;</span> + <span class="str">&quot; &quot;</span>.join(parts))
+
+
+<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法で、新宿から各駅までの最短時間を求める&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（* が付いている駅は「もう変わらないと決まった駅」）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">74</span>)
+<span class="fn">show_table</span>(<span class="num">0</span>, <span class="str">&quot;なし&quot;</span>)
+
+step = <span class="num">0</span>
+<span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
+    step = step + <span class="num">1</span>
+
+    <span class="cmt"># 手順1: まだ決まっていない駅のうち、距離がいちばん小さい駅を選ぶ</span>
+    current = <span class="kw">None</span>
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        <span class="kw">if</span> station <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> distance[station] == INF:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+            current = station
+
+    <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="kw">break</span>                       <span class="cmt"># どこにもたどり着けない駅が残っている場合</span>
+
+    <span class="cmt"># 手順2: 選んだ駅を「決まった」ことにする</span>
+    settled.add(current)
+
+    <span class="cmt"># 手順3: 選んだ駅のとなりの駅について、より短い行き方が見つかれば書き直す</span>
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        new_distance = distance[current] + minutes
+        <span class="kw">if</span> new_distance &lt; distance[name]:
+            old = <span class="str">&quot;-&quot;</span> <span class="kw">if</span> distance[name] == INF <span class="kw">else</span> distance[name]
+            distance[name] = new_distance
+            <span class="fn">print</span>(<span class="str">f&quot;        {name} の時間を {old} から {new_distance} に書き直した&quot;</span>
+                  <span class="str">f&quot;（{current} 経由: {distance[current]} + {minutes}）&quot;</span>)
+
+    <span class="fn">show_table</span>(step, current)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">74</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;新宿から各駅までの最短時間&quot;</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {distance[station]}分&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a05_ex1_result.png" alt="AL2-05-ex1.py の実行結果。ダイクストラ法で、新宿から各駅までの最短時間を求める / （* が付いている駅は「もう変わらないと決まった駅」） / -------------------------------------------------------------------------- / 手順0  選んだ駅: なし    新宿:   0 渋谷:   - 池袋:   - 上野:   - 東京:   - 品川:   - / 渋谷 の時間を - から 7 に書き直した（新宿 経由: 0 + 7） / 池袋 の時間を - から 9 に書き直した（新宿 経由: 0 + 9） / 品川 の時間を - から 30 に書き直した（新宿 経由: 0 + 30） / 手順1  選んだ駅: 新宿    新宿:  0* 渋谷:   7 池袋:   9 上野:   - 東京:   - 品川:  30 / 品川 の時間を 30 から 16 に書き直した（渋谷 経由: 7 + 9） / 手順2  選んだ駅: 渋谷    新宿:  0* 渋谷:  7* 池袋:   9 上野:   - 東京:   - 品川:  16 / 上野 の時間を - から 21 に書き直した（池袋 経由: 9 + 12） / 手順3  選んだ駅: 池袋    新宿:  0* 渋谷:  7* 池袋:  9* 上野:  21 東京:   - 品川:  16 / 東京 の時間を - から 27 に書き直した（品川 経由: 16 + 11） / 手順4  選んだ駅: 品川    新宿:  0* 渋谷:  7* 池袋:  9* 上野:  21 東京:  27 品川: 16* / 手順5  選んだ駅: 上野    新宿:  0* 渋谷:  7* 池袋:  9* 上野: 21* 東京:  27 品川: 16* / 手順6  選んだ駅: 東京    新宿:  0* 渋谷:  7* 池袋:  9* 上野: 21* 東京: 27* 品川: 16* / -------------------------------------------------------------------------- /  / 新宿から各駅までの最短時間 / 新宿: 0分 / 渋谷: 7分 / 池袋: 9分 / 上野: 21分 / 東京: 27分 / 品川: 16分" width="609" height="548" loading="lazy">
+      </div>
+      <p class="run-note">手順1で新宿を確定させると、渋谷7分・池袋9分・品川30分が書き込まれます。手順2で渋谷を確定させたとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。直通の30分より、渋谷で乗りかえる16分のほうが早いことが見つかったためです。手順3以降、品川の16分はもう書き直されず、手順4で確定しています。最終的に、新宿から東京までは27分と求まりました。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題1の実行結果から、「時間を書き直した」と表示された行をすべて書き写す。あわせて、品川の時間が30分から16分に書き直された理由を、自分の言葉で説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>どの道を通ったかを記録する</h3>
+      </div>
+      <p>ダイクストラ法は最短時間を求めますが、そのままでは「どの道を通ったか」が分かりません。
+      距離を書き直すときに、<strong>どの駅から来たか</strong>も一緒に記録しておけば、あとで道順を組み立てられます。</p>
+
+<pre><span class="code-label">Python ── AL2-05-ex2.py</span>
+<span class="cmt"># ダイクストラ法（2）: 最短時間だけでなく「どの道を通ったか」も記録する</span>
+<span class="cmt"># 距離を書き直したときに「どこから来たか」も一緒に記録しておけば、あとで道順を復元できる。</span>
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = {}
+came_from = {}
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    distance[station] = INF
+    came_from[station] = <span class="kw">None</span>
+distance[start] = <span class="num">0</span>
+
+settled = <span class="fn">set</span>()
+
+<span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
+    current = <span class="kw">None</span>
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        <span class="kw">if</span> station <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> distance[station] == INF:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+            current = station
+    <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="kw">break</span>
+
+    settled.add(current)
+
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        new_distance = distance[current] + minutes
+        <span class="kw">if</span> new_distance &lt; distance[name]:
+            distance[name] = new_distance
+            came_from[name] = current      <span class="cmt"># 「どこから来たか」を記録する</span>
+
+
+<span class="kw">def</span> <span class="fn">build_route</span>(goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から各駅への最短の行き方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="kw">if</span> station == start:
+        <span class="kw">continue</span>
+    route = <span class="fn">build_route</span>(station)
+    <span class="fn">print</span>(<span class="str">f&quot;{station:&lt;4} {distance[station]:&gt;3}分   &quot;</span> + <span class="str">&quot; → &quot;</span>.join(route))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 「どこから来たか」の記録そのものを表示する</span>
+<span class="fn">print</span>(<span class="str">&quot;came_from の中身（どの駅へは、どこから来るのがいちばん早いか）&quot;</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {came_from[station]}&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;came_from をゴールから逆にたどると、道順ができあがる&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。新宿から各駅への最短の行き方 / ------------------------------------------------------------ / 渋谷     7分   新宿 → 渋谷 / 池袋     9分   新宿 → 池袋 / 上野    21分   新宿 → 池袋 → 上野 / 東京    27分   新宿 → 渋谷 → 品川 → 東京 / 品川    16分   新宿 → 渋谷 → 品川 / ------------------------------------------------------------ /  / came_from の中身（どの駅へは、どこから来るのがいちばん早いか） / 新宿: None / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / came_from をゴールから逆にたどると、道順ができあがる" width="479" height="408" loading="lazy">
+      </div>
+      <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」で27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 → 品川 → 渋谷 → 新宿 となり、順番をひっくり返せば道順になります。第1回の幅優先探索で経路を復元したときと、まったく同じやり方です。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>マイナスの重みがあると間違える</h3>
+      </div>
+      <p>ダイクストラ法が正しく動くのは「重みがすべて0以上」のときだけです。
+      マイナスの重みが1本でも混ざると、答えを間違えます。
+      3つのお店をめぐる例で確かめます。B店を通ると5円のクーポンがもらえるので、
+      B店からA店へ向かう辺の重みは <code>-5</code> になっています。</p>
+
+<pre><span class="code-label">Python ── AL2-05-ex3.py</span>
+<span class="cmt"># ダイクストラ法（3）: マイナスの重みがあると答えを間違える</span>
+<span class="cmt"># 3つのお店をめぐる。辺の重みは「かかる金額（円）」。</span>
+<span class="cmt"># B店を通ると5円のクーポンがもらえるので、B店からA店へ行く辺の重みは -5 になる。</span>
+
+shops = {
+    <span class="str">&quot;スタート&quot;</span>: [(<span class="str">&quot;A店&quot;</span>, <span class="num">1</span>), (<span class="str">&quot;B店&quot;</span>, <span class="num">2</span>)],
+    <span class="str">&quot;B店&quot;</span>: [(<span class="str">&quot;A店&quot;</span>, -<span class="num">5</span>)],
+    <span class="str">&quot;A店&quot;</span>: [],
+}
+
+start = <span class="str">&quot;スタート&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+
+<span class="kw">def</span> <span class="fn">dijkstra</span>():
+    <span class="str">&quot;&quot;&quot;ダイクストラ法で、スタートから各店までの最小金額を求める&quot;&quot;&quot;</span>
+    distance = {}
+    <span class="kw">for</span> shop <span class="kw">in</span> shops:
+        distance[shop] = INF
+    distance[start] = <span class="num">0</span>
+    settled = <span class="fn">set</span>()
+
+    <span class="fn">print</span>(<span class="str">&quot;ダイクストラ法の進み方&quot;</span>)
+    <span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(shops):
+        current = <span class="kw">None</span>
+        <span class="kw">for</span> shop <span class="kw">in</span> shops:
+            <span class="kw">if</span> shop <span class="kw">in</span> settled <span class="kw">or</span> distance[shop] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[shop] &lt; distance[current]:
+                current = shop
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
+            <span class="kw">break</span>
+        settled.add(current)
+        <span class="fn">print</span>(<span class="str">f&quot;  {current} を「{distance[current]}円で確定」とした&quot;</span>)
+        <span class="kw">for</span> name, price <span class="kw">in</span> shops[current]:
+            <span class="kw">if</span> name <span class="kw">in</span> settled:
+                <span class="fn">print</span>(<span class="str">f&quot;      {name} へ {distance[current]} + ({price}) = &quot;</span>
+                      <span class="str">f&quot;{distance[current] + price} 円で行けるが、&quot;</span>
+                      <span class="str">f&quot;{name} はすでに確定しているので無視された&quot;</span>)
+                <span class="kw">continue</span>
+            new_price = distance[current] + price
+            <span class="kw">if</span> new_price &lt; distance[name]:
+                distance[name] = new_price
+    <span class="kw">return</span> distance
+
+
+<span class="kw">def</span> <span class="fn">all_routes</span>(here, visited):
+    <span class="str">&quot;&quot;&quot;同じ店を2度通らない行き方をすべて返す&quot;&quot;&quot;</span>
+    result = [[here]]
+    <span class="kw">for</span> name, price <span class="kw">in</span> shops[here]:
+        <span class="kw">if</span> name <span class="kw">in</span> visited:
+            <span class="kw">continue</span>
+        <span class="kw">for</span> rest <span class="kw">in</span> <span class="fn">all_routes</span>(name, visited + [name]):
+            result.append([here] + rest)
+    <span class="kw">return</span> result
+
+
+<span class="kw">def</span> <span class="fn">route_price</span>(route):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        <span class="kw">for</span> name, price <span class="kw">in</span> shops[route[i]]:
+            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
+                total = total + price
+                <span class="kw">break</span>
+    <span class="kw">return</span> total
+
+
+<span class="fn">print</span>(<span class="str">&quot;お店のつながり（数字は金額・円。マイナスはクーポンで安くなることを表す）&quot;</span>)
+<span class="kw">for</span> shop <span class="kw">in</span> shops:
+    <span class="kw">if</span> <span class="fn">len</span>(shops[shop]) == <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;  {shop}: つながる先なし&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;  {shop}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(<span class="str">f&quot;{n}({p}円)&quot;</span> <span class="kw">for</span> n, p <span class="kw">in</span> shops[shop]))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+
+result = <span class="fn">dijkstra</span>()
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法が出した答え&quot;</span>)
+<span class="kw">for</span> shop <span class="kw">in</span> shops:
+    <span class="fn">print</span>(<span class="str">f&quot;  {shop}: {result[shop]}円&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;すべての行き方を書き出して確かめる&quot;</span>)
+best = {}
+<span class="kw">for</span> route <span class="kw">in</span> <span class="fn">all_routes</span>(start, [start]):
+    goal = route[-<span class="num">1</span>]
+    price = <span class="fn">route_price</span>(route)
+    <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: {price}円&quot;</span>)
+    <span class="kw">if</span> goal <span class="kw">not</span> <span class="kw">in</span> best <span class="kw">or</span> price &lt; best[goal]:
+        best[goal] = price
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;本当の最小金額&quot;</span>)
+<span class="kw">for</span> shop <span class="kw">in</span> shops:
+    <span class="fn">print</span>(<span class="str">f&quot;  {shop}: {best[shop]}円&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;A店について、ダイクストラ法は&quot;</span>, result[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円と答えたが、本当は&quot;</span>, best[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円で行ける。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 326" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="15">マイナスの重みがあると、ダイクストラ法は間違える</text>
+        <circle cx="110" cy="160" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="110" y="165" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">スタート</text>
+        <circle cx="560" cy="160" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="560" y="165" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">A店</text>
+        <circle cx="335" cy="260" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="335" y="265" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">B店</text>
+        <line x1="144" y1="160" x2="526" y2="160" stroke="#666" stroke-width="2"/>
+        <rect x="318" y="140" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="340" y="157" text-anchor="middle" fill="#bbb" font-size="12">1円</text>
+        <line x1="136" y1="180" x2="308" y2="248" stroke="#666" stroke-width="2"/>
+        <rect x="196" y="200" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="218" y="217" text-anchor="middle" fill="#bbb" font-size="12">2円</text>
+        <line x1="366" y1="246" x2="534" y2="184" stroke="#FF5252" stroke-width="3"/>
+        <rect x="432" y="196" width="56" height="24" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
+        <text x="460" y="213" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">-5円</text>
+        <text x="460" y="240" text-anchor="middle" fill="#888888" font-size="10">B店でもらえるクーポン</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.280;0.300;1" dur="12s" repeatCount="indefinite"/>
+          <text x="350" y="60" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">① スタートを0円で確定</text>
+          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">A店は1円、B店は2円と分かった</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.320;0.340;0.580;0.600;1" dur="12s" repeatCount="indefinite"/>
+          <text x="350" y="60" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">② いちばん小さいA店（1円）を確定</text>
+          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">「A店は1円で決まり」としてしまう</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.620;0.640;0.960;0.980;1" dur="12s" repeatCount="indefinite"/>
+          <text x="350" y="60" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="700">③ B店（2円）を確定すると -3円 が見つかる</text>
+          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">しかしA店はもう確定済みなので、書き直されない</text>
+        </g>
+        <text x="350" y="310" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">ダイクストラ法の答え: A店は1円　／　本当の答え: A店は -3円</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a05_ex3_result.png" alt="AL2-05-ex3.py の実行結果。お店のつながり（数字は金額・円。マイナスはクーポンで安くなることを表す） / スタート: A店(1円)、B店(2円) / B店: A店(-5円) / A店: つながる先なし / ------------------------------------------------------------ /  / ダイクストラ法の進み方 / スタート を「0円で確定」とした / A店 を「1円で確定」とした / B店 を「2円で確定」とした / A店 へ 2 + (-5) = -3 円で行けるが、A店 はすでに確定しているので無視された /  / ダイクストラ法が出した答え / スタート: 0円 / B店: 2円 / A店: 1円 /  / すべての行き方を書き出して確かめる / スタート: 0円 / スタート → A店: 1円 / スタート → B店: 2円 / スタート → B店 → A店: -3円 /  / 本当の最小金額 / スタート: 0円 / B店: 2円 / A店: -3円 /  / A店について、ダイクストラ法は 1 円と答えたが、本当は -3 円で行ける。 / マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。" width="553" height="648" loading="lazy">
+      </div>
+      <p class="run-note">ダイクストラ法はA店を<strong>1円</strong>と答えましたが、すべての行き方を書き出すと「スタート → B店 → A店」で<strong>-3円</strong>で行けることが分かります。ダイクストラ法は、A店を1円で確定させたあとにB店を調べています。そのときA店へ -3円で行けることが見つかりますが、A店はすでに確定しているので<strong>無視されてしまいます</strong>。「遠回りをすると安くなる」ことが起きると、確定という考え方そのものが成り立たなくなります。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の実行結果から、ダイクストラ法の答えと本当の答えを書く。あわせて、ダイクストラ法がA店の -3円 を採用できなかった理由を、実行結果の「無視された」という行を引用しながら説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>出発点を変える／全探索と答え合わせ</h3>
+      </div>
+      <p>出発点を6つの駅すべてに変えて距離表を作り、
+      さらに全探索（すべての行き方を書き出す方法）の答えと一致するかを機械的に確かめます。</p>
+
+<pre><span class="code-label">Python ── AL2-05-ex4.py</span>
+<span class="cmt"># ダイクストラ法（4）: 出発点を変えて表を作り、全探索の答えと一致するか確かめる</span>
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+
+<span class="kw">def</span> <span class="fn">dijkstra</span>(start):
+    <span class="str">&quot;&quot;&quot;start から各駅までの最短時間を辞書で返す&quot;&quot;&quot;</span>
+    distance = {}
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        distance[station] = INF
+    distance[start] = <span class="num">0</span>
+    settled = <span class="fn">set</span>()
+
+    <span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
+        current = <span class="kw">None</span>
+        <span class="kw">for</span> station <span class="kw">in</span> railway:
+            <span class="kw">if</span> station <span class="kw">in</span> settled <span class="kw">or</span> distance[station] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+                current = station
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
+            <span class="kw">break</span>
+        settled.add(current)
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> name <span class="kw">in</span> settled:
+                <span class="kw">continue</span>
+            new_distance = distance[current] + minutes
+            <span class="kw">if</span> new_distance &lt; distance[name]:
+                distance[name] = new_distance
+    <span class="kw">return</span> distance
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>(start):
+    <span class="str">&quot;&quot;&quot;すべての行き方を書き出して、各駅までの最短時間を求める（答え合わせ用）&quot;&quot;&quot;</span>
+    best = {start: <span class="num">0</span>}
+
+    <span class="kw">def</span> <span class="fn">walk</span>(here, total, visited):
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+            <span class="kw">if</span> name <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            new_total = total + minutes
+            <span class="kw">if</span> name <span class="kw">not</span> <span class="kw">in</span> best <span class="kw">or</span> new_total &lt; best[name]:
+                best[name] = new_total
+            <span class="fn">walk</span>(name, new_total, visited + [name])
+
+    <span class="fn">walk</span>(start, <span class="num">0</span>, [start])
+    <span class="kw">return</span> best
+
+
+stations = <span class="fn">list</span>(railway)
+
+<span class="fn">print</span>(<span class="str">&quot;出発点を変えたときの最短時間の表（分）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="cmt"># 駅名は全角なので、見出しは空白5つ＋駅名（全角2文字＝半角4文字ぶん）でそろえる</span>
+<span class="fn">print</span>(<span class="str">&quot;出発点&quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">&quot;     &quot;</span> + s <span class="kw">for</span> s <span class="kw">in</span> stations))
+<span class="kw">for</span> start <span class="kw">in</span> stations:
+    result = <span class="fn">dijkstra</span>(start)
+    <span class="fn">print</span>(start + <span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{result[s]:&gt;9}&quot;</span> <span class="kw">for</span> s <span class="kw">in</span> stations))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法と全探索の答えが一致するか確かめる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+all_same = <span class="kw">True</span>
+<span class="kw">for</span> start <span class="kw">in</span> stations:
+    fast = <span class="fn">dijkstra</span>(start)
+    slow = <span class="fn">brute_force</span>(start)
+    <span class="kw">for</span> goal <span class="kw">in</span> stations:
+        <span class="kw">if</span> fast[goal] != slow[goal]:
+            <span class="fn">print</span>(<span class="str">f&quot;  ちがう: {start} → {goal}  ダイクストラ {fast[goal]} / 全探索 {slow[goal]}&quot;</span>)
+            all_same = <span class="kw">False</span>
+<span class="kw">if</span> all_same:
+    <span class="fn">print</span>(<span class="str">&quot;  すべての出発点・すべての目的地で、答えは完全に一致した&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a05_ex4_result.png" alt="AL2-05-ex4.py の実行結果。出発点を変えたときの最短時間の表（分） / -------------------------------------------------------- / 出発点     新宿     渋谷     池袋     上野     東京     品川 / 新宿          0        7        9       21       27       16 / 渋谷          7        0       16       26       20        9 / 池袋          9       16        0       12       18       25 / 上野         21       26       12        0        6       17 / 東京         27       20       18        6        0       11 / 品川         16        9       25       17       11        0 / -------------------------------------------------------- /  / ダイクストラ法と全探索の答えが一致するか確かめる / -------------------------------------------------------- / すべての出発点・すべての目的地で、答えは完全に一致した / -------------------------------------------------------- /  / 重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。" width="523" height="388" loading="lazy">
+      </div>
+      <p class="run-note">6つの駅それぞれを出発点にした表ができました。表は左上から右下への線を軸にして<strong>対称</strong>になっています。行き帰りで同じ時間がかかる路線図なので、新宿から東京への27分と、東京から新宿への27分は同じ値になります。ダイクストラ法と全探索の答えは、すべての組み合わせで完全に一致しました。重みがすべて0以上であれば、ダイクストラ法は全探索と同じ正しい答えを、はるかに速く出せます。</p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
+    標準課題1は<strong>先に手で表を作ってから</strong>プログラムで答え合わせをします。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>渋谷を出発点にして、距離表を手で埋める</h3>
+      </div>
+      <p>下の路線図について、<strong>プログラムを使わずに紙と鉛筆で</strong>ダイクストラ法を進め、距離表を完成させてください。
+      出発点は <strong>渋谷</strong> です。</p>
+
+      <div class="setup-step">
+        <p class="step-title">路線図（第5回の例題と同じもの）</p>
+        <ul>
+          <li>新宿 ─ 渋谷: 7分</li>
+          <li>新宿 ─ 池袋: 9分</li>
+          <li>新宿 ─ 品川: 30分</li>
+          <li>渋谷 ─ 品川: 9分</li>
+          <li>池袋 ─ 上野: 12分</li>
+          <li>上野 ─ 東京: 6分</li>
+          <li>東京 ─ 品川: 11分</li>
+        </ul>
+      </div>
+
+      <p>次の表をNotionに作り、手順ごとに埋めてください。まだ分かっていない駅は「－」と書きます。</p>
+
+      <table>
+        <tr><th>手順</th><th>選んだ駅</th><th>渋谷</th><th>新宿</th><th>品川</th><th>池袋</th><th>東京</th><th>上野</th></tr>
+        <tr><td>はじめ</td><td>なし</td><td>0</td><td>－</td><td>－</td><td>－</td><td>－</td><td>－</td></tr>
+        <tr><td>手順1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>手順2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>手順3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>手順4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>手順5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>手順6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+
+      <div class="setup-step">
+        <p class="step-title">答え合わせ</p>
+        <ol>
+          <li>表を最後まで埋めてから、<code>AL2-05-ex1.py</code> の <code>start = "新宿"</code> を <code>start = "渋谷"</code> に書き換える</li>
+          <li>保存して実行し、自分が手で作った表と見比べる</li>
+          <li>ちがっていた場所があれば、どこで間違えたかを書く</li>
+        </ol>
+      </div>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 手で作った距離表（手順6まで）、プログラムの実行結果、ちがいがあった場合はどこで間違えたか。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>重みを変えると最短時間はどう変わるか</h3>
+      </div>
+      <p>例題1のファイル <code>AL2-05-ex1.py</code> を開き、上野と東京のあいだの重みを 6分 から 40分 に変えます。
+      工事のため、上野と東京のあいだが大きく遠回りになったという設定です。</p>
+
+<pre><span class="code-label">Python ── 書き換える2か所</span>
+    <span class="str">"上野"</span>: [(<span class="str">"池袋"</span>, <span class="num">12</span>), (<span class="str">"東京"</span>, <span class="num">40</span>)],   <span class="cmt"># ← 6 を 40 に</span>
+    <span class="str">"東京"</span>: [(<span class="str">"上野"</span>, <span class="num">40</span>), (<span class="str">"品川"</span>, <span class="num">11</span>)],   <span class="cmt"># ← 6 を 40 に</span></pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、新宿から各駅までの最短時間がどうなるかを予測してNotionに書く</li>
+          <li>2か所を書き換えて保存し、実行する</li>
+          <li>実際の結果を記録し、予測と比べる</li>
+          <li><code>AL2-05-ex2.py</code> も同じように書き換えて実行し、東京への道順が変わったかを確かめる</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>駅</th><th>6分のとき</th><th>予測（40分のとき）</th><th>実際</th></tr>
+        <tr><td>渋谷</td><td>7分</td><td></td><td></td></tr>
+        <tr><td>池袋</td><td>9分</td><td></td><td></td></tr>
+        <tr><td>品川</td><td>16分</td><td></td><td></td></tr>
+        <tr><td>上野</td><td>21分</td><td></td><td></td></tr>
+        <tr><td>東京</td><td>27分</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 上野と東京のあいだの重みを大きくしたのに、
+      変わらなかった駅と変わった駅があります。どの駅が変わり、どの駅が変わらなかったかを書き、
+      その理由を「最短経路がその辺を通っているかどうか」という観点から説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの駅についての予測と実際の表、東京への道順の変化、および「変わった駅と変わらなかった駅」の理由。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第5回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題1</strong>: 「書き直した」行の書き写し、品川が16分に変わった理由</li>
+        <li><strong>例題3</strong>: ダイクストラ法の答えと本当の答え、採用できなかった理由</li>
+        <li><strong>標準課題1</strong>: 手で作った距離表、プログラムとの照合結果</li>
+        <li><strong>標準課題2</strong>: 予測と実際の表、道順の変化、変わった駅と変わらない駅の理由</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="{{RELEASE}}">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-content">
+      <div class="ans-item">
+        <h4>標準課題1: 渋谷を出発点にした距離表</h4>
+        <table>
+          <tr><th>手順</th><th>選んだ駅</th><th>渋谷</th><th>新宿</th><th>品川</th><th>池袋</th><th>東京</th><th>上野</th></tr>
+          <tr><td>はじめ</td><td>なし</td><td>0</td><td>－</td><td>－</td><td>－</td><td>－</td><td>－</td></tr>
+          <tr><td>手順1</td><td>渋谷</td><td><strong>0</strong></td><td>7</td><td>9</td><td>－</td><td>－</td><td>－</td></tr>
+          <tr><td>手順2</td><td>新宿</td><td><strong>0</strong></td><td><strong>7</strong></td><td>9</td><td>16</td><td>－</td><td>－</td></tr>
+          <tr><td>手順3</td><td>品川</td><td><strong>0</strong></td><td><strong>7</strong></td><td><strong>9</strong></td><td>16</td><td>20</td><td>－</td></tr>
+          <tr><td>手順4</td><td>池袋</td><td><strong>0</strong></td><td><strong>7</strong></td><td><strong>9</strong></td><td><strong>16</strong></td><td>20</td><td>28</td></tr>
+          <tr><td>手順5</td><td>東京</td><td><strong>0</strong></td><td><strong>7</strong></td><td><strong>9</strong></td><td><strong>16</strong></td><td><strong>20</strong></td><td>26</td></tr>
+          <tr><td>手順6</td><td>上野</td><td><strong>0</strong></td><td><strong>7</strong></td><td><strong>9</strong></td><td><strong>16</strong></td><td><strong>20</strong></td><td><strong>26</strong></td></tr>
+        </table>
+        <p style="margin-top:0.8rem"><strong>手順の中身:</strong></p>
+        <ul class="point-list">
+          <li>手順1: 渋谷を確定。となりの新宿を 0+7=7、品川を 0+9=9 と書き込む。</li>
+          <li>手順2: 未確定でいちばん小さい新宿（7分）を確定。池袋を 7+9=16 と書き込む。品川へは 7+30=37 だが、すでに9分なので書き直さない。</li>
+          <li>手順3: 品川（9分）を確定。東京を 9+11=20 と書き込む。</li>
+          <li>手順4: 池袋（16分）を確定。上野を 16+12=28 と書き込む。</li>
+          <li>手順5: 東京（20分）を確定。上野へ 20+6=26 のほうが短いので、28から<strong>26に書き直す</strong>。</li>
+          <li>手順6: 上野（26分）を確定。すべての駅が確定して終了。</li>
+        </ul>
+        <p style="margin-top:0.6rem"><strong>よくある間違い:</strong> 手順4で上野を28分と書いたあと、手順5で26分に書き直す部分を見落とすことが多いです。
+        「一度書いた値は、確定するまで何度でも書き直される」という点に注意してください。</p>
+      </div>
+      <div class="ans-item">
+        <h4>標準課題2: 上野と東京のあいだを40分にしたときの結果</h4>
+        <table>
+          <tr><th>駅</th><th>6分のとき</th><th>40分のとき</th><th>変わったか</th></tr>
+          <tr><td>渋谷</td><td>7分</td><td>7分</td><td>変わらない</td></tr>
+          <tr><td>池袋</td><td>9分</td><td>9分</td><td>変わらない</td></tr>
+          <tr><td>品川</td><td>16分</td><td>16分</td><td>変わらない</td></tr>
+          <tr><td>上野</td><td>21分</td><td>21分</td><td>変わらない</td></tr>
+          <tr><td>東京</td><td>27分</td><td>27分</td><td>変わらない</td></tr>
+        </table>
+        <p style="margin-top:0.8rem"><strong>どの駅も変わりません。</strong>東京への道順も「新宿 → 渋谷 → 品川 → 東京」のままです。</p>
+        <p style="margin-top:0.6rem"><strong>理由:</strong>
+        新宿から東京への最短経路は、もともと「新宿 → 渋谷 → 品川 → 東京」の27分でした。
+        上野と東京をつなぐ辺は、この経路に<strong>1本も含まれていません</strong>。
+        使っていない辺の重みをいくら大きくしても、使っている経路の合計は変わりません。</p>
+        <p style="margin-top:0.6rem">上野への最短経路も「新宿 → 池袋 → 上野」の21分で、やはり上野と東京のあいだの辺を使っていません。
+        書き換える前の実行結果（例題1）をよく見ると、東京は品川経由の27分で決まっており、
+        上野経由の 21+6=27分 は「短くないので書き直さなかった」ことが分かります。
+        書き換えたあとは上野経由が 21+40=61分 になりますが、もともと採用されていなかったので結果は同じです。</p>
+        <p style="margin-top:0.6rem"><strong>まとめ:</strong>
+        重みを変えたときに答えが変わるのは、その辺が<strong>最短経路の一部として使われているとき</strong>だけです。
+        逆に、重みを小さくした場合は、使われていなかった辺が新しく最短経路に入ってくることがあり、答えが変わる可能性があります。
+        （標準課題1の値を確かめたい場合は、6分を 3分 にして実行すると、東京が 21+3=24分 に変わることが観察できます。）</p>
+      </div>
+    </div>
+
+  </div>
+</section>
