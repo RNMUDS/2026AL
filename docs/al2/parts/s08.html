@@ -1,0 +1,1006 @@
+<!--NAV
+提出 #sec-submission
+巡回セールスマン問題 #sec-explanation
+例題 #sec-examples
+標準課題 #sec-standard nav-assignment
+提出まとめ #sec-notion
+解答 #answers-section
+-->
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の24通り</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題3の時間の増え方</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>4都市を手で解く</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>都市を増やすと？</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>巡回セールスマン問題とは</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第5回から第7回まででは、<strong>2地点のあいだ</strong>の最短経路を求めました。
+      第8回からは問題の形が変わります。求めるのは<strong>すべての地点を1回ずつ回って出発点へ戻る、いちばん短いルート</strong>です。
+      巡回セールスマン問題（じゅんかいセールスマンもんだい）と呼ばれ、
+      英語の頭文字をとって<strong>TSP</strong>と書かれることもあります。
+    </p>
+
+    <div class="analogy">
+      宅配便のドライバーが、営業所を出発して10軒の家に荷物を届け、営業所へ戻る場面を思い浮かべてください。
+      どの家から回るかで、走る距離もかかる時間も変わります。
+      同じ問題は、基板に穴をあける機械のドリルの動かし方、
+      工場の部品を取りに行くロボットの動き方など、いろいろな場面に現れます。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 373" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">巡回セールスマン問題: 全ての都市を1回ずつ回って出発点へ戻る最短ルート</text>
+        <line x1="106" y1="94" x2="354" y2="115" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="106" y1="94" x2="478" y2="241" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="106" y1="94" x2="230" y2="304" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="106" y1="94" x2="137" y2="220" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="354" y1="115" x2="478" y2="241" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="354" y1="115" x2="230" y2="304" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="354" y1="115" x2="137" y2="220" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="478" y1="241" x2="230" y2="304" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="478" y1="241" x2="137" y2="220" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="230" y1="304" x2="137" y2="220" stroke="#2a2a2a" stroke-width="1"/>
+        <line x1="106" y1="94" x2="354" y2="115" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="12s" repeatCount="indefinite"/></line>
+        <text x="230.0" y="98.5" text-anchor="middle" fill="#76B900" font-size="11" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="12s" repeatCount="indefinite"/>8.1</text>
+        <line x1="354" y1="115" x2="478" y2="241" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.160;0.190;1" dur="12s" repeatCount="indefinite"/></line>
+        <text x="416.0" y="172.0" text-anchor="middle" fill="#76B900" font-size="11" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.160;0.190;1" dur="12s" repeatCount="indefinite"/>7.2</text>
+        <line x1="478" y1="241" x2="230" y2="304" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.320;0.350;1" dur="12s" repeatCount="indefinite"/></line>
+        <text x="354.0" y="266.5" text-anchor="middle" fill="#76B900" font-size="11" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.320;0.350;1" dur="12s" repeatCount="indefinite"/>8.5</text>
+        <line x1="230" y1="304" x2="137" y2="220" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.480;0.510;1" dur="12s" repeatCount="indefinite"/></line>
+        <text x="183.5" y="256.0" text-anchor="middle" fill="#76B900" font-size="11" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.480;0.510;1" dur="12s" repeatCount="indefinite"/>5.0</text>
+        <line x1="137" y1="220" x2="106" y2="94" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.640;0.670;1" dur="12s" repeatCount="indefinite"/></line>
+        <text x="121.5" y="151.0" text-anchor="middle" fill="#76B900" font-size="11" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.640;0.670;1" dur="12s" repeatCount="indefinite"/>6.1</text>
+        <circle cx="106" cy="94" r="16" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="106" y="98" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">0</text>
+        <text x="106" y="72" text-anchor="middle" fill="#888888" font-size="10">学校</text>
+        <circle cx="354" cy="115" r="16" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="354" y="119" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">1</text>
+        <text x="354" y="93" text-anchor="middle" fill="#888888" font-size="10">郵便局</text>
+        <circle cx="478" cy="241" r="16" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="478" y="245" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">2</text>
+        <text x="478" y="219" text-anchor="middle" fill="#888888" font-size="10">図書館</text>
+        <circle cx="230" cy="304" r="16" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="230" y="308" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">3</text>
+        <text x="230" y="282" text-anchor="middle" fill="#888888" font-size="10">カフェ</text>
+        <circle cx="137" cy="220" r="16" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="137" y="224" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">4</text>
+        <text x="137" y="198" text-anchor="middle" fill="#888888" font-size="10">公園</text>
+        <rect x="430" y="60" width="240" height="88" rx="10" fill="#141414" stroke="#333"/>
+        <text x="550" y="84" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">3つのきまり</text>
+        <text x="550" y="106" text-anchor="middle" fill="#ccc" font-size="11">すべての都市を回る</text>
+        <text x="550" y="124" text-anchor="middle" fill="#ccc" font-size="11">同じ都市は1回だけ</text>
+        <text x="550" y="142" text-anchor="middle" fill="#ccc" font-size="11">最後は出発点へ戻る</text>
+        <text x="350" y="355" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">最短ルート: 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校　合計 34.9</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>ダイクストラ法との違い</h4>
+      <table>
+        <tr><th></th><th>ダイクストラ法（第5〜7回）</th><th>巡回セールスマン問題（第8〜10回）</th></tr>
+        <tr><td>求めるもの</td><td>出発点から目的地までの最短経路</td><td>すべての都市を1回ずつ回って戻る最短ルート</td></tr>
+        <tr><td>通らなくてよい地点</td><td>ある（近道でないなら通らない）</td><td>ない（全部必ず1回通る）</td></tr>
+        <tr><td>決めるもの</td><td>どの道を通るか</td><td>どの順番で回るか</td></tr>
+        <tr><td>速く解く方法</td><td>ある（ダイクストラ法）</td><td>まだ見つかっていない</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>順番の数え方</h4>
+      <p style="font-size:0.95rem">
+        都市が5個あり、そのうち1個を出発点とします。残りの4個を回る順番は
+        <strong>4 × 3 × 2 × 1 = 24通り</strong>です。
+        最初に選べる都市が4通り、次が3通り、その次が2通り、最後は1通りに決まるためです。
+        1から順にかけ算した値を<strong>階乗</strong>（かいじょう）と呼び、<code>4!</code> と書きます。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        都市が n 個なら <code>(n-1)!</code> 通りです。
+        6都市なら120通り、8都市なら5,040通り、12都市なら約4,000万通りになります。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 376" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">都市が1つ増えるだけで、試す順番の数は何倍にもなる</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは10倍ごとの目もり（都市がn個なら (n-1)! 通り）</text>
+        <text x="24" y="86" fill="#E0E0E0" font-size="12" font-weight="700">5都市</text>
+        <rect x="92" y="70" width="29" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="131" y="87" fill="#76B900" font-size="11" font-weight="700">24通り</text>
+        <text x="676" y="87" text-anchor="end" fill="#888888" font-size="11">一瞬</text>
+        <text x="24" y="132" fill="#E0E0E0" font-size="12" font-weight="700">8都市</text>
+        <rect x="92" y="116" width="78" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="180" y="133" fill="#76B900" font-size="11" font-weight="700">5,040通り</text>
+        <text x="676" y="133" text-anchor="end" fill="#888888" font-size="11">一瞬</text>
+        <text x="24" y="178" fill="#E0E0E0" font-size="12" font-weight="700">10都市</text>
+        <rect x="92" y="162" width="117" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="219" y="179" fill="#76B900" font-size="11" font-weight="700">362,880通り</text>
+        <text x="676" y="179" text-anchor="end" fill="#888888" font-size="11">0.07秒</text>
+        <text x="24" y="224" fill="#E0E0E0" font-size="12" font-weight="700">12都市</text>
+        <rect x="92" y="208" width="160" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="262" y="225" fill="#76B900" font-size="11" font-weight="700">39,916,800通り</text>
+        <text x="676" y="225" text-anchor="end" fill="#888888" font-size="11">8.7秒</text>
+        <text x="24" y="270" fill="#E0E0E0" font-size="12" font-weight="700">15都市</text>
+        <rect x="92" y="254" width="231" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="333" y="271" fill="#FF5252" font-size="11" font-weight="700">87,178,291,200通り</text>
+        <text x="676" y="271" text-anchor="end" fill="#888888" font-size="11">約24時間</text>
+        <text x="24" y="316" fill="#E0E0E0" font-size="12" font-weight="700">20都市</text>
+        <rect x="92" y="300" width="361" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="463" y="317" fill="#FF5252" font-size="11" font-weight="700">121,645,100,408,832,000通り</text>
+        <text x="676" y="317" text-anchor="end" fill="#888888" font-size="11">宇宙の年齢より長い</text>
+        <text x="350" y="358" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">このように急激に増える問題を、コンピュータの世界では「NP困難」と呼ぶ</text>
+        </svg>
+      </div>
+
+    <div class="note-warn">
+      <strong>NP困難（エヌピーこんなん）:</strong>
+      巡回セールスマン問題には、都市が増えても現実的な時間で必ず最適解を出せる方法が、
+      <strong>いまだに見つかっていません</strong>。
+      「速く解く方法は存在しないだろう」と多くの研究者が考えていますが、証明もされていません。
+      証明できた人には100万ドルの賞金がかけられている、有名な未解決問題の1つです。
+    </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
+    例題3は実行に10秒ほどかかります。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No08</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No07/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No08/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第8回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No08</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No08 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No08 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-08-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-08-ex1.py</code>, <code>AL2-08-ex2.py</code>, <code>AL2-08-ex3.py</code>, <code>AL2-08-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">巡回セールスマン問題</strong><br><span style="color:#888;font-size:0.8rem">じゅんかいセールスマンもんだい / TSP</span></td><td>すべての都市を1回ずつ回って出発点へ戻る、合計距離がいちばん短いルートを求める問題。</td></tr>
+        <tr><td><strong style="color:#76B900">階乗</strong><br><span style="color:#888;font-size:0.8rem">かいじょう / factorial</span></td><td>1からその数までを順にかけた値。<code>4!</code> は 4×3×2×1＝24。都市がn個のときのルート数は <code>(n-1)!</code> 通り。</td></tr>
+        <tr><td><strong style="color:#76B900">permutations</strong><br><span style="color:#888;font-size:0.8rem">じゅんれつ / 順列</span></td><td>Pythonの <code>itertools</code> にある道具。並べ方をすべて作ってくれる。</td></tr>
+        <tr><td><strong style="color:#76B900">NP困難</strong><br><span style="color:#888;font-size:0.8rem">エヌピーこんなん / NP-hard</span></td><td>都市が増えると、現実的な時間で必ず最適解を出す方法が知られていない問題のこと。巡回セールスマン問題はその代表例。</td></tr>
+        <tr><td><strong style="color:#76B900">距離行列</strong><br><span style="color:#888;font-size:0.8rem">きょりぎょうれつ / distance matrix</span></td><td>すべての都市の組み合わせについて距離を書き並べた表。第3回の隣接行列と同じ形。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>都市の位置から距離の表を作る</h3>
+      </div>
+      <p>巡回セールスマン問題を解く準備として、都市の位置から<strong>距離の表</strong>を作ります。
+      2つの都市のあいだの直線距離は、三平方の定理で求められます。</p>
+
+      <div class="concept-box">
+        <h4>2点のあいだの距離</h4>
+        <p style="font-size:0.95rem">点(x1, y1) と点(x2, y2) のあいだの直線距離は、
+        よこの差とたての差から <code>math.sqrt((x1-x2)**2 + (y1-y2)**2)</code> で求まります。
+        <code>**2</code> は2乗、<code>math.sqrt</code> は平方根（ルート）を求める命令です。</p>
+      </div>
+
+<pre><span class="code-label">Python ── AL2-08-ex1.py</span>
+<span class="cmt"># 巡回セールスマン問題の準備: 都市の位置から距離の表を作る</span>
+<span class="kw">import</span> math
+
+<span class="cmt"># 都市の名前と位置（x, y）</span>
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+<span class="fn">print</span>(<span class="str">&quot;都市の位置&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">34</span>)
+<span class="kw">for</span> name, x, y <span class="kw">in</span> cities:
+    <span class="fn">print</span>(<span class="str">f&quot;  {name}: (x={x}, y={y})&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">34</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 2つの都市のあいだの直線距離を計算して表にする</span>
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        x1 = cities[i][<span class="num">1</span>]
+        y1 = cities[i][<span class="num">2</span>]
+        x2 = cities[j][<span class="num">1</span>]
+        y2 = cities[j][<span class="num">2</span>]
+        d = math.sqrt((x1 - x2) ** <span class="num">2</span> + (y1 - y2) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
+    distance.append(row)
+
+<span class="fn">print</span>(<span class="str">&quot;都市の番号&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} = {cities[i][0]}&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;距離の表（きょり行列）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;7}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i}   &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{distance[i][j]:&gt;7}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;読み方: 0行1列 =&quot;</span>, distance[<span class="num">0</span>][<span class="num">1</span>], <span class="str">&quot;→ 学校から郵便局までの距離&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;ななめの線（自分自身との距離）はすべて 0.0&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;表は左上から右下の線を軸にして対称になっている&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 地図として絵にしてみる</span>
+width = <span class="num">20</span>
+height = <span class="num">15</span>
+<span class="fn">print</span>(<span class="str">&quot;都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * (width * <span class="num">2</span> + <span class="num">4</span>))
+<span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(height):
+    line = <span class="str">&quot;&quot;</span>
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(width):
+        mark = <span class="str">&quot; .&quot;</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> cities[i][<span class="num">1</span>] == x <span class="kw">and</span> cities[i][<span class="num">2</span>] == y:
+                mark = <span class="str">f&quot; {i}&quot;</span>
+        line = line + mark
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * (width * <span class="num">2</span> + <span class="num">4</span>))</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex1_result.png" alt="AL2-08-ex1.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=2, y=2) / 郵便局: (x=10, y=3) / 図書館: (x=14, y=9) / カフェ: (x=6, y=12) / 公園: (x=3, y=8) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    8.1   13.9   10.8    6.1 / 1       8.1    0.0    7.2    9.8    8.6 / 2      13.9    7.2    0.0    8.5   11.0 / 3      10.8    9.8    8.5    0.0    5.0 / 4       6.1    8.6   11.0    5.0    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 8.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 0 . . . . . . . . . . . . . . . . . / . . . . . . . . . . 1 . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . 4 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 2 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 3 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
+      </div>
+      <p class="run-note">5つの都市について、5行5列の距離の表ができました。ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。また、0行1列と1行0列がどちらも 8.1 のように、表は<strong>左上から右下の線を軸にして対称</strong>になっています。行きと帰りで同じ距離だからです。いちばん下の地図では、5つの都市の位置関係が確かめられます。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>全探索で最短ルートを求める</h3>
+      </div>
+      <p>学校を出発点とし、残りの4つの都市を回る順番をすべて書き出して、いちばん短いルートをさがします。
+      並べ方をすべて作るには <code>itertools</code> の <code>permutations</code> を使います。</p>
+
+      <div class="concept-box">
+        <h4>permutations（順列）</h4>
+        <p style="font-size:0.95rem">
+          <code>permutations([1, 2, 3])</code> と書くと、
+          <code>(1,2,3) (1,3,2) (2,1,3) (2,3,1) (3,1,2) (3,2,1)</code> の6通りをすべて作ってくれます。
+          自分で入れ子のループを書かなくてよいので、全探索のコードがとても短くなります。
+        </p>
+      </div>
+
+<pre><span class="code-label">Python ── AL2-08-ex2.py</span>
+<span class="cmt"># 巡回セールスマン問題を全探索で解く</span>
+<span class="cmt"># 学校（0番）を出発し、ほかの4つの都市をすべて1回ずつ回って、学校へ戻る。</span>
+<span class="cmt"># 回る順番をすべて書き出し、いちばん短いものをさがす。</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番を出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    total = total + distance[here][<span class="num">0</span>]
+    <span class="kw">return</span> <span class="fn">round</span>(total, <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">tour_name</span>(order):
+    names = [cities[<span class="num">0</span>][<span class="num">0</span>]]
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        names.append(cities[city][<span class="num">0</span>])
+    names.append(cities[<span class="num">0</span>][<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
+
+
+<span class="cmt"># permutations は「並べ方をすべて作る」道具</span>
+<span class="cmt"># 1, 2, 3, 4 の並べ方は 4×3×2×1 = 24通り</span>
+all_orders = <span class="fn">list</span>(<span class="fn">permutations</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>]))
+
+<span class="fn">print</span>(<span class="str">&quot;学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+
+best_order = <span class="kw">None</span>
+best_length = <span class="kw">None</span>
+
+<span class="kw">for</span> order <span class="kw">in</span> all_orders:
+    length = <span class="fn">tour_length</span>(order)
+    mark = <span class="str">&quot;&quot;</span>
+    <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> length &lt; best_length:
+        best_length = length
+        best_order = order
+        mark = <span class="str">&quot;  ← いまのところ最短&quot;</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  {order}  {length:&gt;6}&quot;</span> + mark)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_orders), <span class="str">&quot;通り&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;いちばん短いルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(best_order))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
+<span class="fn">print</span>()
+
+<span class="cmt"># 逆回りは同じ長さになることを確かめる</span>
+reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(best_order))
+<span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 434" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索: 24通りの順番を1つずつ試して、いちばん短いものを選ぶ</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">24通りのうち6通りを表示（0 = 学校）</text>
+        <rect x="20" y="56" width="212" height="164" rx="10" fill="#141414" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="66" y1="94" x2="162" y2="104" stroke="#76B900" stroke-width="2"/>
+        <line x1="162" y1="104" x2="210" y2="164" stroke="#76B900" stroke-width="2"/>
+        <line x1="210" y1="164" x2="114" y2="194" stroke="#76B900" stroke-width="2"/>
+        <line x1="114" y1="194" x2="78" y2="154" stroke="#76B900" stroke-width="2"/>
+        <line x1="78" y1="154" x2="66" y2="94" stroke="#76B900" stroke-width="2"/>
+        <circle cx="66" cy="94" r="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="66" y="97" text-anchor="middle" fill="#ccc" font-size="8">0</text>
+        <circle cx="162" cy="104" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="162" y="107" text-anchor="middle" fill="#ccc" font-size="8">1</text>
+        <circle cx="210" cy="164" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="210" y="167" text-anchor="middle" fill="#ccc" font-size="8">2</text>
+        <circle cx="114" cy="194" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="114" y="197" text-anchor="middle" fill="#ccc" font-size="8">3</text>
+        <circle cx="78" cy="154" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="78" y="157" text-anchor="middle" fill="#ccc" font-size="8">4</text>
+        <text x="126" y="212" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">1234 → 34.9  最短</text>
+        <rect x="18" y="54" width="216" height="168" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.110;0.120;1" dur="14s" repeatCount="indefinite"/></rect>
+        <rect x="246" y="56" width="212" height="164" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+        <line x1="292" y1="94" x2="388" y2="104" stroke="#666" stroke-width="2"/>
+        <line x1="388" y1="104" x2="436" y2="164" stroke="#666" stroke-width="2"/>
+        <line x1="436" y1="164" x2="304" y2="154" stroke="#666" stroke-width="2"/>
+        <line x1="304" y1="154" x2="340" y2="194" stroke="#666" stroke-width="2"/>
+        <line x1="340" y1="194" x2="292" y2="94" stroke="#666" stroke-width="2"/>
+        <circle cx="292" cy="94" r="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="292" y="97" text-anchor="middle" fill="#ccc" font-size="8">0</text>
+        <circle cx="388" cy="104" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="388" y="107" text-anchor="middle" fill="#ccc" font-size="8">1</text>
+        <circle cx="436" cy="164" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="436" y="167" text-anchor="middle" fill="#ccc" font-size="8">2</text>
+        <circle cx="340" cy="194" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="340" y="197" text-anchor="middle" fill="#ccc" font-size="8">3</text>
+        <circle cx="304" cy="154" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="304" y="157" text-anchor="middle" fill="#ccc" font-size="8">4</text>
+        <text x="352" y="212" text-anchor="middle" fill="#999" font-size="12" font-weight="700">1243 → 42.1</text>
+        <rect x="244" y="54" width="216" height="168" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.133;0.143;0.243;0.253;1" dur="14s" repeatCount="indefinite"/></rect>
+        <rect x="472" y="56" width="212" height="164" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+        <line x1="518" y1="94" x2="614" y2="104" stroke="#666" stroke-width="2"/>
+        <line x1="614" y1="104" x2="566" y2="194" stroke="#666" stroke-width="2"/>
+        <line x1="566" y1="194" x2="662" y2="164" stroke="#666" stroke-width="2"/>
+        <line x1="662" y1="164" x2="530" y2="154" stroke="#666" stroke-width="2"/>
+        <line x1="530" y1="154" x2="518" y2="94" stroke="#666" stroke-width="2"/>
+        <circle cx="518" cy="94" r="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="518" y="97" text-anchor="middle" fill="#ccc" font-size="8">0</text>
+        <circle cx="614" cy="104" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="614" y="107" text-anchor="middle" fill="#ccc" font-size="8">1</text>
+        <circle cx="662" cy="164" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="662" y="167" text-anchor="middle" fill="#ccc" font-size="8">2</text>
+        <circle cx="566" cy="194" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="566" y="197" text-anchor="middle" fill="#ccc" font-size="8">3</text>
+        <circle cx="530" cy="154" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="530" y="157" text-anchor="middle" fill="#ccc" font-size="8">4</text>
+        <text x="578" y="212" text-anchor="middle" fill="#999" font-size="12" font-weight="700">1324 → 43.5</text>
+        <rect x="470" y="54" width="216" height="168" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.267;0.277;0.377;0.387;1" dur="14s" repeatCount="indefinite"/></rect>
+        <rect x="20" y="236" width="212" height="164" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+        <line x1="66" y1="274" x2="210" y2="344" stroke="#666" stroke-width="2"/>
+        <line x1="210" y1="344" x2="162" y2="284" stroke="#666" stroke-width="2"/>
+        <line x1="162" y1="284" x2="114" y2="374" stroke="#666" stroke-width="2"/>
+        <line x1="114" y1="374" x2="78" y2="334" stroke="#666" stroke-width="2"/>
+        <line x1="78" y1="334" x2="66" y2="274" stroke="#666" stroke-width="2"/>
+        <circle cx="66" cy="274" r="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="66" y="277" text-anchor="middle" fill="#ccc" font-size="8">0</text>
+        <circle cx="162" cy="284" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="162" y="287" text-anchor="middle" fill="#ccc" font-size="8">1</text>
+        <circle cx="210" cy="344" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="210" y="347" text-anchor="middle" fill="#ccc" font-size="8">2</text>
+        <circle cx="114" cy="374" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="114" y="377" text-anchor="middle" fill="#ccc" font-size="8">3</text>
+        <circle cx="78" cy="334" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="78" y="337" text-anchor="middle" fill="#ccc" font-size="8">4</text>
+        <text x="126" y="392" text-anchor="middle" fill="#999" font-size="12" font-weight="700">2134 → 42.0</text>
+        <rect x="18" y="234" width="216" height="168" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.400;0.410;0.510;0.520;1" dur="14s" repeatCount="indefinite"/></rect>
+        <rect x="246" y="236" width="212" height="164" rx="10" fill="#141414" stroke="#333" stroke-width="1"/>
+        <line x1="292" y1="274" x2="340" y2="374" stroke="#666" stroke-width="2"/>
+        <line x1="340" y1="374" x2="436" y2="344" stroke="#666" stroke-width="2"/>
+        <line x1="436" y1="344" x2="388" y2="284" stroke="#666" stroke-width="2"/>
+        <line x1="388" y1="284" x2="304" y2="334" stroke="#666" stroke-width="2"/>
+        <line x1="304" y1="334" x2="292" y2="274" stroke="#666" stroke-width="2"/>
+        <circle cx="292" cy="274" r="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="292" y="277" text-anchor="middle" fill="#ccc" font-size="8">0</text>
+        <circle cx="388" cy="284" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="388" y="287" text-anchor="middle" fill="#ccc" font-size="8">1</text>
+        <circle cx="436" cy="344" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="436" y="347" text-anchor="middle" fill="#ccc" font-size="8">2</text>
+        <circle cx="340" cy="374" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="340" y="377" text-anchor="middle" fill="#ccc" font-size="8">3</text>
+        <circle cx="304" cy="334" r="8" fill="#1A1A1A" stroke="#666" stroke-width="1.5"/>
+        <text x="304" y="337" text-anchor="middle" fill="#ccc" font-size="8">4</text>
+        <text x="352" y="392" text-anchor="middle" fill="#999" font-size="12" font-weight="700">3214 → 41.2</text>
+        <rect x="244" y="234" width="216" height="168" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.533;0.543;0.643;0.653;1" dur="14s" repeatCount="indefinite"/></rect>
+        <rect x="472" y="236" width="212" height="164" rx="10" fill="#141414" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="518" y1="274" x2="530" y2="334" stroke="#76B900" stroke-width="2"/>
+        <line x1="530" y1="334" x2="566" y2="374" stroke="#76B900" stroke-width="2"/>
+        <line x1="566" y1="374" x2="662" y2="344" stroke="#76B900" stroke-width="2"/>
+        <line x1="662" y1="344" x2="614" y2="284" stroke="#76B900" stroke-width="2"/>
+        <line x1="614" y1="284" x2="518" y2="274" stroke="#76B900" stroke-width="2"/>
+        <circle cx="518" cy="274" r="8" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="518" y="277" text-anchor="middle" fill="#ccc" font-size="8">0</text>
+        <circle cx="614" cy="284" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="614" y="287" text-anchor="middle" fill="#ccc" font-size="8">1</text>
+        <circle cx="662" cy="344" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="662" y="347" text-anchor="middle" fill="#ccc" font-size="8">2</text>
+        <circle cx="566" cy="374" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="566" y="377" text-anchor="middle" fill="#ccc" font-size="8">3</text>
+        <circle cx="530" cy="334" r="8" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="530" y="337" text-anchor="middle" fill="#ccc" font-size="8">4</text>
+        <text x="578" y="392" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">4321 → 34.9  最短</text>
+        <rect x="470" y="234" width="216" height="168" rx="12" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.667;0.677;0.777;0.787;1" dur="14s" repeatCount="indefinite"/></rect>
+        <text x="350" y="418" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">全探索は必ず正しい答えを出すが、都市が増えると終わらなくなる</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex2_result.png" alt="AL2-08-ex2.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    34.9  ← いまのところ最短 / (1, 2, 4, 3)    42.1 / (1, 3, 2, 4)    43.5 / (1, 3, 4, 2)    47.8 / (1, 4, 2, 3)    47.0 / (1, 4, 3, 2)    44.1 / (2, 1, 3, 4)    42.0 / (2, 1, 4, 3)    45.5 / (2, 3, 1, 4)    46.9 / (2, 3, 4, 1)    44.1 / (2, 4, 1, 3)    54.1 / (2, 4, 3, 1)    47.8 / (3, 1, 2, 4)    44.9 / (3, 1, 4, 2)    54.1 / (3, 2, 1, 4)    41.2 / (3, 2, 4, 1)    47.0 / (3, 4, 1, 2)    45.5 / (3, 4, 2, 1)    42.1 / (4, 1, 2, 3)    41.2 / (4, 1, 3, 2)    46.9 / (4, 2, 1, 3)    44.9 / (4, 2, 3, 1)    43.5 / (4, 3, 1, 2)    42.0 / (4, 3, 2, 1)    34.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9" width="494" height="768" loading="lazy">
+      </div>
+      <p class="run-note">24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。ルートは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」です。いちばん下に表示した逆回りのルートも、同じ34.9になっています。同じ道を反対向きに走るだけなので、距離が変わらないためです。24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、最短ルートと合計距離、いちばん長かったルートと合計距離を書く。あわせて、24通りの中に「同じ形のルート」が2つずつある理由を説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>都市を増やすと時間はどうなるか</h3>
+      </div>
+      <p>都市の数を5個から12個まで増やし、全探索にかかる時間を測ります。
+      12都市は約4,000万通りを試すので、実行に10秒ほどかかります。</p>
+
+<pre><span class="code-label">Python ── AL2-08-ex3.py</span>
+<span class="cmt"># 都市の数が増えると、試す順番の数がどれくらい増えるかを測る</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+<span class="cmt"># 12個の都市（前から順に使う）</span>
+all_cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>),
+    (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>),
+    (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+    (<span class="str">&quot;銀行&quot;</span>, <span class="num">16</span>, <span class="num">12</span>),
+    (<span class="str">&quot;市役所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
+    (<span class="str">&quot;体育館&quot;</span>, <span class="num">11</span>, <span class="num">10</span>),
+    (<span class="str">&quot;美術館&quot;</span>, <span class="num">19</span>, <span class="num">9</span>),
+]
+
+
+<span class="kw">def</span> <span class="fn">solve</span>(count):
+    <span class="str">&quot;&quot;&quot;先頭から count 個の都市を使って、全探索で最短ルートを求める&quot;&quot;&quot;</span>
+    cities = all_cities[:count]
+    n = <span class="fn">len</span>(cities)
+
+    distance = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        row = []
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>
+                          + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+            row.append(d)
+        distance.append(row)
+
+    best_length = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    tried = <span class="num">0</span>
+
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        tried = tried + <span class="num">1</span>
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+            best_order = order
+
+    <span class="kw">return</span> tried, <span class="fn">round</span>(best_length, <span class="num">1</span>), best_order
+
+
+<span class="fn">print</span>(<span class="str">&quot;都市の数を増やしたときの、試す順番の数とかかる時間&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>(<span class="str">&quot;都市の数     試した順番の数        最短距離     かかった時間&quot;</span>)
+
+<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">5</span>, <span class="num">8</span>, <span class="num">10</span>, <span class="num">11</span>, <span class="num">12</span>]:
+    began = time.time()
+    tried, best, order = <span class="fn">solve</span>(count)
+    elapsed = time.time() - began
+    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;6}都市   {tried:&gt;14,}通り   {best:&gt;10}   {elapsed:&gt;10.3f}秒&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 都市が増えたときの順番の数だけを計算で出す（実際には試さない）</span>
+<span class="fn">print</span>(<span class="str">&quot;実際に試さずに、順番の数だけを計算した結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>(<span class="str">&quot;都市の数     試す順番の数&quot;</span>)
+<span class="kw">for</span> city_count <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>, <span class="num">16</span>):
+    total_orders = <span class="num">1</span>
+    <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, city_count):
+        total_orders = total_orders * k
+    <span class="fn">print</span>(<span class="str">f&quot;{city_count:&gt;6}都市   {total_orders:&gt;22,}通り&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;15都市では 87,178,291,200 通り。1秒に100万通り調べても24時間以上かかる。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex3_result.png" alt="AL2-08-ex3.py の実行結果。都市の数を増やしたときの、試す順番の数とかかる時間 / ------------------------------------------------------------ / 都市の数     試した順番の数        最短距離     かかった時間 / 5都市               24通り         34.9        0.000秒 / 8都市            5,040通り         46.8        0.001秒 / 10都市          362,880通り         50.1        0.068秒 / 11都市        3,628,800通り         52.6        0.759秒 / 12都市       39,916,800通り         56.1        8.816秒 / ------------------------------------------------------------ /  / 実際に試さずに、順番の数だけを計算した結果 / ------------------------------------------------------------ / 都市の数     試す順番の数 / 5都市                       24通り / 6都市                      120通り / 7都市                      720通り / 8都市                    5,040通り / 9都市                   40,320通り / 10都市                  362,880通り / 11都市                3,628,800通り / 12都市               39,916,800通り / 13都市              479,001,600通り / 14都市            6,227,020,800通り / 15都市           87,178,291,200通り / ------------------------------------------------------------ /  / 15都市では 87,178,291,200 通り。1秒に100万通り調べても24時間以上かかる。" width="508" height="588" loading="lazy">
+      </div>
+      <p class="run-note">10都市で362,880通り（0.071秒）、11都市で3,628,800通り（0.748秒）、12都市で39,916,800通り（<strong>8.680秒</strong>）でした。都市が1つ増えるたびに、時間がおよそ<strong>10倍</strong>になっています。下の表は、実際には試さずに順番の数だけを計算した結果です。15都市では871億通りあり、1秒に100万通り調べられたとしても24時間以上かかります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の上の表から、都市の数ごとの「試した順番の数」と「かかった時間」を書き写す。あわせて、都市が1つ増えるとかかる時間が何倍になったかを計算して書く。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>最短ルートの中身を区間ごとに見る</h3>
+      </div>
+      <p>最短ルートの中身を、区間ごとに分けて表示します。
+      5都市のときと8都市のときで、ルートの形がどう変わるかを見比べてください。</p>
+
+<pre><span class="code-label">Python ── AL2-08-ex4.py</span>
+<span class="cmt"># 最短ルートの中身を、区間ごとに分けて見る</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+all_cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>),
+    (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>),
+    (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+]
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">make_distance</span>(cities):
+    n = <span class="fn">len</span>(cities)
+    table = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        row = []
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>
+                          + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+            row.append(d)
+        table.append(row)
+    <span class="kw">return</span> table
+
+
+<span class="kw">def</span> <span class="fn">best_tour</span>(cities):
+    <span class="str">&quot;&quot;&quot;全探索で最短ルートを求める&quot;&quot;&quot;</span>
+    n = <span class="fn">len</span>(cities)
+    distance = <span class="fn">make_distance</span>(cities)
+    best_length = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+            best_order = order
+    <span class="kw">return</span> best_order, best_length
+
+
+<span class="kw">def</span> <span class="fn">draw_map</span>(cities, order):
+    <span class="str">&quot;&quot;&quot;都市の位置を絵にする。数字は「何番目に訪れるか」&quot;&quot;&quot;</span>
+    visit = {<span class="num">0</span>: <span class="num">0</span>}
+    step = <span class="num">1</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        visit[city] = step
+        step = step + <span class="num">1</span>
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;  訪れる順番を数字で表した地図（S = 出発点の学校）&quot;</span>)
+    <span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">15</span>):
+        line = <span class="str">&quot;&quot;</span>
+        <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+            mark = <span class="str">&quot; .&quot;</span>
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(cities)):
+                <span class="kw">if</span> cities[i][<span class="num">1</span>] == x <span class="kw">and</span> cities[i][<span class="num">2</span>] == y:
+                    <span class="kw">if</span> i == <span class="num">0</span>:
+                        mark = <span class="str">&quot; S&quot;</span>
+                    <span class="kw">else</span>:
+                        mark = <span class="str">f&quot; {visit[i]}&quot;</span>
+            line = line + mark
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+
+
+<span class="kw">def</span> <span class="fn">show</span>(count):
+    cities = all_cities[:count]
+    order, length = <span class="fn">best_tour</span>(cities)
+    distance = <span class="fn">make_distance</span>(cities)
+
+    <span class="fn">print</span>(<span class="str">f&quot;■ {count}都市のときの最短ルート&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+    route = [<span class="num">0</span>] + <span class="fn">list</span>(order) + [<span class="num">0</span>]
+    total = <span class="num">0.0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        a = route[i]
+        b = route[i + <span class="num">1</span>]
+        d = distance[a][b]
+        total = total + d
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="fn">pad</span>(cities[a][<span class="num">0</span>], <span class="num">8</span>) + <span class="str">&quot;→ &quot;</span> + <span class="fn">pad</span>(cities[b][<span class="num">0</span>], <span class="num">8</span>) + <span class="str">f&quot;{round(d, 1):&gt;6}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(total, 1)}&quot;</span>)
+    <span class="fn">print</span>()
+    <span class="fn">draw_map</span>(cities, order)
+    <span class="fn">print</span>()
+
+
+<span class="fn">show</span>(<span class="num">5</span>)
+<span class="fn">show</span>(<span class="num">8</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;都市が5個から8個に増えると、ルートの形も大きく変わる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;5都市のときの順番をそのまま使って都市を足すことはできない。&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 336" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">都市が増えると、ルートの形そのものが変わる</text>
+        <rect x="20" y="46" width="330" height="252" rx="10" fill="#141414" stroke="#333"/>
+        <text x="185" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">5都市の最短ルート: 合計 34.9</text>
+        <line x1="73" y1="99" x2="197" y2="112" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="197" y1="112" x2="259" y2="186" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="259" y1="186" x2="135" y2="224" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="135" y1="224" x2="88" y2="174" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="88" y1="174" x2="73" y2="99" stroke="#76B900" stroke-width="2.5"/>
+        <circle cx="73" cy="99" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="73" y="103" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">S</text>
+        <text x="73" y="84" text-anchor="middle" fill="#888888" font-size="9">学校</text>
+        <circle cx="197" cy="112" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="197" y="116" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">1</text>
+        <text x="197" y="96" text-anchor="middle" fill="#888888" font-size="9">郵便局</text>
+        <circle cx="259" cy="186" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="259" y="190" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">2</text>
+        <text x="259" y="172" text-anchor="middle" fill="#888888" font-size="9">図書館</text>
+        <circle cx="135" cy="224" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="135" y="228" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">3</text>
+        <text x="135" y="209" text-anchor="middle" fill="#888888" font-size="9">カフェ</text>
+        <circle cx="88" cy="174" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="88" y="178" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">4</text>
+        <text x="88" y="159" text-anchor="middle" fill="#888888" font-size="9">公園</text>
+        <rect x="370" y="46" width="330" height="252" rx="10" fill="#141414" stroke="#333"/>
+        <text x="535" y="66" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">8都市の最短ルート: 合計 46.8</text>
+        <line x1="423" y1="99" x2="438" y2="174" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="438" y1="174" x2="485" y2="224" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="485" y1="224" x2="578" y2="236" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="578" y1="236" x2="609" y2="186" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="609" y1="186" x2="656" y2="124" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="656" y1="124" x2="547" y2="112" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="547" y1="112" x2="516" y2="162" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="516" y1="162" x2="423" y2="99" stroke="#76B900" stroke-width="2.5"/>
+        <circle cx="423" cy="99" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="423" y="103" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">S</text>
+        <text x="423" y="84" text-anchor="middle" fill="#888888" font-size="9">学校</text>
+        <circle cx="547" cy="112" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="547" y="116" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">6</text>
+        <text x="547" y="96" text-anchor="middle" fill="#888888" font-size="9">郵便局</text>
+        <circle cx="609" cy="186" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="609" y="190" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">4</text>
+        <text x="609" y="172" text-anchor="middle" fill="#888888" font-size="9">図書館</text>
+        <circle cx="485" cy="224" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="485" y="228" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">2</text>
+        <text x="485" y="209" text-anchor="middle" fill="#888888" font-size="9">カフェ</text>
+        <circle cx="438" cy="174" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="438" y="178" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">1</text>
+        <text x="438" y="159" text-anchor="middle" fill="#888888" font-size="9">公園</text>
+        <circle cx="656" cy="124" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="656" y="128" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">5</text>
+        <text x="656" y="109" text-anchor="middle" fill="#888888" font-size="9">駅</text>
+        <circle cx="578" cy="236" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="578" y="240" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">3</text>
+        <text x="578" y="222" text-anchor="middle" fill="#888888" font-size="9">病院</text>
+        <circle cx="516" cy="162" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="516" y="166" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">7</text>
+        <text x="516" y="146" text-anchor="middle" fill="#888888" font-size="9">書店</text>
+        <text x="350" y="320" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">5都市の答えに3都市を足すだけでは、8都市の最短ルートにはならない</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex4_result.png" alt="AL2-08-ex4.py の実行結果。■ 5都市のときの最短ルート / ---------------------------------------------------- / 学校    → 郵便局     8.1 / 郵便局  → 図書館     7.2 / 図書館  → カフェ     8.5 / カフェ  → 公園       5.0 / 公園    → 学校       6.1 / ---------------------------------------------------- / 合計距離: 34.9 /  / 訪れる順番を数字で表した地図（S = 出発点の学校） / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . S . . . . . . . . . . . . . . . . . / . . . . . . . . . . 1 . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . 4 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 2 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 3 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . /  / ■ 8都市のときの最短ルート / ---------------------------------------------------- / 学校    → 公園       6.1 / 公園    → カフェ     5.0 / カフェ  → 病院       6.1 / 病院    → 図書館     4.5 / 図書館  → 駅         5.8 / 駅      → 郵便局     7.1 / 郵便局  → 書店       4.5 / 書店    → 学校       7.8 / ---------------------------------------------------- / 合計距離: 46.8 /  / 訪れる順番を数字で表した地図（S = 出発点の学校） / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . S . . . . . . . . . . . . . . . . . / . . . . . . . . . . 6 . . . . . . . . . / . . . . . . . . . . . . . . . . . 5 . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 7 . . . . . . . . . . . / . . . 1 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 4 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 2 . . . . . . . . . . . . . / . . . . . . . . . . . . 3 . . . . . . . / . . . . . . . . . . . . . . . . . . . . /  / ==================================================== / 都市が5個から8個に増えると、ルートの形も大きく変わる。 / 5都市のときの順番をそのまま使って都市を足すことはできない。" width="419" height="1248" loading="lazy">
+      </div>
+      <p class="run-note">5都市の最短ルートは合計<strong>34.9</strong>、8都市の最短ルートは合計<strong>46.8</strong>でした。5都市のときは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」の順に回っていましたが、8都市になると「学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校」と、<strong>まったく逆向きの回り方</strong>に変わっています。都市を足すと、それまでの順番はそのまま使えなくなるということです。</p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>4都市の巡回セールスマン問題を手で解く</h3>
+      </div>
+      <p>次の4つの都市について、<strong>プログラムを使わずに紙と鉛筆で</strong>すべてのルートの長さを計算し、
+      いちばん短いルートを求めてください。</p>
+
+      <table>
+        <tr><th>番号</th><th>都市</th><th>x</th><th>y</th></tr>
+        <tr><td>0</td><td>学校（出発点）</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>郵便局</td><td>4</td><td>0</td></tr>
+        <tr><td>2</td><td>図書館</td><td>4</td><td>3</td></tr>
+        <tr><td>3</td><td>カフェ</td><td>0</td><td>3</td></tr>
+      </table>
+
+      <p>4つの都市は長方形の4すみに並んでいます。距離は次のとおりです。</p>
+      <table>
+        <tr><th>区間</th><th>距離</th><th>区間</th><th>距離</th></tr>
+        <tr><td>0 ─ 1</td><td>4</td><td>1 ─ 2</td><td>3</td></tr>
+        <tr><td>0 ─ 2</td><td>5</td><td>1 ─ 3</td><td>5</td></tr>
+        <tr><td>0 ─ 3</td><td>3</td><td>2 ─ 3</td><td>4</td></tr>
+      </table>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>0番から出発して1・2・3を回り、0番へ戻るルートは全部で何通りかを書く</li>
+          <li>すべてのルートの合計距離を手で計算して表にする</li>
+          <li>いちばん短いルートと、その合計距離を答える</li>
+          <li>例題2のコードの <code>cities</code> を上の4都市に書き換え、<code>permutations([1, 2, 3])</code> に直して実行し、答え合わせをする</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>ルート</th><th>合計距離（手で計算）</th></tr>
+        <tr><td>0 → 1 → 2 → 3 → 0</td><td></td></tr>
+        <tr><td>0 → 1 → 3 → 2 → 0</td><td></td></tr>
+        <tr><td>0 → 2 → 1 → 3 → 0</td><td></td></tr>
+        <tr><td>0 → 2 → 3 → 1 → 0</td><td></td></tr>
+        <tr><td>0 → 3 → 1 → 2 → 0</td><td></td></tr>
+        <tr><td>0 → 3 → 2 → 1 → 0</td><td></td></tr>
+      </table>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 6通りのルートの合計距離の表、いちばん短いルートと合計距離、プログラムでの答え合わせの結果。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>都市が増えたときの時間を予想する</h3>
+      </div>
+      <p>例題3のプログラムを使わずに、<strong>計算だけで</strong>次の問いに答えてください。</p>
+
+      <div class="setup-step">
+        <p class="step-title">問い1</p>
+        <p style="font-size:0.95rem;color:#ccc">都市が12個のとき、試す順番は 39,916,800 通りでした。
+        都市が13個になると何通りになりますか。計算式も書いてください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">問い2</p>
+        <p style="font-size:0.95rem;color:#ccc">12都市の全探索に8.7秒かかったとします。
+        13都市では何秒くらいかかると予想できますか。14都市ではどうですか。理由も書いてください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">問い3</p>
+        <p style="font-size:0.95rem;color:#ccc">実際に <code>AL2-08-ex3.py</code> の <code>for count in [5, 8, 10, 11, 12]:</code> を
+        <code>for count in [5, 8, 10, 11, 12, 13]:</code> に書き換えて実行し、13都市にかかった実際の時間を記録してください。
+        （<code>all_cities</code> に都市を1つ足す必要があります。好きな名前と位置で足してください。）
+        予想と実際を比べ、合っていたかを書いてください。</p>
+      </div>
+
+      <p style="margin-top:1rem"><strong>問い4:</strong> 宅配便の配送センターが1日に回る配達先は、20軒を超えることもあります。
+      全探索が使えないとき、どうすればよいと思いますか。自分の考えを書いてください（正解はありません）。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 問い1の計算式と答え、問い2の予想と理由、問い3の実測値と予想との比較、問い4の自分の考え。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第8回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題2</strong>: 最短と最長のルートと距離、同じ形のルートが2つずつある理由</li>
+        <li><strong>例題3</strong>: 都市の数ごとの順番の数と時間、1都市増えたときの倍率</li>
+        <li><strong>標準課題1</strong>: 6通りの合計距離の表、最短ルート、答え合わせ</li>
+        <li><strong>標準課題2</strong>: 問い1〜問い4への解答</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="{{RELEASE}}">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-content">
+      <div class="ans-item">
+        <h4>標準課題1: 4都市の答え</h4>
+        <p>ルートは <strong>3! = 3 × 2 × 1 = 6通り</strong>あります。</p>
+        <table>
+          <tr><th>ルート</th><th>計算</th><th>合計距離</th></tr>
+          <tr><td>0 → 1 → 2 → 3 → 0</td><td>4 + 3 + 4 + 3</td><td><strong style="color:#76B900">14</strong></td></tr>
+          <tr><td>0 → 1 → 3 → 2 → 0</td><td>4 + 5 + 4 + 5</td><td>18</td></tr>
+          <tr><td>0 → 2 → 1 → 3 → 0</td><td>5 + 3 + 5 + 3</td><td>16</td></tr>
+          <tr><td>0 → 2 → 3 → 1 → 0</td><td>5 + 4 + 5 + 4</td><td>18</td></tr>
+          <tr><td>0 → 3 → 1 → 2 → 0</td><td>3 + 5 + 3 + 5</td><td>16</td></tr>
+          <tr><td>0 → 3 → 2 → 1 → 0</td><td>3 + 4 + 3 + 4</td><td><strong style="color:#76B900">14</strong></td></tr>
+        </table>
+        <p style="margin-top:0.8rem"><strong>いちばん短いルート: 14</strong>（「0 → 1 → 2 → 3 → 0」と、その逆回りの「0 → 3 → 2 → 1 → 0」）。</p>
+        <p style="margin-top:0.6rem">長方形の4すみを、外側の辺に沿って一周する形が最短になります。
+        合計は長方形のまわりの長さ（4 + 3 + 4 + 3 = 14）と同じです。</p>
+        <p style="margin-top:0.6rem">18になる2つのルートは、長方形の対角線を2回わたる形です。
+        対角線は5で辺より長いので、対角線を使うほど合計が増えます。
+        16になる2つは、対角線を2回使いながらも短い辺を通っており、その中間になっています。</p>
+        <p style="margin-top:0.6rem"><strong>ルートが交差しないほうが短い</strong>という性質は、巡回セールスマン問題で一般に成り立ちます。
+        地図の上でルートが交差していたら、その部分を入れかえると必ず短くなります。</p>
+      </div>
+      <div class="ans-item">
+        <h4>標準課題2: 都市が増えたときの時間</h4>
+        <p><strong>問い1:</strong> 13都市の順番の数は <code>12! = 479,001,600 通り</code>です。</p>
+        <p style="margin-top:0.4rem">計算式: 12都市のときが <code>11! = 39,916,800</code> なので、
+        13都市は <code>12! = 11! × 12 = 39,916,800 × 12 = 479,001,600</code> となります。
+        都市が1つ増えると、順番の数は<strong>(都市の数 − 1) 倍</strong>になります。</p>
+        <p style="margin-top:0.8rem"><strong>問い2:</strong></p>
+        <ul class="point-list">
+          <li>13都市: 8.7秒 × 12 = <strong>約104秒（1分44秒）</strong></li>
+          <li>14都市: 104秒 × 13 = <strong>約1,352秒（22分32秒）</strong></li>
+        </ul>
+        <p style="margin-top:0.4rem">理由: 1つのルートを調べるのにかかる時間はほぼ同じなので、
+        かかる時間は「調べるルートの数」に比例します。
+        ルートの数が12倍になれば、時間も12倍になります。</p>
+        <p style="margin-top:0.8rem"><strong>問い3:</strong> 実際に測ると、13都市はおよそ100〜130秒でした（パソコンにより異なります）。
+        予想の104秒とほぼ一致します。
+        1つのルートあたりの処理が都市の数だけ長くなるぶん、予想より少しだけ長くかかる傾向があります。</p>
+        <p style="margin-top:0.8rem"><strong>問い4（考え方の例）:</strong>
+        正解のない問いなので、次のような答えが考えられます。</p>
+        <ul class="point-list">
+          <li><strong>そこそこ良い答えで手を打つ:</strong> 必ずしも最短でなくてよいなら、
+          「近い都市から順に回る」ような簡単なやり方で、まあまあ短いルートを一瞬で作れます（第9回であつかう貪欲法）。</li>
+          <li><strong>都市をグループに分ける:</strong> 20軒を「北エリア10軒」「南エリア10軒」に分けて別々に解けば、
+          それぞれ10都市の問題になり、全探索でも終わります。</li>
+          <li><strong>問題の形を変える:</strong> 実際の宅配便では時間指定があるため、
+          回る順番がある程度決まっています。自由に選べる部分だけを最適化すれば済みます。</li>
+        </ul>
+        <p style="margin-top:0.6rem">第9回では「そこそこ良い答えを一瞬で出す」貪欲法を、
+        第10回では「都市が少なければ必ず最適解を出す」動的計画法を学びます。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
