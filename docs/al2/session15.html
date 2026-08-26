@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第15回: まとめ：最適化アルゴリズムの振り返り | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">後期の総括</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第15回: まとめ：最適化アルゴリズムの振り返り</h1>
+    <p>後期に学んだ最適化アルゴリズムを体系的に振り返り、次に学ぶ手法（焼きなまし法・遺伝的アルゴリズム）を知る</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の5手法比較</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題1</span>後期の振り返り</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題2</span>発展手法の観察</a>
+        <a class="sub-item" href="#sec-notion"><span class="sub-count">1</span><span class="tag tag-advanced">最終確認</span>第13〜14回の提出物</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>後期の総括と発展手法</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第15回は後期のまとめです。学んだ内容を振り返り、
+      後期の授業では扱いきれなかった<strong>発展的な手法</strong>を2つ体験します。
+      あわせて、第13回・第14回で作った作品とレポートの最終チェックを行います。
+    </p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 312" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">前期と後期で学んだことのつながり</text>
+        <rect x="24" y="48" width="310" height="222" rx="12" fill="#141414" stroke="#555" stroke-width="1.6"/>
+        <text x="179" y="72" text-anchor="middle" fill="#aaa" font-size="12" font-weight="700">前期（アルゴリズム論及び演習I）</text>
+        <rect x="38" y="90" width="282" height="50" rx="8" fill="#1A1A1A" stroke="#3a3a3a"/>
+        <text x="50" y="111" fill="#E0E0E0" font-size="12" font-weight="700">探す</text>
+        <text x="50" y="130" fill="#888888" font-size="10">逐次探索・二分探索・ハッシュ法</text>
+        <rect x="38" y="150" width="282" height="50" rx="8" fill="#1A1A1A" stroke="#3a3a3a"/>
+        <text x="50" y="171" fill="#E0E0E0" font-size="12" font-weight="700">並べる</text>
+        <text x="50" y="190" fill="#888888" font-size="10">挿入ソート・カウンティングソート</text>
+        <rect x="38" y="210" width="282" height="50" rx="8" fill="#1A1A1A" stroke="#3a3a3a"/>
+        <text x="50" y="231" fill="#E0E0E0" font-size="12" font-weight="700">たどる</text>
+        <text x="50" y="250" fill="#888888" font-size="10">幅優先探索・深さ優先探索</text>
+        <rect x="366" y="48" width="310" height="222" rx="12" fill="#141414" stroke="#76B900" stroke-width="1.6"/>
+        <text x="521" y="72" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">後期（アルゴリズム論及び演習II）</text>
+        <rect x="380" y="90" width="282" height="50" rx="8" fill="#1A1A1A" stroke="#3a3a3a"/>
+        <text x="392" y="111" fill="#E0E0E0" font-size="12" font-weight="700">最短の道をさがす</text>
+        <text x="392" y="130" fill="#888888" font-size="10">ダイクストラ法</text>
+        <rect x="380" y="150" width="282" height="50" rx="8" fill="#1A1A1A" stroke="#3a3a3a"/>
+        <text x="392" y="171" fill="#E0E0E0" font-size="12" font-weight="700">いちばん良い順番をさがす</text>
+        <text x="392" y="190" fill="#888888" font-size="10">全探索・貪欲法・bitDP</text>
+        <rect x="380" y="210" width="282" height="50" rx="8" fill="#1A1A1A" stroke="#3a3a3a"/>
+        <text x="392" y="231" fill="#E0E0E0" font-size="12" font-weight="700">そこそこ良い答えを速く出す</text>
+        <text x="392" y="250" fill="#888888" font-size="10">焼きなまし法・遺伝的アルゴリズム</text>
+        <text x="350" y="296" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">前期の「たどる」が、後期の「最短の道をさがす」につながっている</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>後期でいちばん大切だったこと</h4>
+      <p style="font-size:0.95rem">
+        後期で学んだのは、6つのアルゴリズムそのものよりも、次の考え方です。
+      </p>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2;color:#ccc">
+        <li><strong>問題を、頂点と辺のグラフに書き直す</strong>と、見た目が違うものも同じ方法で解ける</li>
+        <li><strong>「必ず最適」と「速い」は両立しないことがある</strong>。どちらを取るかは、場面によって決める</li>
+        <li><strong>問題の大きさが、使える方法を決める</strong>。10都市と100都市では、選ぶ方法がまったく違う</li>
+      </ol>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        3つの考え方は、アルゴリズムに限らず、企画・マーケティング・経理・データ分析など、
+        「限られた時間の中でいちばん良い選択をする」あらゆる場面に当てはまります。
+      </p>
+    </div>
+
+    <div class="concept-box">
+      <h4>後期で扱わなかったこと</h4>
+      <p style="font-size:0.95rem">
+        巡回セールスマン問題は、bitDP でも25都市あたりが限界でした。
+        では、実際の配送計画で扱う100都市や1000都市はどうしているのでしょうか。
+        答えは<strong>「最適解をあきらめて、良い近似解を上手にさがす」</strong>です。
+        そのための代表的な手法を2つ体験します。
+      </p>
+      <table>
+        <tr><th>手法</th><th>まねているもの</th><th>考え方</th></tr>
+        <tr><td><strong style="color:#76B900">焼きなまし法</strong></td><td>熱した金属をゆっくり冷ますこと</td><td>最初は悪い変更も受け入れ、だんだん受け入れなくなる</td></tr>
+        <tr><td><strong style="color:#76B900">遺伝的アルゴリズム</strong></td><td>生き物の進化</td><td>良い答えどうしを組み合わせて、次の世代を作る</td></tr>
+      </table>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 422" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">焼きなまし法: わざと悪くなる変更も、たまには受け入れる</text>
+        <text x="350" y="48" text-anchor="middle" fill="#888888" font-size="11">たての位置が「ルートの長さ」。下にあるほど良い（谷の底がいちばん良い）</text>
+        <polyline points="60,150 63,150 66,151 69,152 72,153 75,155 78,157 82,160 85,163 88,166 91,169 94,172 97,176 100,179 103,182 106,186 109,189 112,192 115,195 118,198 122,201 125,203 128,205 131,206 134,207 137,208 140,208 143,208 146,209 149,210 152,211 155,212 158,214 161,216 164,218 167,220 170,222 173,224 176,226 179,228 182,230 185,232 188,233 191,234 194,235 197,236 200,236 203,236 206,235 209,234 212,233 215,231 218,229 221,227 224,224 227,221 230,218 233,216 237,212 240,210 243,207 246,204 249,201 252,199 255,197 258,195 261,194 264,193 267,192 270,192 273,192 276,191 279,190 282,188 285,186 288,183 291,180 294,177 297,173 300,170 303,167 306,163 309,160 312,157 315,154 318,152 321,150 324,149 327,148 330,148 333,148 336,149 339,151 342,153 345,156 348,159 351,162 354,166 357,171 360,175 363,180 367,184 370,189 373,193 376,198 379,202 382,205 385,208 388,211 391,213 394,215 397,216 400,216 403,216 406,217 409,219 412,221 415,223 418,226 421,230 424,234 427,238 430,242 433,247 437,251 440,256 443,260 446,264 449,268 452,272 455,275 458,277 461,279 464,281 467,282 470,282 473,282 476,281 479,279 482,276 485,273 488,270 491,265 494,261 497,256 500,251 503,246 507,240 510,235 513,230 516,225 519,221 522,216 525,213 528,210 531,207 534,205 537,204 540,204 543,204 546,204 549,203 552,202 555,202 558,201 561,200 564,198 567,197 570,195 573,194 576,192 579,190 582,188 585,186 588,184 592,182 595,180 598,178 601,176 604,174 607,172 610,171 613,169 616,168 619,166 622,165 625,164 628,164 631,163 634,162 637,162 640,162" fill="none" stroke="#444" stroke-width="3"/>
+        <circle cx="200" cy="236" r="10" fill="#FFB800"/>
+        <text x="200" y="262" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">貪欲法はここで止まる</text>
+        <text x="200" y="280" text-anchor="middle" fill="#FFB800" font-size="11">（局所最適）</text>
+        <circle cx="470" cy="282" r="10" fill="#76B900"/>
+        <text x="470" y="308" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">本当にいちばん良い場所</text>
+        <text x="470" y="326" text-anchor="middle" fill="#76B900" font-size="11">（全体最適）</text>
+        <path d="M 200 220 Q 335 96 470 266" fill="none" stroke="#FF5252" stroke-width="2.5" stroke-dasharray="7 5"/>
+        <polygon points="470,266 461,255 473,254" fill="#FF5252"/>
+        <text x="335" y="84" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">いったん悪くなる山を越えないと、たどり着けない</text>
+        <text x="330" y="140" text-anchor="middle" fill="#888888" font-size="11">山</text>
+        <rect x="60" y="344" width="580" height="62" rx="10" fill="#141414" stroke="#76B900"/>
+        <text x="350" y="368" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">最初は熱い（悪い変更もよく受け入れる）→ だんだん冷ます（受け入れなくなる）</text>
+        <text x="350" y="390" text-anchor="middle" fill="#ccc" font-size="11">熱いうちに山を越え、冷めてから谷の底へ落ち着く</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>なぜ「わざと悪くする」必要があるのか</h4>
+      <p style="font-size:0.95rem">
+        貪欲法は「いま良くなる方向」にしか進みません。
+        そのため、まわりより少し良いだけの場所（<strong>局所最適</strong>）に着くと、そこから動けなくなります。
+        本当にいちばん良い場所へ行くには、<strong>いったん悪くなる山を越える</strong>必要があります。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        焼きなまし法は「温度」という数を用意し、温度が高いうちは悪い変更もよく受け入れます。
+        温度を少しずつ下げていくと、しだいに良い変更しか受け入れなくなり、答えが落ち着きます。
+        高いところから山を越え、冷めてから谷の底に落ち着く、というしくみです。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 358" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">遺伝的アルゴリズム: 良いルートどうしを組み合わせて次の世代を作る</text>
+        <rect x="40" y="52" width="620" height="36" rx="9" fill="#141414" stroke="#333"/>
+        <text x="60" y="76" fill="#76B900" font-size="13" font-weight="700">① 集団を作る</text>
+        <text x="220" y="76" fill="#ccc" font-size="11">ばらばらのルートを100個用意する</text>
+        <rect x="40" y="96" width="620" height="36" rx="9" fill="#141414" stroke="#333"/>
+        <text x="60" y="120" fill="#76B900" font-size="13" font-weight="700">② 親を選ぶ</text>
+        <text x="220" y="120" fill="#ccc" font-size="11">3つ選んで、いちばん短いものを親にする</text>
+        <rect x="40" y="140" width="620" height="36" rx="9" fill="#141414" stroke="#333"/>
+        <text x="60" y="164" fill="#FFB800" font-size="13" font-weight="700">③ 子を作る</text>
+        <text x="220" y="164" fill="#ccc" font-size="11">親1の一部＋親2の残りで、新しいルートを作る</text>
+        <rect x="40" y="184" width="620" height="36" rx="9" fill="#141414" stroke="#333"/>
+        <text x="60" y="208" fill="#FFB800" font-size="13" font-weight="700">④ 突然変異</text>
+        <text x="220" y="208" fill="#ccc" font-size="11">まれに2か所を入れかえる</text>
+        <rect x="40" y="228" width="620" height="36" rx="9" fill="#141414" stroke="#333"/>
+        <text x="60" y="252" fill="#76B900" font-size="13" font-weight="700">⑤ 世代を進める</text>
+        <text x="220" y="252" fill="#ccc" font-size="11">②〜④で次の100個を作り、くり返す</text>
+        <rect x="40" y="278" width="620" height="62" rx="10" fill="#141414" stroke="#FFB800"/>
+        <text x="350" y="302" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">「良いものどうしを混ぜると、もっと良いものができやすい」という考え方</text>
+        <text x="350" y="323" text-anchor="middle" fill="#ccc" font-size="11">突然変異があることで、集団全体が同じ答えに固まってしまうことを防いでいる</text>
+        </svg>
+      </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 370" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">20都市の巡回セールスマン問題を5つの方法で解いた結果</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">全探索なら19の階乗＝約12京通り。まったく終わらない</text>
+        <text x="24" y="84" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法</text>
+        <text x="24" y="102" fill="#888888" font-size="10">第9回　／　0.000秒</text>
+        <rect x="230" y="70" width="315" height="24" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="555" y="88" fill="#FF5252" font-size="12" font-weight="700">105.7</text>
+        <text x="607" y="88" fill="#888888" font-size="10">最適より15.9%長い</text>
+        <text x="24" y="138" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法(全出発点)</text>
+        <text x="24" y="156" fill="#888888" font-size="10">第11回　／　0.000秒</text>
+        <rect x="230" y="124" width="152" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="392" y="142" fill="#FFB800" font-size="12" font-weight="700">95.0</text>
+        <text x="444" y="142" fill="#888888" font-size="10">最適より4.2%長い</text>
+        <text x="24" y="192" fill="#E0E0E0" font-size="12" font-weight="700">焼きなまし法</text>
+        <text x="24" y="210" fill="#888888" font-size="10">第15回　／　0.015秒</text>
+        <rect x="230" y="178" width="155" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="395" y="196" fill="#FFB800" font-size="12" font-weight="700">95.2</text>
+        <text x="447" y="196" fill="#888888" font-size="10">最適より4.5%長い</text>
+        <text x="24" y="246" fill="#E0E0E0" font-size="12" font-weight="700">遺伝的アルゴリズム</text>
+        <text x="24" y="264" fill="#888888" font-size="10">第15回　／　0.533秒</text>
+        <rect x="230" y="232" width="172" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="412" y="250" fill="#FFB800" font-size="12" font-weight="700">96.3</text>
+        <text x="464" y="250" fill="#888888" font-size="10">最適より5.7%長い</text>
+        <text x="24" y="300" fill="#E0E0E0" font-size="12" font-weight="700">bitDP（必ず最適）</text>
+        <text x="24" y="318" fill="#888888" font-size="10">第10回　／　6.214秒</text>
+        <rect x="230" y="286" width="93" height="24" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="333" y="304" fill="#76B900" font-size="12" font-weight="700">91.1</text>
+        <line x1="323" y1="58" x2="323" y2="326" stroke="#76B900" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="350" y="352" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">近似解の3つは、最適の4〜6%長いだけ。しかも bitDP より圧倒的に速い</text>
+        </svg>
+      </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
+    例題4は実行に10秒ほどかかります。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No15</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No14/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No15/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第15回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No15</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No15 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No15 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-15-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-15-ex1.py</code>, <code>AL2-15-ex2.py</code>, <code>AL2-15-ex3.py</code>, <code>AL2-15-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">焼きなまし法</strong><br><span style="color:#888;font-size:0.8rem">やきなましほう / Simulated Annealing</span></td><td>悪くなる変更もときどき受け入れながら、少しずつ受け入れにくくしていく方法。局所最適から抜け出せる。</td></tr>
+        <tr><td><strong style="color:#76B900">遺伝的アルゴリズム</strong><br><span style="color:#888;font-size:0.8rem">いでんてきアルゴリズム / GA</span></td><td>たくさんの答えを集団として持ち、良いものどうしを組み合わせて次の世代を作る方法。</td></tr>
+        <tr><td><strong style="color:#76B900">メタヒューリスティクス</strong><br><span style="color:#888;font-size:0.8rem">metaheuristics</span></td><td>焼きなまし法や遺伝的アルゴリズムのように、いろいろな問題に使える「良い答えのさがし方」のまとめ。</td></tr>
+        <tr><td><strong style="color:#76B900">乱数の種</strong><br><span style="color:#888;font-size:0.8rem">らんすうのたね / random seed</span></td><td><code>random.seed(2026)</code> のように決めておくと、乱数を使っても毎回同じ結果になる。実験をやり直せるようにするために使う。</td></tr>
+        <tr><td><strong style="color:#76B900">局所最適</strong><br><span style="color:#888;font-size:0.8rem">きょくしょさいてき</span></td><td>まわりより良いが、全体でいちばん良いとはかぎらない答え。貪欲法がはまりこみやすい。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>後期に学んだ6つを一度に動かす</h3>
+      </div>
+      <p>後期に学んだ6つのアルゴリズムを、1つのプログラムでまとめて動かします。
+      前半は2地点間の経路、後半は全部回って戻る最短ルートです。</p>
+
+<pre><span class="code-label">Python ── AL2-15-ex1.py</span>
+<span class="cmt"># 後期のまとめ: 学んだ6つのアルゴリズムを、一度にすべて動かす</span>
+<span class="kw">import</span> heapq
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="cmt"># ============================================================</span>
+<span class="cmt"># 前半: 2地点間の経路をさがす3つの方法</span>
+<span class="cmt"># ============================================================</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+start = <span class="str">&quot;新宿&quot;</span>
+goal = <span class="str">&quot;東京&quot;</span>
+
+
+<span class="kw">def</span> <span class="fn">build</span>(came_from, goal):
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
+            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
+                total = total + minutes
+                <span class="kw">break</span>
+    <span class="kw">return</span> total
+
+
+<span class="kw">def</span> <span class="fn">bfs</span>():
+    came_from = {start: <span class="kw">None</span>}
+    queue = <span class="fn">deque</span>([start])
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        current = queue.popleft()
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> name <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[name] = current
+            queue.append(name)
+    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
+
+
+<span class="kw">def</span> <span class="fn">dfs</span>():
+    came_from = {start: <span class="kw">None</span>}
+    stack = [start]
+    <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
+        current = stack.pop()
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> name <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[name] = current
+            stack.append(name)
+    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
+
+
+<span class="kw">def</span> <span class="fn">dijkstra</span>():
+    distance = {s: INF <span class="kw">for</span> s <span class="kw">in</span> railway}
+    came_from = {s: <span class="kw">None</span> <span class="kw">for</span> s <span class="kw">in</span> railway}
+    distance[start] = <span class="num">0</span>
+    queue = [(<span class="num">0</span>, start)]
+    settled = <span class="fn">set</span>()
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        minutes, current = heapq.heappop(queue)
+        <span class="kw">if</span> current <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        settled.add(current)
+        <span class="kw">for</span> name, weight <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> minutes + weight &lt; distance[name]:
+                distance[name] = minutes + weight
+                came_from[name] = current
+                heapq.heappush(queue, (distance[name], name))
+    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="str">&quot;  前半: 新宿から東京までの経路をさがす&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">&quot;路線の本数&quot;</span>, <span class="num">14</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計時間&quot;</span>, <span class="num">12</span>) + <span class="str">&quot;経路&quot;</span>)
+<span class="kw">for</span> name, function, learned <span class="kw">in</span> [(<span class="str">&quot;幅優先探索&quot;</span>, bfs, <span class="str">&quot;第1〜3回&quot;</span>),
+                                (<span class="str">&quot;深さ優先探索&quot;</span>, dfs, <span class="str">&quot;第2回&quot;</span>),
+                                (<span class="str">&quot;ダイクストラ法&quot;</span>, dijkstra, <span class="str">&quot;第5〜7回&quot;</span>)]:
+    route = <span class="fn">function</span>()
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{len(route)-1}本&quot;</span>, <span class="num">14</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{route_minutes(route)}分&quot;</span>, <span class="num">12</span>) + <span class="str">&quot; → &quot;</span>.join(route))
+<span class="fn">print</span>()
+
+
+<span class="cmt"># ============================================================</span>
+<span class="cmt"># 後半: 全部回って戻る最短ルートをさがす3つの方法</span>
+<span class="cmt"># ============================================================</span>
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>), (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>), (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>), (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>), (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>), (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>), (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+    (<span class="str">&quot;銀行&quot;</span>, <span class="num">16</span>, <span class="num">12</span>), (<span class="str">&quot;市役所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
+]
+n = <span class="fn">len</span>(cities)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        row.append(math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>
+                             + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    best = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best:
+            best = total
+    <span class="kw">return</span> best
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    total = <span class="num">0.0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="kw">def</span> <span class="fn">bit_dp</span>():
+    full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+    best = [[INF] * n <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n)]
+    best[<span class="num">1</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        row = best[visited]
+        <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> row[here] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; nxt):
+                    <span class="kw">continue</span>
+                <span class="kw">if</span> row[here] + distance[here][nxt] &lt; best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt]:
+                    best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt] = row[here] + distance[here][nxt]
+    answer = INF
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[full][here] &lt; INF:
+            answer = <span class="fn">min</span>(answer, best[full][here] + distance[here][<span class="num">0</span>])
+    <span class="kw">return</span> answer
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  後半: {n}都市を全部回って戻る最短ルートをさがす&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計距離&quot;</span>, <span class="num">14</span>) + <span class="fn">pad</span>(<span class="str">&quot;かかった時間&quot;</span>, <span class="num">16</span>) + <span class="str">&quot;性質&quot;</span>)
+<span class="kw">for</span> name, function, note <span class="kw">in</span> [(<span class="str">&quot;全探索&quot;</span>, brute_force, <span class="str">&quot;必ず最適（第8回）&quot;</span>),
+                             (<span class="str">&quot;貪欲法&quot;</span>, greedy, <span class="str">&quot;近似解（第9回）&quot;</span>),
+                             (<span class="str">&quot;bitDP&quot;</span>, bit_dp, <span class="str">&quot;必ず最適（第10回）&quot;</span>)]:
+    began = time.time()
+    value = <span class="fn">function</span>()
+    elapsed = time.time() - began
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{round(value, 1)}&quot;</span>, <span class="num">14</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{elapsed:.4f}秒&quot;</span>, <span class="num">16</span>) + note)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0707秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0016秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
+      </div>
+      <p class="run-note">前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。後半では、全探索と bitDP がどちらも<strong>50.1</strong>という同じ答えを出し、貪欲法だけが58.2と長くなっています。かかった時間は、全探索が0.08秒に対し bitDP は0.0016秒で、約50倍の差がつきました。後期の授業で1行ずつ書いてきたコードが、すべてここに集まっています。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>焼きなまし法を体験する</h3>
+      </div>
+      <p>後期では扱わなかった<strong>焼きなまし法</strong>を体験します。
+      20都市の問題を、貪欲法が作ったルートから始めて、少しずつ短くしていきます。</p>
+
+      <div class="concept-box">
+        <h4>コードの中で起きていること</h4>
+        <ul class="point-list">
+          <li>2つの都市を選んで、順番を<strong>入れかえてみる</strong></li>
+          <li>短くなったら、必ず受け入れる</li>
+          <li>長くなった場合も、<code>math.exp(-差 / 温度)</code> の確率で受け入れる</li>
+          <li>1回ごとに温度を0.9995倍して、少しずつ冷ましていく</li>
+        </ul>
+        <p style="font-size:0.92rem;margin-top:0.6rem;color:#bbb">
+          <code>math.exp(-差 / 温度)</code> は、差が小さいほど、また温度が高いほど1に近づく値です。
+          「少しだけ悪くなる変更」は受け入れやすく、「大きく悪くなる変更」は受け入れにくくなります。
+        </p>
+      </div>
+
+<pre><span class="code-label">Python ── AL2-15-ex2.py</span>
+<span class="cmt"># 発展手法その1: 焼きなまし法（やきなましほう / Simulated Annealing）</span>
+<span class="cmt"># 考え方: 「いまより悪くなる変更も、たまには受け入れる」</span>
+<span class="cmt">#         最初は悪い変更もよく受け入れ、だんだん受け入れなくなっていく。</span>
+<span class="cmt">#         鉄を熱してゆっくり冷ますと、内部のひずみが取れることに由来する名前。</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> random
+
+<span class="cmt"># 乱数の種を決めておくと、何度実行しても同じ結果になる</span>
+random.seed(<span class="num">2026</span>)
+
+<span class="cmt"># 20都市。全探索では 19! ＝ 約12京通りになり、まったく終わらない</span>
+cities = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+
+n = <span class="fn">len</span>(cities)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
+                             + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番から出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="kw">def</span> <span class="fn">greedy_order</span>():
+    <span class="str">&quot;&quot;&quot;出発点にする最初のルートを、貪欲法で作る&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited[<span class="num">1</span>:]
+
+
+order = <span class="fn">greedy_order</span>()
+current = <span class="fn">tour_length</span>(order)
+best_order = <span class="fn">list</span>(order)
+best_length = current
+
+temperature = <span class="num">10.0</span>          <span class="cmt"># 最初の「熱さ」。大きいほど悪い変更も受け入れる</span>
+cooling = <span class="num">0.9995</span>            <span class="cmt"># 1回ごとに温度をかける数（1より少し小さい）</span>
+steps = <span class="num">20000</span>
+
+accepted_worse = <span class="num">0</span>
+<span class="fn">print</span>(<span class="str">&quot;焼きなまし法で20都市のルートを短くしていく&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  はじめのルート（貪欲法）: {round(current, 1)}&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;  途中経過&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="str">&quot;  ステップ      温度      いまのルート      いちばん良いルート&quot;</span>)
+
+<span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(steps):
+    <span class="cmt"># 2つの都市を選んで、順番を入れかえてみる</span>
+    i = random.randrange(n - <span class="num">1</span>)
+    j = random.randrange(n - <span class="num">1</span>)
+    <span class="kw">if</span> i == j:
+        <span class="kw">continue</span>
+    candidate = <span class="fn">list</span>(order)
+    candidate[i], candidate[j] = candidate[j], candidate[i]
+    new_length = <span class="fn">tour_length</span>(candidate)
+
+    difference = new_length - current
+    <span class="kw">if</span> difference &lt; <span class="num">0</span>:
+        accept = <span class="kw">True</span>                       <span class="cmt"># 短くなったので必ず受け入れる</span>
+    <span class="kw">else</span>:
+        <span class="cmt"># 悪くなる場合でも、温度が高いうちは受け入れることがある</span>
+        chance = math.exp(-difference / temperature)
+        accept = random.random() &lt; chance
+        <span class="kw">if</span> accept:
+            accepted_worse = accepted_worse + <span class="num">1</span>
+
+    <span class="kw">if</span> accept:
+        order = candidate
+        current = new_length
+        <span class="kw">if</span> current &lt; best_length:
+            best_length = current
+            best_order = <span class="fn">list</span>(order)
+
+    temperature = temperature * cooling
+
+    <span class="kw">if</span> step % <span class="num">4000</span> == <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;  {step:&gt;8}   {temperature:&gt;7.3f}   {round(current, 1):&gt;14}&quot;</span>
+              <span class="str">f&quot;   {round(best_length, 1):&gt;18}&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">f&quot;  最後のルート: {round(best_length, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  はじめから何%短くなったか: &quot;</span>
+      <span class="str">f&quot;{round((1 - best_length / tour_length(greedy_order())) * 100, 1)}%&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  「悪くなる変更」を受け入れた回数: {accepted_worse:,}回&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;わざと悪くなる変更を受け入れることで、貪欲法がはまりこむ「局所最適」から抜け出せる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;温度が下がるにつれて悪い変更を受け入れなくなり、答えが落ち着いていく。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。焼きなまし法で20都市のルートを短くしていく / -------------------------------------------------------------- / はじめのルート（貪欲法）: 105.7 /  / 途中経過 / ---------------------------------------------------------- / ステップ      温度      いまのルート      いちばん良いルート / 0     9.995            105.7                105.7 / 4000     1.490            104.3                 95.2 / 8000     0.223             95.2                 95.2 / 12000     0.034             95.2                 95.2 / 16000     0.005             95.2                 95.2 / ---------------------------------------------------------- /  / 最後のルート: 95.2 / はじめから何%短くなったか: 9.9% / 「悪くなる変更」を受け入れた回数: 478回 / -------------------------------------------------------------- /  / わざと悪くなる変更を受け入れることで、貪欲法がはまりこむ「局所最適」から抜け出せる。 / 温度が下がるにつれて悪い変更を受け入れなくなり、答えが落ち着いていく。" width="552" height="468" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法が作った<strong>105.7</strong>のルートが、20,000ステップの改善で<strong>95.2</strong >まで短くなりました。約9.9%の改善です。途中経過を見ると、温度が9.995から0.005まで下がっていく間に答えが落ち着いていきます。「悪くなる変更」を478回受け入れており、その回り道があったからこそ局所最適から抜け出せています。<code>random.seed(2026)</code> で乱数を固定しているので、何度実行しても同じ結果になります。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>遺伝的アルゴリズムを体験する</h3>
+      </div>
+      <p>もう1つの発展手法、<strong>遺伝的アルゴリズム</strong>を体験します。
+      100個のルートを「集団」として持ち、良いものどうしを組み合わせて次の世代を作ります。</p>
+
+<pre><span class="code-label">Python ── AL2-15-ex3.py</span>
+<span class="cmt"># 発展手法その2: 遺伝的アルゴリズム（いでんてきアルゴリズム / Genetic Algorithm）</span>
+<span class="cmt"># 考え方: たくさんのルートを「集団」として持ち、</span>
+<span class="cmt">#         良いルートどうしを組み合わせて次の世代を作ることをくり返す。</span>
+<span class="cmt">#         生き物の進化をまねた方法。</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> random
+
+random.seed(<span class="num">2026</span>)
+
+cities = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+
+n = <span class="fn">len</span>(cities)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
+                             + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="kw">def</span> <span class="fn">make_random_order</span>():
+    <span class="str">&quot;&quot;&quot;0番以外の都市をばらばらに並べたルートを1つ作る&quot;&quot;&quot;</span>
+    order = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, n))
+    random.shuffle(order)
+    <span class="kw">return</span> order
+
+
+<span class="kw">def</span> <span class="fn">choose_parent</span>(population):
+    <span class="str">&quot;&quot;&quot;3つをランダムに選び、その中でいちばん短いものを親にする（トーナメント選択）&quot;&quot;&quot;</span>
+    a = random.choice(population)
+    b = random.choice(population)
+    c = random.choice(population)
+    <span class="kw">return</span> <span class="fn">min</span>([a, b, c], key=tour_length)
+
+
+<span class="kw">def</span> <span class="fn">crossover</span>(parent1, parent2):
+    <span class="str">&quot;&quot;&quot;2つの親から子を作る。
+    親1の一部をそのまま使い、残りを親2に出てくる順に並べる。&quot;&quot;&quot;</span>
+    size = <span class="fn">len</span>(parent1)
+    left = random.randrange(size)
+    right = random.randrange(size)
+    <span class="kw">if</span> left &gt; right:
+        left, right = right, left
+
+    child = [<span class="kw">None</span>] * size
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(left, right + <span class="num">1</span>):
+        child[i] = parent1[i]              <span class="cmt"># 親1から受けつぐ部分</span>
+
+    used = <span class="fn">set</span>(child[left:right + <span class="num">1</span>])
+    position = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> parent2:
+        <span class="kw">if</span> city <span class="kw">in</span> used:
+            <span class="kw">continue</span>
+        <span class="kw">while</span> child[position] <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+            position = position + <span class="num">1</span>
+        child[position] = city             <span class="cmt"># 残りは親2の順に入れる</span>
+    <span class="kw">return</span> child
+
+
+<span class="kw">def</span> <span class="fn">mutate</span>(order):
+    <span class="str">&quot;&quot;&quot;まれに2か所を入れかえる（突然変異）&quot;&quot;&quot;</span>
+    <span class="kw">if</span> random.random() &lt; <span class="num">0.3</span>:
+        i = random.randrange(<span class="fn">len</span>(order))
+        j = random.randrange(<span class="fn">len</span>(order))
+        order[i], order[j] = order[j], order[i]
+    <span class="kw">return</span> order
+
+
+population_size = <span class="num">100</span>
+generations = <span class="num">1000</span>
+
+<span class="cmt"># 第1世代をランダムに作る</span>
+population = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(population_size):
+    population.append(<span class="fn">make_random_order</span>())
+
+best_order = <span class="fn">min</span>(population, key=tour_length)
+best_length = <span class="fn">tour_length</span>(best_order)
+
+<span class="fn">print</span>(<span class="str">&quot;遺伝的アルゴリズムで20都市のルートを短くしていく&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  集団の大きさ: {population_size} ／ 世代数: {generations}&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;  世代      集団の平均      いちばん良いルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+
+<span class="kw">for</span> generation <span class="kw">in</span> <span class="fn">range</span>(generations):
+    <span class="cmt"># 次の世代を作る</span>
+    next_population = [<span class="fn">list</span>(best_order)]        <span class="cmt"># いちばん良いものは必ず残す</span>
+    <span class="kw">while</span> <span class="fn">len</span>(next_population) &lt; population_size:
+        parent1 = <span class="fn">choose_parent</span>(population)
+        parent2 = <span class="fn">choose_parent</span>(population)
+        child = <span class="fn">crossover</span>(parent1, parent2)
+        child = <span class="fn">mutate</span>(child)
+        next_population.append(child)
+    population = next_population
+
+    <span class="kw">for</span> order <span class="kw">in</span> population:
+        length = <span class="fn">tour_length</span>(order)
+        <span class="kw">if</span> length &lt; best_length:
+            best_length = length
+            best_order = <span class="fn">list</span>(order)
+
+    <span class="kw">if</span> generation % <span class="num">100</span> == <span class="num">0</span>:
+        average = <span class="fn">sum</span>(<span class="fn">tour_length</span>(o) <span class="kw">for</span> o <span class="kw">in</span> population) / <span class="fn">len</span>(population)
+        <span class="fn">print</span>(<span class="str">f&quot;  {generation:&gt;4}   {round(average, 1):&gt;12}   {round(best_length, 1):&gt;18}&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">f&quot;  最後のルート: {round(best_length, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;最初はばらばらのルートしかないが、良いものどうしを組み合わせるうちに短くなっていく。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;集団の平均も、世代が進むにつれて下がっていく。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a15_ex3_result.png" alt="AL2-15-ex3.py の実行結果。遺伝的アルゴリズムで20都市のルートを短くしていく / -------------------------------------------------------------- / 集団の大きさ: 100 ／ 世代数: 1000 /  / 世代      集団の平均      いちばん良いルート / ---------------------------------------------- / 0          219.7                170.6 / 100          105.5                 98.2 / 200          108.8                 96.7 / 300          106.9                 96.7 / 400          104.7                 96.7 / 500          105.8                 96.7 / 600          105.2                 96.7 / 700          106.7                 96.7 / 800          104.9                 96.7 / 900          104.8                 96.7 / ---------------------------------------------- /  / 最後のルート: 96.7 / -------------------------------------------------------------- /  / 最初はばらばらのルートしかないが、良いものどうしを組み合わせるうちに短くなっていく。 / 集団の平均も、世代が進むにつれて下がっていく。" width="552" height="508" loading="lazy">
+      </div>
+      <p class="run-note">第1世代ではいちばん良いルートでも<strong>170.6</strong>と、でたらめに近い長さでした。100世代で98.2まで縮み、最終的に<strong>96.7</strong>になっています。集団の平均も219.7から105前後まで下がっており、集団全体が良くなっていることが分かります。200世代以降は最良の値が変わっていません。集団の中身が似てきて、新しい組み合わせが生まれにくくなったためです。突然変異の確率を上げると、もう少し先まで改善が続くことがあります。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>5つの方法をまとめて比べる</h3>
+      </div>
+      <p>20都市の問題を、後期に学んだ方法と発展手法を合わせて5つで解き、まとめて比べます。
+      実行に10秒ほどかかります。</p>
+
+<pre><span class="code-label">Python ── AL2-15-ex4.py</span>
+<span class="cmt"># 20都市の巡回セールスマン問題を、5つの方法で解いて比べる</span>
+<span class="kw">import</span> heapq
+<span class="kw">import</span> math
+<span class="kw">import</span> random
+<span class="kw">import</span> time
+
+random.seed(<span class="num">2026</span>)
+
+cities = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+
+n = <span class="fn">len</span>(cities)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
+                             + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="kw">def</span> <span class="fn">greedy_from</span>(start):
+    visited = [start]
+    here = start
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="cmt"># 0番から始まる形に直して長さを求める</span>
+    total = <span class="num">0.0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(visited)):
+        total = total + distance[visited[i]][visited[(i + <span class="num">1</span>) % n]]
+    <span class="kw">return</span> total, visited
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    total, visited = <span class="fn">greedy_from</span>(<span class="num">0</span>)
+    <span class="kw">return</span> total
+
+
+<span class="kw">def</span> <span class="fn">greedy_all_starts</span>():
+    best = <span class="kw">None</span>
+    <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
+        total, visited = <span class="fn">greedy_from</span>(start)
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best:
+            best = total
+    <span class="kw">return</span> best
+
+
+<span class="kw">def</span> <span class="fn">annealing</span>():
+    total, visited = <span class="fn">greedy_from</span>(<span class="num">0</span>)
+    order = visited[<span class="num">1</span>:]
+    current = <span class="fn">tour_length</span>(order)
+    best = current
+    temperature = <span class="num">10.0</span>
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20000</span>):
+        i = random.randrange(n - <span class="num">1</span>)
+        j = random.randrange(n - <span class="num">1</span>)
+        <span class="kw">if</span> i == j:
+            <span class="kw">continue</span>
+        candidate = <span class="fn">list</span>(order)
+        candidate[i], candidate[j] = candidate[j], candidate[i]
+        new_length = <span class="fn">tour_length</span>(candidate)
+        difference = new_length - current
+        <span class="kw">if</span> difference &lt; <span class="num">0</span> <span class="kw">or</span> random.random() &lt; math.exp(-difference / temperature):
+            order = candidate
+            current = new_length
+            <span class="kw">if</span> current &lt; best:
+                best = current
+        temperature = temperature * <span class="num">0.9995</span>
+    <span class="kw">return</span> best
+
+
+<span class="kw">def</span> <span class="fn">genetic</span>():
+    population = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">100</span>):
+        order = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, n))
+        random.shuffle(order)
+        population.append(order)
+    best_order = <span class="fn">min</span>(population, key=tour_length)
+    best = <span class="fn">tour_length</span>(best_order)
+
+    <span class="kw">for</span> generation <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1000</span>):
+        next_population = [<span class="fn">list</span>(best_order)]
+        <span class="kw">while</span> <span class="fn">len</span>(next_population) &lt; <span class="num">100</span>:
+            parents = []
+            <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>):
+                three = [random.choice(population) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>)]
+                parents.append(<span class="fn">min</span>(three, key=tour_length))
+            size = n - <span class="num">1</span>
+            left = random.randrange(size)
+            right = random.randrange(size)
+            <span class="kw">if</span> left &gt; right:
+                left, right = right, left
+            child = [<span class="kw">None</span>] * size
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(left, right + <span class="num">1</span>):
+                child[i] = parents[<span class="num">0</span>][i]
+            used = <span class="fn">set</span>(child[left:right + <span class="num">1</span>])
+            position = <span class="num">0</span>
+            <span class="kw">for</span> city <span class="kw">in</span> parents[<span class="num">1</span>]:
+                <span class="kw">if</span> city <span class="kw">in</span> used:
+                    <span class="kw">continue</span>
+                <span class="kw">while</span> child[position] <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+                    position = position + <span class="num">1</span>
+                child[position] = city
+            <span class="kw">if</span> random.random() &lt; <span class="num">0.3</span>:
+                i = random.randrange(size)
+                j = random.randrange(size)
+                child[i], child[j] = child[j], child[i]
+            next_population.append(child)
+        population = next_population
+        <span class="kw">for</span> order <span class="kw">in</span> population:
+            length = <span class="fn">tour_length</span>(order)
+            <span class="kw">if</span> length &lt; best:
+                best = length
+                best_order = <span class="fn">list</span>(order)
+    <span class="kw">return</span> best
+
+
+<span class="kw">def</span> <span class="fn">bit_dp</span>():
+    full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+    best = [[INF] * n <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n)]
+    best[<span class="num">1</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        row = best[visited]
+        <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> row[here] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; nxt):
+                    <span class="kw">continue</span>
+                <span class="kw">if</span> row[here] + distance[here][nxt] &lt; best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt]:
+                    best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt] = row[here] + distance[here][nxt]
+    answer = INF
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[full][here] &lt; INF:
+            answer = <span class="fn">min</span>(answer, best[full][here] + distance[here][<span class="num">0</span>])
+    <span class="kw">return</span> answer
+
+
+methods = [
+    (<span class="str">&quot;貪欲法&quot;</span>, greedy, <span class="str">&quot;第9回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;貪欲法(全出発点)&quot;</span>, greedy_all_starts, <span class="str">&quot;第11回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;焼きなまし法&quot;</span>, annealing, <span class="str">&quot;第15回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;遺伝的アルゴリズム&quot;</span>, genetic, <span class="str">&quot;第15回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;bitDP&quot;</span>, bit_dp, <span class="str">&quot;第10回&quot;</span>, <span class="str">&quot;必ず最適&quot;</span>),
+]
+
+<span class="fn">print</span>(<span class="str">f&quot;{n}都市の巡回セールスマン問題を5つの方法で解く&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（全探索なら 19! ＝ 約12京通り。まったく終わらない）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">&quot;答え&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="str">&quot;最適との差&quot;</span>, <span class="num">18</span>)
+      + <span class="fn">pad</span>(<span class="str">&quot;かかった時間&quot;</span>, <span class="num">16</span>) + <span class="str">&quot;学んだ回&quot;</span>)
+
+results = []
+<span class="kw">for</span> name, function, week, note <span class="kw">in</span> methods:
+    began = time.time()
+    value = <span class="fn">function</span>()
+    elapsed = time.time() - began
+    results.append((name, value, elapsed, week, note))
+
+best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _, _, _ <span class="kw">in</span> results)
+<span class="kw">for</span> name, value, elapsed, week, note <span class="kw">in</span> results:
+    gap = value - best_value
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{round(value, 1)}&quot;</span>, <span class="num">10</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;+{round(gap, 1)}（{round(gap/best_value*100, 1)}%）&quot;</span> <span class="kw">if</span> gap &gt; <span class="num">0</span> <span class="kw">else</span> <span class="str">&quot;最適&quot;</span>, <span class="num">18</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{elapsed:.3f}秒&quot;</span>, <span class="num">16</span>) + week)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 370" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">20都市の巡回セールスマン問題を5つの方法で解いた結果</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">全探索なら19の階乗＝約12京通り。まったく終わらない</text>
+        <text x="24" y="84" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法</text>
+        <text x="24" y="102" fill="#888888" font-size="10">第9回　／　0.000秒</text>
+        <rect x="230" y="70" width="315" height="24" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="555" y="88" fill="#FF5252" font-size="12" font-weight="700">105.7</text>
+        <text x="607" y="88" fill="#888888" font-size="10">最適より15.9%長い</text>
+        <text x="24" y="138" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法(全出発点)</text>
+        <text x="24" y="156" fill="#888888" font-size="10">第11回　／　0.000秒</text>
+        <rect x="230" y="124" width="152" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="392" y="142" fill="#FFB800" font-size="12" font-weight="700">95.0</text>
+        <text x="444" y="142" fill="#888888" font-size="10">最適より4.2%長い</text>
+        <text x="24" y="192" fill="#E0E0E0" font-size="12" font-weight="700">焼きなまし法</text>
+        <text x="24" y="210" fill="#888888" font-size="10">第15回　／　0.015秒</text>
+        <rect x="230" y="178" width="155" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="395" y="196" fill="#FFB800" font-size="12" font-weight="700">95.2</text>
+        <text x="447" y="196" fill="#888888" font-size="10">最適より4.5%長い</text>
+        <text x="24" y="246" fill="#E0E0E0" font-size="12" font-weight="700">遺伝的アルゴリズム</text>
+        <text x="24" y="264" fill="#888888" font-size="10">第15回　／　0.533秒</text>
+        <rect x="230" y="232" width="172" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="412" y="250" fill="#FFB800" font-size="12" font-weight="700">96.3</text>
+        <text x="464" y="250" fill="#888888" font-size="10">最適より5.7%長い</text>
+        <text x="24" y="300" fill="#E0E0E0" font-size="12" font-weight="700">bitDP（必ず最適）</text>
+        <text x="24" y="318" fill="#888888" font-size="10">第10回　／　6.214秒</text>
+        <rect x="230" y="286" width="93" height="24" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="333" y="304" fill="#76B900" font-size="12" font-weight="700">91.1</text>
+        <line x1="323" y1="58" x2="323" y2="326" stroke="#76B900" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="350" y="352" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">近似解の3つは、最適の4〜6%長いだけ。しかも bitDP より圧倒的に速い</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a15_ex4_result.png" alt="AL2-15-ex4.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.513秒         第15回 / bitDP                   91.1      最適              6.250秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
+      </div>
+      <p class="run-note"><strong>bitDP だけが最適の91.1</strong>を出し、6.214秒かかりました。近似解の3つ（貪欲法の全出発点版・焼きなまし法・遺伝的アルゴリズム）は、最適より<strong>わずか4〜6%長いだけ</strong>で、いずれも1秒以内に終わっています。出発点を1つに固定した貪欲法だけが15.9%長く、明らかに劣っています。20都市では bitDP が使えましたが、25都市を超えると表が大きすぎて使えなくなります。そのとき頼りになるのが、この3つの近似解法です。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の表から、5つの方法それぞれの「答え」「最適との差」「かかった時間」を書き写す。あわせて、「25都市を超えたらどの方法を使うか」を、理由とともに書く。</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">課題1と課題2に取り組み、解答をNotionに記録してください。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>後期の振り返り</h3>
+      </div>
+      <p>後期の授業全体を振り返り、次の4つの問いに答えてください。
+      教材を見ながらで構いません。それぞれ4行以上で書いてください。</p>
+
+      <div class="setup-step">
+        <p class="step-title">問い1: いちばん印象に残ったアルゴリズム</p>
+        <p style="font-size:0.95rem;color:#ccc">後期に学んだ6つ（幅優先探索・深さ優先探索・ダイクストラ法・全探索・貪欲法・bitDP）から1つ選び、
+        <strong>どんな場面で使うか</strong>と<strong>なぜ印象に残ったか</strong>を書いてください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">問い2: 前期とのつながり</p>
+        <p style="font-size:0.95rem;color:#ccc">前期に学んだこと（探索・整列・計算量）のうち、
+        後期でいちばん役に立ったものを1つ挙げ、<strong>どの回のどの場面で役に立ったか</strong>を具体的に書いてください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">問い3: 身のまわりへの応用</p>
+        <p style="font-size:0.95rem;color:#ccc">自分の生活・アルバイト・サークル・将来の仕事の中で、
+        後期に学んだ考え方が使えそうな場面を1つ挙げ、<strong>どのアルゴリズムをどう使うか</strong>を書いてください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">問い4: いちばん難しかったこと</p>
+        <p style="font-size:0.95rem;color:#ccc">後期でいちばん理解に時間がかかったところを1つ挙げ、
+        <strong>どこがつまずきの原因だったか</strong>と<strong>どうやって乗り越えたか</strong>を書いてください。
+        まだ理解できていない場合は、それも正直に書いてください。</p>
+      </div>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 問い1〜問い4への解答。それぞれ4行以上で、具体的な回や場面を挙げて書く。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>発展手法の設定を変えて観察する</h3>
+      </div>
+      <p>例題2の焼きなまし法と例題3の遺伝的アルゴリズムを、設定を変えて動かし、
+      結果がどう変わるかを観察します。</p>
+
+      <div class="setup-step">
+        <p class="step-title">実験1: 焼きなまし法の温度を変える</p>
+        <p style="font-size:0.95rem;color:#ccc">
+        <code>AL2-15-ex2.py</code> の <code>temperature = 10.0</code> を、
+        <strong>0.1</strong> と <strong>100.0</strong> に変えて実行してください。</p>
+      </div>
+
+      <table>
+        <tr><th>最初の温度</th><th>最後のルート</th><th>悪い変更を受け入れた回数</th></tr>
+        <tr><td>0.1</td><td></td><td></td></tr>
+        <tr><td>10.0（もとの値）</td><td>95.2</td><td>478回</td></tr>
+        <tr><td>100.0</td><td></td><td></td></tr>
+      </table>
+
+      <div class="setup-step">
+        <p class="step-title">実験2: 遺伝的アルゴリズムの突然変異を変える</p>
+        <p style="font-size:0.95rem;color:#ccc">
+        <code>AL2-15-ex3.py</code> の <code>if random.random() &lt; 0.3:</code> を、
+        <strong>0.0</strong> と <strong>0.8</strong> に変えて実行してください。</p>
+      </div>
+
+      <table>
+        <tr><th>突然変異の確率</th><th>最後のルート</th><th>集団の平均（900世代）</th></tr>
+        <tr><td>0.0</td><td></td><td></td></tr>
+        <tr><td>0.3（もとの値）</td><td>96.7</td><td>104.8</td></tr>
+        <tr><td>0.8</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 2つの実験の結果から、次の3つに答えてください。</p>
+      <ul class="point-list">
+        <li>最初の温度を変えると、「悪い変更を受け入れた回数」はどう変わりましたか。答えの長さとの関係を書いてください。</li>
+        <li>突然変異の確率を 0.0 にしたとき、集団の平均と最良の値はどうなりましたか。なぜそうなるのかを説明してください。</li>
+        <li>2つの実験から、「新しいことを試す力」を強めると答えは良くなりましたか、悪くなりましたか。<strong>実際の数値を根拠に</strong>答えてください。</li>
+      </ul>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 実験1・実験2それぞれの表（空欄をすべて埋める）と、3つの問いへの解答。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>後期の提出物の最終チェック</h3>
+      </div>
+      <p>第15回の提出物は次の4項目です。</p>
+      <ul class="point-list">
+        <li><strong>例題4</strong>: 5つの方法の答え・差・時間の表、25都市を超えたときの選択と理由</li>
+        <li><strong>課題1</strong>: 後期の振り返り（問い1〜問い4）</li>
+        <li><strong>課題2</strong>: 実験1・実験2の表と、3つの問いへの解答</li>
+        <li><strong>最終確認</strong>: 第13回・第14回の作品とレポートが提出済みかを確かめる</li>
+      </ul>
+      <div class="note-warn" style="margin-top:1rem">
+        <strong>作品とレポートについて:</strong> 第13回・第14回で提出した作品とレポートは、
+        第15回の授業中まで修正して出し直すことができます。
+        直したい部分があれば、この時間に修正して提出し直してください。
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-top:1.5rem">
+      <div class="card-header">
+        <span class="tag tag-example">この先へ</span>
+        <h3>もっと学びたい人へ</h3>
+      </div>
+      <p>後期の内容の先には、次のような世界が広がっています。</p>
+      <table>
+        <tr><th>分野</th><th>内容</th><th>後期の内容とのつながり</th></tr>
+        <tr><td>ネットワークフロー</td><td>「どれだけ流せるか」を求める問題</td><td>グラフの上で解く。ダイクストラ法の考え方を使う手法もある</td></tr>
+        <tr><td>線形計画法</td><td>不等式の条件のもとで最大・最小を求める</td><td>配送計画や生産計画で実際に使われている</td></tr>
+        <tr><td>A*（エースター）探索</td><td>ゴールの方向を手がかりに速く探索する</td><td>ダイクストラ法に「ゴールまでの見当」を足したもの。ゲームAIで広く使われる</td></tr>
+        <tr><td>強化学習</td><td>試行錯誤しながら良い行動を学ぶ</td><td>「いま良い選択」と「先を見た選択」のバランスは、貪欲法と焼きなまし法の話と同じ構造</td></tr>
+      </table>
+      <p style="margin-top:0.8rem;font-size:0.95rem">
+        後期に身につけた「問題をグラフに書き直す」「最適解と近似解を使い分ける」という考え方は、
+        どの分野へ進んでも土台になります。半年間おつかれさまでした。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2027-01-20T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="pF1XqbPJTnC7yOT17fRSS/aWbeBM/2l5xFJQ+aRjc9e7WtRCzK4NpzpBACUfLia9dP3F7rHsY4+Pcfkr7zYoI2tRjxgctDEKvlIJhK80cwmv4/ZW/7Ltqy9g91z3NSvXNSKqXFfCQK/Rj5OS3bAuV1O/wF/F5lVb0xQu9xetlYsH8Mv2VmD/9nCMqVOTG58olVLJRDWaLPdEp4me6vKTYgStpYzy+FOMc+g9zO+MIpevT5cU35pFs/0Eh3/6+5AoQVjCecHqgRukk1BbNIUJwk3gByn3efFQ4JpEdpg143D7sZIXA3yx3WyHve3pTiGuULZt9nXMtATxkuVSOvMs8I+IQUy0poQeEtXatD1mPJLYiI5vJs9SfyBJBTYmb684Y6H5iUynLjEY7jAnayr4S2aBBtfRu2G67CpY/08t2hK378UkJFzaHRwBY6CQ1DMcHUtp68wzWACOUshBlKtO8KnV5Raj599KvNiw1gAMyVNhxMXE1A+EHKmkYTl3Ubm6n7wwS6IatFfyADaKHml8rvanOnp0+rKvsHP5QgYRcLd2AudEnn8Zq1TzPseOcwppDDm0zvJ9WQG2jnpWCe9J5xgVbN81Fy9gAaggPEtZ1I6EnXP+YO/5Xk0ueQq4krGUfSKjJCRi9qwu4Ce8HRyaXFnMy96MtFuJEIcl7o8LWmnGUoDppY/GSzFlTc97qeq3XwyK3+oL8xNP39uSc2POKPxT1H4JBEwPHAoHKTagOU6LiPCUQh8ixRcT1SN+rtN46Np4IViYjzLvideiJnVCjoHPZRogF0Ys630xnOFWQldg9W+Sd/swYGUBSp8Gg4Yf2qAi0KLT6xRBWCtKBLfit0XMuPwwWtW4g/AwjkxSjxvOY3d5A4+7tpDgtzD/QeW6IzSMK6rbe8uLoN+veh1Fp3kwXxuXfOKKB/olJbhD3uHYwfP1wsn8/EFbHdwLcVVtbYhILshO0n9lADifmFNVU40/4Zr+sPxBIP4oddL5T7DsyQFcsKocWQmjfg/M2E6zWX1sRoKDlEuBwQDK5hIb9tb2S9IVyWhKgv9pzGTpAkBmvyjkZuFWtGisFJIAaL1emAU2Apd8r4LL699mFVQtA3i9cj7oq88pvdm4C9viQG0EnB4c3KYlwkChal9QxoAqkSJm6rbBt4fcQVkzP1bpKepBLBan8X0jWsO+i+sF+2TGCG9d4Yh7ZazbQXmRVFmqKMs6GL0n5AN/4IOsMF5NmV5ceR0TpHabxrMHU/zhuQ7txOGt6M6waa2l3n6lNSzIqIo0/Kzb4Xw3mXzy6jpprzCxYuXOLMXXel1D2DT4+2keZk0hSJs26BWC3givfJPqys41ALnX76XFo8hdWYLZwPiJsa5lhy3IZzphcD3XH2YVweVMf2lNA7/i1YNKGm7AC/TnW8itQdZQjKnyv8d7YH1WMHurZN4QC2bg+8xGh4OmKgkdR/uC6n/jfEvkkzjMCYM0vH4AIsxIhUdj/v0xcC9HFz4APcoxwx/97opB/z3vPY0TjQAFQZL90VcKFPnjL575MkjxLhniJiXGFG6iXj3gyQ8Cz6maeAkJdpoyxKetpqRYDQqVa2PMsMHcUMoB10gKioho7cPra1KWCH1MLb2lzTI2FYVfeACyG2MJe/HP8aLHb7JMXHlUn8txcsjMDou/wDD1UUZzoWVsU/TDwM/EmpiMq8VunRHb9gFAJftZtoiwSUgFIHMkC9kX2QhgjV+sAaMHzFuWkdauYXfrA7vgBs55c26GSFWzH/o03AtDiOYhu2m1rg9pz/HPl2CDRWjctHfeRskjbNRlPmsiWUvSW9z7HxKObBTZA80BhYtbg2oMTDdbsuDUfvu6xfeUwMlM31eqTfhSnJUNeu1W1luAV/F5rv5dSBxUbsMorcJZ3WbmstYUeGNgJ6VKUlqIKNCdT+rVN2qKGQ7gfzLXRtmxPIn2gQy0uGnsT9+UBDAlMuvEh/zSmO84zPFvdPImAewZrjlwAoOAP44b+3jcvLkzl+lwCFVGn8JgRkwTzvcISBvG0LLnC4P2QkdaHxOs8HEgVIre4HdZjebedQLQf22yWcJb1gVbQHVb37FYI0DjF0d4BMeCyszRuYz9tsQ8iKaFdNCWpsqFKHvL1hrGbUj26fJ9QPcWOjUEPahnxrl+4F4oGIOTXVVzGod2oIovGkQm+9zvuj67Nncv66XfAETHgE/Z5tx0ghDYoeCJfBSAQBxEIWsSKxVsosBiBTwyR0vdH8jEW64pLuQlMtOgcx4J2wg12bdhrKnroIiYTTYm26o3V/cM+ls/N3RNqMGdooxF1HJ1olOvMAG9Fk+KDVdHSHi1HEThXd+uKFsJikRfBi6maapVSCdZ2lq+twZu92kZCBLXmNSdNxN9wFYQmJrHRn9xu9yysEBcbIQatbxyORDpi1bEf6RtF+4hF14+/zhOVFrKfBskl+IL26k9U6wY9JPwoZVSP7JaC9736lEXh3EsHBwwCL8liVqsYc7utm9VX05Me1slUsg6wKm0oH4tgXN+Z2v4NA8xR+UUd1eDXOYVnRingVHObfCdWUKZ1SMyYD1ZodbQfDsht5LWs/iHwH9AxCuB07eswiNBkQoQ9ymZijq/m3Mokg+eKvBRkNIp63TlKAlZQdkAkOGcU53vCfD2HmrbU/gzXyv6mGh+b95wJlrpcujwgAfwtm9VHa8z1fcN4DwA0LZILyfG4q5Iy1QSq02PXIjF5rrWfMKNlHuBafHFzyhqW+CNlBn12IHQnq8oFI4cswmsNeW9AEQZ1cQ8+uu9netHH5aR1H80E3RwR5NWIaU6vBjEp8l5GHH3mXDUYMb25V1Y3SNwp1JPZ/qB44na5kqQpzpXtW1YdHliZjdMUueLkW30dMD2L4uhWuZxI/kRPB7IeRtUE0u7ql+MGlwRUz8ksMb/1zi7vJds0BWO6ytsQ86HprgKU6Bg/nKqUPzfnLGSU/CwajZpNIz7keUxY5MJmmCTrjewC0p0ziFk6xaNb6prjxE52+E17C6DC/yFJzdf/Ncfn5IOKI/Rq479Ja1CjoNjuI5dqw3AQK4S8KxKdTSQ4z6/hD2SiY/zKoVvycn7YZAQqkZw0XNQpZwkbE8aglC+qV3tuMpDN79sBPyo8/F9wYx84jPnU+MBUyTs97Lx+b+3bEMMAyhdIEOI0Go8pmQl0DTkFHNmtevkclcR22wGLUoYOAJt3tM22GT4ygzCu4pGuHhu4Z4JtIb8BUfMg9cgugggo2RgHLvfZRyB3r6R5PLovJeslbq5AS0lPv+MSRWGcXD5NNwoNACmq4O7UkI7wVajDjGTd3/lkj4cD59dV73eafxlsicNVqsggmdfUya47XcDmlJQ5Lr7q6vuacUHbmn6x72ilnyMpW81Xmf2VZWvc+Pg8Cy3s2cN4XtyRJZQmXTLDeXQcps6j8rJKDXUQuCMsFXom5mBLFlaAWaYU3BbXLXEWE3hFg8+k8biurYDTMCwW4APQrG7aNP88CZcA4Ua0M4ZHhMqLtkIVevvLbJQ5ExXxL+HZb1+lrmV0jmb24mu8gPAWYyfldNEpeWeFMNvDuQubhxxW2EZlBNsKWcI2i/1ORgJcYnwq+q2XP1rHbCrThpBWrU/u/jbkwXpRwPykAERRmKcbt7nkNkAwy0GxaxKaQw3fD2/zcoGHddmCRaWrkZp3sR6D1DyfleSw4Gpx8bpILPahb7h/nHEA80gHNqur381yLOLfCn6uS7oeUlU2SfA/snka47ep+bKy6si0EgHoWdO5WJi+DTYN4gsj4H7dPJcvl4wNApQ+KCO/sW5W2y+OnAOUGEHzJjHemH+vCnFn3gnQQs9KcaYKRcxzWF07chLjB1TnO+rGNh5ZpoOy+8KHX3DO7K7fL/djcn7avR9si8OhQY1JCQa4GVXrrwcaMOITAABInVQuIWzbaNGP5zH4zKyFr9v1Y+p3/4qAiKuWQAPlL8UcnFPvoM0syvt3eJWcTDSARkd77ZbIy2/lnGbXHFWRifRUeNLcCkwe4uM2NRRw92I+yr0wDWRwNsU1t+zVQTc0/hHxUpOC5aKgrgeoen09H44uCuilEqIElZzwB0V8wcaeTaOmm51Cx7x9iHeNA62gFXRp6jFKSLx/j0epzwouR6VHUEAxxbv5Rbmbx15rsAo3BZEZhD4mMjYyJcJGEK4aOTKqD+d9OIVzy86AoXqveCrQr8ZQFS8L43+HEESE/wPk80Tb/OhfRdDqxnbXmjwa50WfYX2yq2guhyWpxmPFlRtpS/IVzZg017xGNooEC28CbWMIlVrhkWA1JF16IxxJ5fWjQ2mo6e9Ieg3dxAU+QicY6wYixBFxx04/gqFj+IhyKqfDOtelNobM2l/F5qJ0h1nKMSLAgxr9Rp8V1Q/xj2nowNOoOzZ6EFX3rLJLvmOTiI1XIplMXAdBD8gwuXMrJAHbu/pBHg+A5Y0064os+xXFNctFYPz1zFPp2ItymN/bcaH2AhRmxp1QqCt7dvM8yICb5cYv4t4GGGSMdzGHKSLAWkMODWUmExp7+C4vA1XOQAoXvkegb0sobUMO0yvI2JviSQFd7pMqJUr6H4s6jmkuyukWhWcB9f62P0Q8R+HcgJJ1NoQ2vPFMGTUp+MnNsjkcvmLDhFMPpZXdGUfwCDE2h1a/UX4NIxshQu/jrVo+egp3wn+bbEZ0d5KZevVGnGWZdrQdCvTtyrLd9Cm6W5sOyOanw3UFohdcfgTPqz2/JZM2wg5sCgYyI0qYpw3C7VGUkjTOdTL0rR67IqIjAI74Oybpi5EPCZx1kxMe81aec/mAkmgE7dW6JUaTgGUfAtrrUcjXEHGgLUGKm5mbQBf6+y6kE+eOEwJBTZ0PpGz/5AmLEyyVDUL7yW5zXdb22ez6t6SN9EBL0VwRHMO49s0h1vmn4A0bdMzI5oWu5Xiergn9XAoROtZr8XbyRPjxM+I4TKHgXUtJ9S4WhIfvc8dFWeEsbheQMNBbogBY4VEzyTIKNEjAA0soxths1bsa3KRmp4HKMS3zgQWgYEadHUBoVDtYv0r3VNGI/h9JFQv48vdIxj+pnAhL0t748tjxjY+SG7Gr89AEYMcgnpBlJDzcrhvXrpQ/YpLFzRyF4eu5NXl0vGcdWLFNq6bcNXMPGNaZw+efsSCvkc1ho50dl0F84Lz/1PkWuvTeJ/p4uIaE05ozq7i6yHAE4SlixP63F0eV81/32r/ng5NMvLIPmuB22q/Ea1IO9OuIQAglVcYftX3UXsUnNogFVG4sdXgA9gtCUWbTCVuUMz41NOVNlkBFmaErHfK/83959pb0nFgcqr+NTc0p4/1UufTmc1v3YSdLmB1oiwfMmUr/P/KoWjtfPQxu7sHW8aFLvo8jgPuEOrdmIcDD5r0bFHJ+w83EcfOLL4rn5vv06sxYuCQpU7NEuzUmmrRliOPobiJDsp7MBHIHZlpLPeTTg4sGfoqbECTcqkC2MZKbSYLdCOtSHnbasBwYbPAT5lBWtaJQm7W336Yh+DfN8C9XtfT1GyREMrcqf+gE30wBMGnUj+E9jYbrL/7ZwKBkIPF+EhBrMgAyYDey9nUc2onocyE7ueR5bCF+jx7QLPuyXzyRy4saBZnZxoH6MG2gGgwECyCCFHW9IVTM5gXJGSwWK9TrpT+SZByKqi5PZq2TI3Zmt+h4OAgT7pAxa1eBLyrAVGjVBdar3jyK3usVsiCtDjjm6MOzAfgL9/dkxcY5wGCOIh0mBid9R3FOS+CpT7/7wwOOJNFbKseGc92ElPC+5JFsjPGYlQCDWJS9IiI2ho6Icc2ktdHFGEaxQ0TQtpd6shzh/ARVEAlXF5jkbkw2uMdgsKOkcYfuKgEM0ROOGatBdoi7umfjmVCD7s61x0mNJIQ6JbcocRReXdMKmoJGXoD5vXg3SqIdRnHFzpA1AXtdG0XQSjChiaL/pNly+rhCo4ktz7HjgV1G7pVE1vMg/8My7TY/N12S3unn+gL6y7roPZ/Y33KE5gHRQ0i5nB3haxlGXf546PPfnETNKorrPWJiwOzdQ/I4YVEXydQf3/lQDZxcS/esHB+X72H6t3RFBbxmraqgH61V49w9oeLsoqtZPjl0atS5rbBn5Ly7v+iaKjmIofUDaNSgID0wA+MrrxatVfoOIGlxuo8/FMzuuiMA6/16s1vJZ8Egrde8NQMzrkRmBHVbBHblkjAGAaH1GsD1tMGRC9CdAiQD+0CGOpZYxXVSKSuz1ednwe1EotyRrAwsj3+fE3Gw6zIU8DMGUePtKqgYpuE9M4EQObx/B/Dz/5zaZrKPrqrbCHfJSCqukiIIU15FxXf2c065/5jRCnCwIO7VNTuoj6PJenc1sUJQNr7vC5QCG+4rgE4eZpvlC4ygmschtdQjoWglUlpdeL7MR+UbNLmhMxhIZpRiaaQnIz0DLrHjfMYdvvEM5r4VHREypCZNCDo2rWZpn7HjriqI6Oda5xFKojtZtlLmHr0BBr/HpsRa0RjOSJlLRKuKjQR/vXUqtkTlqUN+SDg7ZB9KRAKlrqv/j2lVxjiA7i1ic3nO5WKO1FREETEuopMFSJTahKfBq1MTy6ajgBWyUlVRqcJ3Dc9YWorvwEVyK8H29ynxsubc/IB1S7RQz7em4/PWdOTVBI6TmatlvQyHexQuaAZpZw2uNusavz4ENrzfMHPesOUjEYMnJNhmMyAAJiqGKDp0/otAPXhN2r3refgoIojXYTtBIgd9WK61zDvjJyh+5wgHLRU4o46GthLgymRDdIuTDYMBL34vDj+V1/8mvj5BvjdhAPtcxD0I+S2O4m2Ix7WIq8w6x2uD5uYqDOUoLumzD/flEngA1cQiP84nBTjkYwdUl0VyTP3x5aLeZRs90PFaeNjksaJ2cGqlzH1e5HFkvEEdjIM4TuKUiBvBdrV4bJbsh1qKYeede6R+jw2gYeTY88x4zU2tZN5Ae1U2Rjq0c6IKiKKMjfElEiFzNKNx9LMETaiGY6ydJm2GVXHNM7jjVuxUTeg8LBcGR2gYuZm+VGDXjmgPpdLKBLbYxge4nm1FfODpJKw9QaBJdsRrV/bhUdbVjYWe+Fx1cF+WVDsE1Qf2FWQNlEbOO3kDEJSyHLjBJAcMJLEaxJTGqv3GaqQcdoSgMgGUKcoESQjpAs58+60/H+3wsyjnlai8bkLy5USxb1F2dfRfiez6QUWukQMOR28toD0ToyFB15ufQybUCWTZ8X2tkyOMCpMCWG0MArRY4IbIFEPc/DWyEF6cKUHLn+hOTSbWlUX3Nz2jwEPr6GsvjiqGzHU4v4dk104A4b287COKqFczS1Agjni1Ker0dTB37UOy334ZkwgvkBBbi4Z0RokAqoLjg8kI+J7ibjPDeAdJtY9ZSgxN0h51RS+xwVbn7jSVs6rZOjMhvLqoYlc/9O11bp5Fo6iAklBcqzmqXruzHrB1NzOIxPbsxlFlCuFyn23UUN7aOgK1LXwiK0LnDg9YjIutvjFMJ9nrsKVh1HAh2bncR10NgmkdGybzDzubvi6BN8qY/PZIR6S/y5lF3biPXd+GCizVpo7rp/zyjbWpzsvSrs2qO10GnfOC/mo81osVmgOJAzlfda/jFSyHzJE/HHD12VKGGBJSgFJODmazPrFLRrbluMMKm6vv3KHSjh1Ml3qbRTFqExQiC4Zgy3QQgtcI6Q0er7mHw3FhfrYktMtQsdy8NgbxlBXvEnLLZXonAadpHGTG8M7KlvzRboHTEWiBAMP0pqlVp9Nv89yaXZqW0BzHOLOEq+mfTsWVEb9l7tKAISDBX1XbPIC4nQ69MeQXMctyEjEdWXX2uBWGxCjbIaMYLyqfa1XcwItRMeaEOfpF+NVke83lWH039m/4JppMc8jN84wlwkP0k4Z7ZcZvmFnAEe21pQ4kyswgV1qPNL1ML4KZrQZQi/SK8nnsPe9LPnpUOnNUS0QVY4N4b+f4YzOuDBdpbhOHcq3lJWFiWvnecQoS6E2/0uxWNog2gw0m2BUXeYJLC4yRd1yRQPhpDs7XBPZsbmOUkNowEj2dki9e8Jn5jBB08WgXMe5AfOT2RuIkA4CXJPg6I3Ax6RjvR5ozovIbAT9ro06hp2dWJUNShGcOAlxr/nLUTie7qEj7ka3Evy2mba8aagARyfnoaGf3BsmrY1/R3oAkj0xhmlfxP0xzELU57AZZ1yDilG7dA4BEipAITORR2NdMWTqA1ToDT96/L8wiaDRP4Yx5p+22CWdNmz1sDGumD+37c5gFd9M0/KTnAD9zN0ztuWS9hHkUTKp3MbwjTevltUVqjg25FIX0UKhMg58ZHdjqZe6JhQ6Q/PNQWnYi71hKvRlQwyAcn6YZlZ0dnu+3Dv1JlRcM34URvrQVmW5VQAprDo2DT78adPq7TQ8FSVeyInkJ4/XmphotgwsgA7ii1ZizyEKKzJzC0zox/afxJXb/g7oeSdu84SsyNJtfGWYzrPjjotrNcHM3xxNMCFxB6gOghrtbP8ek0LBcY3eSg+msGexHNvHHtZlYNxtkyET4NHVCDFEvm0TFfwMBM6tH8r0xxpGWhCYFDHwxMNldzcr8dWM1qeR8MIMqAjRG5iooE42jK4+BdscQiN/TvwItwuWAz9Oggp2tUxNIFM1UTotBMkZdm4k+EzhDzz25SOpL2JGPY8DXLJVPEbmM451voaRju67M97c4//59SAjc63+QN2e/UjALPe3i78BtoSVqATsIKBS0UG0ok3rRpV7D13TzzEq3yUy1wCjuJt3TiRAccm/i1tLWiv0sKiIGsHDHXs/VjPU304ypOG4T9d2gfMXdhAHEkLTfsf60R9l84TVtQjYqDMzbE4hgVf/e0m05ZMtfbbkYHLJZfNav4Rvn/8p+gvVSNFD89FQB1YzXYbvF4sI/QuKfmykYOT7xtICCtmcWpug918OeqrEJu6sc47TmW8j3yCjfGmjN7bBf1uEsyBNw+x8Ne578ep/pWKPKcgmcUsv74oyyM7/fOZhPchMckWbiXYdcNTNBPisA6Jf70xgLvIO+FGDrvqzZvDQOz/NVmxi22L7SgAfYgsNvB3XWX/FVdZaQLnDgprytA29AzvBeeBgq/6GDLN2zNq/8GYTaU/nlxJNA8YyeKQEmZDc3JY0yP+PPcv8BQtEPxIgRENwmsmpp3Y1dnZ1Qe4ct3n8wfV+j1pqvp89QaozxMF2izGhkK8zMVcw2Fx7KGdnCDH9qZ8DHG6C2JhzFxAN1b6wLwUtRxWJ8LiN4d9jLWRIkGyS3xt+gFiDqugDnnJdGaSL76onzuROujMvtbBTfwq3sHSaXYi/eQmI0yHH53QHpu2c+0jPXl01p/+3M9iZHY/6swS7ChMs9L6IF0XKtYEF9cD4U9kFLrzw5ydjdCsSP23JKOVKl90LNj5F+lywmRUmJNS69kkbLrG5sT1plZbN40g1Stq2Fd5JXwNsQGb64l8/f6ef9UpcMfRASxRmG+i30tripfqyEv5mq9xgS5+XArqjliypZmLTOYEuWnWbeUXubdISybcAdSuSQftFn3iuQIHtzd0I6dNA7UU/H3pzoLkPuQtgqv12zG0EocnlFQZoqZa5HhrMHWzqhbAblmT0T3HHCBHCh65xVzhzOv7s7vqXSYOFLPqJL/D+H36IqhcJ+g7WxIH+nVZm5ZXTw+yca3I4GInuJ5Jw7XYyY/uTM+IRVALTkAJv1XnRPMsbfhW7t0deYMty0MBA4Qc7tYuZRRIQfTLNEYLG3ZnxuPed6GrlELkCjeMw1cfm1Uf41VU66hlmnBAi4hUD/PGp97eB20ow"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第15回 まとめ：最適化アルゴリズムの振り返り
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
