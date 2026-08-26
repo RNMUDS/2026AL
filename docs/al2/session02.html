@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回: 幅優先探索・深さ優先探索の発展 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">2つの探索</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">標準課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第2回: 幅優先探索・深さ優先探索の発展</h1>
+    <p>障害物を増やした迷路で2つの探索を動かし、幅優先探索と深さ優先探索の得意・不得意を比べる</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の歩数と調査数</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の広場での差</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>壁を1つ足すと？</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>使い分けの表</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>2つの探索の違い</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      前期の最後に学んだ幅優先探索に加えて、第2回では<strong>深さ優先探索</strong>をあつかいます。
+      2つの探索は、コードの見た目こそよく似ていますが、見つける道がまったく違います。
+      違いは<strong>たった1行</strong>、「メモのどこを読むか」だけです。
+    </p>
+
+    <div class="analogy">
+      迷路で分かれ道に来ると、進める方向が2つ以上見えることがあります。
+      体は1つなので、同時に両方へは進めません。そこで「あとで見に行く場所」をメモに書いておきます。
+      メモの<strong>上から順に</strong>読めば幅優先探索、<strong>いちばん最後に書いた行から</strong>読めば深さ優先探索になります。
+      人が迷路を歩くときは、たいてい深さ優先探索と同じで「行けるところまで進んで、行き止まりなら引き返す」やり方をしています。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 245" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">2つの探索の違いは「メモのどこを読むか」だけ</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">メモに書き足す場所は同じ。読んで消す場所だけが違う</text>
+        <text x="175" y="82" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">幅優先探索（キュー）</text>
+        <text x="175" y="102" text-anchor="middle" fill="#888888" font-size="11">いちばん古い行を読む　popleft()</text>
+        <text x="30" y="140" fill="#666" font-size="10">古い</text>
+        <text x="320" y="140" text-anchor="end" fill="#666" font-size="10">新しい</text>
+        <g>
+          <rect x="36" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.167;0.187;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="60" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">ア<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.167;0.187;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="60" y="128" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.087;0.097;0.167;0.177;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="92" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.333;0.353;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="116" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">イ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.333;0.353;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="116" y="128" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.253;0.263;0.333;0.343;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="148" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.500;0.520;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="172" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">ウ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.500;0.520;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="172" y="128" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.420;0.430;0.500;0.510;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="204" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.667;0.687;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="228" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">エ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.667;0.687;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="228" y="128" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.587;0.597;0.667;0.677;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="260" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.833;0.853;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="284" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">オ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.833;0.853;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="284" y="128" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.753;0.763;0.833;0.843;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <text x="175" y="222" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">読む順番: ア → イ → ウ → エ → オ</text>
+        <text x="525" y="82" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">深さ優先探索（スタック）</text>
+        <text x="525" y="102" text-anchor="middle" fill="#888888" font-size="11">いちばん新しい行を読む　pop()</text>
+        <text x="380" y="140" fill="#666" font-size="10">古い</text>
+        <text x="670" y="140" text-anchor="end" fill="#666" font-size="10">新しい</text>
+        <g>
+          <rect x="386" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.833;0.853;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="410" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">ア<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.833;0.853;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="410" y="128" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.753;0.763;0.833;0.843;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="442" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.667;0.687;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="466" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">イ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.667;0.687;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="466" y="128" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.587;0.597;0.667;0.677;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="498" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.500;0.520;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="522" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">ウ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.500;0.520;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="522" y="128" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.420;0.430;0.500;0.510;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="554" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.333;0.353;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="578" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">エ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.333;0.353;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="578" y="128" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.253;0.263;0.333;0.343;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <g>
+          <rect x="610" y="148" width="48" height="42" rx="8" fill="#1A1A1A" stroke="#444"><animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.167;0.187;1" dur="10s" repeatCount="indefinite"/></rect>
+          <text x="634" y="175" text-anchor="middle" fill="#E0E0E0" font-size="15">オ<animate attributeName="opacity" values="1;1;0.12;0.12" keyTimes="0;0.167;0.187;1" dur="10s" repeatCount="indefinite"/></text>
+          <text x="634" y="128" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0">読む▼<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.087;0.097;0.167;0.177;1" dur="10s" repeatCount="indefinite"/></text>
+        </g>
+        <text x="525" y="222" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">読む順番: オ → エ → ウ → イ → ア</text>
+        <line x1="355" y1="70" x2="355" y2="232" stroke="#333" stroke-width="1"/>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>キューとスタック</h4>
+      <p style="font-size:0.95rem">
+        <strong style="color:#76B900">キュー</strong>（queue）は「先に入れたものを先に取り出す入れもの」です。
+        レジの行列と同じで、先に並んだ人から順に呼ばれます。Pythonでは <code>deque</code> の <code>popleft()</code> で先頭を取り出します。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        <strong style="color:#FFB800">スタック</strong>（stack）は「あとから入れたものを先に取り出す入れもの」です。
+        積み重ねた本と同じで、いちばん上に置いた本から取ります。Pythonでは <code>pop()</code> で末尾を取り出します。
+      </p>
+    </div>
+
+    <div class="concept-box">
+      <h4>幅優先探索が最短を保証する理由</h4>
+      <p style="font-size:0.95rem">
+        幅優先探索はメモを古い順に読むため、<strong>1歩で行ける場所をすべて調べ終えるまで、2歩の場所には進みません</strong>。
+        同じように、2歩の場所をすべて調べ終えてから3歩へ進みます。
+        歩数が少ない場所から順に調べているので、ゴールに最初に届いたときの歩数が、必ずいちばん少ない歩数になります。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        深さ優先探索は歩数の順に調べません。行き止まりに当たるまで一方向へ進み続けるため、
+        遠回りの道を先に見つけてしまうことがあります。<strong>深さ優先探索が見つけた道は、最短とはかぎりません</strong>。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
+    第1回と同じように、まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No02</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No01/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No02/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第2回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No02</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No02 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No02 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-02-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-02-ex1.py</code>, <code>AL2-02-ex2.py</code>, <code>AL2-02-ex3.py</code>, <code>AL2-02-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">深さ優先探索</strong><br><span style="color:#888;font-size:0.8rem">ふかさゆうせんたんさく / DFS</span></td><td>行き止まりに当たるまで一方向へ進み、行き止まりなら1つ戻って別の道を試す探し方。見つかる道は最短とはかぎらない。</td></tr>
+        <tr><td><strong style="color:#76B900">スタック</strong><br><span style="color:#888;font-size:0.8rem">stack</span></td><td>あとから入れたものを先に取り出す入れもの。積み重ねた本と同じ。Pythonのリストでは <code>append()</code> で入れて <code>pop()</code> で取り出す。</td></tr>
+        <tr><td><strong style="color:#76B900">キュー</strong><br><span style="color:#888;font-size:0.8rem">queue</span></td><td>先に入れたものを先に取り出す入れもの。レジの行列と同じ。Pythonでは <code>deque</code> の <code>append()</code> と <code>popleft()</code> を使う。</td></tr>
+        <tr><td><strong style="color:#76B900">到達可能性</strong><br><span style="color:#888;font-size:0.8rem">とうたつかのうせい / reachability</span></td><td>「ゴールへ行けるかどうか」だけを判定すること。最短の道は要らないので、深さ優先探索でも十分な場合が多い。</td></tr>
+        <tr><td><strong style="color:#76B900">トレードオフ</strong><br><span style="color:#888;font-size:0.8rem">trade-off</span></td><td>一方を良くすると他方が悪くなる関係。幅優先探索と深さ優先探索は「道の短さ」と「調べる手間」がトレードオフの関係にある。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>深さ優先探索で迷路を解く</h3>
+      </div>
+      <p>第1回の例題3で使った迷路を、深さ優先探索で解きます。
+      幅優先探索のコードと見比べると、変わっているのは<strong>メモから取り出す行</strong>だけです。</p>
+
+      <table>
+        <tr><th>探索方法</th><th>メモの入れもの</th><th>取り出す命令</th><th>取り出す場所</th></tr>
+        <tr><td>幅優先探索</td><td><code>deque</code>（キュー）</td><td><code>queue.popleft()</code></td><td>いちばん古い行</td></tr>
+        <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>stack.pop()</code></td><td>いちばん新しい行</td></tr>
+      </table>
+
+<pre><span class="code-label">Python ── AL2-02-ex1.py</span>
+<span class="cmt"># 深さ優先探索（ふかさゆうせんたんさく）で迷路を解く</span>
+<span class="cmt"># 幅優先探索との違いは「メモのどこを読むか」だけ。</span>
+<span class="cmt">#   幅優先探索: いちばん古い行を読む → popleft()</span>
+<span class="cmt">#   深さ優先探索: いちばん新しい行を読む → pop()</span>
+
+<span class="cmt"># S = スタート、G = ゴール、# = 壁、. = 通路</span>
+maze = [
+    <span class="str">&quot;S.....#&quot;</span>,
+    <span class="str">&quot;.####.#&quot;</span>,
+    <span class="str">&quot;.#....#&quot;</span>,
+    <span class="str">&quot;.#.##..&quot;</span>,
+    <span class="str">&quot;.#..#.#&quot;</span>,
+    <span class="str">&quot;.##.#.#&quot;</span>,
+    <span class="str">&quot;......G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            start = (r, c)
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
+            goal = (r, c)
+
+<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
+<span class="kw">for</span> line <span class="kw">in</span> maze:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- 深さ優先探索 ---</span>
+stack = [start]                 <span class="cmt"># これから調べる場所を書いたメモ</span>
+came_from = {start: <span class="kw">None</span>}       <span class="cmt"># 「その場所へ、どこから来たか」の記録</span>
+visited_order = []              <span class="cmt"># 調べた順番を記録する</span>
+
+<span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
+    current = stack.pop()       <span class="cmt"># メモのいちばん新しい行を読んで消す</span>
+    visited_order.append(current)
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+
+    r, c = current
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
+            <span class="kw">continue</span>
+        came_from[(nr, nc)] = current
+        stack.append((nr, nc))
+
+<span class="cmt"># --- ゴールからスタートへ逆にたどって経路を復元する ---</span>
+path = []
+node = goal
+<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+    path.append(node)
+    node = came_from[node]
+path.reverse()
+
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路の歩数:&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;調べたマスの数:&quot;</span>, <span class="fn">len</span>(visited_order), <span class="str">&quot;マス&quot;</span>)
+<span class="fn">print</span>()
+
+picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+<span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+        picture[r][c] = <span class="str">&quot;*&quot;</span>
+
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路（* が通り道）&quot;</span>)
+<span class="kw">for</span> line <span class="kw">in</span> picture:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="448" loading="lazy">
+      </div>
+      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。第1回の例題3で幅優先探索が見つけた道は12歩だったので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>2つの探索を同じ迷路で比べる</h3>
+      </div>
+      <p>幅優先探索と深さ優先探索を1つのプログラムにまとめ、同じ迷路で走らせて比べます。
+      <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。</p>
+
+<pre><span class="code-label">Python ── AL2-02-ex2.py</span>
+<span class="cmt"># 幅優先探索と深さ優先探索を、同じ迷路で走らせて比べる</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+maze = [
+    <span class="str">&quot;S.....#&quot;</span>,
+    <span class="str">&quot;.####.#&quot;</span>,
+    <span class="str">&quot;.#....#&quot;</span>,
+    <span class="str">&quot;.#.##..&quot;</span>,
+    <span class="str">&quot;.#..#.#&quot;</span>,
+    <span class="str">&quot;.##.#.#&quot;</span>,
+    <span class="str">&quot;......G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            start = (r, c)
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
+            goal = (r, c)
+
+
+<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
+    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではない場所を返す&quot;&quot;&quot;</span>
+    result = []
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>
+        result.append((nr, nc))
+    <span class="kw">return</span> result
+
+
+<span class="kw">def</span> <span class="fn">search</span>(mode):
+    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
+    memo = <span class="fn">deque</span>([start])           <span class="cmt"># これから調べる場所のメモ</span>
+    came_from = {start: <span class="kw">None</span>}
+    checked = <span class="num">0</span>                     <span class="cmt"># 何マス調べたか</span>
+
+    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
+        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
+            current = memo.popleft()    <span class="cmt"># いちばん古い行を読む</span>
+        <span class="kw">else</span>:
+            current = memo.pop()        <span class="cmt"># いちばん新しい行を読む</span>
+        checked = checked + <span class="num">1</span>
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+            <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[next_cell] = current
+            memo.append(next_cell)
+
+    path = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        path.append(node)
+        node = came_from[node]
+    path.reverse()
+    <span class="kw">return</span> path, checked
+
+
+bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
+dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法              歩数    調べたマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+
+
+<span class="kw">def</span> <span class="fn">draw</span>(path, title):
+    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+            picture[r][c] = <span class="str">&quot;*&quot;</span>
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> line <span class="kw">in</span> picture:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="fn">print</span>()
+
+
+<span class="fn">print</span>()
+<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路（12歩・最短）&quot;</span>)
+<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路（18歩・最短ではない）&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じ迷路を調べる順番の比較（数字は何番目に調べたか）</text>
+        <text x="123" y="52" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">幅優先探索</text>
+        <rect x="46" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.015;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="76.0" text-anchor="middle" fill="#76B900" font-size="10">1</text>
+        </g>
+        <rect x="68" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.055;0.070;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="68" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="78.0" y="76.0" text-anchor="middle" fill="#76B900" font-size="10">3</text>
+        </g>
+        <rect x="90" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.110;0.125;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="90" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="100.0" y="76.0" text-anchor="middle" fill="#76B900" font-size="10">5</text>
+        </g>
+        <rect x="112" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.165;0.180;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="112" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="122.0" y="76.0" text-anchor="middle" fill="#76B900" font-size="10">7</text>
+        </g>
+        <rect x="134" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.219;0.234;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="134" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="144.0" y="76.0" text-anchor="middle" fill="#76B900" font-size="10">9</text>
+        </g>
+        <rect x="156" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.274;0.289;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="76.0" text-anchor="middle" fill="#76B900" font-size="10">11</text>
+        </g>
+        <rect x="178" y="62" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="188.0" y="76.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="46" y="84" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.027;0.042;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="84" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="98.0" text-anchor="middle" fill="#76B900" font-size="10">2</text>
+        </g>
+        <rect x="68" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="78.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="90" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="100.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="112" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="122.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="134" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="144.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="156" y="84" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.329;0.344;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="84" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="98.0" text-anchor="middle" fill="#76B900" font-size="10">13</text>
+        </g>
+        <rect x="178" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="188.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="46" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.082;0.097;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="120.0" text-anchor="middle" fill="#76B900" font-size="10">4</text>
+        </g>
+        <rect x="68" y="106" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="78.0" y="120.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="90" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.685;0.700;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="90" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="100.0" y="120.0" text-anchor="middle" fill="#76B900" font-size="10">26</text>
+        </g>
+        <rect x="112" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.576;0.591;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="112" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="122.0" y="120.0" text-anchor="middle" fill="#76B900" font-size="10">22</text>
+        </g>
+        <rect x="134" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.466;0.481;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="134" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="144.0" y="120.0" text-anchor="middle" fill="#76B900" font-size="10">18</text>
+        </g>
+        <rect x="156" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.384;0.399;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="120.0" text-anchor="middle" fill="#76B900" font-size="10">15</text>
+        </g>
+        <rect x="178" y="106" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="188.0" y="120.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="46" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.137;0.152;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="128" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="142.0" text-anchor="middle" fill="#76B900" font-size="10">6</text>
+        </g>
+        <rect x="68" y="128" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="78.0" y="142.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="90" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.768;0.783;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="90" y="128" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="100.0" y="142.0" text-anchor="middle" fill="#76B900" font-size="10">29</text>
+        </g>
+        <rect x="112" y="128" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="122.0" y="142.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="134" y="128" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="144.0" y="142.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="156" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.439;0.454;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="128" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="142.0" text-anchor="middle" fill="#76B900" font-size="10">17</text>
+        </g>
+        <rect x="178" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.548;0.563;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="178" y="128" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="188.0" y="142.0" text-anchor="middle" fill="#76B900" font-size="10">21</text>
+        </g>
+        <rect x="46" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.192;0.207;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="150" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="164.0" text-anchor="middle" fill="#76B900" font-size="10">8</text>
+        </g>
+        <rect x="68" y="150" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="78.0" y="164.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="90" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.795;0.810;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="90" y="150" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="100.0" y="164.0" text-anchor="middle" fill="#76B900" font-size="10">30</text>
+        </g>
+        <rect x="112" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.713;0.728;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="112" y="150" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="122.0" y="164.0" text-anchor="middle" fill="#76B900" font-size="10">27</text>
+        </g>
+        <rect x="134" y="150" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="144.0" y="164.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="156" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.521;0.536;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="150" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="164.0" text-anchor="middle" fill="#76B900" font-size="10">20</text>
+        </g>
+        <rect x="178" y="150" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="188.0" y="164.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="46" y="172" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.247;0.262;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="172" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="186.0" text-anchor="middle" fill="#76B900" font-size="10">10</text>
+        </g>
+        <rect x="68" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="78.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="90" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="100.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="112" y="172" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.603;0.618;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="112" y="172" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="122.0" y="186.0" text-anchor="middle" fill="#76B900" font-size="10">23</text>
+        </g>
+        <rect x="134" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="144.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="156" y="172" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.658;0.673;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="172" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="186.0" text-anchor="middle" fill="#76B900" font-size="10">25</text>
+        </g>
+        <rect x="178" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="188.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="46" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.302;0.317;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="46" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="56.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">12</text>
+        </g>
+        <rect x="68" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.356;0.371;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="68" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="78.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">14</text>
+        </g>
+        <rect x="90" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.411;0.426;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="90" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="100.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">16</text>
+        </g>
+        <rect x="112" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.494;0.509;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="112" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="122.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">19</text>
+        </g>
+        <rect x="134" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.631;0.646;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="134" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="144.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">24</text>
+        </g>
+        <rect x="156" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.740;0.755;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="156" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="166.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">28</text>
+        </g>
+        <rect x="178" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.823;0.838;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="178" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
+          <text x="188.0" y="208.0" text-anchor="middle" fill="#76B900" font-size="10">31</text>
+        </g>
+        <text x="123" y="238" text-anchor="middle" fill="#ccc" font-size="11">31マス調べてゴール到着 ／ 経路は12歩</text>
+        <text x="473" y="52" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">深さ優先探索</text>
+        <rect x="396" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.015;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="396" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="406.0" y="76.0" text-anchor="middle" fill="#FFB800" font-size="10">1</text>
+        </g>
+        <rect x="418" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.045;0.060;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="418" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="428.0" y="76.0" text-anchor="middle" fill="#FFB800" font-size="10">2</text>
+        </g>
+        <rect x="440" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.089;0.104;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="440" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="450.0" y="76.0" text-anchor="middle" fill="#FFB800" font-size="10">3</text>
+        </g>
+        <rect x="462" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.134;0.149;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="462" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="472.0" y="76.0" text-anchor="middle" fill="#FFB800" font-size="10">4</text>
+        </g>
+        <rect x="484" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.179;0.194;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="484" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="494.0" y="76.0" text-anchor="middle" fill="#FFB800" font-size="10">5</text>
+        </g>
+        <rect x="506" y="62" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.224;0.239;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="506" y="62" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="516.0" y="76.0" text-anchor="middle" fill="#FFB800" font-size="10">6</text>
+        </g>
+        <rect x="528" y="62" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="538.0" y="76.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="396" y="84" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="418" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="428.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="440" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="450.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="462" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="472.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="484" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="494.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="506" y="84" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.268;0.283;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="506" y="84" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="516.0" y="98.0" text-anchor="middle" fill="#FFB800" font-size="10">7</text>
+        </g>
+        <rect x="528" y="84" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="538.0" y="98.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="396" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="418" y="106" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="428.0" y="120.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="440" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.447;0.462;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="440" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="450.0" y="120.0" text-anchor="middle" fill="#FFB800" font-size="10">11</text>
+        </g>
+        <rect x="462" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.403;0.418;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="462" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="472.0" y="120.0" text-anchor="middle" fill="#FFB800" font-size="10">10</text>
+        </g>
+        <rect x="484" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.358;0.373;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="484" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="494.0" y="120.0" text-anchor="middle" fill="#FFB800" font-size="10">9</text>
+        </g>
+        <rect x="506" y="106" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.313;0.328;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="506" y="106" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="516.0" y="120.0" text-anchor="middle" fill="#FFB800" font-size="10">8</text>
+        </g>
+        <rect x="528" y="106" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="538.0" y="120.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="396" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="418" y="128" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="428.0" y="142.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="440" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.492;0.507;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="440" y="128" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="450.0" y="142.0" text-anchor="middle" fill="#FFB800" font-size="10">12</text>
+        </g>
+        <rect x="462" y="128" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="472.0" y="142.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="484" y="128" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="494.0" y="142.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="506" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="528" y="128" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="396" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="418" y="150" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="428.0" y="164.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="440" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.537;0.552;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="440" y="150" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="450.0" y="164.0" text-anchor="middle" fill="#FFB800" font-size="10">13</text>
+        </g>
+        <rect x="462" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.582;0.597;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="462" y="150" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="472.0" y="164.0" text-anchor="middle" fill="#FFB800" font-size="10">14</text>
+        </g>
+        <rect x="484" y="150" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="494.0" y="164.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="506" y="150" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="528" y="150" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="538.0" y="164.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="396" y="172" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="418" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="428.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="440" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="450.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="462" y="172" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.626;0.641;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="462" y="172" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="472.0" y="186.0" text-anchor="middle" fill="#FFB800" font-size="10">15</text>
+        </g>
+        <rect x="484" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="494.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="506" y="172" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="528" y="172" width="20" height="20" rx="3" fill="#33302a" stroke="#4a453a"/>
+        <text x="538.0" y="186.0" text-anchor="middle" fill="#7a7060" font-size="11" font-weight="700">#</text>
+        <rect x="396" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="418" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="440" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <rect x="462" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.671;0.686;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="462" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="472.0" y="208.0" text-anchor="middle" fill="#FFB800" font-size="10">16</text>
+        </g>
+        <rect x="484" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.716;0.731;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="484" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="494.0" y="208.0" text-anchor="middle" fill="#FFB800" font-size="10">17</text>
+        </g>
+        <rect x="506" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.761;0.776;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="506" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="516.0" y="208.0" text-anchor="middle" fill="#FFB800" font-size="10">18</text>
+        </g>
+        <rect x="528" y="194" width="20" height="20" rx="3" fill="#141414" stroke="#333"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.805;0.820;1" dur="16s" repeatCount="indefinite"/>
+          <rect x="528" y="194" width="20" height="20" rx="3" fill="#1a2e0a" stroke="#FFB800" stroke-width="1.2"/>
+          <text x="538.0" y="208.0" text-anchor="middle" fill="#FFB800" font-size="10">19</text>
+        </g>
+        <text x="473" y="238" text-anchor="middle" fill="#ccc" font-size="11">19マス調べてゴール到着 ／ 経路は18歩</text>
+        <line x1="350" y1="40" x2="350" y2="240" stroke="#333" stroke-width="1"/>
+        <text x="350" y="266" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">幅優先探索は近い順にじわじわ広がる。深さ優先探索は一方向へどんどん進む</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法              歩数    調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G /  / 深さ優先探索の経路（18歩・最短ではない） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="528" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、幅優先探索と深さ優先探索の「歩数」と「調べたマス数」を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどう違うかを言葉で説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>障害物を増やした大きい迷路で比べる</h3>
+      </div>
+      <p>迷路を15マス×15マスに大きくし、壁（障害物）を増やして同じ比較をします。
+      迷路が大きくなると、2つの探索の差はどう変わるかを観察してください。</p>
+
+<pre><span class="code-label">Python ── AL2-02-ex3.py</span>
+<span class="cmt"># 障害物を増やした大きい迷路（15マス×15マス）で、2つの探索を比べる</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+maze = [
+    <span class="str">&quot;S.............#&quot;</span>,
+    <span class="str">&quot;.####.#####.#..&quot;</span>,
+    <span class="str">&quot;.#....#...#.#.#&quot;</span>,
+    <span class="str">&quot;.#.##.#.#.#.#.#&quot;</span>,
+    <span class="str">&quot;.#.#..#.#...#..&quot;</span>,
+    <span class="str">&quot;.#.#.##.####.#.&quot;</span>,
+    <span class="str">&quot;...#....#....#.&quot;</span>,
+    <span class="str">&quot;.###.####.####.&quot;</span>,
+    <span class="str">&quot;.#...#....#...#&quot;</span>,
+    <span class="str">&quot;.#.###.####.##.&quot;</span>,
+    <span class="str">&quot;.#.....#......#&quot;</span>,
+    <span class="str">&quot;.#####.#.####.#&quot;</span>,
+    <span class="str">&quot;.....#.#.#....#&quot;</span>,
+    <span class="str">&quot;####.#.#.#.####&quot;</span>,
+    <span class="str">&quot;.....#...#....G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            start = (r, c)
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
+            goal = (r, c)
+
+
+<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
+    result = []
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>
+        result.append((nr, nc))
+    <span class="kw">return</span> result
+
+
+<span class="kw">def</span> <span class="fn">search</span>(mode):
+    memo = <span class="fn">deque</span>([start])
+    came_from = {start: <span class="kw">None</span>}
+    checked = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
+        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
+            current = memo.popleft()
+        <span class="kw">else</span>:
+            current = memo.pop()
+        checked = checked + <span class="num">1</span>
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+            <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[next_cell] = current
+            memo.append(next_cell)
+    path = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        path.append(node)
+        node = came_from[node]
+    path.reverse()
+    <span class="kw">return</span> path, checked
+
+
+<span class="kw">def</span> <span class="fn">draw</span>(path, title):
+    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+            picture[r][c] = <span class="str">&quot;*&quot;</span>
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> line <span class="kw">in</span> picture:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="fn">print</span>()
+
+
+bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
+dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;15マス×15マスの迷路（通れるマスは全部で&quot;</span>, rows * cols - <span class="fn">sum</span>(line.count(<span class="str">&quot;#&quot;</span>) <span class="kw">for</span> line <span class="kw">in</span> maze), <span class="str">&quot;マス）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法              歩数    調べたマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+
+<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路&quot;</span>)
+<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 298" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">一長一短: 幅優先探索は道が短く、深さ優先探索は手間が軽い</text>
+        <text x="30" y="58" fill="#E0E0E0" font-size="12" font-weight="700">経路の歩数（小さいほど良い）</text>
+        <text x="30" y="92" fill="#888888" font-size="11">幅優先探索</text>
+        <rect x="140" y="76" width="168" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="318" y="93" fill="#76B900" font-size="12" font-weight="700">12</text>
+        <text x="30" y="126" fill="#888888" font-size="11">深さ優先探索</text>
+        <rect x="140" y="110" width="252" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="402" y="127" fill="#FFB800" font-size="12" font-weight="700">18</text>
+        <text x="30" y="166" fill="#E0E0E0" font-size="12" font-weight="700">調べたマス数（小さいほど手間が軽い）</text>
+        <text x="30" y="200" fill="#888888" font-size="11">幅優先探索</text>
+        <rect x="140" y="184" width="434" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="584" y="201" fill="#76B900" font-size="12" font-weight="700">31</text>
+        <text x="30" y="234" fill="#888888" font-size="11">深さ優先探索</text>
+        <rect x="140" y="218" width="266" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="416" y="235" fill="#FFB800" font-size="12" font-weight="700">19</text>
+        <text x="350" y="280" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">最短の道がほしいなら幅優先探索。ゴールへ行けるかだけ知りたいなら深さ優先探索でも足りる</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a02_ex3_result.png" alt="AL2-02-ex3.py の実行結果。15マス×15マスの迷路（通れるマスは全部で 128 マス） / ---------------------------------------------- / 方法              歩数    調べたマス数 / 幅優先探索         48歩        127マス / 深さ優先探索       64歩         76マス / ---------------------------------------------- /  / 幅優先探索の経路 / S*****........# / .####*#####.#.. / .#...*#...#.#.# / .#.##*#.#.#.#.# / .#.#**#.#...#.. / .#.#*##.####.#. / ...#*...#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G /  / 深さ優先探索の経路 / S***********..# / .####.#####*#.. / .#....#***#*#.# / .#.##.#*#*#*#.# / .#.#..#*#***#.. / .#.#.##*####.#. / ...#****#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G" width="380" height="848" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索は<strong>48歩・127マス調査</strong>、深さ優先探索は<strong>64歩・76マス調査</strong>でした。通れるマスは全部で128マスなので、幅優先探索はほぼ全部のマスを調べています。迷路が大きくなっても、「幅優先探索は道が短いが手間が重い」「深さ優先探索は手間が軽いが道が長い」という関係は変わりません。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>壁のない広場で比べる</h3>
+      </div>
+      <p>壁がまったくない広場で、2つの探索がどんな道を選ぶかを見ます。
+      広場は10マス×10マス、20マス×20マス、40マス×40マスの3種類を試します。</p>
+
+<pre><span class="code-label">Python ── AL2-02-ex4.py</span>
+<span class="cmt"># 壁のない広場で、2つの探索がどれだけ違う道を選ぶかを見る</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+
+<span class="kw">def</span> <span class="fn">search</span>(size, mode):
+    <span class="str">&quot;&quot;&quot;size × size の壁のない広場を、左上から右下まで探索する&quot;&quot;&quot;</span>
+    start = (<span class="num">0</span>, <span class="num">0</span>)
+    goal = (size - <span class="num">1</span>, size - <span class="num">1</span>)
+
+    memo = <span class="fn">deque</span>([start])
+    came_from = {start: <span class="kw">None</span>}
+    checked = <span class="num">0</span>
+
+    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
+        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
+            current = memo.popleft()
+        <span class="kw">else</span>:
+            current = memo.pop()
+        checked = checked + <span class="num">1</span>
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        r, c = current
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= size <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= size:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[(nr, nc)] = current
+            memo.append((nr, nc))
+
+    path = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        path.append(node)
+        node = came_from[node]
+    path.reverse()
+    <span class="kw">return</span> path, checked
+
+
+<span class="fn">print</span>(<span class="str">&quot;壁のない広場（左上から右下まで）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;広さ        幅優先の歩数  幅優先の調査数   深さ優先の歩数  深さ優先の調査数&quot;</span>)
+<span class="kw">for</span> size <span class="kw">in</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>]:
+    bfs_path, bfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;bfs&quot;</span>)
+    dfs_path, dfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;dfs&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;{size:&gt;2}×{size:&lt;2}     {len(bfs_path)-1:&gt;8}歩 {bfs_checked:&gt;12}マス&quot;</span>
+          <span class="str">f&quot; {len(dfs_path)-1:&gt;12}歩 {dfs_checked:&gt;12}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 10×10 の広場で、それぞれの経路を絵にして比べる</span>
+<span class="kw">for</span> mode, title <span class="kw">in</span> [(<span class="str">&quot;bfs&quot;</span>, <span class="str">&quot;幅優先探索の経路（最短）&quot;</span>), (<span class="str">&quot;dfs&quot;</span>, <span class="str">&quot;深さ優先探索の経路（遠回り）&quot;</span>)]:
+    path, checked = <span class="fn">search</span>(<span class="num">10</span>, mode)
+    picture = [[<span class="str">&quot;.&quot;</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
+    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+        picture[r][c] = <span class="str">&quot;*&quot;</span>
+    picture[<span class="num">0</span>][<span class="num">0</span>] = <span class="str">&quot;S&quot;</span>
+    picture[<span class="num">9</span>][<span class="num">9</span>] = <span class="str">&quot;G&quot;</span>
+    <span class="fn">print</span>(title, <span class="str">&quot;／&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
+    <span class="kw">for</span> line <span class="kw">in</span> picture:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="fn">print</span>()</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">壁のない10マス×10マスの広場を、左上から右下まで進んだ道</text>
+        <text x="180" y="52" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">幅優先探索: 18歩</text>
+        <rect x="60" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="86" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="134" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="182" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="230" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="108" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="132" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="156" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="180" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="204" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="228" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="252" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="276" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="60" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="84" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="108" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="132" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="156" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="180" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="204" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="228" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="252" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="276" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="71" y="77" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">S</text>
+        <text x="287" y="293" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">G</text>
+        <polyline points="71.0,73.0 71.0,97.0 71.0,121.0 71.0,145.0 71.0,169.0 71.0,193.0 71.0,217.0 71.0,241.0 71.0,265.0 71.0,289.0 95.0,289.0 119.0,289.0 143.0,289.0 167.0,289.0 191.0,289.0 215.0,289.0 239.0,289.0 263.0,289.0 287.0,289.0" fill="none" stroke="#76B900" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="10s" repeatCount="indefinite"/></polyline>
+        <text x="520" y="52" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">深さ優先探索: 54歩</text>
+        <rect x="400" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="448" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="472" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="496" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="520" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="544" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="568" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="592" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="616" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="424" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="448" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="472" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="496" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="520" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="544" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="568" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="592" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="616" y="86" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="448" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="472" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="496" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="520" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="544" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="568" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="592" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="616" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="134" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="448" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="472" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="496" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="520" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="544" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="568" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="592" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="616" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="400" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="448" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="472" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="496" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="520" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="544" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="568" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="592" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="616" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="424" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="448" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="472" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="496" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="520" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="544" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="568" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="592" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="616" y="182" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="448" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="472" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="496" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="520" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="544" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="568" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="592" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="616" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="230" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="448" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="472" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="496" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="520" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="544" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="568" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="592" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="616" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="400" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="424" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="448" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="472" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="496" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="520" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="544" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="568" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="592" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="616" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="400" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="424" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="448" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="472" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="496" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="520" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="544" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="568" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="592" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
+        <rect x="616" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="411" y="77" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">S</text>
+        <text x="627" y="293" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">G</text>
+        <polyline points="411.0,73.0 435.0,73.0 459.0,73.0 483.0,73.0 507.0,73.0 531.0,73.0 555.0,73.0 579.0,73.0 603.0,73.0 627.0,73.0 627.0,97.0 627.0,121.0 603.0,121.0 579.0,121.0 555.0,121.0 531.0,121.0 507.0,121.0 483.0,121.0 459.0,121.0 435.0,121.0 411.0,121.0 411.0,145.0 411.0,169.0 435.0,169.0 459.0,169.0 483.0,169.0 507.0,169.0 531.0,169.0 555.0,169.0 579.0,169.0 603.0,169.0 627.0,169.0 627.0,193.0 627.0,217.0 603.0,217.0 579.0,217.0 555.0,217.0 531.0,217.0 507.0,217.0 483.0,217.0 459.0,217.0 435.0,217.0 411.0,217.0 411.0,241.0 411.0,265.0 435.0,265.0 459.0,265.0 483.0,265.0 507.0,265.0 531.0,265.0 555.0,265.0 579.0,265.0 603.0,265.0 627.0,265.0 627.0,289.0" fill="none" stroke="#FFB800" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="10s" repeatCount="indefinite"/></polyline>
+        <text x="350" y="328" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">深さ優先探索は行き止まりに当たるまで進み続けるため、広場では大きく蛇行する</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a02_ex4_result.png" alt="AL2-02-ex4.py の実行結果。壁のない広場（左上から右下まで） / -------------------------------------------------------------- / 広さ        幅優先の歩数  幅優先の調査数   深さ優先の歩数  深さ優先の調査数 / 10×10           18歩          100マス           54歩           55マス / 20×20           38歩          400マス          190歩          229マス / 40×40           78歩         1600マス          780歩          859マス / -------------------------------------------------------------- /  / 幅優先探索の経路（最短） ／ 18 歩 / S......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *********G /  / 深さ優先探索の経路（遠回り） ／ 54 歩 / S********* / .........* / ********** / *......... / ********** / .........* / ********** / *......... / ********** / .........G" width="531" height="668" loading="lazy">
+      </div>
+      <p class="run-note">40マス×40マスの広場では、幅優先探索が<strong>78歩</strong>なのに対し、深さ優先探索は<strong>780歩</strong>でした。10倍の差です。一方で調べたマスの数は、幅優先探索が1600マス（広場のすべて）、深さ優先探索は859マスと約半分です。10マス×10マスの経路の絵を見ると、深さ優先探索が行をまたいで蛇のように往復していることが分かります。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の表から、40マス×40マスのときの「歩数の差」と「調べたマス数の差」を書く。あわせて、深さ優先探索の経路が蛇のようになる理由を、メモの読み方（pop）と結びつけて説明する。</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
+    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>壁を1つ足すと歩数はどうなるか</h3>
+      </div>
+      <p>例題2のファイル <code>AL2-02-ex2.py</code> を開き、迷路のいちばん下の行を書き換えます。</p>
+
+<pre><span class="code-label">Python ── 書き換える行</span>
+    <span class="str">"......G"</span>,      <span class="cmt"># ← "..#...G" に書き換える（下の通路に壁を1つ置く）</span></pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、幅優先探索の歩数がどうなるかを予測してNotionに書く（増える／変わらない／減る のどれか、と理由）</li>
+          <li>迷路を書き換えて保存し、実行する</li>
+          <li>幅優先探索と深さ優先探索の歩数・調べたマス数を記録する</li>
+          <li>迷路の絵をよく見て、経路がどう変わったかを書く</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>項目</th><th>書き換える前</th><th>書き換えたあと</th></tr>
+        <tr><td>幅優先探索の歩数</td><td>12歩</td><td></td></tr>
+        <tr><td>幅優先探索の調べたマス数</td><td>31マス</td><td></td></tr>
+        <tr><td>深さ優先探索の歩数</td><td>18歩</td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 予測は当たりましたか。
+      当たっても外れても、実行結果の迷路の絵を見て、通り道がどう変わったかを言葉で説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 予測（増える／変わらない／減る と理由）、書き換えたあとの歩数と調べたマス数の表、経路がどう変わったかの説明。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>幅優先探索と深さ優先探索の使い分け</h3>
+      </div>
+      <p>例題2・例題3・例題4の結果をもとに、2つの探索の使い分けを表にまとめます。
+      表はNotionに作り、空欄をすべて埋めてください。</p>
+
+      <table>
+        <tr><th>比べる点</th><th>幅優先探索</th><th>深さ優先探索</th></tr>
+        <tr><td>メモから取り出す場所</td><td></td><td></td></tr>
+        <tr><td>見つかる道は最短か</td><td></td><td></td></tr>
+        <tr><td>調べるマスの数（多い／少ない）</td><td></td><td></td></tr>
+        <tr><td>広場（例題4・40マス四方）での歩数</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem">表を作ったうえで、次の2つの場面には、それぞれどちらの探索が向いているかを<strong>理由つきで</strong>答えてください。</p>
+      <ul class="point-list">
+        <li><strong>場面A:</strong> 配達アプリで「いちばん早く着く道順」を案内する</li>
+        <li><strong>場面B:</strong> 迷路ゲームで「そもそもゴールにたどり着けるか」だけを判定する</li>
+      </ul>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 4行の比較表（空欄をすべて埋める）と、場面A・場面Bそれぞれに向いている探索とその理由。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第2回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題2</strong>: 歩数と調べたマス数の表、経路の違いの説明</li>
+        <li><strong>例題4</strong>: 40マス四方での差、蛇行する理由</li>
+        <li><strong>標準課題1</strong>: 予測、書き換えたあとの結果、経路の変化</li>
+        <li><strong>標準課題2</strong>: 比較表、場面A・場面Bへの答えと理由</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2026-10-14T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="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"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第2回 幅優先探索・深さ優先探索の発展
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
