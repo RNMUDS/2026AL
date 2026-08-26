@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第14回: 実践的課題（2）仕上げとレポート作成 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">テストと仕上げ</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第14回: 実践的課題（2）仕上げとレポート作成</h1>
+    <p>動作を検証して作品を仕上げ、使ったアルゴリズムの構成と実行結果をレポートにまとめる</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">実行確認</span>例題1のテスト結果</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題1</span>作品を仕上げる</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題1</span>テスト結果を記録</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題2</span>レポートを書く</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>テストと仕上げ</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第14回では、第13回で作りはじめた作品を<strong>仕上げて</strong>、レポートにまとめます。
+      仕上げるとは「機能を足す」ことだけではありません。
+      <strong>変な入力を与えても止まらないようにする</strong>ことが、いちばん大切な仕上げです。
+    </p>
+
+    <div class="analogy">
+      料理を人に出す前に、味見をして、熱すぎないか確かめ、盛り付けを整えます。
+      プログラムも同じで、自分だけが正しく使えるものは「まだ完成していない」状態です。
+      作った本人は正しい入力しか試しませんが、ほかの人は思いもよらない使い方をします。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 228" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">提出する前に必ず試す4種類の入力</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">バグの多くは「ふつうでない入力」で見つかる</text>
+        <rect x="20" y="62" width="152" height="124" rx="12" fill="#141414" stroke="#76B900" stroke-width="1.6"/>
+        <text x="96" y="90" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">空っぽ</text>
+        <text x="96" y="116" text-anchor="middle" fill="#E0E0E0" font-size="11">何も入力されなかったとき</text>
+        <text x="96" y="132" text-anchor="middle" fill="#E0E0E0" font-size="11"></text>
+        <text x="96" y="156" text-anchor="middle" fill="#888888" font-size="10">空の文字列、空のリスト、</text>
+        <text x="96" y="171" text-anchor="middle" fill="#888888" font-size="10">都市0個</text>
+        <rect x="17" y="59" width="158" height="130" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.230;0.250;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="188" y="62" width="152" height="124" rx="12" fill="#141414" stroke="#76B900" stroke-width="1.6"/>
+        <text x="264" y="90" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">はしっこ</text>
+        <text x="264" y="116" text-anchor="middle" fill="#E0E0E0" font-size="11">ぎりぎりの値を入れたとき</text>
+        <text x="264" y="132" text-anchor="middle" fill="#E0E0E0" font-size="11"></text>
+        <text x="264" y="156" text-anchor="middle" fill="#888888" font-size="10">0、1、いちばん大きい値</text>
+        <rect x="185" y="59" width="158" height="130" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.250;0.260;0.480;0.500;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="356" y="62" width="152" height="124" rx="12" fill="#141414" stroke="#FFB800" stroke-width="1.6"/>
+        <text x="432" y="90" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">範囲の外</text>
+        <text x="432" y="116" text-anchor="middle" fill="#E0E0E0" font-size="11">ありえない値を入れたとき</text>
+        <text x="432" y="132" text-anchor="middle" fill="#E0E0E0" font-size="11"></text>
+        <text x="432" y="156" text-anchor="middle" fill="#888888" font-size="10">マイナス、迷路の外、大き</text>
+        <text x="432" y="171" text-anchor="middle" fill="#888888" font-size="10">すぎる数</text>
+        <rect x="353" y="59" width="158" height="130" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.500;0.510;0.730;0.750;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="524" y="62" width="152" height="124" rx="12" fill="#141414" stroke="#FFB800" stroke-width="1.6"/>
+        <text x="600" y="90" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">形がちがう</text>
+        <text x="600" y="116" text-anchor="middle" fill="#E0E0E0" font-size="11">想定と違う形のとき</text>
+        <text x="600" y="132" text-anchor="middle" fill="#E0E0E0" font-size="11"></text>
+        <text x="600" y="156" text-anchor="middle" fill="#888888" font-size="10">数字のかわりに文字、使え</text>
+        <text x="600" y="171" text-anchor="middle" fill="#888888" font-size="10">ない記号</text>
+        <rect x="521" y="59" width="158" height="130" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.750;0.760;0.980;1.000;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="350" y="212" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">「エラーで止まらない」だけでなく「理由を教えてくれる」ところまで直す</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>テストの書き方</h4>
+      <p style="font-size:0.95rem">
+        テストとは、<strong>わざと特別な入力を与えて、正しく動くか確かめる作業</strong>のことです。
+        頭の中でやるのではなく、実際に動かして結果を記録します。
+      </p>
+      <table>
+        <tr><th>試すこと</th><th>期待する動き</th></tr>
+        <tr><td>空の入力（何も入れない）</td><td>エラーで止まらず、「入力してください」と伝える</td></tr>
+        <tr><td>いちばん小さい値・大きい値</td><td>正しく計算できる</td></tr>
+        <tr><td>ありえない値（マイナス、範囲外）</td><td>受けつけず、理由を伝える</td></tr>
+        <tr><td>形が違う入力（数字のはずが文字）</td><td>受けつけず、理由を伝える</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        第14回のレポートには、<strong>この表の4行それぞれについて、実際に試した結果</strong>を書いてもらいます。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 318" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">print デバッグの5ステップ</text>
+        <rect x="60" y="54" width="580" height="38" rx="9" fill="#141414" stroke="#333"/>
+        <text x="80" y="79" fill="#76B900" font-size="13" font-weight="700">① 変だと気づく</text>
+        <text x="300" y="79" fill="#ccc" font-size="11">答えがおかしい／エラーで止まる</text>
+        <rect x="57" y="51" width="586" height="44" rx="11" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.180;0.200;1" dur="14s" repeatCount="indefinite"/></rect>
+        <text x="350" y="102" text-anchor="middle" fill="#555" font-size="12">▼</text>
+        <rect x="60" y="100" width="580" height="38" rx="9" fill="#141414" stroke="#333"/>
+        <text x="80" y="125" fill="#76B900" font-size="13" font-weight="700">② あたりを付ける</text>
+        <text x="300" y="125" fill="#ccc" font-size="11">どのあたりの行が怪しいか考える</text>
+        <rect x="57" y="97" width="586" height="44" rx="11" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.200;0.210;0.380;0.400;1" dur="14s" repeatCount="indefinite"/></rect>
+        <text x="350" y="148" text-anchor="middle" fill="#555" font-size="12">▼</text>
+        <rect x="60" y="146" width="580" height="38" rx="9" fill="#141414" stroke="#333"/>
+        <text x="80" y="171" fill="#FFB800" font-size="13" font-weight="700">③ print を入れる</text>
+        <text x="300" y="171" fill="#ccc" font-size="11">変数の中身をその場で表示する</text>
+        <rect x="57" y="143" width="586" height="44" rx="11" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.400;0.410;0.580;0.600;1" dur="14s" repeatCount="indefinite"/></rect>
+        <text x="350" y="194" text-anchor="middle" fill="#555" font-size="12">▼</text>
+        <rect x="60" y="192" width="580" height="38" rx="9" fill="#141414" stroke="#333"/>
+        <text x="80" y="217" fill="#FFB800" font-size="13" font-weight="700">④ 見比べる</text>
+        <text x="300" y="217" fill="#ccc" font-size="11">自分の思っている値と実際の値を比べる</text>
+        <rect x="57" y="189" width="586" height="44" rx="11" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.600;0.610;0.780;0.800;1" dur="14s" repeatCount="indefinite"/></rect>
+        <text x="350" y="240" text-anchor="middle" fill="#555" font-size="12">▼</text>
+        <rect x="60" y="238" width="580" height="38" rx="9" fill="#141414" stroke="#333"/>
+        <text x="80" y="263" fill="#76B900" font-size="13" font-weight="700">⑤ 直して print を消す</text>
+        <text x="300" y="263" fill="#ccc" font-size="11">原因が分かったら直し、print は消す</text>
+        <rect x="57" y="235" width="586" height="44" rx="11" fill="none" stroke="#FFB800" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.800;0.810;0.980;1.000;1" dur="14s" repeatCount="indefinite"/></rect>
+        <text x="350" y="300" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">エラーの文は、いちばん下の行から読む。何行目で何が起きたかが書いてある</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>エラーの読み方</h4>
+      <p style="font-size:0.95rem">
+        エラーが出たときは、<strong>いちばん下の行</strong>から読みます。
+        エラーの名前と、何が起きたかが書いてあります。
+      </p>
+      <table>
+        <tr><th>エラーの名前</th><th>意味</th><th>よくある原因</th></tr>
+        <tr><td><code>IndexError</code></td><td>リストの範囲外を見た</td><td>迷路の外のマスを見ようとした</td></tr>
+        <tr><td><code>KeyError</code></td><td>辞書にない鍵を使った</td><td>存在しない駅名や地点名を書いた</td></tr>
+        <tr><td><code>TypeError</code></td><td>型が合わない</td><td>文字列と数を足そうとした</td></tr>
+        <tr><td><code>ValueError</code></td><td>値の形が合わない</td><td><code>int("abc")</code> のように変換できない</td></tr>
+        <tr><td><code>ZeroDivisionError</code></td><td>0で割った</td><td>0件のときに平均を計算した</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        エラーの1つ上の行には、<strong>何行目で起きたか</strong>が書いてあります。その行から読み始めてください。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 396" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">レポートの7つの見出し</text>
+        <rect x="24" y="48" width="652" height="38" rx="8" fill="#141414" stroke="#282828"/>
+        <text x="40" y="65" fill="#76B900" font-size="12" font-weight="700">1. 作品の名前と概要</text>
+        <text x="40" y="81" fill="#888888" font-size="10">何を作ったかを3行で</text>
+        <text x="290" y="73" fill="#bbb" font-size="11">沼をよけろ！コスト迷路。プレイヤーが道を選び…</text>
+        <rect x="24" y="92" width="652" height="38" rx="8" fill="#101010" stroke="#282828"/>
+        <text x="40" y="109" fill="#76B900" font-size="12" font-weight="700">2. 使ったアルゴリズム</text>
+        <text x="40" y="125" fill="#888888" font-size="10">名前と、なぜ選んだか</text>
+        <text x="290" y="117" fill="#bbb" font-size="11">ダイクストラ法。マスごとに時間が違うため…</text>
+        <rect x="24" y="136" width="652" height="38" rx="8" fill="#141414" stroke="#282828"/>
+        <text x="40" y="153" fill="#76B900" font-size="12" font-weight="700">3. 動かし方</text>
+        <text x="40" y="169" fill="#888888" font-size="10">実行手順と入力の例</text>
+        <text x="290" y="161" fill="#bbb" font-size="11">python AL2-14-work.py を実行し、道を入力…</text>
+        <rect x="24" y="180" width="652" height="38" rx="8" fill="#101010" stroke="#282828"/>
+        <text x="40" y="197" fill="#76B900" font-size="12" font-weight="700">4. 実行結果</text>
+        <text x="40" y="213" fill="#888888" font-size="10">画面のコピーと、読み取れること</text>
+        <text x="290" y="205" fill="#bbb" font-size="11">図1のとおり、プレイヤー42秒・最短18秒…</text>
+        <rect x="24" y="224" width="652" height="38" rx="8" fill="#141414" stroke="#282828"/>
+        <text x="40" y="241" fill="#76B900" font-size="12" font-weight="700">5. 調べたこと</text>
+        <text x="40" y="257" fill="#888888" font-size="10">表と図で数値を示す</text>
+        <text x="290" y="249" fill="#bbb" font-size="11">表1のとおり、ステージを大きくすると…</text>
+        <rect x="24" y="268" width="652" height="38" rx="8" fill="#101010" stroke="#282828"/>
+        <text x="40" y="285" fill="#76B900" font-size="12" font-weight="700">6. 苦労した点</text>
+        <text x="40" y="301" fill="#888888" font-size="10">つまずきと、どう解決したか</text>
+        <text x="290" y="293" fill="#bbb" font-size="11">IndexError が出た。行の長さがそろって…</text>
+        <rect x="24" y="312" width="652" height="38" rx="8" fill="#141414" stroke="#282828"/>
+        <text x="40" y="329" fill="#76B900" font-size="12" font-weight="700">7. これからやりたいこと</text>
+        <text x="40" y="345" fill="#888888" font-size="10">足せなかった機能</text>
+        <text x="290" y="337" fill="#bbb" font-size="11">ステージを3つに増やしたい…</text>
+        <text x="350" y="378" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">「動きました」だけでは足りない。数値と、そこから読み取れることを書く</text>
+        </svg>
+      </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
+    自分の作品を仕上げるときに、そのまま使えるやり方です。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No14</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No13/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No14/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第14回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No14</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No14 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No14 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-14-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-14-ex1.py</code>, <code>AL2-14-ex2.py</code>, <code>AL2-14-ex3.py</code>, <code>AL2-14-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">テスト</strong><br><span style="color:#888;font-size:0.8rem">test</span></td><td>わざと特別な入力を与えて、プログラムが正しく動くか確かめる作業。</td></tr>
+        <tr><td><strong style="color:#76B900">境界値</strong><br><span style="color:#888;font-size:0.8rem">きょうかいち / boundary value</span></td><td>0、1、いちばん大きい値など「ぎりぎりの値」。バグの多くは境界値で見つかる。</td></tr>
+        <tr><td><strong style="color:#76B900">デバッグ</strong><br><span style="color:#888;font-size:0.8rem">debug</span></td><td>バグ（誤り）をさがして直すこと。<code>print</code> を入れて変数の中身を見る方法がいちばん手軽。</td></tr>
+        <tr><td><strong style="color:#76B900">例外</strong><br><span style="color:#888;font-size:0.8rem">れいがい / exception</span></td><td>プログラムが続けられなくなったときに出るエラー。<code>IndexError</code> や <code>KeyError</code> など種類がある。</td></tr>
+        <tr><td><strong style="color:#76B900">再現性</strong><br><span style="color:#888;font-size:0.8rem">さいげんせい / reproducibility</span></td><td>同じ手順で誰がやっても同じ結果になること。レポートには測り方や環境も書く。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>境界値テストでバグを見つける</h3>
+      </div>
+      <p>第13回のテンプレートAで「プレイヤーの道を受け取る部分」に対し、
+      6種類の入力を与えてテストします。バグのある関数と修正版を並べて比べます。</p>
+
+<pre><span class="code-label">Python ── AL2-14-ex1.py</span>
+<span class="cmt"># 境界値テスト: わざと「特別な入力」を与えて、プログラムが正しく動くか確かめる</span>
+<span class="cmt"># テンプレートAの「プレイヤーの道」を受け取る部分をテストする。</span>
+
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+]
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">move_to_route_buggy</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR&quot; を通るマスの並びに変える（バグあり）&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        route.append((r, c))
+    <span class="kw">return</span> route
+
+
+<span class="kw">def</span> <span class="fn">move_to_route_fixed</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR&quot; を通るマスの並びに変える（修正版）&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;U&quot;</span>:
+            r = r - <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;L&quot;</span>:
+            c = c - <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">f&quot;「{move}」は使えない文字です（D/U/R/L だけ使えます）&quot;</span>
+        <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
+            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;迷路の外に出てしまいました&quot;</span>
+        route.append((r, c))
+    <span class="kw">if</span> route[-<span class="num">1</span>] != goal:
+        <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;ゴールに着いていません&quot;</span>
+    <span class="kw">return</span> route, <span class="str">&quot;OK&quot;</span>
+
+
+tests = [
+    (<span class="str">&quot;ふつうの道&quot;</span>, <span class="str">&quot;DDRR&quot;</span>),
+    (<span class="str">&quot;空の道&quot;</span>, <span class="str">&quot;&quot;</span>),
+    (<span class="str">&quot;迷路の外に出る道&quot;</span>, <span class="str">&quot;DDDDDD&quot;</span>),
+    (<span class="str">&quot;ゴールに着かない道&quot;</span>, <span class="str">&quot;DR&quot;</span>),
+    (<span class="str">&quot;使えない文字が入った道&quot;</span>, <span class="str">&quot;DDXR&quot;</span>),
+    (<span class="str">&quot;行ったり戻ったりする道&quot;</span>, <span class="str">&quot;DRLDRR&quot;</span>),
+]
+
+<span class="fn">print</span>(<span class="str">&quot;バグのある関数に、6種類の入力を与えてみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="kw">for</span> name, moves <span class="kw">in</span> tests:
+    <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+    route = <span class="fn">move_to_route_buggy</span>(moves)
+    last = route[-<span class="num">1</span>]
+    inside = <span class="num">0</span> &lt;= last[<span class="num">0</span>] &lt; rows <span class="kw">and</span> <span class="num">0</span> &lt;= last[<span class="num">1</span>] &lt; cols
+    <span class="fn">print</span>(<span class="str">f&quot;  最後にいるマス: {last}   迷路の中か: {inside}&quot;</span>)
+    <span class="kw">if</span> <span class="kw">not</span> inside:
+        <span class="fn">print</span>(<span class="str">&quot;  → 迷路の外を指している。このあと cost_map[r][c] でエラーになる&quot;</span>)
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="str">&quot;修正版に、同じ6種類の入力を与えてみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="kw">for</span> name, moves <span class="kw">in</span> tests:
+    route, message = <span class="fn">move_to_route_fixed</span>(moves)
+    <span class="kw">if</span> route <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;） → 受けつけない: {message}&quot;</span>)
+    <span class="kw">else</span>:
+        total = <span class="num">0</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+            r, c = route[i]
+            total = total + cost_map[r][c]
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;） → OK: {len(route)-1}歩 ／ {total}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a14_ex1_result.png" alt="AL2-14-ex1.py の実行結果。バグのある関数に、6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / 最後にいるマス: (2, 2)   迷路の中か: True /  / 入力: 空の道（&quot;&quot;） / 最後にいるマス: (0, 0)   迷路の中か: True /  / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / 最後にいるマス: (6, 0)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / 入力: ゴールに着かない道（&quot;DR&quot;） / 最後にいるマス: (1, 1)   迷路の中か: True /  / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / 最後にいるマス: (2, 1)   迷路の中か: True /  / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / 最後にいるマス: (2, 3)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / ========================================================== / 修正版に、同じ6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） → OK: 4歩 ／ 12秒 / 入力: 空の道（&quot;&quot;） → 受けつけない: ゴールに着いていません / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） → 受けつけない: 迷路の外に出てしまいました / 入力: ゴールに着かない道（&quot;DR&quot;） → 受けつけない: ゴールに着いていません / 入力: 使えない文字が入った道（&quot;DDXR&quot;） → 受けつけない: 「X」は使えない文字です（D/U/R/L だけ使えます） / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） → OK: 6歩 ／ 22秒 / ========================================================== /  / 修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。 / 「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。" width="698" height="748" loading="lazy">
+      </div>
+      <p class="run-note">バグのある関数では、「迷路の外に出る道」と「行ったり戻ったりする道」が<strong>迷路の外のマスを指したまま</strong>返ってきています。このあと <code>cost_map[r][c]</code> を計算するとエラーで止まります。また「使えない文字が入った道」では、<code>X</code> が無視されて別の場所に着いてしまいました。修正版は、6種類すべてに対してエラーで止まらず、受けつけない場合は<strong>理由を文章で返して</strong>います。「行ったり戻ったりする道」は、ルールの上では正しい道なので受けつけている点にも注目してください。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題1の実行結果から、6種類の入力それぞれについて「バグのある関数の結果」と「修正版の結果」を表にまとめる。あわせて、修正版が「行ったり戻ったりする道」を受けつけている理由を説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>print デバッグでバグの原因をつきとめる</h3>
+      </div>
+      <p>バグをしこんだ貪欲法の関数を、<code>print</code> を入れて追いかけます。
+      どの行で判断がおかしくなっているかを、目で見て確かめます。</p>
+
+<pre><span class="code-label">Python ── AL2-14-ex2.py</span>
+<span class="cmt"># print デバッグ: プログラムの途中に print を入れて、変数の中身を目で見る</span>
+<span class="cmt"># ここでは「貪欲法で配達ルートを作る関数」にバグを1つしこんである。</span>
+<span class="kw">import</span> math
+
+places = [
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">0</span>, <span class="num">0</span>),
+    (<span class="str">&quot;A宅&quot;</span>, <span class="num">3</span>, <span class="num">1</span>),
+    (<span class="str">&quot;B宅&quot;</span>, <span class="num">1</span>, <span class="num">4</span>),
+    (<span class="str">&quot;C宅&quot;</span>, <span class="num">6</span>, <span class="num">2</span>),
+]
+
+n = <span class="fn">len</span>(places)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((places[i][<span class="num">1</span>] - places[j][<span class="num">1</span>]) ** <span class="num">2</span> + (places[i][<span class="num">2</span>] - places[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">2</span>))
+    distance.append(row)
+
+<span class="fn">print</span>(<span class="str">&quot;距離の表&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;8}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i}   &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{distance[i][j]:&gt;8}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="fn">print</span>()
+
+
+<span class="kw">def</span> <span class="fn">greedy_buggy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法でルートを作る（バグあり）&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="num">0</span>                       <span class="cmt"># ← ここがバグ。0番はすでに訪問済みなのに初期値にしている</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+
+<span class="kw">def</span> <span class="fn">greedy_with_print</span>():
+    <span class="str">&quot;&quot;&quot;同じ関数に print を入れて、中で何が起きているかを見る&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="num">0</span>
+        <span class="fn">print</span>(<span class="str">f&quot;  [ここまで] visited={visited}  here={here}  nearest の初期値={nearest}&quot;</span>)
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="fn">print</span>(<span class="str">f&quot;      j={j} はすでに訪問済み → とばす&quot;</span>)
+                <span class="kw">continue</span>
+            <span class="fn">print</span>(<span class="str">f&quot;      j={j}: distance[{here}][{j}]={distance[here][j]}&quot;</span>
+                  <span class="str">f&quot;  vs  distance[{here}][{nearest}]={distance[here][nearest]}&quot;</span>)
+            <span class="kw">if</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+                <span class="fn">print</span>(<span class="str">f&quot;        → nearest を {j} に更新&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  [結果] nearest={nearest} を訪問する&quot;</span>)
+        <span class="fn">print</span>()
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+
+<span class="kw">def</span> <span class="fn">greedy_fixed</span>():
+    <span class="str">&quot;&quot;&quot;修正版: nearest の初期値を None にして、最初の1件で必ず更新されるようにする&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;バグのある関数の結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+result = <span class="fn">greedy_buggy</span>()
+<span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+<span class="fn">print</span>(<span class="str">&quot;  同じ場所が2回入っていないか:&quot;</span>, <span class="fn">len</span>(result) != <span class="fn">len</span>(<span class="fn">set</span>(result)))
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;print を入れて、中で何が起きているかを見る&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">greedy_with_print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;修正版の結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+result = <span class="fn">greedy_fixed</span>()
+<span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> result]
+<span class="fn">print</span>(<span class="str">&quot;  ルート:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(names) + <span class="str">&quot; → &quot;</span> + places[<span class="num">0</span>][<span class="num">0</span>])
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;print を入れると、どの行で判断がおかしくなったかが目で見える。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;バグが直ったら、入れた print は消す。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a14_ex2_result.png" alt="AL2-14-ex2.py の実行結果。距離の表 / 0       1       2       3 / 0        0.0    3.16    4.12    6.32 / 1       3.16     0.0    3.61    3.16 / 2       4.12    3.61     0.0    5.39 / 3       6.32    3.16    5.39     0.0 /  / ============================================================== / バグのある関数の結果 / ============================================================== / 訪問した順番: [0, 0, 0, 0] / 同じ場所が2回入っていないか: True /  / ============================================================== / print を入れて、中で何が起きているかを見る / ============================================================== / [ここまで] visited=[0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / ============================================================== / 修正版の結果 / ============================================================== / 訪問した順番: [0, 1, 3, 2] / ルート: 営業所 → A宅 → C宅 → B宅 → 営業所 /  / print を入れると、どの行で判断がおかしくなったかが目で見える。 / バグが直ったら、入れた print は消す。" width="494" height="948" loading="lazy">
+      </div>
+      <p class="run-note">バグのある関数は <code>[0, 0, 0, 0]</code> という結果を返し、同じ場所を4回訪れています。<code>print</code> を入れた結果を見ると、原因がはっきり分かります。<code>nearest</code> の初期値が <code>0</code> になっており、<code>distance[0][0]</code> は<strong>0.0</strong>なので、どの都市と比べても「0.0より小さい」ことがなく、<code>nearest</code> が一度も更新されません。修正版では初期値を <code>None</code> にして、最初の1件で必ず更新されるようにしています。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>実行時間の正しい測り方</h3>
+      </div>
+      <p>レポートに実行時間を書くときの、正しい測り方を学びます。
+      1回だけ測ると、たまたま遅かった値をつかむことがあります。</p>
+
+<pre><span class="code-label">Python ── AL2-14-ex3.py</span>
+<span class="cmt"># レポートに載せる「実行時間の測り方」</span>
+<span class="cmt"># 1回だけ測ると、たまたま遅かった値をつかむことがある。何度か測って平均を取る。</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">make_distance</span>(count):
+    cities = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
+        cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+    table = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
+        row = []
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(count):
+            row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
+                                 + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
+        table.append(row)
+    <span class="kw">return</span> table
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>(distance):
+    n = <span class="fn">len</span>(distance)
+    best = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best:
+            best = total
+    <span class="kw">return</span> best
+
+
+<span class="kw">def</span> <span class="fn">measure</span>(function, argument, times):
+    <span class="str">&quot;&quot;&quot;function を times 回動かして、毎回の時間を返す&quot;&quot;&quot;</span>
+    records = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(times):
+        began = time.time()
+        <span class="fn">function</span>(argument)
+        records.append(time.time() - began)
+    <span class="kw">return</span> records
+
+
+<span class="fn">print</span>(<span class="str">&quot;同じ処理を5回ずつ測ってみる（10都市の全探索）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
+distance = <span class="fn">make_distance</span>(<span class="num">10</span>)
+records = <span class="fn">measure</span>(brute_force, distance, <span class="num">5</span>)
+<span class="kw">for</span> i, value <span class="kw">in</span> <span class="fn">enumerate</span>(records):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i+1}回目: {value:.4f}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  いちばん速い: {min(records):.4f}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  いちばん遅い: {max(records):.4f}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  平均:         {sum(records)/len(records):.4f}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  ばらつき（遅い÷速い）: {max(records)/min(records):.2f}倍&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;同じ処理でも、測るたびに時間が違う。1回だけの結果を書くのは正しくない。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;レポートには「5回測った平均」のように、測り方も書く。&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="str">&quot;レポート用の表（都市の数を変えて、5回ずつ測った平均）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;都市の数&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">&quot;平均&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">&quot;最速&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">&quot;最遅&quot;</span>, <span class="num">12</span>))
+<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>]:
+    distance = <span class="fn">make_distance</span>(count)
+    records = <span class="fn">measure</span>(brute_force, distance, <span class="num">5</span>)
+    average = <span class="fn">sum</span>(records) / <span class="fn">len</span>(records)
+    <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">f&quot;{count}都市&quot;</span>, <span class="num">12</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{average:.4f}秒&quot;</span>, <span class="num">12</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{min(records):.4f}秒&quot;</span>, <span class="num">12</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{max(records):.4f}秒&quot;</span>, <span class="num">12</span>))
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;測り方の書き方の例:&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  「MacBook Air (M4) 上の Python 3.11 で、同じ処理を5回ずつ実行し、&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;   その平均を記録した。時間は time.time() で計測した。」&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a14_ex3_result.png" alt="AL2-14-ex3.py の実行結果。同じ処理を5回ずつ測ってみる（10都市の全探索） / ---------------------------------------------------------- / 1回目: 0.0648秒 / 2回目: 0.0653秒 / 3回目: 0.0654秒 / 4回目: 0.0657秒 / 5回目: 0.0650秒 / ---------------------------------------------------------- / いちばん速い: 0.0648秒 / いちばん遅い: 0.0657秒 / 平均:         0.0652秒 / ばらつき（遅い÷速い）: 1.01倍 / ---------------------------------------------------------- /  / 同じ処理でも、測るたびに時間が違う。1回だけの結果を書くのは正しくない。 / レポートには「5回測った平均」のように、測り方も書く。 /  / ========================================================== / レポート用の表（都市の数を変えて、5回ずつ測った平均） / ========================================================== / 都市の数    平均        最速        最遅 / 7都市       0.0001秒    0.0001秒    0.0001秒 / 8都市       0.0008秒    0.0008秒    0.0008秒 / 9都市       0.0068秒    0.0068秒    0.0068秒 / 10都市      0.0665秒    0.0650秒    0.0683秒 / ========================================================== /  / 測り方の書き方の例: / 「MacBook Air (M4) 上の Python 3.11 で、同じ処理を5回ずつ実行し、 / その平均を記録した。時間は time.time() で計測した。」" width="488" height="648" loading="lazy">
+      </div>
+      <p class="run-note">同じ処理を5回測ったところ、いちばん速い回といちばん遅い回で差が出ました。差はわずかですが、<strong>毎回同じ値にはならない</strong>ことが確かめられます。パソコンは同時にほかの仕事もしているため、実行時間は必ずばらつきます。レポートには「5回測った平均」のように<strong>測り方も書く</strong>ことが大切です。「0.07秒でした」とだけ書かれていると、読んだ人は本当かどうか確かめられません。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>レポート用の表とグラフを作る</h3>
+      </div>
+      <p>レポートに載せる「表」と「グラフ」を、文字だけで作ります。
+      グラフを描くための特別な道具は必要ありません。</p>
+
+<pre><span class="code-label">Python ── AL2-14-ex4.py</span>
+<span class="cmt"># レポートに載せる「表」と「グラフ」を、文字だけで作る</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">make_distance</span>(count):
+    cities = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
+        cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+    table = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
+        row = []
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(count):
+            row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
+                                 + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
+        table.append(row)
+    <span class="kw">return</span> table
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>(distance):
+    n = <span class="fn">len</span>(distance)
+    best = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best:
+            best = total
+    <span class="kw">return</span> best
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>(distance):
+    n = <span class="fn">len</span>(distance)
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    total = <span class="num">0.0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="cmt"># --- データを集める ---</span>
+sizes = [<span class="num">5</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>]
+results = []
+<span class="kw">for</span> count <span class="kw">in</span> sizes:
+    distance = <span class="fn">make_distance</span>(count)
+    best = <span class="fn">brute_force</span>(distance)
+    fast = <span class="fn">greedy</span>(distance)
+    results.append((count, <span class="fn">round</span>(best, <span class="num">1</span>), <span class="fn">round</span>(fast, <span class="num">1</span>),
+                    <span class="fn">round</span>((fast / best - <span class="num">1</span>) * <span class="num">100</span>, <span class="num">1</span>)))
+
+
+<span class="cmt"># --- 表にする ---</span>
+<span class="fn">print</span>(<span class="str">&quot;表1: 都市の数と、2つの方法が出した答え&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;都市の数&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">&quot;最適解&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">&quot;貪欲法&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">&quot;何%長いか&quot;</span>, <span class="num">12</span>))
+<span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
+    <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">f&quot;{count}都市&quot;</span>, <span class="num">12</span>) + <span class="fn">pad</span>(<span class="fn">str</span>(best), <span class="num">12</span>) + <span class="fn">pad</span>(<span class="fn">str</span>(fast), <span class="num">12</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{gap}%&quot;</span>, <span class="num">12</span>))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+
+<span class="cmt"># --- 文字だけでグラフにする ---</span>
+<span class="kw">def</span> <span class="fn">bar</span>(value, biggest, width):
+    <span class="str">&quot;&quot;&quot;value の大きさに合わせて # を並べる&quot;&quot;&quot;</span>
+    length = <span class="fn">int</span>(value / biggest * width)
+    <span class="kw">if</span> length &lt; <span class="num">1</span>:
+        length = <span class="num">1</span>
+    <span class="kw">return</span> <span class="str">&quot;#&quot;</span> * length
+
+
+<span class="fn">print</span>(<span class="str">&quot;図1: 貪欲法が最適解より何%長いか&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+biggest = <span class="fn">max</span>(gap <span class="kw">for</span> _, _, _, gap <span class="kw">in</span> results)
+<span class="kw">if</span> biggest == <span class="num">0</span>:
+    biggest = <span class="num">1</span>
+<span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
+    <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">f&quot;{count}都市&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="fn">bar</span>(gap, biggest, <span class="num">30</span>), <span class="num">32</span>) + <span class="str">f&quot;{gap}%&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;図2: 最適解と貪欲法の答えを並べて比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+biggest = <span class="fn">max</span>(<span class="fn">max</span>(best, fast) <span class="kw">for</span> _, best, fast, _ <span class="kw">in</span> results)
+<span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
+    <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">f&quot;{count}都市&quot;</span>, <span class="num">10</span>) + <span class="str">&quot;最適 &quot;</span> + <span class="fn">pad</span>(<span class="fn">bar</span>(best, biggest, <span class="num">30</span>), <span class="num">32</span>) + <span class="fn">str</span>(best))
+    <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;&quot;</span>, <span class="num">10</span>) + <span class="str">&quot;貪欲 &quot;</span> + <span class="fn">pad</span>(<span class="fn">bar</span>(fast, biggest, <span class="num">30</span>), <span class="num">32</span>) + <span class="fn">str</span>(fast))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;表と図をレポートに載せるときは、必ず「表1」「図1」のように番号と題を付ける。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;本文からは「表1のとおり」のように番号で指す。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a14_ex4_result.png" alt="AL2-14-ex4.py の実行結果。表1: 都市の数と、2つの方法が出した答え / -------------------------------------------------------- / 都市の数    最適解      貪欲法      何%長いか / 5都市       54.9        62.1        13.2% / 6都市       57.8        57.8        0.0% / 7都市       58.0        58.0        0.0% / 8都市       58.0        58.7        1.2% / 9都市       58.8        59.5        1.2% / 10都市      59.5        60.2        1.2% / -------------------------------------------------------- /  / 図1: 貪欲法が最適解より何%長いか / -------------------------------------------------------- / 5都市     ##############################  13.2% / 6都市     #                               0.0% / 7都市     #                               0.0% / 8都市     ##                              1.2% / 9都市     ##                              1.2% / 10都市    ##                              1.2% / -------------------------------------------------------- /  / 図2: 最適解と貪欲法の答えを並べて比べる / -------------------------------------------------------- / 5都市     最適 ##########################      54.9 / 貪欲 ##############################  62.1 / 6都市     最適 ###########################     57.8 / 貪欲 ###########################     57.8 / 7都市     最適 ############################    58.0 / 貪欲 ############################    58.0 / 8都市     最適 ############################    58.0 / 貪欲 ############################    58.7 / 9都市     最適 ############################    58.8 / 貪欲 ############################    59.5 / 10都市    最適 ############################    59.5 / 貪欲 #############################   60.2 / -------------------------------------------------------- /  / 表と図をレポートに載せるときは、必ず「表1」「図1」のように番号と題を付ける。 / 本文からは「表1のとおり」のように番号で指す。" width="505" height="828" loading="lazy">
+      </div>
+      <p class="run-note">表1では、都市の数ごとに最適解と貪欲法の答えが並んでいます。5都市のときだけ貪欲法が<strong>13.2%も長く</strong>、6都市と7都市では差が0%でした。図1のように棒の長さで表すと、5都市だけが飛び抜けていることが一目で分かります。図2では最適解と貪欲法を並べていますが、棒の長さがほとんど同じで差が読み取りにくくなっています。<strong>同じデータでも、何を棒の長さにするかで伝わり方が変わる</strong>ということです。レポートでは「差」を図にするほうが、言いたいことが伝わります。</p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">課題1と課題2に取り組み、解答をNotionに記録してください。
+    第14回が作品づくりの<strong>最終回</strong>です。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>作品をテストして仕上げる</h3>
+      </div>
+      <p>第13回で作りはじめた <code>AL2-13-work.py</code> を仕上げます。
+      作業用のファイルは <code>AL2-14-work.py</code> という名前でコピーしてから始めてください。</p>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: テストする</p>
+        <p style="font-size:0.95rem;color:#ccc;margin-bottom:0.5rem">次の4種類の入力を、実際に自分の作品に与えてください。</p>
+        <ol>
+          <li><strong>空っぽ</strong>: 何も入力しない／空のリストを渡す</li>
+          <li><strong>はしっこ</strong>: いちばん小さい値・いちばん大きい値を入れる</li>
+          <li><strong>範囲の外</strong>: マイナス、迷路の外、大きすぎる数を入れる</li>
+          <li><strong>形がちがう</strong>: 数字のかわりに文字、使えない記号を入れる</li>
+        </ol>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: 直す</p>
+        <ol>
+          <li>エラーで止まったものを、<strong>止まらないように</strong>直す</li>
+          <li>受けつけない入力には、<strong>理由を文章で表示する</strong></li>
+          <li>直したら、もう一度4種類すべてを試す</li>
+        </ol>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 記録する</p>
+        <p style="font-size:0.95rem;color:#ccc">次の表をNotionに作り、4種類すべてについて記入してください。</p>
+      </div>
+
+      <table>
+        <tr><th>試した入力</th><th>直す前の動き</th><th>直したあとの動き</th><th>直した内容</th></tr>
+        <tr><td>空っぽ</td><td></td><td></td><td></td></tr>
+        <tr><td>はしっこ</td><td></td><td></td><td></td></tr>
+        <tr><td>範囲の外</td><td></td><td></td><td></td></tr>
+        <tr><td>形がちがう</td><td></td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>もともと正しく動いていた場合:</strong>
+      「直す前から正しく動いた」と書き、<strong>なぜ正しく動いたのか</strong>（どの行が守っているのか）を説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 4種類のテストの表（直す前・直したあと・直した内容）、および仕上げたコード全体。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>レポートを書く</h3>
+      </div>
+      <p>作品についてのレポートをNotionに書きます。次の7つの見出しをすべて作ってください。</p>
+
+      <table>
+        <tr><th>見出し</th><th>書くこと</th><th>目安</th></tr>
+        <tr><td>1. 作品の名前と概要</td><td>何を作ったか</td><td>3行以上</td></tr>
+        <tr><td>2. 使ったアルゴリズム</td><td>名前と、なぜ選んだか（第11回の3つの問いに沿って）</td><td>5行以上</td></tr>
+        <tr><td>3. 動かし方</td><td>実行手順、入力の例、出力の見方</td><td>3行以上</td></tr>
+        <tr><td>4. 実行結果</td><td>画面のコピーと、そこから読み取れること</td><td>結果＋3行以上</td></tr>
+        <tr><td>5. 調べたこと</td><td><strong>表を1つ以上</strong>と<strong>図を1つ以上</strong></td><td>表1・図1として番号を付ける</td></tr>
+        <tr><td>6. 苦労した点</td><td>つまずいた内容と、どう解決したか</td><td>2つ以上</td></tr>
+        <tr><td>7. これからやりたいこと</td><td>足せなかった機能と、その理由</td><td>2つ以上</td></tr>
+      </table>
+
+      <div class="note-warn">
+        <strong>見出し5「調べたこと」のヒント:</strong>
+        自分の作品で、条件を変えると結果がどう変わるかを調べて表にします。次のような例があります。
+        <ul style="padding-left:1.2rem;margin-top:0.5rem;font-size:0.92rem;line-height:1.9">
+          <li>ステージの大きさを 5×5、8×8、12×12 と変えて、実行時間を測る</li>
+          <li>配達先を 4件、6件、8件と増やして、貪欲法と全探索の差を測る</li>
+          <li>沼のマスの割合を 0%、20%、40% と変えて、最短時間がどう変わるかを測る</li>
+        </ul>
+        例題3のように<strong>5回測った平均</strong>を書き、例題4のように<strong>表と図</strong>にしてください。
+      </div>
+
+      <p style="margin-top:1rem"><strong>書き方の注意:</strong></p>
+      <ul class="point-list">
+        <li>「動きました」「うまくいきました」だけでは足りません。<strong>数値</strong>を書いてください</li>
+        <li>本文からは「表1のとおり」「図1を見ると」のように<strong>番号で指して</strong>ください</li>
+        <li>うまくいかなかったことも、正直に書いてください。減点にはなりません</li>
+      </ul>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 7つの見出しをすべて埋めたレポート。見出し5には表と図を必ず1つ以上ずつ入れる。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第14回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題1</strong>: 6種類の入力についての表、「行ったり戻ったりする道」を受けつける理由</li>
+        <li><strong>課題1</strong>: 4種類のテストの表</li>
+        <li><strong>課題1</strong>: 仕上げたコード全体と、最終的な実行結果</li>
+        <li><strong>課題2</strong>: 7つの見出しを埋めたレポート</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+      <div class="note-warn" style="margin-top:1rem">
+        <strong>第15回について:</strong> 第15回は後期のまとめです。
+        提出物の最終チェックを行い、後期に学ばなかった発展的な手法（焼きなまし法・遺伝的アルゴリズム）を体験します。
+        作品とレポートは第15回の授業中まで修正できます。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2027-01-20T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="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"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第14回 実践的課題（2）仕上げとレポート作成
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
