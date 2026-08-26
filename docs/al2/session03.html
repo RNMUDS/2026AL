@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回: グラフとデータ構造の再確認 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">グラフとは</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">標準課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第3回: グラフとデータ構造の再確認</h1>
+    <p>頂点・辺・重みを図で確かめ、隣接リストと隣接行列という2つの表現方法でグラフをPythonに書き写す</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2のマス数の比較</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の変換結果</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>路線を1本足すと？</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>2つの表現の使い分け</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>グラフとは</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第1回・第2回であつかった迷路は、じつは<strong>グラフ</strong>という考え方の一例です。
+      グラフとは、<strong>「点」と「点どうしのつながり」だけでものごとを表す方法</strong>のことです。
+      点のことを<strong>頂点</strong>、つながりのことを<strong>辺</strong>と呼びます。
+    </p>
+
+    <div class="analogy">
+      路線図を思い浮かべてください。実際の線路は曲がりくねっていますが、路線図では駅を丸で、路線をまっすぐな線で描きます。
+      駅の正確な位置や線路の曲がり方は消えていますが、「どの駅とどの駅がつながっているか」は残っています。
+      乗りかえを考えるときに必要な情報だけを残した形が、グラフです。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 322" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">グラフの言葉: 頂点と辺</text>
+        <line x1="176" y1="146" x2="206" y2="252" stroke="#555" stroke-width="2"/>
+        <line x1="176" y1="146" x2="260" y2="62" stroke="#555" stroke-width="2"/>
+        <line x1="176" y1="146" x2="408" y2="152" stroke="#555" stroke-width="2"/>
+        <line x1="206" y1="252" x2="356" y2="252" stroke="#555" stroke-width="2"/>
+        <line x1="408" y1="152" x2="356" y2="252" stroke="#555" stroke-width="2"/>
+        <line x1="408" y1="152" x2="470" y2="62" stroke="#555" stroke-width="2"/>
+        <line x1="260" y1="62" x2="470" y2="62" stroke="#555" stroke-width="2"/>
+        <circle cx="260" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+        <circle cx="176" cy="146" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+        <circle cx="470" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+        <circle cx="408" cy="152" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+        <circle cx="206" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+        <circle cx="356" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+        <circle cx="260" cy="62" r="26" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.040;0.060;0.30;0.34;1" dur="15s" repeatCount="indefinite"/></circle>
+        <circle cx="176" cy="146" r="26" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.060;0.080;0.30;0.34;1" dur="15s" repeatCount="indefinite"/></circle>
+        <circle cx="470" cy="62" r="26" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.080;0.100;0.30;0.34;1" dur="15s" repeatCount="indefinite"/></circle>
+        <circle cx="408" cy="152" r="26" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.100;0.120;0.30;0.34;1" dur="15s" repeatCount="indefinite"/></circle>
+        <circle cx="206" cy="252" r="26" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.120;0.140;0.30;0.34;1" dur="15s" repeatCount="indefinite"/></circle>
+        <circle cx="356" cy="252" r="26" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.140;0.160;0.30;0.34;1" dur="15s" repeatCount="indefinite"/></circle>
+        <text x="350" y="306" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.04;0.08;0.30;0.34;1" dur="15s" repeatCount="indefinite"/>① 頂点（ちょうてん）＝ 駅。全部で6個</text>
+        <line x1="176" y1="146" x2="206" y2="252" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.360;0.380;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <line x1="176" y1="146" x2="260" y2="62" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.380;0.400;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <line x1="176" y1="146" x2="408" y2="152" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.400;0.420;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <line x1="206" y1="252" x2="356" y2="252" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.420;0.440;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <line x1="408" y1="152" x2="356" y2="252" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.440;0.460;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <line x1="408" y1="152" x2="470" y2="62" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.460;0.480;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <line x1="260" y1="62" x2="470" y2="62" stroke="#FFB800" stroke-width="4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.480;0.500;0.62;0.66;1" dur="15s" repeatCount="indefinite"/></line>
+        <text x="350" y="306" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.36;0.40;0.62;0.66;1" dur="15s" repeatCount="indefinite"/>② 辺（へん）＝ 路線。全部で7本</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="177.0" y="188.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="191.0" y="204.0" text-anchor="middle" fill="#ccc" font-size="12">7</text></g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="204.0" y="93.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="218.0" y="109.0" text-anchor="middle" fill="#ccc" font-size="12">9</text></g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="278.0" y="138.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="292.0" y="154.0" text-anchor="middle" fill="#ccc" font-size="12">14</text></g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="267.0" y="241.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="281.0" y="257.0" text-anchor="middle" fill="#ccc" font-size="12">15</text></g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="368.0" y="191.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="382.0" y="207.0" text-anchor="middle" fill="#ccc" font-size="12">11</text></g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="425.0" y="96.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="439.0" y="112.0" text-anchor="middle" fill="#ccc" font-size="12">6</text></g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/><rect x="351.0" y="51.0" width="28" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/><text x="365.0" y="67.0" text-anchor="middle" fill="#ccc" font-size="12">12</text></g>
+        <text x="350" y="306" text-anchor="middle" fill="#888888" font-size="13" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="15s" repeatCount="indefinite"/>③ 重み（おもみ）＝ 辺ごとの数値。第4回であつかう</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>グラフで表せるもの</h4>
+      <table>
+        <tr><th>あつかうもの</th><th>頂点になるもの</th><th>辺になるもの</th></tr>
+        <tr><td>路線図</td><td>駅</td><td>駅と駅をつなぐ路線</td></tr>
+        <tr><td>友達関係</td><td>人</td><td>友達であるという関係</td></tr>
+        <tr><td>迷路</td><td>通れる1マス</td><td>となり合うマスどうしのつながり</td></tr>
+        <tr><td>道路地図</td><td>交差点</td><td>交差点をつなぐ道路</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        見た目はまるで違いますが、どれも「頂点」と「辺」だけで書き直せます。
+        書き直してしまえば、<strong>同じ1つのプログラムで4つとも解ける</strong>ようになります。
+        例題4では、迷路をグラフに書き直して、例題3とまったく同じ幅優先探索で解きます。
+      </p>
+    </div>
+
+    <div class="concept-box">
+      <h4>グラフをPythonに書き写す2つの方法</h4>
+      <p style="font-size:0.95rem">
+        紙に描いたグラフを、そのままPythonに渡すことはできません。数や文字の形に書き写す必要があります。
+        書き写し方には、よく使われる方法が2つあります。
+      </p>
+      <ul class="point-list" style="margin-top:0.6rem">
+        <li><strong style="color:#76B900">隣接リスト</strong>（りんせつリスト）: 頂点ごとに「となりの頂点」を並べる。辞書とリストで書ける。</li>
+        <li><strong style="color:#FFB800">隣接行列</strong>（りんせつぎょうれつ）: たてよこの表を作り、つながっていれば1、つながっていなければ0を書く。</li>
+      </ul>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 316" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じグラフを2通りの形で書き写す</text>
+        <text x="175" y="52" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">隣接リスト</text>
+        <text x="175" y="70" text-anchor="middle" fill="#888888" font-size="11">駅ごとに、となりの駅を並べる</text>
+        <text x="500" y="52" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">隣接行列</text>
+        <text x="500" y="70" text-anchor="middle" fill="#888888" font-size="11">表を作り、つながっていれば1を書く</text>
+        <line x1="345" y1="44" x2="345" y2="290" stroke="#333" stroke-width="1"/>
+        <rect x="24" y="80" width="300" height="26" rx="6" fill="#141414" stroke="#2e2e2e"/>
+        <text x="36" y="98" fill="#76B900" font-size="12" font-weight="700">新宿</text>
+        <text x="90" y="98" fill="#ccc" font-size="12">→ 渋谷、池袋、東京</text>
+        <rect x="24" y="110" width="300" height="26" rx="6" fill="#141414" stroke="#2e2e2e"/>
+        <text x="36" y="128" fill="#76B900" font-size="12" font-weight="700">渋谷</text>
+        <text x="90" y="128" fill="#ccc" font-size="12">→ 新宿、品川</text>
+        <rect x="24" y="140" width="300" height="26" rx="6" fill="#141414" stroke="#2e2e2e"/>
+        <text x="36" y="158" fill="#76B900" font-size="12" font-weight="700">池袋</text>
+        <text x="90" y="158" fill="#ccc" font-size="12">→ 新宿、上野</text>
+        <rect x="24" y="170" width="300" height="26" rx="6" fill="#141414" stroke="#2e2e2e"/>
+        <text x="36" y="188" fill="#76B900" font-size="12" font-weight="700">東京</text>
+        <text x="90" y="188" fill="#ccc" font-size="12">→ 新宿、品川、上野</text>
+        <rect x="24" y="200" width="300" height="26" rx="6" fill="#141414" stroke="#2e2e2e"/>
+        <text x="36" y="218" fill="#76B900" font-size="12" font-weight="700">品川</text>
+        <text x="90" y="218" fill="#ccc" font-size="12">→ 渋谷、東京</text>
+        <rect x="24" y="230" width="300" height="26" rx="6" fill="#141414" stroke="#2e2e2e"/>
+        <text x="36" y="248" fill="#76B900" font-size="12" font-weight="700">上野</text>
+        <text x="90" y="248" fill="#ccc" font-size="12">→ 東京、池袋</text>
+        <text x="411.0" y="91" text-anchor="middle" fill="#888888" font-size="10">新宿</text>
+        <text x="441.0" y="91" text-anchor="middle" fill="#888888" font-size="10">渋谷</text>
+        <text x="471.0" y="91" text-anchor="middle" fill="#888888" font-size="10">池袋</text>
+        <text x="501.0" y="91" text-anchor="middle" fill="#888888" font-size="10">東京</text>
+        <text x="531.0" y="91" text-anchor="middle" fill="#888888" font-size="10">品川</text>
+        <text x="561.0" y="91" text-anchor="middle" fill="#888888" font-size="10">上野</text>
+        <text x="388" y="119.0" text-anchor="end" fill="#888888" font-size="10">新宿</text>
+        <rect x="396" y="100" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="410.0" y="118.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="426" y="100" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="440.0" y="118.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="456" y="100" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="470.0" y="118.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="486" y="100" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="500.0" y="118.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="516" y="100" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="530.0" y="118.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="546" y="100" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="560.0" y="118.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <text x="388" y="149.0" text-anchor="end" fill="#888888" font-size="10">渋谷</text>
+        <rect x="396" y="130" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="410.0" y="148.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="426" y="130" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="440.0" y="148.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="456" y="130" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="470.0" y="148.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="486" y="130" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="500.0" y="148.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="516" y="130" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="530.0" y="148.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="546" y="130" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="560.0" y="148.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <text x="388" y="179.0" text-anchor="end" fill="#888888" font-size="10">池袋</text>
+        <rect x="396" y="160" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="410.0" y="178.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="426" y="160" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="440.0" y="178.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="456" y="160" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="470.0" y="178.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="486" y="160" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="500.0" y="178.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="516" y="160" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="530.0" y="178.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="546" y="160" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="560.0" y="178.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <text x="388" y="209.0" text-anchor="end" fill="#888888" font-size="10">東京</text>
+        <rect x="396" y="190" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="410.0" y="208.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="426" y="190" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="440.0" y="208.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="456" y="190" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="470.0" y="208.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="486" y="190" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="500.0" y="208.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="516" y="190" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="530.0" y="208.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="546" y="190" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="560.0" y="208.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <text x="388" y="239.0" text-anchor="end" fill="#888888" font-size="10">品川</text>
+        <rect x="396" y="220" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="410.0" y="238.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="426" y="220" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="440.0" y="238.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="456" y="220" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="470.0" y="238.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="486" y="220" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="500.0" y="238.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="516" y="220" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="530.0" y="238.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="546" y="220" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="560.0" y="238.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <text x="388" y="269.0" text-anchor="end" fill="#888888" font-size="10">上野</text>
+        <rect x="396" y="250" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="410.0" y="268.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="426" y="250" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="440.0" y="268.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="456" y="250" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="470.0" y="268.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="486" y="250" width="28" height="28" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="500.0" y="268.0" text-anchor="middle" fill="#93D500" font-size="12">1</text>
+        <rect x="516" y="250" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="530.0" y="268.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="546" y="250" width="28" height="28" rx="4" fill="#141414" stroke="#2e2e2e"/>
+        <text x="560.0" y="268.0" text-anchor="middle" fill="#555" font-size="12">0</text>
+        <rect x="24" y="80" width="300" height="26" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.147;0.167;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="394" y="98" width="182" height="32" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.147;0.167;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="24" y="110" width="300" height="26" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.167;0.177;0.313;0.333;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="394" y="128" width="182" height="32" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.167;0.177;0.313;0.333;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="24" y="140" width="300" height="26" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.333;0.343;0.480;0.500;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="394" y="158" width="182" height="32" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.333;0.343;0.480;0.500;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="24" y="170" width="300" height="26" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.500;0.510;0.647;0.667;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="394" y="188" width="182" height="32" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.500;0.510;0.647;0.667;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="24" y="200" width="300" height="26" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.667;0.677;0.813;0.833;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="394" y="218" width="182" height="32" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.667;0.677;0.813;0.833;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="24" y="230" width="300" height="26" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.833;0.843;0.980;1.000;1" dur="12s" repeatCount="indefinite"/></rect>
+        <rect x="394" y="248" width="182" height="32" rx="6" fill="none" stroke="#76B900" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.833;0.843;0.980;1.000;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="350" y="300" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">左の1行と右の1行は、まったく同じつながりを表している</text>
+        </svg>
+      </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No03</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No02/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No03/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第3回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No03</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No03 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No03 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-03-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code>, <code>AL2-03-ex3.py</code>, <code>AL2-03-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">グラフ</strong><br><span style="color:#888;font-size:0.8rem">graph</span></td><td>「点」と「点どうしのつながり」だけでものごとを表す方法。棒グラフや折れ線グラフとは別のもの。</td></tr>
+        <tr><td><strong style="color:#76B900">頂点</strong><br><span style="color:#888;font-size:0.8rem">ちょうてん / vertex</span></td><td>グラフの「点」。駅・人・迷路の1マスなどが頂点になる。ノード（node）とも呼ぶ。</td></tr>
+        <tr><td><strong style="color:#76B900">辺</strong><br><span style="color:#888;font-size:0.8rem">へん / edge</span></td><td>グラフの「つながり」。路線・友達関係・となり合うマスの関係などが辺になる。</td></tr>
+        <tr><td><strong style="color:#76B900">隣接リスト</strong><br><span style="color:#888;font-size:0.8rem">りんせつリスト / adjacency list</span></td><td>頂点ごとに、となりの頂点を並べた表し方。辺の数だけ場所を使うので、辺が少ないグラフに向く。</td></tr>
+        <tr><td><strong style="color:#76B900">隣接行列</strong><br><span style="color:#888;font-size:0.8rem">りんせつぎょうれつ / adjacency matrix</span></td><td>たてよこの表を作り、つながっていれば1を書く表し方。「2点がつながっているか」を1回で調べられる。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>隣接リストで路線図を表す</h3>
+      </div>
+      <p>6つの駅と7本の路線からなる路線図を、隣接リストの形でPythonに書き写します。
+      隣接リストは<strong>辞書</strong>を使い、「駅の名前」を鍵、「となりの駅を並べたリスト」を値にします。</p>
+
+<pre><span class="code-label">Python ── AL2-03-ex1.py</span>
+<span class="cmt"># グラフを「隣接リスト」で表す</span>
+<span class="cmt"># 隣接リスト = それぞれの頂点について「となりにある頂点」を並べた表</span>
+
+<span class="cmt"># 6つの駅と、駅どうしをつなぐ路線をグラフにする</span>
+<span class="cmt"># 頂点（ちょうてん） = 駅、辺（へん） = 路線</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+    <span class="str">&quot;渋谷&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    <span class="str">&quot;池袋&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;上野&quot;</span>],
+    <span class="str">&quot;東京&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>],
+    <span class="str">&quot;品川&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+    <span class="str">&quot;上野&quot;</span>: [<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+}
+
+<span class="fn">print</span>(<span class="str">&quot;隣接リストで表した路線図&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    neighbors = railway[station]
+    <span class="fn">print</span>(<span class="str">f&quot;{station}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(neighbors))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+
+<span class="cmt"># 頂点の数と辺の数を数える</span>
+vertex_count = <span class="fn">len</span>(railway)
+
+edge_count = <span class="num">0</span>
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    edge_count = edge_count + <span class="fn">len</span>(railway[station])
+edge_count = edge_count // <span class="num">2</span>      <span class="cmt"># 1本の路線が両方の駅から数えられるので半分にする</span>
+
+<span class="fn">print</span>(<span class="str">&quot;頂点（駅）の数:&quot;</span>, vertex_count)
+<span class="fn">print</span>(<span class="str">&quot;辺（路線）の数:&quot;</span>, edge_count)
+<span class="fn">print</span>()
+
+<span class="cmt"># となりの駅をすぐに取り出せることが、隣接リストの長所</span>
+<span class="fn">print</span>(<span class="str">&quot;新宿のとなりの駅:&quot;</span>, railway[<span class="str">&quot;新宿&quot;</span>])
+<span class="fn">print</span>(<span class="str">&quot;品川のとなりの駅:&quot;</span>, railway[<span class="str">&quot;品川&quot;</span>])
+<span class="fn">print</span>()
+
+<span class="cmt"># 「新宿と品川は直接つながっているか」を調べる</span>
+<span class="kw">if</span> <span class="str">&quot;品川&quot;</span> <span class="kw">in</span> railway[<span class="str">&quot;新宿&quot;</span>]:
+    <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっている&quot;</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex1_result.png" alt="AL2-03-ex1.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 新宿: 渋谷、池袋、東京 / 渋谷: 新宿、品川 / 池袋: 新宿、上野 / 東京: 新宿、品川、上野 / 品川: 渋谷、東京 / 上野: 池袋、東京 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 新宿のとなりの駅: [&#x27;渋谷&#x27;, &#x27;池袋&#x27;, &#x27;東京&#x27;] / 品川のとなりの駅: [&#x27;渋谷&#x27;, &#x27;東京&#x27;] /  / 新宿と品川は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
+      </div>
+      <p class="run-note">6つの駅それぞれについて、となりの駅が一覧で表示されました。<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。辺（路線）の数を数えるときに <code>// 2</code> で半分にしているのは、1本の路線が「新宿の側」と「渋谷の側」の両方から数えられてしまうためです。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>隣接行列で同じ路線図を表す</h3>
+      </div>
+      <p>例題1とまったく同じ路線図を、今度は隣接行列の形で書き写します。
+      6つの駅があるので、たて6マス・よこ6マスの表を作ります。</p>
+
+<pre><span class="code-label">Python ── AL2-03-ex2.py</span>
+<span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
+<span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
+
+stations = [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>]
+
+<span class="cmt"># 路線（辺）の一覧</span>
+lines = [
+    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>),
+    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>),
+    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;東京&quot;</span>),
+    (<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>),
+    (<span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>),
+    (<span class="str">&quot;東京&quot;</span>, <span class="str">&quot;上野&quot;</span>),
+    (<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>),
+]
+
+n = <span class="fn">len</span>(stations)
+
+<span class="cmt"># 全部のマスを0にした表を作る</span>
+matrix = [[<span class="num">0</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n)]
+
+<span class="cmt"># 路線があるマスだけ1にする（行き帰りの両方を1にする）</span>
+<span class="kw">for</span> a, b <span class="kw">in</span> lines:
+    i = stations.index(a)
+    j = stations.index(b)
+    matrix[i][j] = <span class="num">1</span>
+    matrix[j][i] = <span class="num">1</span>
+
+<span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
+<span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} = {stations[i]}&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;隣接行列（1 = つながっている、0 = つながっていない）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>(<span class="str">&quot;          &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{matrix[i][j]:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n))
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} {stations[i]}  &quot;</span> + row)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 隣接行列は「つながっているか」を1回で調べられる</span>
+a = <span class="str">&quot;新宿&quot;</span>
+b = <span class="str">&quot;品川&quot;</span>
+i = stations.index(a)
+j = stations.index(b)
+<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
+
+a = <span class="str">&quot;新宿&quot;</span>
+b = <span class="str">&quot;東京&quot;</span>
+i = stations.index(a)
+j = stations.index(b)
+<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
+<span class="fn">print</span>()
+
+<span class="cmt"># 使うマスの数を比べる</span>
+matrix_cells = n * n
+list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
+<span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;駅の数を増やしたときの比較（1駅あたり3路線とした場合）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)
+<span class="fn">print</span>(<span class="str">&quot;    駅の数     隣接行列のマス数     隣接リストのマス数&quot;</span>)
+<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
+    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">駅の数が増えたとき、表に必要なマスの数はどうなるか</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは10倍ごとの目もり（1駅あたり3路線として計算）</text>
+        <text x="24" y="88" fill="#E0E0E0" font-size="12" font-weight="700">駅6個</text>
+        <text x="106" y="82" fill="#888888" font-size="10">隣接行列</text>
+        <rect x="168" y="68" width="82" height="18" rx="4" fill="#FFB800" opacity="0.85"/>
+        <text x="260" y="82" fill="#FFB800" font-size="11" font-weight="700">36マス</text>
+        <text x="106" y="108" fill="#888888" font-size="10">隣接リスト</text>
+        <rect x="168" y="94" width="82" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="260" y="108" fill="#76B900" font-size="11" font-weight="700">36マス</text>
+        <text x="24" y="150" fill="#E0E0E0" font-size="12" font-weight="700">駅50個</text>
+        <text x="106" y="144" fill="#888888" font-size="10">隣接行列</text>
+        <rect x="168" y="130" width="178" height="18" rx="4" fill="#FFB800" opacity="0.85"/>
+        <text x="356" y="144" fill="#FFB800" font-size="11" font-weight="700">2,500マス</text>
+        <text x="106" y="170" fill="#888888" font-size="10">隣接リスト</text>
+        <rect x="168" y="156" width="130" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="308" y="170" fill="#76B900" font-size="11" font-weight="700">300マス</text>
+        <text x="24" y="212" fill="#E0E0E0" font-size="12" font-weight="700">駅500個</text>
+        <text x="106" y="206" fill="#888888" font-size="10">隣接行列</text>
+        <rect x="168" y="192" width="283" height="18" rx="4" fill="#FFB800" opacity="0.85"/>
+        <text x="461" y="206" fill="#FFB800" font-size="11" font-weight="700">250,000マス</text>
+        <text x="106" y="232" fill="#888888" font-size="10">隣接リスト</text>
+        <rect x="168" y="218" width="183" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="361" y="232" fill="#76B900" font-size="11" font-weight="700">3,000マス</text>
+        <text x="24" y="274" fill="#E0E0E0" font-size="12" font-weight="700">駅5,000個</text>
+        <text x="106" y="268" fill="#888888" font-size="10">隣接行列</text>
+        <rect x="168" y="254" width="388" height="18" rx="4" fill="#FFB800" opacity="0.85"/>
+        <text x="566" y="268" fill="#FFB800" font-size="11" font-weight="700">25,000,000マス</text>
+        <text x="106" y="294" fill="#888888" font-size="10">隣接リスト</text>
+        <rect x="168" y="280" width="235" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="413" y="294" fill="#76B900" font-size="11" font-weight="700">30,000マス</text>
+        <text x="350" y="328" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">駅が5000個になると、隣接行列は隣接リストの約800倍のマスが必要になる</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数     隣接行列のマス数     隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
+      </div>
+      <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>グラフの上を幅優先探索する</h3>
+      </div>
+      <p>迷路で使った幅優先探索を、そのままグラフに使います。
+      「新宿から各駅まで、何本の路線に乗ればたどり着けるか」を求めます。</p>
+
+<pre><span class="code-label">Python ── AL2-03-ex3.py</span>
+<span class="cmt"># グラフの上を幅優先探索する</span>
+<span class="cmt"># 迷路と同じ考え方で、「新宿から各駅まで何本の路線に乗ればよいか」を求める</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+    <span class="str">&quot;渋谷&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    <span class="str">&quot;池袋&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;上野&quot;</span>],
+    <span class="str">&quot;東京&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>],
+    <span class="str">&quot;品川&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+    <span class="str">&quot;上野&quot;</span>: [<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+
+<span class="cmt"># rides = 「その駅まで何本の路線に乗ればよいか」を記録する辞書</span>
+rides = {start: <span class="num">0</span>}
+came_from = {start: <span class="kw">None</span>}
+
+queue = <span class="fn">deque</span>([start])
+
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索の進み方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    current = queue.popleft()
+    <span class="fn">print</span>(<span class="str">f&quot;{current} を調べる（乗る路線の数: {rides[current]}本）&quot;</span>)
+    <span class="kw">for</span> next_station <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> next_station <span class="kw">in</span> rides:
+            <span class="kw">continue</span>                     <span class="cmt"># すでに調べた駅</span>
+        rides[next_station] = rides[current] + <span class="num">1</span>
+        came_from[next_station] = current
+        queue.append(next_station)
+        <span class="fn">print</span>(<span class="str">f&quot;    → {next_station} は {rides[next_station]}本でたどり着ける&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">f&quot;{start} から各駅までに乗る路線の数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {rides[station]}本&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 経路を復元して表示する</span>
+<span class="kw">for</span> goal <span class="kw">in</span> [<span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>]:
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} への行き方:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 322" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">新宿から出発して、乗る路線の数が少ない駅から順に広がる</text>
+        <line x1="176" y1="146" x2="206" y2="252" stroke="#555" stroke-width="2"/>
+        <line x1="176" y1="146" x2="260" y2="62" stroke="#555" stroke-width="2"/>
+        <line x1="176" y1="146" x2="408" y2="152" stroke="#555" stroke-width="2"/>
+        <line x1="206" y1="252" x2="356" y2="252" stroke="#555" stroke-width="2"/>
+        <line x1="408" y1="152" x2="356" y2="252" stroke="#555" stroke-width="2"/>
+        <line x1="408" y1="152" x2="470" y2="62" stroke="#555" stroke-width="2"/>
+        <line x1="260" y1="62" x2="470" y2="62" stroke="#555" stroke-width="2"/>
+        <circle cx="260" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+        <circle cx="176" cy="146" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+        <circle cx="470" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+        <circle cx="408" cy="152" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+        <circle cx="206" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+        <circle cx="356" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
+        <circle cx="260" cy="62" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+          <text x="260" y="28" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="10s" repeatCount="indefinite"/>
+        <circle cx="176" cy="146" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+          <text x="176" y="112" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">0本</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.563;1" dur="10s" repeatCount="indefinite"/>
+        <circle cx="470" cy="62" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+          <text x="470" y="28" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">2本</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
+        <circle cx="408" cy="152" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+          <text x="408" y="118" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
+        <circle cx="206" cy="252" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+          <text x="206" y="218" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.563;1" dur="10s" repeatCount="indefinite"/>
+        <circle cx="356" cy="252" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+          <text x="356" y="218" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">2本</text>
+        </g>
+        <text x="350" y="306" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">0本（新宿）→ 1本（渋谷・池袋・東京）→ 2本（品川・上野）の順に決まっていく</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex3_result.png" alt="AL2-03-ex3.py の実行結果。幅優先探索の進み方 / -------------------------------------------- / 新宿 を調べる（乗る路線の数: 0本） / → 渋谷 は 1本でたどり着ける / → 池袋 は 1本でたどり着ける / → 東京 は 1本でたどり着ける / 渋谷 を調べる（乗る路線の数: 1本） / → 品川 は 2本でたどり着ける / 池袋 を調べる（乗る路線の数: 1本） / → 上野 は 2本でたどり着ける / 東京 を調べる（乗る路線の数: 1本） / 品川 を調べる（乗る路線の数: 2本） / 上野 を調べる（乗る路線の数: 2本） / -------------------------------------------- /  / 新宿 から各駅までに乗る路線の数 / -------------------------------------------- / 新宿: 0本 / 渋谷: 1本 / 池袋: 1本 / 東京: 1本 / 品川: 2本 / 上野: 2本 / -------------------------------------------- /  / 新宿 から 品川 への行き方: 新宿 → 渋谷 → 品川 / 新宿 から 上野 への行き方: 新宿 → 池袋 → 上野" width="380" height="588" loading="lazy">
+      </div>
+      <p class="run-note">新宿から見て、渋谷・池袋・東京は<strong>1本</strong>、品川・上野は<strong>2本</strong>という結果になりました。実行結果の上半分を見ると、幅優先探索が「新宿 → 渋谷・池袋・東京 → 品川・上野」の順に調べていることが分かります。1本で行ける駅をすべて調べ終えてから、2本で行ける駅に進んでいます。迷路のときとまったく同じ進み方です。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>迷路をグラフに書き直して解く</h3>
+      </div>
+      <p>迷路をグラフ（隣接リスト）に書き直してから、例題3と同じ幅優先探索で解きます。
+      迷路の1マスを1つの頂点とし、頂点の名前を <code>"(行,列)"</code> という文字列にします。</p>
+
+<pre><span class="code-label">Python ── AL2-03-ex4.py</span>
+<span class="cmt"># 迷路もグラフである</span>
+<span class="cmt"># 迷路の1マスを頂点、となり合うマスどうしのつながりを辺と考えると、</span>
+<span class="cmt"># 迷路は「頂点がたくさんあるグラフ」になる。</span>
+<span class="cmt"># 迷路をグラフ（隣接リスト）に変換してから、例題3と同じ幅優先探索で解く。</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+maze = [
+    <span class="str">&quot;S.#..&quot;</span>,
+    <span class="str">&quot;..#..&quot;</span>,
+    <span class="str">&quot;....#&quot;</span>,
+    <span class="str">&quot;#.#..&quot;</span>,
+    <span class="str">&quot;...#G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
+<span class="kw">for</span> line <span class="kw">in</span> maze:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- 手順1: 迷路を隣接リストに変換する ---</span>
+graph = {}
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>                      <span class="cmt"># 壁は頂点にしない</span>
+        name = <span class="str">f&quot;({r},{c})&quot;</span>               <span class="cmt"># 頂点の名前は「(行,列)」にする</span>
+        graph[name] = []
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            graph[name].append(<span class="str">f&quot;({nr},{nc})&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;迷路を隣接リストに変換した結果（最初の6個だけ表示）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+count = <span class="num">0</span>
+<span class="kw">for</span> name <span class="kw">in</span> graph:
+    <span class="fn">print</span>(<span class="str">f&quot;  {name}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(graph[name]))
+    count = count + <span class="num">1</span>
+    <span class="kw">if</span> count == <span class="num">6</span>:
+        <span class="kw">break</span>
+<span class="fn">print</span>(<span class="str">&quot;  ...&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>(<span class="str">&quot;頂点（通れるマス）の数:&quot;</span>, <span class="fn">len</span>(graph))
+<span class="fn">print</span>()
+
+<span class="cmt"># --- 手順2: 例題3とまったく同じ幅優先探索で解く ---</span>
+start = <span class="str">&quot;(0,0)&quot;</span>
+goal = <span class="str">f&quot;({rows-1},{cols-1})&quot;</span>
+
+steps = {start: <span class="num">0</span>}
+came_from = {start: <span class="kw">None</span>}
+queue = <span class="fn">deque</span>([start])
+
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    current = queue.popleft()
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+    <span class="kw">for</span> next_node <span class="kw">in</span> graph[current]:
+        <span class="kw">if</span> next_node <span class="kw">in</span> steps:
+            <span class="kw">continue</span>
+        steps[next_node] = steps[current] + <span class="num">1</span>
+        came_from[next_node] = current
+        queue.append(next_node)
+
+route = []
+node = goal
+<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+    route.append(node)
+    node = came_from[node]
+route.reverse()
+
+<span class="fn">print</span>(<span class="str">&quot;スタートからゴールまでの歩数:&quot;</span>, steps[goal], <span class="str">&quot;歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;通る順番:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))
+<span class="fn">print</span>()
+
+picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+<span class="kw">for</span> name <span class="kw">in</span> route:
+    r, c = name.strip(<span class="str">&quot;()&quot;</span>).split(<span class="str">&quot;,&quot;</span>)
+    r = <span class="fn">int</span>(r)
+    c = <span class="fn">int</span>(c)
+    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+        picture[r][c] = <span class="str">&quot;*&quot;</span>
+
+<span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
+<span class="kw">for</span> line <span class="kw">in</span> picture:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">迷路もグラフ: 1マスが頂点、となり合うマスのつながりが辺</text>
+        <rect x="60" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <text x="78.5" y="83.5" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">S</text>
+        <rect x="100" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="140" y="60" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
+        <text x="158.5" y="83.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
+        <rect x="180" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="220" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="60" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="100" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="140" y="100" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
+        <text x="158.5" y="123.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
+        <rect x="180" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="220" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="60" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="100" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="140" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="180" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="220" y="140" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
+        <text x="238.5" y="163.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
+        <rect x="60" y="180" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
+        <text x="78.5" y="203.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
+        <rect x="100" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="140" y="180" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
+        <text x="158.5" y="203.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
+        <rect x="180" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="220" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="60" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="100" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="140" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <rect x="180" y="220" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
+        <text x="198.5" y="243.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
+        <rect x="220" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
+        <text x="238.5" y="243.5" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">G</text>
+        <text x="160.0" y="284" text-anchor="middle" fill="#888888" font-size="12">迷路として見た形</text>
+        <line x1="398" y1="78" x2="398" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="398" y1="78" x2="438" y2="78" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="438" y1="78" x2="438" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="518" y1="78" x2="518" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="518" y1="78" x2="558" y2="78" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="558" y1="78" x2="558" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="398" y1="118" x2="398" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="398" y1="118" x2="438" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="438" y1="118" x2="438" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="518" y1="118" x2="518" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="518" y1="118" x2="558" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="398" y1="158" x2="438" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="438" y1="158" x2="438" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="438" y1="158" x2="478" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="478" y1="158" x2="518" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="518" y1="158" x2="518" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="438" y1="198" x2="438" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="518" y1="198" x2="558" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="558" y1="198" x2="558" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="398" y1="238" x2="438" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <line x1="438" y1="238" x2="478" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
+        <circle cx="398" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="398" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,0</text>
+        <circle cx="438" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="438" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,1</text>
+        <circle cx="518" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="518" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,3</text>
+        <circle cx="558" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="558" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,4</text>
+        <circle cx="398" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="398" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,0</text>
+        <circle cx="438" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="438" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,1</text>
+        <circle cx="518" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="518" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,3</text>
+        <circle cx="558" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="558" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,4</text>
+        <circle cx="398" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="398" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,0</text>
+        <circle cx="438" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="438" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,1</text>
+        <circle cx="478" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="478" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,2</text>
+        <circle cx="518" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="518" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,3</text>
+        <circle cx="438" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="438" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,1</text>
+        <circle cx="518" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="518" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,3</text>
+        <circle cx="558" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="558" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,4</text>
+        <circle cx="398" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="398" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,0</text>
+        <circle cx="438" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="438" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,1</text>
+        <circle cx="478" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="478" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,2</text>
+        <circle cx="558" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
+        <text x="558" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,4</text>
+        <text x="480.0" y="284" text-anchor="middle" fill="#888888" font-size="12">グラフとして見た形</text>
+        <text x="350" y="312" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">壁のマスは頂点にしない。通れるマスどうしだけを辺でつなぐ</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex4_result.png" alt="AL2-03-ex4.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.#.. / ..#.. / ....# / #.#.. / ...#G /  / 迷路を隣接リストに変換した結果（最初の6個だけ表示） / -------------------------------------------- / (0,0): (1,0)、(0,1) / (0,1): (1,1)、(0,0) / (0,3): (1,3)、(0,4) / (0,4): (1,4)、(0,3) / (1,0): (0,0)、(2,0)、(1,1) / (1,1): (0,1)、(2,1)、(1,0) / ... / -------------------------------------------- / 頂点（通れるマス）の数: 19 /  / スタートからゴールまでの歩数: 8 歩 / 通る順番: (0,0) → (1,0) → (2,0) → (2,1) → (2,2) → (2,3) → (3,3) → (3,4) → (4,4) /  / 最短経路（* が通り道） / S.#.. / *.#.. / ****# / #.#** / ...#G" width="651" height="608" loading="lazy">
+      </div>
+      <p class="run-note">5マス×5マスの迷路のうち、壁ではないマスは<strong>19個</strong>ありました。19個の頂点と、となり合うマスどうしの辺からなるグラフに書き直せています。書き直したあとは、例題3の路線図とまったく同じコードで最短経路（8歩）が求まりました。見た目がまったく違う迷路と路線図が、グラフという同じ形に書き直すことで、同じプログラムで解けるようになります。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の実行結果から、迷路の頂点の数と、(0,0) の頂点につながっている頂点を書き写す。あわせて、迷路をグラフに書き直したことで何が便利になったかを、自分の言葉で説明する。</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
+    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>路線を1本足すと、乗る路線の数はどう変わるか</h3>
+      </div>
+      <p>例題3のファイル <code>AL2-03-ex3.py</code> を開き、路線図に<strong>新宿と品川を直接つなぐ新しい路線</strong>を1本追加します。
+      隣接リストは両方の駅を書き換える必要があります。</p>
+
+<pre><span class="code-label">Python ── 書き換える2行</span>
+    <span class="str">"新宿"</span>: [<span class="str">"渋谷"</span>, <span class="str">"池袋"</span>, <span class="str">"東京"</span>, <span class="str">"品川"</span>],   <span class="cmt"># ← "品川" を足す</span>
+    <span class="str">"品川"</span>: [<span class="str">"渋谷"</span>, <span class="str">"東京"</span>, <span class="str">"新宿"</span>],           <span class="cmt"># ← "新宿" を足す</span></pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、6つの駅それぞれについて「乗る路線の数」がどうなるかを予測してNotionに書く</li>
+          <li>2行を書き換えて保存し、実行する</li>
+          <li>実際の結果を記録し、予測と比べる</li>
+          <li>新宿から品川への行き方が、書き換える前とどう変わったかを書く</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>駅</th><th>書き換える前</th><th>予測</th><th>実際</th></tr>
+        <tr><td>渋谷</td><td>1本</td><td></td><td></td></tr>
+        <tr><td>池袋</td><td>1本</td><td></td><td></td></tr>
+        <tr><td>東京</td><td>1本</td><td></td><td></td></tr>
+        <tr><td>品川</td><td>2本</td><td></td><td></td></tr>
+        <tr><td>上野</td><td>2本</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 隣接リストの片方（<code>"新宿"</code> の行）だけを書き換えて、
+      もう片方（<code>"品川"</code> の行）を書き換え忘れると、どんな問題が起きるかを説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの駅についての予測と実際の表、新宿から品川への行き方の変化、および「片方だけ書き換えたときに起きる問題」の説明。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>隣接リストと隣接行列の使い分け</h3>
+      </div>
+      <p>例題1から例題4までの結果をもとに、隣接リストと隣接行列の使い分けを表にまとめます。
+      表はNotionに作り、空欄をすべて埋めてください。</p>
+
+      <table>
+        <tr><th>比べる点</th><th>隣接リスト</th><th>隣接行列</th></tr>
+        <tr><td>書き方</td><td></td><td></td></tr>
+        <tr><td>駅が5000個のときのマス数</td><td></td><td></td></tr>
+        <tr><td>「2駅が直接つながっているか」の調べやすさ</td><td></td><td></td></tr>
+        <tr><td>「ある駅のとなりの駅をすべて並べる」調べやすさ</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem">表を作ったうえで、次の2つの場面には、それぞれどちらの表し方が向いているかを<strong>理由つきで</strong>答えてください。</p>
+      <ul class="point-list">
+        <li><strong>場面A:</strong> 日本全国の鉄道路線図（駅が約9000個、1駅あたりつながる駅は2〜4個）をあつかう</li>
+        <li><strong>場面B:</strong> 30人のクラス全員について、「誰と誰が同じ委員会か」を何度も繰り返し調べる</li>
+      </ul>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 4行の比較表（空欄をすべて埋める）と、場面A・場面Bそれぞれに向いている表し方とその理由。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第3回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題2</strong>: 駅の数ごとのマス数の表、10倍になったときの増え方</li>
+        <li><strong>例題4</strong>: 迷路の頂点の数、(0,0) につながる頂点、書き直して便利になったこと</li>
+        <li><strong>標準課題1</strong>: 予測と実際の表、行き方の変化、片方だけ書き換えたときの問題</li>
+        <li><strong>標準課題2</strong>: 比較表、場面A・場面Bへの答えと理由</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2026-10-21T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="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"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第3回 グラフとデータ構造の再確認
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
