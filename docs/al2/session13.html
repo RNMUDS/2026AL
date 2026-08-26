@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第13回: 実践的課題（1）設計と実装 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">進め方</a>
+  <a href="#sec-examples">テンプレート</a>
+  <a href="#sec-standard" class="nav-assignment">課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第13回: 実践的課題（1）設計と実装</h1>
+    <p>自分でテーマを決め、最適化アルゴリズムを使った小さなプログラムの設計と実装に取りかかる</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">実行確認</span>テンプレート3つを動かす</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題1</span>設計シートを書く</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題2</span>動く最小版を作る</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">課題2</span>実行結果を記録する</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>作品づくりの進め方</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第13回と第14回は、<strong>自分でテーマを決めた作品づくり</strong>に取り組みます。
+      第13回で設計と実装、第14回でテストと仕上げ、そしてレポート作成を行います。
+      後期に学んだアルゴリズムを、少なくとも<strong>1つ</strong>は使ってください。
+    </p>
+
+    <div class="analogy">
+      料理と同じで、いきなり完成品を作ろうとするとうまくいきません。
+      まず「何を作るか」を決め、次に「とりあえず食べられる状態」まで作り、
+      味見をして足りないものを足していきます。
+      プログラムも同じで、<strong>まず動く最小版を作る</strong>ことがいちばん大切です。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 260" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">作品づくりの4ステップ（②〜④はくり返す）</text>
+        <rect x="20" y="52" width="150" height="118" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="95" y="80" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">① 設計</text>
+        <text x="95" y="106" text-anchor="middle" fill="#E0E0E0" font-size="11">何を作るかを紙に書く</text>
+        <text x="95" y="130" text-anchor="middle" fill="#888888" font-size="10">テーマ・入力・出力・使うアルゴリ</text>
+        <text x="95" y="146" text-anchor="middle" fill="#888888" font-size="10">ズム</text>
+        <rect x="17" y="49" width="156" height="124" rx="14" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.010;0.230;0.250;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="179" y="116" text-anchor="middle" fill="#666" font-size="16">▶</text>
+        <rect x="188" y="52" width="150" height="118" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="263" y="80" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">② 実装</text>
+        <text x="263" y="106" text-anchor="middle" fill="#E0E0E0" font-size="11">動く最小版をまず作る</text>
+        <text x="263" y="130" text-anchor="middle" fill="#888888" font-size="10">完成をめざさず、まず動かす</text>
+        <rect x="185" y="49" width="156" height="124" rx="14" fill="none" stroke="#76B900" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.250;0.260;0.480;0.500;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="347" y="116" text-anchor="middle" fill="#666" font-size="16">▶</text>
+        <rect x="356" y="52" width="150" height="118" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="431" y="80" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">③ テスト</text>
+        <text x="431" y="106" text-anchor="middle" fill="#E0E0E0" font-size="11">わざと変な入力を試す</text>
+        <text x="431" y="130" text-anchor="middle" fill="#888888" font-size="10">空・0・大きすぎる値・想定外の順</text>
+        <text x="431" y="146" text-anchor="middle" fill="#888888" font-size="10">番</text>
+        <rect x="353" y="49" width="156" height="124" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.500;0.510;0.730;0.750;1" dur="12s" repeatCount="indefinite"/></rect>
+        <text x="515" y="116" text-anchor="middle" fill="#666" font-size="16">▶</text>
+        <rect x="524" y="52" width="150" height="118" rx="12" fill="#141414" stroke="#444" stroke-width="1.5"/>
+        <text x="599" y="80" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">④ 修正</text>
+        <text x="599" y="106" text-anchor="middle" fill="#E0E0E0" font-size="11">見つけた問題を直す</text>
+        <text x="599" y="130" text-anchor="middle" fill="#888888" font-size="10">直したら②へ戻る</text>
+        <rect x="521" y="49" width="156" height="124" rx="14" fill="none" stroke="#FFB800" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.750;0.760;0.980;1.000;1" dur="12s" repeatCount="indefinite"/></rect>
+        <path d="M 654 178 L 654 198 L 264 198 L 264 178" fill="none" stroke="#FFB800" stroke-width="2"/>
+        <polygon points="264,178 259,188 269,188" fill="#FFB800"/>
+        <text x="459" y="216" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">直したら、もう一度テストする</text>
+        <text x="350" y="244" text-anchor="middle" fill="#888888" font-size="11">第13回で①と②、第14回で③と④に取り組む</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>動く最小版とは</h4>
+      <p style="font-size:0.95rem">
+        「動く最小版」とは、<strong>やりたいことの中心だけができている状態</strong>のことです。
+        たとえば迷路ゲームなら、次のものが最小版になります。
+      </p>
+      <table>
+        <tr><th>最小版に入れるもの</th><th>あとで足すもの</th></tr>
+        <tr><td>迷路が1つある</td><td>ステージが3つある</td></tr>
+        <tr><td>プレイヤーの道を1つ受け取る</td><td>何度でも遊び直せる</td></tr>
+        <tr><td>最短の道と比べて点数を出す</td><td>ランキングを保存する</td></tr>
+        <tr><td>結果を文字で表示する</td><td>色を付けてきれいに表示する</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        最小版が動いてから足していけば、途中で止まっても「動くもの」が手元に残ります。
+        逆に全部いっぺんに作ろうとすると、最後まで1度も動かないまま時間切れになりがちです。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 254" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">作品の出発点にできる3つのテンプレート</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">どれか1つを選んで書き換えれば、自分の作品になる</text>
+        <rect x="20" y="62" width="212" height="152" rx="12" fill="#141414" stroke="#76B900" stroke-width="1.8"/>
+        <text x="126" y="86" text-anchor="middle" fill="#76B900" font-size="11">テンプレートA</text>
+        <text x="126" y="110" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">コスト付き迷路ゲーム</text>
+        <text x="126" y="140" text-anchor="middle" fill="#bbb" font-size="11">プレイヤーが道を選ぶ</text>
+        <text x="126" y="162" text-anchor="middle" fill="#bbb" font-size="11">最短の道と比べて採点</text>
+        <text x="126" y="184" text-anchor="middle" fill="#bbb" font-size="11">ダイクストラ法を使う</text>
+        <rect x="244" y="62" width="212" height="152" rx="12" fill="#141414" stroke="#FFB800" stroke-width="1.8"/>
+        <text x="350" y="86" text-anchor="middle" fill="#FFB800" font-size="11">テンプレートB</text>
+        <text x="350" y="110" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">配達ルート最適化</text>
+        <text x="350" y="140" text-anchor="middle" fill="#bbb" font-size="11">配達先を並べる</text>
+        <text x="350" y="162" text-anchor="middle" fill="#bbb" font-size="11">貪欲法と全探索で比べる</text>
+        <text x="350" y="184" text-anchor="middle" fill="#bbb" font-size="11">巡回セールスマン問題</text>
+        <rect x="468" y="62" width="212" height="152" rx="12" fill="#141414" stroke="#4FC3F7" stroke-width="1.8"/>
+        <text x="574" y="86" text-anchor="middle" fill="#4FC3F7" font-size="11">テンプレートC</text>
+        <text x="574" y="110" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">アイテム収集パズル</text>
+        <text x="574" y="140" text-anchor="middle" fill="#bbb" font-size="11">迷路のアイテムを集める</text>
+        <text x="574" y="162" text-anchor="middle" fill="#bbb" font-size="11">拾う順番を決める</text>
+        <text x="574" y="184" text-anchor="middle" fill="#bbb" font-size="11">幅優先探索＋全探索</text>
+        <text x="350" y="238" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">テンプレートを使わず、まったく新しい作品を作ってもよい</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>テーマの決め方</h4>
+      <p style="font-size:0.95rem">
+        テーマが思いつかないときは、次の3つの問いから考えてみてください。
+      </p>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2;color:#ccc">
+        <li><strong>自分が毎日している「順番を決めること」は何か</strong>（買い物、部活の練習メニュー、朝の支度）</li>
+        <li><strong>自分がよく遊ぶゲームの中に、最短や最適が出てくる場面はないか</strong>（敵の追いかけ方、アイテム集め）</li>
+        <li><strong>身のまわりの地図で、時間や料金が違う道はないか</strong>（自宅から大学、キャンパス内の移動）</li>
+      </ol>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        大きな作品である必要はありません。<strong>小さくても、動いて、アルゴリズムが役に立っていること</strong>が大切です。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 372" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">設計シートの書き方（記入例）</text>
+        <rect x="24" y="52" width="652" height="34" rx="7" fill="#141414" stroke="#282828"/>
+        <text x="40" y="74" fill="#76B900" font-size="11" font-weight="700">作品の名前</text>
+        <text x="220" y="74" fill="#76B900" font-size="12">沼をよけろ！コスト迷路</text>
+        <rect x="24" y="92" width="652" height="34" rx="7" fill="#101010" stroke="#282828"/>
+        <text x="40" y="114" fill="#76B900" font-size="11" font-weight="700">どんな作品か</text>
+        <text x="220" y="114" fill="#ccc" font-size="12">プレイヤーが道を選び、最短の道と比べて採点する</text>
+        <rect x="24" y="132" width="652" height="34" rx="7" fill="#141414" stroke="#282828"/>
+        <text x="40" y="154" fill="#76B900" font-size="11" font-weight="700">入力</text>
+        <text x="220" y="154" fill="#ccc" font-size="12">プレイヤーが選んだ道（D/R/U/L の文字列）</text>
+        <rect x="24" y="172" width="652" height="34" rx="7" fill="#101010" stroke="#282828"/>
+        <text x="40" y="194" fill="#76B900" font-size="11" font-weight="700">出力</text>
+        <text x="220" y="194" fill="#ccc" font-size="12">プレイヤーの秒数・最短の秒数・スコア（100点満点）</text>
+        <rect x="24" y="212" width="652" height="34" rx="7" fill="#141414" stroke="#282828"/>
+        <text x="40" y="234" fill="#76B900" font-size="11" font-weight="700">使うアルゴリズム</text>
+        <text x="220" y="234" fill="#FFB800" font-size="12">ダイクストラ法（最短コスト経路を求める）</text>
+        <rect x="24" y="252" width="652" height="34" rx="7" fill="#101010" stroke="#282828"/>
+        <text x="40" y="274" fill="#76B900" font-size="11" font-weight="700">なぜそれを使うか</text>
+        <text x="220" y="274" fill="#ccc" font-size="12">マスごとに通る時間が違うので、幅優先探索では求まらない</text>
+        <rect x="24" y="292" width="652" height="34" rx="7" fill="#141414" stroke="#282828"/>
+        <text x="40" y="314" fill="#76B900" font-size="11" font-weight="700">作れたら足したいこと</text>
+        <text x="220" y="314" fill="#888888" font-size="12">ステージを3つにする／制限時間を付ける</text>
+        <text x="350" y="354" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">「なぜそのアルゴリズムを使うか」がいちばん大切。作る前に言葉にしておく</text>
+        </svg>
+      </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>テンプレートと部品</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">3つのテンプレートと部品集を実行してください。
+    どれか1つを選んで書き換えると、自分の作品の出発点になります。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No13</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No12/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No13/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第13回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No13</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No13 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No13 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-13-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-13-ex1.py</code>, <code>AL2-13-ex2.py</code>, <code>AL2-13-ex3.py</code>, <code>AL2-13-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">動く最小版</strong><br><span style="color:#888;font-size:0.8rem">うごくさいしょうばん / MVP</span></td><td>やりたいことの中心だけができている状態。まず最小版を動かしてから、少しずつ足していく。</td></tr>
+        <tr><td><strong style="color:#76B900">設計シート</strong><br><span style="color:#888;font-size:0.8rem">せっけいシート</span></td><td>作る前に「何を・どう作るか」を紙に書き出したもの。テーマ・入力・出力・使うアルゴリズムを書く。</td></tr>
+        <tr><td><strong style="color:#76B900">テンプレート</strong><br><span style="color:#888;font-size:0.8rem">template</span></td><td>書き換えて使うための下書き。ゼロから書くより速く、まちがいも少ない。</td></tr>
+        <tr><td><strong style="color:#76B900">入力の検査</strong><br><span style="color:#888;font-size:0.8rem">にゅうりょくのけんさ / validation</span></td><td>受け取った入力が正しい形かを調べること。まちがった入力をそのまま使うと、あとで止まる原因になる。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>テンプレートA: コスト付き迷路ゲーム</h3>
+      </div>
+      <p>プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付けるゲームです。
+      <code>cost_map</code> と <code>player_moves</code> を書き換えれば、自分のステージが作れます。</p>
+
+<pre><span class="code-label">Python ── AL2-13-ex1.py</span>
+<span class="cmt"># 作品テンプレートA: コスト付き迷路ゲーム</span>
+<span class="cmt"># プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付ける。</span>
+<span class="kw">import</span> heapq
+
+<span class="cmt"># ここを書き換えれば、自分のステージが作れる</span>
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">1</span>],
+]
+
+<span class="cmt"># プレイヤーが選んだ道（&quot;D&quot; = 下へ、&quot;R&quot; = 右へ、&quot;U&quot; = 上へ、&quot;L&quot; = 左へ）</span>
+player_moves = <span class="str">&quot;DDRRDDRRDDRRDR&quot;</span>
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+
+<span class="kw">def</span> <span class="fn">move_to_route</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR...&quot; のような文字列を、通るマスの並びに変える&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;U&quot;</span>:
+            r = r - <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;L&quot;</span>:
+            c = c - <span class="num">1</span>
+        <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
+            <span class="kw">return</span> <span class="kw">None</span>                    <span class="cmt"># 迷路の外に出た</span>
+        route.append((r, c))
+    <span class="kw">return</span> route
+
+
+<span class="kw">def</span> <span class="fn">route_cost</span>(route):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+        r, c = route[i]
+        total = total + cost_map[r][c]
+    <span class="kw">return</span> total
+
+
+<span class="kw">def</span> <span class="fn">solve</span>():
+    <span class="str">&quot;&quot;&quot;ダイクストラ法で最小コスト経路を求める&quot;&quot;&quot;</span>
+    distance = {}
+    came_from = {}
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            distance[(r, c)] = INF
+            came_from[(r, c)] = <span class="kw">None</span>
+    distance[start] = <span class="num">0</span>
+    queue = [(<span class="num">0</span>, start)]
+    settled = <span class="fn">set</span>()
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        total, current = heapq.heappop(queue)
+        <span class="kw">if</span> current <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        settled.add(current)
+        r, c = current
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> total + cost_map[nr][nc] &lt; distance[(nr, nc)]:
+                distance[(nr, nc)] = total + cost_map[nr][nc]
+                came_from[(nr, nc)] = current
+                heapq.heappush(queue, (distance[(nr, nc)], (nr, nc)))
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route, distance[goal]
+
+
+<span class="kw">def</span> <span class="fn">draw</span>(route, title):
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        line = <span class="str">&quot;&quot;</span>
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> route:
+                line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;3}*&quot;</span>
+            <span class="kw">else</span>:
+                line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;3} &quot;</span>
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+    <span class="fn">print</span>()
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;  コスト迷路ゲーム  ステージ1&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;  1 = 舗装路(1秒)  5 = 砂地(5秒)  9 = 沼(9秒)&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  左上(S)から右下(G)まで、できるだけ短い時間で行こう&quot;</span>)
+<span class="fn">print</span>()
+
+best_route, best_cost = <span class="fn">solve</span>()
+player_route = <span class="fn">move_to_route</span>(player_moves)
+
+<span class="kw">if</span> player_route <span class="kw">is</span> <span class="kw">None</span>:
+    <span class="fn">print</span>(<span class="str">&quot;プレイヤーの道は迷路の外に出てしまった&quot;</span>)
+<span class="kw">elif</span> player_route[-<span class="num">1</span>] != goal:
+    <span class="fn">print</span>(<span class="str">&quot;プレイヤーの道はゴールに着いていない&quot;</span>)
+<span class="kw">else</span>:
+    player_cost = <span class="fn">route_cost</span>(player_route)
+    <span class="fn">draw</span>(player_route, <span class="str">f&quot;プレイヤーの道: {len(player_route)-1}歩 ／ {player_cost}秒&quot;</span>)
+    <span class="fn">draw</span>(best_route, <span class="str">f&quot;最短の道: {len(best_route)-1}歩 ／ {best_cost}秒&quot;</span>)
+
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  プレイヤー: {player_cost}秒&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  最短:       {best_cost}秒&quot;</span>)
+    score = <span class="fn">int</span>(best_cost / player_cost * <span class="num">100</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  スコア: {score}点（最短と同じなら100点）&quot;</span>)
+    <span class="kw">if</span> score == <span class="num">100</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: 完璧！ 最短の道を見つけた&quot;</span>)
+    <span class="kw">elif</span> score &gt;= <span class="num">80</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: あと少し。もっと短い道がある&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: 沼をよけると、ぐっと短くなる&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a13_ex1_result.png" alt="AL2-13-ex1.py の実行結果。============================================== / コスト迷路ゲーム  ステージ1 / ============================================== / 1 = 舗装路(1秒)  5 = 砂地(5秒)  9 = 沼(9秒) / 左上(S)から右下(G)まで、できるだけ短い時間で行こう /  / プレイヤーの道: 14歩 ／ 42秒 / 1*  1   5   9   9   1   1   1 / 9*  1   5   1   1   1   9   1 / 1*  1*  1*  1   9   1   9   1 / 1   9   9*  5   9   1   1   1 / 1   1   5*  5*  1*  1   9   5 / 9   1   1   9   1*  9   9   1 / 1   1   9   9   1*  1*  1*  1 / 5   1   1   1   1   9   5*  1* /  / 最短の道: 18歩 ／ 18秒 / 1*  1*  5   9   9   1   1   1 / 9   1*  5   1*  1*  1*  9   1 / 1   1*  1*  1*  9   1*  9   1 / 1   9   9   5   9   1*  1   1 / 1   1   5   5   1*  1*  9   5 / 9   1   1   9   1*  9   9   1 / 1   1   9   9   1*  1*  1*  1* / 5   1   1   1   1   9   5   1* /  / ---------------------------------------------- / プレイヤー: 42秒 / 最短:       18秒 / スコア: 42点（最短と同じなら100点） / 評価: 沼をよけると、ぐっと短くなる / ----------------------------------------------" width="380" height="688" loading="lazy">
+      </div>
+      <p class="run-note">プレイヤーの道は14歩で<strong>42秒</strong>、最短の道は18歩で<strong>18秒</strong>でした。プレイヤーは歩数こそ少ないものの、9（沼）のマスを何度も通っているため時間がかかっています。最短の道は4歩よけいに歩くかわりに、沼を1つも通っていません。スコアは <code>最短 ÷ プレイヤー × 100</code> で計算しており、42点となりました。<code>player_moves</code> を書き換えて、100点を取れる道をさがしてみてください。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>テンプレートB: 配達ルート最適化アプリ</h3>
+      </div>
+      <p>配達先を並べると、貪欲法と全探索の両方でルートを作って比べるアプリです。
+      <code>places</code> を書き換えれば、自分の配達先が作れます（8件までなら全探索が使えます）。</p>
+
+<pre><span class="code-label">Python ── AL2-13-ex2.py</span>
+<span class="cmt"># 作品テンプレートB: 配達ルート最適化アプリ</span>
+<span class="cmt"># 配達先を並べると、貪欲法と全探索でルートを作り、比べて表示する。</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+<span class="cmt"># ここを書き換えれば、自分の配達先が作れる（8件までなら全探索が使える）</span>
+places = [
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
+    (<span class="str">&quot;田中さん宅&quot;</span>, <span class="num">12</span>, <span class="num">3</span>),
+    (<span class="str">&quot;鈴木さん宅&quot;</span>, <span class="num">2</span>, <span class="num">11</span>),
+    (<span class="str">&quot;佐藤さん宅&quot;</span>, <span class="num">15</span>, <span class="num">12</span>),
+    (<span class="str">&quot;高橋さん宅&quot;</span>, <span class="num">8</span>, <span class="num">14</span>),
+    (<span class="str">&quot;伊藤さん宅&quot;</span>, <span class="num">19</span>, <span class="num">1</span>),
+    (<span class="str">&quot;渡辺さん宅&quot;</span>, <span class="num">1</span>, <span class="num">2</span>),
+]
+
+n = <span class="fn">len</span>(places)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((places[i][<span class="num">1</span>] - places[j][<span class="num">1</span>]) ** <span class="num">2</span> + (places[i][<span class="num">2</span>] - places[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">route_length</span>(order):
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> <span class="fn">tuple</span>(visited[<span class="num">1</span>:])
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    best = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        value = <span class="fn">route_length</span>(order)
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best:
+            best = value
+            best_order = order
+    <span class="kw">return</span> best_order
+
+
+<span class="kw">def</span> <span class="fn">show</span>(order, title):
+    <span class="fn">print</span>(title)
+    names = [places[<span class="num">0</span>][<span class="num">0</span>]]
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        names.append(places[city][<span class="num">0</span>])
+    names.append(places[<span class="num">0</span>][<span class="num">0</span>])
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot; → &quot;</span>.join(names))
+    <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(route_length(order), 1)}&quot;</span>)
+    <span class="fn">print</span>()
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">54</span>)
+<span class="fn">print</span>(<span class="str">&quot;  配達ルート最適化アプリ&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">54</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  配達先: {n - 1}件&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;配達先の位置&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">34</span>)
+<span class="kw">for</span> name, x, y <span class="kw">in</span> places:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="fn">pad</span>(name, <span class="num">14</span>) + <span class="str">f&quot;(x={x:&gt;2}, y={y:&gt;2})&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">34</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;地図（左上が (0,0)。E = 営業所）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">16</span>):
+    line = <span class="str">&quot;&quot;</span>
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+        mark = <span class="str">&quot; .&quot;</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> places[i][<span class="num">1</span>] == x <span class="kw">and</span> places[i][<span class="num">2</span>] == y:
+                mark = <span class="str">&quot; E&quot;</span> <span class="kw">if</span> i == <span class="num">0</span> <span class="kw">else</span> <span class="str">f&quot; {i}&quot;</span>
+        line = line + mark
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>()
+
+began = time.time()
+greedy_order = <span class="fn">greedy</span>()
+greedy_time = time.time() - began
+
+began = time.time()
+best_order = <span class="fn">brute_force</span>()
+brute_time = time.time() - began
+
+<span class="fn">show</span>(greedy_order, <span class="str">f&quot;貪欲法のルート（{greedy_time:.6f}秒で作成）&quot;</span>)
+<span class="fn">show</span>(best_order, <span class="str">f&quot;全探索のルート（{brute_time:.6f}秒で作成）&quot;</span>)
+
+greedy_value = <span class="fn">route_length</span>(greedy_order)
+best_value = <span class="fn">route_length</span>(best_order)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">54</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  貪欲法: {round(greedy_value, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  最　適: {round(best_value, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  むだになった距離: {round(greedy_value - best_value, 1)}&quot;</span>
+      <span class="str">f&quot;（{round((greedy_value / best_value - 1) * 100, 1)}% 長い）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">54</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中さん宅    (x=12, y= 3) / 鈴木さん宅    (x= 2, y=11) / 佐藤さん宅    (x=15, y=12) / 高橋さん宅    (x= 8, y=14) / 伊藤さん宅    (x=19, y= 1) / 渡辺さん宅    (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺さん宅 → 鈴木さん宅 → 高橋さん宅 → 佐藤さん宅 → 田中さん宅 → 伊藤さん宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000128秒で作成） / 営業所 → 田中さん宅 → 伊藤さん宅 → 佐藤さん宅 → 高橋さん宅 → 鈴木さん宅 → 渡辺さん宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="685" height="1028" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>テンプレートC: アイテム収集パズル</h3>
+      </div>
+      <p>迷路の中のアイテムを全部拾ってゴールへ向かうパズルです。
+      幅優先探索で歩数の表を作ってから、貪欲法と全探索で拾う順番を決めます。
+      <code>maze</code> と <code>items</code> を書き換えれば、自分のステージが作れます。</p>
+
+<pre><span class="code-label">Python ── AL2-13-ex3.py</span>
+<span class="cmt"># 作品テンプレートC: アイテム収集パズル</span>
+<span class="cmt"># 迷路の中のアイテムを全部拾ってゴールへ向かう。貪欲法と全探索の両方で解く。</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+<span class="cmt"># ここを書き換えれば、自分のステージが作れる</span>
+maze = [
+    <span class="str">&quot;S.....#...&quot;</span>,
+    <span class="str">&quot;.####.#.#.&quot;</span>,
+    <span class="str">&quot;.#..#...#.&quot;</span>,
+    <span class="str">&quot;.#.##.###.&quot;</span>,
+    <span class="str">&quot;.....#....&quot;</span>,
+    <span class="str">&quot;####.#.##.&quot;</span>,
+    <span class="str">&quot;...#.#.#..&quot;</span>,
+    <span class="str">&quot;.#...#.#.#&quot;</span>,
+    <span class="str">&quot;.#.###...#&quot;</span>,
+    <span class="str">&quot;.........G&quot;</span>,
+]
+
+items = {
+    <span class="str">&quot;A&quot;</span>: (<span class="num">0</span>, <span class="num">3</span>),
+    <span class="str">&quot;B&quot;</span>: (<span class="num">2</span>, <span class="num">7</span>),
+    <span class="str">&quot;C&quot;</span>: (<span class="num">3</span>, <span class="num">0</span>),
+    <span class="str">&quot;D&quot;</span>: (<span class="num">6</span>, <span class="num">8</span>),
+}
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">steps_from</span>(origin):
+    dist = {origin: <span class="num">0</span>}
+    queue = <span class="fn">deque</span>([origin])
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        r, c = queue.popleft()
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> dist:
+                <span class="kw">continue</span>
+            dist[(nr, nc)] = dist[(r, c)] + <span class="num">1</span>
+            queue.append((nr, nc))
+    <span class="kw">return</span> dist
+
+
+places = {<span class="str">&quot;S&quot;</span>: start, <span class="str">&quot;G&quot;</span>: goal}
+<span class="kw">for</span> name, position <span class="kw">in</span> items.items():
+    places[name] = position
+
+table = {}
+<span class="kw">for</span> name, position <span class="kw">in</span> places.items():
+    dist = <span class="fn">steps_from</span>(position)
+    <span class="kw">for</span> other, other_position <span class="kw">in</span> places.items():
+        <span class="kw">if</span> other_position <span class="kw">not</span> <span class="kw">in</span> dist:
+            <span class="fn">print</span>(<span class="str">f&quot;エラー: {name} から {other} へ行けません。迷路を作り直してください。&quot;</span>)
+            <span class="kw">raise</span> SystemExit
+    table[name] = {other: dist[places[other]] <span class="kw">for</span> other <span class="kw">in</span> places}
+
+
+<span class="kw">def</span> <span class="fn">route_steps</span>(order):
+    total = table[<span class="str">&quot;S&quot;</span>][order[<span class="num">0</span>]]
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(order) - <span class="num">1</span>):
+        total = total + table[order[i]][order[i + <span class="num">1</span>]]
+    <span class="kw">return</span> total + table[order[-<span class="num">1</span>]][<span class="str">&quot;G&quot;</span>]
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>(<span class="str">&quot;  アイテム収集パズル  ステージ1&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">40</span>)
+picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+picture[<span class="num">0</span>][<span class="num">0</span>] = <span class="str">&quot;S&quot;</span>
+picture[rows - <span class="num">1</span>][cols - <span class="num">1</span>] = <span class="str">&quot;G&quot;</span>
+<span class="kw">for</span> name, (r, c) <span class="kw">in</span> items.items():
+    picture[r][c] = name
+<span class="kw">for</span> line <span class="kw">in</span> picture:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>()
+
+names = [<span class="str">&quot;S&quot;</span>, <span class="str">&quot;A&quot;</span>, <span class="str">&quot;B&quot;</span>, <span class="str">&quot;C&quot;</span>, <span class="str">&quot;D&quot;</span>, <span class="str">&quot;G&quot;</span>]
+<span class="fn">print</span>(<span class="str">&quot;地点どうしの歩数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{m:&gt;5}&quot;</span> <span class="kw">for</span> m <span class="kw">in</span> names))
+<span class="kw">for</span> name <span class="kw">in</span> names:
+    <span class="fn">print</span>(<span class="str">f&quot;  {name}   &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{table[name][m]:&gt;5}&quot;</span> <span class="kw">for</span> m <span class="kw">in</span> names))
+<span class="fn">print</span>()
+
+<span class="cmt"># 貪欲法</span>
+here = <span class="str">&quot;S&quot;</span>
+remaining = [<span class="str">&quot;A&quot;</span>, <span class="str">&quot;B&quot;</span>, <span class="str">&quot;C&quot;</span>, <span class="str">&quot;D&quot;</span>]
+greedy_order = []
+<span class="kw">while</span> <span class="fn">len</span>(remaining) &gt; <span class="num">0</span>:
+    nearest = <span class="fn">min</span>(remaining, key=<span class="kw">lambda</span> name: table[here][name])
+    greedy_order.append(nearest)
+    remaining.remove(nearest)
+    here = nearest
+
+<span class="cmt"># 全探索</span>
+best_order = <span class="kw">None</span>
+best_steps = <span class="kw">None</span>
+<span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="str">&quot;ABCD&quot;</span>):
+    steps = <span class="fn">route_steps</span>(order)
+    <span class="kw">if</span> best_steps <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> steps &lt; best_steps:
+        best_steps = steps
+        best_order = order
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  貪欲法: S → {&#x27; → &#x27;.join(greedy_order)} → G   {route_steps(greedy_order)}歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  最　適: S → {&#x27; → &#x27;.join(best_order)} → G   {best_steps}歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  差: {route_steps(greedy_order) - best_steps}歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a13_ex3_result.png" alt="AL2-13-ex3.py の実行結果。======================================== / アイテム収集パズル  ステージ1 / ======================================== / S..A..#... / .####.#.#. / .#..#..B#. / C#.##.###. / .....#.... / ####.#.##. / ...#.#.#D. / .#...#.#.# / .#.###...# / .........G / ---------------------------------------- /  / 地点どうしの歩数 / S    A    B    C    D    G / S       0    3    9    3   20   22 / A       3    0    6    6   17   21 / B       9    6    0   12   11   15 / C       3    6   12    0   21   19 / D      20   17   11   21    0    4 / G      22   21   15   19    4    0 /  / ---------------------------------------- / 貪欲法: S → A → B → D → C → G   60歩 / 最　適: S → C → A → B → D → G   30歩 / 差: 30歩 / ----------------------------------------" width="380" height="628" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は<strong>60歩</strong>、全探索は<strong>30歩</strong>で、貪欲法はちょうど2倍かかっています。歩数の表を見ると、SからAが3歩、SからCも3歩と、どちらも近い場所にあります。貪欲法はAを先に選びましたが、最短ルートはCを先に拾っています。アイテムの位置を1つ動かすだけで差が大きく変わるので、<strong>「貪欲法でも十分なステージ」と「全探索が必要なステージ」を作り分けられます</strong>。なお、迷路を書き換えたときにゴールへ行けなくなると、エラーメッセージが出るようにしてあります。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>作品に使える部品集</h3>
+      </div>
+      <p>作品に組み込むための小さな道具を4つ集めました。
+      必要な部分だけをコピーして使ってください。</p>
+
+      <div class="note-warn">
+        <strong>入力について:</strong> 授業ページに実行結果を載せるため、<code>USE_INPUT</code> を <code>False</code> にしてあります。
+        自分の作品では <code>USE_INPUT = True</code> に書き換えると、キーボードから入力できるようになります。
+      </div>
+
+<pre><span class="code-label">Python ── AL2-13-ex4.py</span>
+<span class="cmt"># 作品づくりに使える部品集</span>
+<span class="cmt"># コピーして自分の作品に組み込むための、小さな道具を4つ集めた。</span>
+<span class="kw">import</span> time
+
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="cmt"># 部品1: プレイヤーからの入力を受け取る</span>
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="cmt"># 授業ページに実行結果を載せるため、いまは USE_INPUT を False にしてある。</span>
+<span class="cmt"># 自分の作品では True に変えると、キーボードから入力できるようになる。</span>
+USE_INPUT = <span class="kw">False</span>
+sample_answers = [<span class="str">&quot;3&quot;</span>, <span class="str">&quot;たなか&quot;</span>, <span class="str">&quot;DDRR&quot;</span>]
+answer_index = <span class="num">0</span>
+
+
+<span class="kw">def</span> <span class="fn">ask</span>(question, default):
+    <span class="str">&quot;&quot;&quot;質問を表示して答えを受け取る。USE_INPUT が False なら決められた答えを返す。&quot;&quot;&quot;</span>
+    <span class="kw">global</span> answer_index
+    <span class="kw">if</span> USE_INPUT:
+        <span class="kw">return</span> <span class="fn">input</span>(question)
+    <span class="kw">if</span> answer_index &lt; <span class="fn">len</span>(sample_answers):
+        answer = sample_answers[answer_index]
+        answer_index = answer_index + <span class="num">1</span>
+    <span class="kw">else</span>:
+        answer = default
+    <span class="fn">print</span>(question + answer + <span class="str">&quot;  ← 入力のかわりに用意した答え&quot;</span>)
+    <span class="kw">return</span> answer
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;  部品1: 入力を受け取る&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+level = <span class="fn">ask</span>(<span class="str">&quot;難易度を選んでください（1〜3）: &quot;</span>, <span class="str">&quot;1&quot;</span>)
+name = <span class="fn">ask</span>(<span class="str">&quot;名前を入力してください: &quot;</span>, <span class="str">&quot;ゲスト&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  → 難易度 {level} で、{name} さんとして始めます&quot;</span>)
+<span class="fn">print</span>()
+
+
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="cmt"># 部品2: 数字だけを受け取る（まちがった入力をはじく）</span>
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="kw">def</span> <span class="fn">ask_number</span>(question, low, high, default):
+    <span class="str">&quot;&quot;&quot;low 以上 high 以下の整数を受け取る。正しくない入力はやり直しになる。&quot;&quot;&quot;</span>
+    <span class="kw">while</span> <span class="kw">True</span>:
+        answer = <span class="fn">ask</span>(question, <span class="fn">str</span>(default))
+        <span class="kw">if</span> <span class="kw">not</span> answer.isdigit():
+            <span class="fn">print</span>(<span class="str">&quot;  数字を入力してください&quot;</span>)
+            <span class="kw">if</span> <span class="kw">not</span> USE_INPUT:
+                <span class="kw">return</span> default
+            <span class="kw">continue</span>
+        value = <span class="fn">int</span>(answer)
+        <span class="kw">if</span> value &lt; low <span class="kw">or</span> value &gt; high:
+            <span class="fn">print</span>(<span class="str">f&quot;  {low} から {high} までの数を入力してください&quot;</span>)
+            <span class="kw">if</span> <span class="kw">not</span> USE_INPUT:
+                <span class="kw">return</span> default
+            <span class="kw">continue</span>
+        <span class="kw">return</span> value
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;  部品2: 数字だけを受け取る&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+count = <span class="fn">ask_number</span>(<span class="str">&quot;配達先の数を入力してください（3〜8）: &quot;</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">5</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  → 配達先を {count} 件にします&quot;</span>)
+<span class="fn">print</span>()
+
+
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="cmt"># 部品3: 処理にかかった時間を測る</span>
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;  部品3: 時間を測る&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+
+began = time.time()
+total = <span class="num">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1000000</span>):
+    total = total + i
+elapsed = time.time() - began
+
+<span class="fn">print</span>(<span class="str">f&quot;  1から100万までの合計: {total:,}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  かかった時間: {elapsed:.4f}秒&quot;</span>)
+<span class="fn">print</span>()
+
+
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="cmt"># 部品4: スコアを計算して表示する</span>
+<span class="cmt"># ------------------------------------------------------------</span>
+<span class="kw">def</span> <span class="fn">show_score</span>(player_value, best_value, smaller_is_better=<span class="kw">True</span>):
+    <span class="str">&quot;&quot;&quot;プレイヤーの結果と最適な結果を比べて、100点満点で表示する&quot;&quot;&quot;</span>
+    <span class="kw">if</span> smaller_is_better:
+        score = <span class="fn">int</span>(best_value / player_value * <span class="num">100</span>)
+    <span class="kw">else</span>:
+        score = <span class="fn">int</span>(player_value / best_value * <span class="num">100</span>)
+    <span class="kw">if</span> score &gt; <span class="num">100</span>:
+        score = <span class="num">100</span>
+
+    <span class="fn">print</span>(<span class="str">f&quot;  あなたの結果: {player_value}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  最適な結果  : {best_value}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  スコア      : {score}点&quot;</span>)
+
+    bar_length = score // <span class="num">4</span>
+    <span class="fn">print</span>(<span class="str">&quot;  [&quot;</span> + <span class="str">&quot;#&quot;</span> * bar_length + <span class="str">&quot;.&quot;</span> * (<span class="num">25</span> - bar_length) + <span class="str">&quot;]&quot;</span>)
+
+    <span class="kw">if</span> score == <span class="num">100</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: ★★★ 最適解を見つけた&quot;</span>)
+    <span class="kw">elif</span> score &gt;= <span class="num">80</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: ★★☆ あと少し&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: ★☆☆ もう一度考えてみよう&quot;</span>)
+    <span class="kw">return</span> score
+
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;  部品4: スコアを表示する&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">show_score</span>(<span class="num">42</span>, <span class="num">18</span>)
+<span class="fn">print</span>()
+<span class="fn">show_score</span>(<span class="num">19</span>, <span class="num">18</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;  4つの部品を組み合わせれば、遊べる作品になる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a13_ex4_result.png" alt="AL2-13-ex4.py の実行結果。==================================================== / 部品1: 入力を受け取る / ==================================================== / 難易度を選んでください（1〜3）: 3  ← 入力のかわりに用意した答え / 名前を入力してください: たなか  ← 入力のかわりに用意した答え / → 難易度 3 で、たなか さんとして始めます /  / ==================================================== / 部品2: 数字だけを受け取る / ==================================================== / 配達先の数を入力してください（3〜8）: DDRR  ← 入力のかわりに用意した答え / 数字を入力してください / → 配達先を 5 件にします /  / ==================================================== / 部品3: 時間を測る / ==================================================== / 1から100万までの合計: 499,999,500,000 / かかった時間: 0.0426秒 /  / ==================================================== / 部品4: スコアを表示する / ==================================================== / あなたの結果: 42 / 最適な結果  : 18 / スコア      : 42点 / [##########...............] / 評価: ★☆☆ もう一度考えてみよう /  / あなたの結果: 19 / 最適な結果  : 18 / スコア      : 94点 / [#######################..] / 評価: ★★☆ あと少し /  / ==================================================== / 4つの部品を組み合わせれば、遊べる作品になる / ====================================================" width="498" height="808" loading="lazy">
+      </div>
+      <p class="run-note">4つの部品が順に動きました。部品2では、用意した答え「DDRR」が数字でないため<strong>「数字を入力してください」と表示され、はじかれて</strong>います。まちがった入力をそのまま受け取ると、あとでプログラムが止まる原因になります。部品3では100万回の足し算に0.04秒かかりました。部品4では、スコアに応じて <code>#</code> の棒グラフと星の評価が表示されています。文字だけでも、見せ方をくふうすれば作品らしくなります。</p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">課題1と課題2に取り組み、解答をNotionに記録してください。
+    第14回で仕上げるので、第13回では<strong>完成させなくてかまいません</strong>。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>設計シートを書く</h3>
+      </div>
+      <p>作りたい作品の<strong>設計シート</strong>をNotionに書きます。
+      次の7項目をすべて埋めてください。書けない項目があれば、テーマを見直す合図です。</p>
+
+      <table>
+        <tr><th>項目</th><th>書くこと</th></tr>
+        <tr><td>作品の名前</td><td>短くて分かりやすい名前</td></tr>
+        <tr><td>どんな作品か</td><td>2〜3行で説明する</td></tr>
+        <tr><td>入力</td><td>プログラムが受け取るもの（何を、どんな形で）</td></tr>
+        <tr><td>出力</td><td>プログラムが表示するもの</td></tr>
+        <tr><td>使うアルゴリズム</td><td>後期に学んだものから1つ以上</td></tr>
+        <tr><td>なぜそれを使うか</td><td>ほかの方法ではだめな理由を書く</td></tr>
+        <tr><td>作れたら足したいこと</td><td>2つ以上（最小版には入れない）</td></tr>
+      </table>
+
+      <div class="note-warn">
+        <strong>いちばん大切な項目:</strong> 「なぜそのアルゴリズムを使うか」です。
+        「重みに差があるからダイクストラ法」「順番を決める問題で都市が少ないから全探索」のように、
+        <strong>第11回の3つの問い</strong>（どんな問題か／重みに差があるか／最適解が必要か）に沿って書いてください。
+      </div>
+
+      <p style="margin-top:1rem"><strong>テーマが決まらない場合:</strong>
+      3つのテンプレートのどれかを選び、「ステージを自分で作る」「配達先を自分の町にする」など、
+      中身を自分のものに置きかえるだけでもかまいません。
+      その場合も、7項目すべてを自分の言葉で書いてください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 7項目すべてを埋めた設計シート。とくに「なぜそのアルゴリズムを使うか」は3行以上で書く。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>動く最小版を作る</h3>
+      </div>
+      <p>設計シートをもとに、<strong>動く最小版</strong>を作ります。
+      第13回の時間内に完成しなくてもかまいません。<strong>動くところまで</strong>を提出してください。</p>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>テンプレートを1つ選んでコピーし、<code>AL2-13-work.py</code> という名前で保存する</li>
+          <li>設計シートの「入力」と「出力」にあたる部分を、自分の作品に書き換える</li>
+          <li>1か所書き換えるたびに<strong>実行して確かめる</strong>（まとめて書き換えない）</li>
+          <li>動いたら、実行結果をコピーしてNotionに貼る</li>
+          <li>まだできていないことを「残っていること」として書き出す</li>
+        </ol>
+      </div>
+
+      <div class="note-warn">
+        <strong>行きづまったときのコツ:</strong>
+        <ul style="padding-left:1.2rem;margin-top:0.5rem;font-size:0.92rem;line-height:1.9">
+          <li>エラーが出たら、<strong>いちばん下の行</strong>を読む。何行目で何が起きたかが書いてある</li>
+          <li><code>print()</code> を途中に入れて、変数の中身を見る</li>
+          <li>大きく書き換えず、動いていたところまで戻して、少しずつやり直す</li>
+          <li>テンプレートのどの部分が何をしているか分からなくなったら、その行を消して実行してみる</li>
+        </ul>
+      </div>
+
+      <p style="margin-top:1rem"><strong>Notionに書くこと:</strong></p>
+      <ul class="point-list">
+        <li>書き換えたコード（全部）</li>
+        <li>実行結果（コピーして貼る）</li>
+        <li>いま動いていること（3つ以上）</li>
+        <li>まだ動いていないこと・残っていること（2つ以上）</li>
+        <li>つまずいた点と、どう解決したか（解決していなければ、それも書く）</li>
+      </ul>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 書き換えたコード、実行結果、動いていること3つ以上、残っていること2つ以上、つまずいた点とその対応。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第13回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>テンプレートの実行確認</strong>: 3つのテンプレートを動かした結果（画面のコピーでよい）</li>
+        <li><strong>課題1</strong>: 設計シート（7項目）</li>
+        <li><strong>課題2</strong>: 書き換えたコードと実行結果</li>
+        <li><strong>課題2</strong>: 動いていること・残っていること・つまずいた点</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+      <div class="note-warn" style="margin-top:1rem">
+        <strong>第14回の準備:</strong> 作りかけの <code>AL2-13-work.py</code> は消さずに残してください。
+        第14回では、そのファイルをテストして仕上げ、レポートにまとめます。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2027-01-13T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="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"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第13回 実践的課題（1）設計と実装
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
