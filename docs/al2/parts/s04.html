@@ -1,0 +1,921 @@
+<!--NAV
+提出 #sec-submission
+重みとは #sec-explanation
+例題 #sec-examples
+標準課題 #sec-standard nav-assignment
+提出まとめ #sec-notion
+解答 #answers-section
+-->
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の14分の差</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の通り数の増え方</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>重みを変えると？</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>自分で重み付きグラフを作る</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>重み付きグラフとは</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第3回のグラフでは、辺は「つながっている／つながっていない」のどちらかでした。
+      しかし実際の地図や路線図では、つながり方に<strong>強さの違い</strong>があります。
+      1駅ぶんでも、急行で3分の区間もあれば、各駅停車で30分かかる区間もあります。
+      辺ごとに数値を書き込んだグラフを<strong>重み付きグラフ</strong>と呼び、書き込む数値を<strong>重み</strong>と呼びます。
+    </p>
+
+    <div class="analogy">
+      乗換案内アプリで経路を調べると、「乗りかえ0回・所要45分」と「乗りかえ2回・所要28分」のように、
+      性質の違う候補が並びます。乗りかえの回数がいちばん少ない行き方と、所要時間がいちばん短い行き方は、別のものです。
+      第1回から第3回までの幅優先探索が求めていたのは、前者の「乗りかえの回数がいちばん少ない行き方」でした。
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 336" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">辺に「かかる時間」を書き込んだグラフ（重み付きグラフ）</text>
+        <line x1="170" y1="96" x2="170" y2="246" stroke="#555" stroke-width="2"/>
+        <line x1="170" y1="96" x2="390" y2="66" stroke="#555" stroke-width="2"/>
+        <line x1="170" y1="96" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+        <line x1="170" y1="246" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+        <line x1="390" y1="66" x2="560" y2="66" stroke="#555" stroke-width="2"/>
+        <line x1="560" y1="66" x2="560" y2="196" stroke="#555" stroke-width="2"/>
+        <line x1="560" y1="196" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+        <rect x="153.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="170.0" y="176.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">7分</text>
+        <rect x="263.0" y="70.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="280.0" y="86.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">9分</text>
+        <rect x="263.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="280.0" y="176.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">30分</text>
+        <rect x="263.0" y="235.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="280.0" y="251.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">9分</text>
+        <rect x="458.0" y="55.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="475.0" y="71.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">12分</text>
+        <rect x="543.0" y="120.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="560.0" y="136.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">6分</text>
+        <rect x="458.0" y="210.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+        <text x="475.0" y="226.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">11分</text>
+        <circle cx="170" cy="96" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="170" y="101" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+        <circle cx="170" cy="246" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="170" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+        <circle cx="390" cy="246" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="390" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+        <circle cx="390" cy="66" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="390" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+        <circle cx="560" cy="66" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="560" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+        <circle cx="560" cy="196" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+        <text x="560" y="201" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.320;0.340;1" dur="15s" repeatCount="indefinite"/>
+          <line x1="170" y1="96" x2="170" y2="246" stroke="#555" stroke-width="2"/>
+          <line x1="170" y1="96" x2="390" y2="66" stroke="#555" stroke-width="2"/>
+          <line x1="170" y1="96" x2="390" y2="246" stroke="#FFB800" stroke-width="5"/>
+          <line x1="170" y1="246" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+          <line x1="390" y1="66" x2="560" y2="66" stroke="#555" stroke-width="2"/>
+          <line x1="560" y1="66" x2="560" y2="196" stroke="#555" stroke-width="2"/>
+          <line x1="560" y1="196" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+          <rect x="153.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="170.0" y="176.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">7分</text>
+          <rect x="263.0" y="70.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="280.0" y="86.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">9分</text>
+          <rect x="263.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#FFB800"/>
+          <text x="280.0" y="176.0" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">30分</text>
+          <rect x="263.0" y="235.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="280.0" y="251.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">9分</text>
+          <rect x="458.0" y="55.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="475.0" y="71.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">12分</text>
+          <rect x="543.0" y="120.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="560.0" y="136.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">6分</text>
+          <rect x="458.0" y="210.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="475.0" y="226.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">11分</text>
+          <circle cx="170" cy="96" r="26" fill="#1a2e0a" stroke="#FFB800" stroke-width="2"/>
+          <text x="170" y="101" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+          <circle cx="170" cy="246" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="170" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+          <circle cx="390" cy="246" r="26" fill="#1a2e0a" stroke="#FFB800" stroke-width="2"/>
+          <text x="390" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+          <circle cx="390" cy="66" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="390" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+          <circle cx="560" cy="66" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="560" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+          <circle cx="560" cy="196" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="560" y="201" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+          <text x="350" y="300" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">直通: 路線1本 ／ 合計 30分</text>
+          <text x="350" y="322" text-anchor="middle" fill="#888888" font-size="11">辺の数はいちばん少ない</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.360;0.380;0.640;0.660;1" dur="15s" repeatCount="indefinite"/>
+          <line x1="170" y1="96" x2="170" y2="246" stroke="#76B900" stroke-width="5"/>
+          <line x1="170" y1="96" x2="390" y2="66" stroke="#555" stroke-width="2"/>
+          <line x1="170" y1="96" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+          <line x1="170" y1="246" x2="390" y2="246" stroke="#76B900" stroke-width="5"/>
+          <line x1="390" y1="66" x2="560" y2="66" stroke="#555" stroke-width="2"/>
+          <line x1="560" y1="66" x2="560" y2="196" stroke="#555" stroke-width="2"/>
+          <line x1="560" y1="196" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+          <rect x="153.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#76B900"/>
+          <text x="170.0" y="176.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">7分</text>
+          <rect x="263.0" y="70.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="280.0" y="86.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">9分</text>
+          <rect x="263.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="280.0" y="176.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">30分</text>
+          <rect x="263.0" y="235.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#76B900"/>
+          <text x="280.0" y="251.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">9分</text>
+          <rect x="458.0" y="55.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="475.0" y="71.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">12分</text>
+          <rect x="543.0" y="120.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="560.0" y="136.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">6分</text>
+          <rect x="458.0" y="210.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="475.0" y="226.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">11分</text>
+          <circle cx="170" cy="96" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="170" y="101" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+          <circle cx="170" cy="246" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="170" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+          <circle cx="390" cy="246" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
+          <text x="390" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+          <circle cx="390" cy="66" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="390" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+          <circle cx="560" cy="66" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="560" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+          <circle cx="560" cy="196" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="560" y="201" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+          <text x="350" y="300" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">乗りかえ1回: 路線2本 ／ 合計 16分</text>
+          <text x="350" y="322" text-anchor="middle" fill="#888888" font-size="11">辺の数は多いが、合計時間はいちばん短い</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.680;0.700;0.960;0.980;1" dur="15s" repeatCount="indefinite"/>
+          <line x1="170" y1="96" x2="170" y2="246" stroke="#555" stroke-width="2"/>
+          <line x1="170" y1="96" x2="390" y2="66" stroke="#FF5252" stroke-width="5"/>
+          <line x1="170" y1="96" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+          <line x1="170" y1="246" x2="390" y2="246" stroke="#555" stroke-width="2"/>
+          <line x1="390" y1="66" x2="560" y2="66" stroke="#FF5252" stroke-width="5"/>
+          <line x1="560" y1="66" x2="560" y2="196" stroke="#FF5252" stroke-width="5"/>
+          <line x1="560" y1="196" x2="390" y2="246" stroke="#FF5252" stroke-width="5"/>
+          <rect x="153.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="170.0" y="176.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">7分</text>
+          <rect x="263.0" y="70.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
+          <text x="280.0" y="86.0" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">9分</text>
+          <rect x="263.0" y="160.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="280.0" y="176.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">30分</text>
+          <rect x="263.0" y="235.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#888888"/>
+          <text x="280.0" y="251.0" text-anchor="middle" fill="#bbb" font-size="11" font-weight="400">9分</text>
+          <rect x="458.0" y="55.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
+          <text x="475.0" y="71.0" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">12分</text>
+          <rect x="543.0" y="120.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
+          <text x="560.0" y="136.0" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">6分</text>
+          <rect x="458.0" y="210.0" width="34" height="22" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
+          <text x="475.0" y="226.0" text-anchor="middle" fill="#FF5252" font-size="11" font-weight="700">11分</text>
+          <circle cx="170" cy="96" r="26" fill="#1a2e0a" stroke="#FF5252" stroke-width="2"/>
+          <text x="170" y="101" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
+          <circle cx="170" cy="246" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
+          <text x="170" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
+          <circle cx="390" cy="246" r="26" fill="#1a2e0a" stroke="#FF5252" stroke-width="2"/>
+          <text x="390" y="251" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
+          <circle cx="390" cy="66" r="26" fill="#1a2e0a" stroke="#FF5252" stroke-width="2"/>
+          <text x="390" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
+          <circle cx="560" cy="66" r="26" fill="#1a2e0a" stroke="#FF5252" stroke-width="2"/>
+          <text x="560" y="71" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
+          <circle cx="560" cy="196" r="26" fill="#1a2e0a" stroke="#FF5252" stroke-width="2"/>
+          <text x="560" y="201" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
+          <text x="350" y="300" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="700">遠回り: 路線4本 ／ 合計 38分</text>
+          <text x="350" y="322" text-anchor="middle" fill="#888888" font-size="11">辺の数も合計時間も多い</text>
+        </g>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>重みになるもの</h4>
+      <table>
+        <tr><th>あつかうもの</th><th>重みになるもの</th><th>小さいほど良いか</th></tr>
+        <tr><td>路線図</td><td>乗車時間（分）</td><td>小さいほど良い</td></tr>
+        <tr><td>道路地図</td><td>距離（km）、通行料金（円）</td><td>小さいほど良い</td></tr>
+        <tr><td>床コスト付き迷路</td><td>そのマスを通り抜ける時間（秒）</td><td>小さいほど良い</td></tr>
+        <tr><td>通信ネットワーク</td><td>通信の遅れ（ミリ秒）</td><td>小さいほど良い</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        後期の授業であつかう重みは、すべて<strong>0以上の数値</strong>です。
+        マイナスの重みが混ざると、第5回から学ぶダイクストラ法は正しく動きません。理由は第5回で確かめます。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 238" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">隣接リストに重みを書き足す</text>
+        <rect x="24" y="46" width="312" height="150" rx="12" fill="#141414" stroke="#888888" stroke-width="1.6"/>
+        <text x="180" y="72" text-anchor="middle" fill="#888888" font-size="13" font-weight="700">重みなし（第3回）</text>
+        <text x="180" y="100" text-anchor="middle" fill="#cdd6f4" font-size="10" font-family="JetBrains Mono, monospace">"新宿": ["渋谷", "池袋", "品川"]</text>
+        <text x="180" y="148" text-anchor="middle" fill="#bbb" font-size="11">となりの駅の名前だけを並べる</text>
+        <text x="180" y="172" text-anchor="middle" fill="#bbb" font-size="11">「どこへ行けるか」しか分からない</text>
+        <rect x="364" y="46" width="312" height="150" rx="12" fill="#141414" stroke="#76B900" stroke-width="1.6"/>
+        <text x="520" y="72" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">重みあり（第4回）</text>
+        <text x="520" y="100" text-anchor="middle" fill="#cdd6f4" font-size="10" font-family="JetBrains Mono, monospace">"新宿": [("渋谷", 7), ("池袋", 9), ("品川", 30)]</text>
+        <text x="520" y="148" text-anchor="middle" fill="#bbb" font-size="11">（駅の名前, かかる時間）の組で並べる</text>
+        <text x="520" y="172" text-anchor="middle" fill="#bbb" font-size="11">「どこへ行けるか」＋「いくらかかるか」が分かる</text>
+        <text x="350" y="222" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">重みを書き足すだけで、「乗りかえの少なさ」ではなく「かかる時間の短さ」を考えられるようになる</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>用語の整理: 「最短」には2つの意味がある</h4>
+      <table>
+        <tr><th>言い方</th><th>意味</th><th>求める方法</th></tr>
+        <tr><td>辺の数が最も少ない経路</td><td>乗りかえや歩数がいちばん少ない行き方</td><td>幅優先探索（第1〜3回）</td></tr>
+        <tr><td>重みの合計が最も小さい経路</td><td>かかる時間や料金がいちばん小さい行き方</td><td>ダイクストラ法（第5回から）</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        重みがすべて同じ値なら、2つの答えは一致します。
+        重みがばらばらのときは、例題2で確かめるように<strong>答えがずれます</strong>。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
+    例題4は実行に10秒ほどかかります。止まっているように見えても、終わるまで待ってください。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No04</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No03/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No04/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第4回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No04</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No04 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No04 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-04-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-04-ex1.py</code>, <code>AL2-04-ex2.py</code>, <code>AL2-04-ex3.py</code>, <code>AL2-04-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">重み</strong><br><span style="color:#888;font-size:0.8rem">おもみ / weight</span></td><td>辺ごとに書き込む数値。乗車時間・距離・料金など「その辺を通るのにかかるもの」を表す。</td></tr>
+        <tr><td><strong style="color:#76B900">重み付きグラフ</strong><br><span style="color:#888;font-size:0.8rem">weighted graph</span></td><td>すべての辺に重みが付いているグラフ。重みのないグラフは、すべての重みが1のグラフと考えることもできる。</td></tr>
+        <tr><td><strong style="color:#76B900">コスト</strong><br><span style="color:#888;font-size:0.8rem">cost</span></td><td>重みの言いかえ。「その道を通るために支払うもの」という意味で使う。合計コストが小さいほど良い。</td></tr>
+        <tr><td><strong style="color:#76B900">タプル</strong><br><span style="color:#888;font-size:0.8rem">tuple</span></td><td><code>("渋谷", 7)</code> のように、丸かっこでいくつかの値をまとめたもの。リストと違って、あとから中身を書き換えられない。</td></tr>
+        <tr><td><strong style="color:#76B900">全探索</strong><br><span style="color:#888;font-size:0.8rem">ぜんたんさく / brute force</span></td><td>考えられる候補をすべて書き出して1つずつ調べる方法。必ず正しい答えが出るが、候補が増えると終わらなくなる。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>重み付きグラフを隣接リストで表す</h3>
+      </div>
+      <p>6つの駅からなる路線図に、区間ごとの乗車時間を重みとして書き込みます。
+      重み付きの隣接リストでは、となりの駅を <code>("駅の名前", 時間)</code> という<strong>2つ組</strong>で並べます。</p>
+
+<pre><span class="code-label">Python ── AL2-04-ex1.py</span>
+<span class="cmt"># 重み付きグラフを隣接リストで表す</span>
+<span class="cmt"># 重み（おもみ）= 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
+
+<span class="cmt"># となりの駅を (駅名, かかる時間) の形で並べる</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+<span class="fn">print</span>(<span class="str">&quot;重み付きグラフ（数字は乗車時間・分）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    parts = []
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[station]:
+        parts.append(<span class="str">f&quot;{name}({minutes}分)&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;{station}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(parts))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を求める。つながっていない駅があれば None を返す。&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        here = route[i]
+        next_station = route[i + <span class="num">1</span>]
+        found = <span class="kw">False</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+            <span class="kw">if</span> name == next_station:
+                total = total + minutes
+                found = <span class="kw">True</span>
+                <span class="kw">break</span>
+        <span class="kw">if</span> <span class="kw">not</span> found:
+            <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">return</span> total
+
+
+<span class="cmt"># 新宿から品川まで、3通りの行き方を比べる</span>
+routes = [
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+]
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方を比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="kw">for</span> route <span class="kw">in</span> routes:
+    minutes = <span class="fn">route_minutes</span>(route)
+    <span class="fn">print</span>(<span class="str">f&quot;{&#x27; → &#x27;.join(route)}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;    乗りかえの回数: {len(route)-2}回 ／ 合計時間: {minutes}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;直通（乗りかえ0回）がいちばん時間がかかっている&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a04_ex1_result.png" alt="AL2-04-ex1.py の実行結果。重み付きグラフ（数字は乗車時間・分） / ---------------------------------------------- / 新宿: 渋谷(7分)、池袋(9分)、品川(30分) / 渋谷: 新宿(7分)、品川(9分) / 池袋: 新宿(9分)、上野(12分) / 上野: 池袋(12分)、東京(6分) / 東京: 上野(6分)、品川(11分) / 品川: 新宿(30分)、渋谷(9分)、東京(11分) / ---------------------------------------------- /  / 新宿から品川までの行き方を比べる / ---------------------------------------------- / 新宿 → 品川 / 乗りかえの回数: 0回 ／ 合計時間: 30分 / 新宿 → 渋谷 → 品川 / 乗りかえの回数: 1回 ／ 合計時間: 16分 / 新宿 → 池袋 → 上野 → 東京 → 品川 / 乗りかえの回数: 3回 ／ 合計時間: 38分 / ---------------------------------------------- /  / 直通（乗りかえ0回）がいちばん時間がかかっている" width="380" height="468" loading="lazy">
+      </div>
+      <p class="run-note">新宿から品川へは3通りの行き方があり、乗りかえ0回の直通が<strong>30分</strong>、渋谷で1回乗りかえる行き方が<strong>16分</strong>、大回りの行き方が<strong>38分</strong>でした。乗りかえが少ない順に並べると 30分 → 16分 → 38分 で、乗りかえの回数と所要時間はまったく対応していません。<code>route_minutes</code> 関数は、隣り合う2駅の重みを順に足していくことで合計時間を求めています。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>幅優先探索では最短時間を求められない</h3>
+      </div>
+      <p>幅優先探索で新宿から品川への経路を求め、すべての行き方の中でいちばん時間が短い経路と比べます。</p>
+
+<pre><span class="code-label">Python ── AL2-04-ex2.py</span>
+<span class="cmt"># 幅優先探索は「重みの合計」を最小にできないことを確かめる</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+goal = <span class="str">&quot;品川&quot;</span>
+
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を求める&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
+            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
+                total = total + minutes
+                <span class="kw">break</span>
+    <span class="kw">return</span> total
+
+
+<span class="cmt"># --- 方法1: 幅優先探索（乗る路線の本数がいちばん少ない道をさがす） ---</span>
+came_from = {start: <span class="kw">None</span>}
+queue = <span class="fn">deque</span>([start])
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    current = queue.popleft()
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> came_from:
+            <span class="kw">continue</span>
+        came_from[name] = current
+        queue.append(name)
+
+bfs_route = []
+node = goal
+<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+    bfs_route.append(node)
+    node = came_from[node]
+bfs_route.reverse()
+
+
+<span class="cmt"># --- 方法2: すべての行き方を書き出して、合計時間がいちばん短い道をさがす ---</span>
+<span class="kw">def</span> <span class="fn">all_routes</span>(here, goal, visited):
+    <span class="str">&quot;&quot;&quot;here から goal までの、同じ駅を2度通らない行き方をすべて返す&quot;&quot;&quot;</span>
+    <span class="kw">if</span> here == goal:
+        <span class="kw">return</span> [[goal]]
+    result = []
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+        <span class="kw">if</span> name <span class="kw">in</span> visited:
+            <span class="kw">continue</span>
+        <span class="kw">for</span> rest <span class="kw">in</span> <span class="fn">all_routes</span>(name, goal, visited + [name]):
+            result.append([here] + rest)
+    <span class="kw">return</span> result
+
+
+every_route = <span class="fn">all_routes</span>(start, goal, [start])
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方をすべて書き出す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="kw">for</span> route <span class="kw">in</span> every_route:
+    <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: 路線{len(route)-1}本 ／ {route_minutes(route)}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;行き方の数:&quot;</span>, <span class="fn">len</span>(every_route), <span class="str">&quot;通り&quot;</span>)
+<span class="fn">print</span>()
+
+best_route = every_route[<span class="num">0</span>]
+<span class="kw">for</span> route <span class="kw">in</span> every_route:
+    <span class="kw">if</span> <span class="fn">route_minutes</span>(route) &lt; <span class="fn">route_minutes</span>(best_route):
+        best_route = route
+
+<span class="fn">print</span>(<span class="str">&quot;方法1: 幅優先探索が選んだ道&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(bfs_route)}: 路線{len(bfs_route)-1}本 ／ {route_minutes(bfs_route)}分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;方法2: 合計時間がいちばん短い道&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(best_route)}: 路線{len(best_route)-1}本 ／ {route_minutes(best_route)}分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_minutes</span>(bfs_route) - <span class="fn">route_minutes</span>(best_route), <span class="str">&quot;分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a04_ex2_result.png" alt="AL2-04-ex2.py の実行結果。新宿から品川までの行き方をすべて書き出す / ---------------------------------------------------- / 新宿 → 渋谷 → 品川: 路線2本 ／ 16分 / 新宿 → 池袋 → 上野 → 東京 → 品川: 路線4本 ／ 38分 / 新宿 → 品川: 路線1本 ／ 30分 / ---------------------------------------------------- / 行き方の数: 3 通り /  / 方法1: 幅優先探索が選んだ道 / 新宿 → 品川: 路線1本 ／ 30分 /  / 方法2: 合計時間がいちばん短い道 / 新宿 → 渋谷 → 品川: 路線2本 ／ 16分 /  / 差: 14 分 /  / 幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。" width="465" height="388" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索が選んだのは<strong>直通の30分</strong>の経路でした。一方、合計時間がいちばん短いのは<strong>渋谷で乗りかえる16分</strong>の経路で、その差は14分もあります。幅優先探索は「路線の本数」を最小にするアルゴリズムなので、本数が1本の直通を選びます。重みの合計を最小にしたい場合、幅優先探索は使えません。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、幅優先探索が選んだ経路と合計時間、いちばん短い経路と合計時間、その差を書く。あわせて、幅優先探索が16分の経路を選べない理由を、幅優先探索の進め方と結びつけて説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>床にコストがある迷路</h3>
+      </div>
+      <p>迷路のマスごとに「通り抜けるのにかかる秒数」を決めた迷路を作り、3通りの行き方の合計時間を比べます。
+      1 は舗装された道（1秒）、9 はぬかるみ（9秒）です。</p>
+
+<pre><span class="code-label">Python ── AL2-04-ex3.py</span>
+<span class="cmt"># 床にコストがある迷路</span>
+<span class="cmt"># マスごとに「通り抜けるのにかかる時間」が決まっている迷路を考える。</span>
+<span class="cmt">#   1 = 舗装された道（1秒）</span>
+<span class="cmt">#   9 = ぬかるみ（9秒）</span>
+
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+]
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+
+<span class="fn">print</span>(<span class="str">&quot;床コスト付き迷路（数字はそのマスを通るのにかかる秒数）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  S = スタート(0,0)   G = ゴール(4,4)&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    line = <span class="str">&quot;  &quot;</span>
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        mark = <span class="str">&quot; &quot;</span>
+        <span class="kw">if</span> (r, c) == (<span class="num">0</span>, <span class="num">0</span>):
+            mark = <span class="str">&quot;S&quot;</span>
+        <span class="kw">if</span> (r, c) == (rows - <span class="num">1</span>, cols - <span class="num">1</span>):
+            mark = <span class="str">&quot;G&quot;</span>
+        line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;4}{mark}&quot;</span>
+    <span class="fn">print</span>(line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="fn">print</span>()
+
+
+<span class="kw">def</span> <span class="fn">route_cost</span>(route):
+    <span class="str">&quot;&quot;&quot;通る順番が route のとき、合計で何秒かかるかを求める。
+    スタートのマスは「入る」わけではないので数えない。&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+        r, c = route[i]
+        total = total + cost_map[r][c]
+    <span class="kw">return</span> total
+
+
+<span class="kw">def</span> <span class="fn">draw</span>(route, title):
+    <span class="str">&quot;&quot;&quot;通り道のマスに * を付けて迷路を表示する&quot;&quot;&quot;</span>
+    picture = []
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        line = []
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> route:
+                line.append(<span class="str">f&quot;{cost_map[r][c]:&gt;4}*&quot;</span>)
+            <span class="kw">else</span>:
+                line.append(<span class="str">f&quot;{cost_map[r][c]:&gt;4} &quot;</span>)
+        picture.append(<span class="str">&quot;&quot;</span>.join(line))
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> line <span class="kw">in</span> picture:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+    <span class="fn">print</span>()
+
+
+<span class="cmt"># 3通りの行き方を比べる（* が通り道）</span>
+route_a = [(<span class="num">0</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">2</span>, <span class="num">0</span>), (<span class="num">3</span>, <span class="num">0</span>), (<span class="num">4</span>, <span class="num">0</span>),
+           (<span class="num">4</span>, <span class="num">1</span>), (<span class="num">4</span>, <span class="num">2</span>), (<span class="num">4</span>, <span class="num">3</span>), (<span class="num">4</span>, <span class="num">4</span>)]
+
+route_b = [(<span class="num">0</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">1</span>), (<span class="num">0</span>, <span class="num">2</span>), (<span class="num">0</span>, <span class="num">3</span>), (<span class="num">0</span>, <span class="num">4</span>),
+           (<span class="num">1</span>, <span class="num">4</span>), (<span class="num">2</span>, <span class="num">4</span>), (<span class="num">3</span>, <span class="num">4</span>), (<span class="num">4</span>, <span class="num">4</span>)]
+
+route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">1</span>), (<span class="num">0</span>, <span class="num">2</span>), (<span class="num">1</span>, <span class="num">2</span>), (<span class="num">2</span>, <span class="num">2</span>),
+           (<span class="num">2</span>, <span class="num">1</span>), (<span class="num">2</span>, <span class="num">0</span>), (<span class="num">3</span>, <span class="num">0</span>), (<span class="num">4</span>, <span class="num">0</span>),
+           (<span class="num">4</span>, <span class="num">1</span>), (<span class="num">4</span>, <span class="num">2</span>), (<span class="num">4</span>, <span class="num">3</span>), (<span class="num">4</span>, <span class="num">4</span>)]
+
+<span class="fn">print</span>(<span class="str">&quot;行き方A: 左の列を下りて、下の行を右へ進む&quot;</span>)
+<span class="fn">draw</span>(route_a, <span class="str">f&quot;  歩数 {len(route_a)-1}歩 ／ 合計 {route_cost(route_a)}秒&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;行き方B: 上の行を右へ進んで、右の列を下りる&quot;</span>)
+<span class="fn">draw</span>(route_b, <span class="str">f&quot;  歩数 {len(route_b)-1}歩 ／ 合計 {route_cost(route_b)}秒&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;行き方C: いったん右へ出てから左へもどり、下の行を右へ進む&quot;</span>)
+<span class="fn">draw</span>(route_c, <span class="str">f&quot;  歩数 {len(route_c)-1}歩 ／ 合計 {route_cost(route_c)}秒&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>(<span class="str">f&quot;行き方A: {len(route_a)-1}歩 ／ {route_cost(route_a)}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;行き方B: {len(route_b)-1}歩 ／ {route_cost(route_b)}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;行き方C: {len(route_c)-1}歩 ／ {route_cost(route_c)}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>(<span class="str">&quot;歩数がいちばん多い行き方Cが、合計時間ではいちばん短い&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 362" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">床コスト付き迷路: 歩数が多くても合計時間は短いことがある</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">マスの数字は、そのマスを通り抜けるのにかかる秒数</text>
+        <rect x="246" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="267.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="292" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="313.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="338" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="359.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="384" y="62" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="405.5" y="89.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="430" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="451.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="246" y="108" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="267.5" y="135.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="292" y="108" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="313.5" y="135.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="338" y="108" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="359.5" y="135.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="384" y="108" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="405.5" y="135.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="430" y="108" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="451.5" y="135.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="246" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="267.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="292" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="313.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="338" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="359.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="384" y="154" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="405.5" y="181.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="430" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="451.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="246" y="200" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="267.5" y="227.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="292" y="200" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="313.5" y="227.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="338" y="200" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="359.5" y="227.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="384" y="200" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
+        <text x="405.5" y="227.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
+        <rect x="430" y="200" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="451.5" y="227.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="246" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="267.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="292" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="313.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="338" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="359.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="384" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="405.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <rect x="430" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
+        <text x="451.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
+        <text x="254" y="76" fill="#76B900" font-size="11" font-weight="700">S</text>
+        <text x="460" y="284" fill="#76B900" font-size="11" font-weight="700">G</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.300;0.320;1" dur="15s" repeatCount="indefinite"/>
+          <polyline points="267.5,83.5 267.5,129.5 267.5,175.5 267.5,221.5 267.5,267.5 313.5,267.5 359.5,267.5 405.5,267.5 451.5,267.5" fill="none" stroke="#FFB800" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
+          <text x="350" y="320" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">行き方A: 8歩 ／ 合計 16秒</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.340;0.360;0.620;0.640;1" dur="15s" repeatCount="indefinite"/>
+          <polyline points="267.5,83.5 313.5,83.5 359.5,83.5 405.5,83.5 451.5,83.5 451.5,129.5 451.5,175.5 451.5,221.5 451.5,267.5" fill="none" stroke="#FFB800" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
+          <text x="350" y="320" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">行き方B: 8歩 ／ 合計 16秒</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.660;0.680;0.960;0.980;1" dur="15s" repeatCount="indefinite"/>
+          <polyline points="267.5,83.5 313.5,83.5 359.5,83.5 359.5,129.5 359.5,175.5 313.5,175.5 267.5,175.5 267.5,221.5 267.5,267.5 313.5,267.5 359.5,267.5 405.5,267.5 451.5,267.5" fill="none" stroke="#76B900" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
+          <text x="350" y="320" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">行き方C: 12歩 ／ 合計 12秒（いちばん短い）</text>
+        </g>
+        <text x="350" y="346" text-anchor="middle" fill="#888888" font-size="11">9のマス（ぬかるみ）を1つ通るだけで、1のマスを8回通るより時間がかかる</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a04_ex3_result.png" alt="AL2-04-ex3.py の実行結果。床コスト付き迷路（数字はそのマスを通るのにかかる秒数） / S = スタート(0,0)   G = ゴール(4,4) / ------------------------------ / 1S   1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1G / ------------------------------ /  / 行き方A: 左の列を下りて、下の行を右へ進む / 歩数 8歩 ／ 合計 16秒 / 1*   1    1    9    1 / 9*   9    1    9    1 / 1*   1    1    9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / 行き方B: 上の行を右へ進んで、右の列を下りる / 歩数 8歩 ／ 合計 16秒 / 1*   1*   1*   9*   1* / 9    9    1    9    1* / 1    1    1    9    1* / 1    9    9    9    1* / 1    1    1    1    1* /  / 行き方C: いったん右へ出てから左へもどり、下の行を右へ進む / 歩数 12歩 ／ 合計 12秒 / 1*   1*   1*   9    1 / 9    9    1*   9    1 / 1*   1*   1*   9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / -------------------------------------------- / 行き方A: 8歩 ／ 16秒 / 行き方B: 8歩 ／ 16秒 / 行き方C: 12歩 ／ 12秒 / -------------------------------------------- / 歩数がいちばん多い行き方Cが、合計時間ではいちばん短い" width="388" height="848" loading="lazy">
+      </div>
+      <p class="run-note">行き方Aと行き方Bはどちらも<strong>8歩・16秒</strong>、行き方Cは<strong>12歩・12秒</strong>でした。歩数がいちばん多い行き方Cが、合計時間ではいちばん短くなっています。行き方Aと行き方Bは、途中で 9 のマス（ぬかるみ）を1回通っているためです。ぬかるみを1マス通るだけで9秒かかるので、舗装路を4マスよけいに歩いたほうが早く着きます。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>全探索が使えなくなる大きさ</h3>
+      </div>
+      <p>「すべての行き方を書き出して、いちばん安いものを選ぶ」という全探索が、
+      迷路の大きさによってどれくらい時間がかかるようになるかを測ります。</p>
+
+<pre><span class="code-label">Python ── AL2-04-ex4.py</span>
+<span class="cmt"># すべての行き方を書き出して最小コストを求める方法（全探索）は、</span>
+<span class="cmt"># 迷路が少し大きくなるだけで使えなくなることを確かめる</span>
+<span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="fn">count_all_routes</span>(size):
+    <span class="str">&quot;&quot;&quot;size × size の迷路で、同じマスを2度通らない行き方をすべて数え、
+    いちばん安い合計コストも求める。すべてのマスのコストは1とする。&quot;&quot;&quot;</span>
+    goal = (size - <span class="num">1</span>, size - <span class="num">1</span>)
+    visited = <span class="fn">set</span>()
+    result = {<span class="str">&quot;count&quot;</span>: <span class="num">0</span>, <span class="str">&quot;best&quot;</span>: <span class="kw">None</span>}
+
+    <span class="kw">def</span> <span class="fn">walk</span>(r, c, total):
+        <span class="kw">if</span> (r, c) == goal:
+            result[<span class="str">&quot;count&quot;</span>] = result[<span class="str">&quot;count&quot;</span>] + <span class="num">1</span>
+            <span class="kw">if</span> result[<span class="str">&quot;best&quot;</span>] <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; result[<span class="str">&quot;best&quot;</span>]:
+                result[<span class="str">&quot;best&quot;</span>] = total
+            <span class="kw">return</span>
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= size <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= size:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            visited.add((nr, nc))
+            <span class="fn">walk</span>(nr, nc, total + <span class="num">1</span>)
+            visited.discard((nr, nc))
+
+    visited.add((<span class="num">0</span>, <span class="num">0</span>))
+    <span class="fn">walk</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>)
+    <span class="kw">return</span> result[<span class="str">&quot;count&quot;</span>], result[<span class="str">&quot;best&quot;</span>]
+
+
+<span class="fn">print</span>(<span class="str">&quot;全探索で「すべての行き方」を数えたときの通り数と時間&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>(<span class="str">&quot;迷路の大きさ         行き方の数        かかった時間&quot;</span>)
+
+<span class="kw">for</span> size <span class="kw">in</span> [<span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]:
+    started = time.time()
+    count, best = <span class="fn">count_all_routes</span>(size)
+    elapsed = time.time() - started
+    <span class="fn">print</span>(<span class="str">f&quot;{size}マス×{size}マス   {count:&gt;16,}通り   {elapsed:&gt;10.3f}秒&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;7マス×7マスの行き方は 575,780,564 通りある。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">迷路が1マス大きくなるだけで、行き方の数は数百倍に増える</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは10倍ごとの目もり</text>
+        <text x="24" y="86" fill="#E0E0E0" font-size="12" font-weight="700">3×3</text>
+        <rect x="86" y="70" width="48" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="144" y="87" fill="#76B900" font-size="12" font-weight="700">12通り</text>
+        <text x="676" y="87" text-anchor="end" fill="#888888" font-size="11">すぐ終わる</text>
+        <text x="24" y="130" fill="#E0E0E0" font-size="12" font-weight="700">4×4</text>
+        <rect x="86" y="114" width="101" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="197" y="131" fill="#76B900" font-size="12" font-weight="700">184通り</text>
+        <text x="676" y="131" text-anchor="end" fill="#888888" font-size="11">すぐ終わる</text>
+        <text x="24" y="174" fill="#E0E0E0" font-size="12" font-weight="700">5×5</text>
+        <rect x="86" y="158" width="175" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="271" y="175" fill="#76B900" font-size="12" font-weight="700">8,512通り</text>
+        <text x="676" y="175" text-anchor="end" fill="#888888" font-size="11">0.03秒</text>
+        <text x="24" y="218" fill="#E0E0E0" font-size="12" font-weight="700">6×6</text>
+        <rect x="86" y="202" width="271" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="367" y="219" fill="#FF5252" font-size="12" font-weight="700">1,262,816通り</text>
+        <text x="676" y="219" text-anchor="end" fill="#888888" font-size="11">約7秒</text>
+        <text x="24" y="262" fill="#E0E0E0" font-size="12" font-weight="700">7×7</text>
+        <rect x="86" y="246" width="389" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="485" y="263" fill="#FF5252" font-size="12" font-weight="700">575,780,564通り</text>
+        <text x="676" y="263" text-anchor="end" fill="#888888" font-size="11">約1時間</text>
+        <text x="350" y="302" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">全探索では現実的な時間で終わらない。第5回から学ぶダイクストラ法が必要になる</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ         行き方の数        かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.034秒 / 6マス×6マス          1,262,816通り        7.164秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
+      </div>
+      <p class="run-note">3マス四方は12通り、4マス四方は184通り、5マス四方は8,512通り、6マス四方は1,262,816通りでした。たった1マス大きくなるだけで、行き方の数は<strong>およそ150倍</strong>に増えています。6マス四方で約7秒かかったので、7マス四方（5億7千万通り）では1時間近くかかる計算になります。カーナビが数万の交差点をあつかうことを考えると、全探索はまったく使えません。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の表から、迷路の大きさごとの「行き方の数」と「かかった時間」を書き写す。あわせて、5マス四方から6マス四方に大きくしたとき、行き方の数が何倍になったかを計算して書く。</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>重みを変えると、いちばん短い行き方はどうなるか</h3>
+      </div>
+      <p>例題2のファイル <code>AL2-04-ex2.py</code> を開き、新宿と品川を直接つなぐ区間の重みを変えます。
+      直通が急行に変わり、30分から12分に短くなったという設定です。</p>
+
+<pre><span class="code-label">Python ── 書き換える2か所</span>
+    <span class="str">"新宿"</span>: [(<span class="str">"渋谷"</span>, <span class="num">7</span>), (<span class="str">"池袋"</span>, <span class="num">9</span>), (<span class="str">"品川"</span>, <span class="num">12</span>)],   <span class="cmt"># ← 30 を 12 に</span>
+    <span class="str">"品川"</span>: [(<span class="str">"新宿"</span>, <span class="num">12</span>), (<span class="str">"渋谷"</span>, <span class="num">9</span>), (<span class="str">"東京"</span>, <span class="num">11</span>)],   <span class="cmt"># ← 30 を 12 に</span></pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、3通りの行き方それぞれの合計時間と、いちばん短い行き方を予測してNotionに書く</li>
+          <li>2か所を書き換えて保存し、実行する</li>
+          <li>幅優先探索が選んだ経路と、いちばん短い経路を記録する</li>
+          <li>書き換える前（30分）と比べて、何が変わったかを書く</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>行き方</th><th>30分のとき</th><th>予測（12分のとき）</th><th>実際</th></tr>
+        <tr><td>新宿 → 品川</td><td>30分</td><td></td><td></td></tr>
+        <tr><td>新宿 → 渋谷 → 品川</td><td>16分</td><td></td><td></td></tr>
+        <tr><td>新宿 → 池袋 → 上野 → 東京 → 品川</td><td>38分</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 重みを12分にしたとき、幅優先探索が選ぶ経路と、いちばん短い経路は一致しますか。
+      一致する場合、それは「幅優先探索が重みを考えられるようになった」ことを意味しますか。理由とともに説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 3通りの行き方についての予測と実際の表、幅優先探索が選んだ経路、いちばん短い経路、および「一致は偶然か」の説明。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>自分で重み付きグラフを作る</h3>
+      </div>
+      <p>身近な場面を1つ選び、自分で重み付きグラフを作ります。頂点は4個以上、辺は5本以上にしてください。</p>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>テーマを1つ決める（例: 自宅から大学までの経路、キャンパス内の建物、よく行く店の位置関係）</li>
+          <li>頂点（場所）と辺（つながり）と重み（かかる時間や距離）を紙に描く</li>
+          <li>例題1のコードをコピーして <code>AL2-04-std2.py</code> という名前で保存し、<code>railway</code> の中身を自分のグラフに書き換える</li>
+          <li>出発点と目的地を決め、行き方を3通り以上書き出して、それぞれの合計コストを <code>route_minutes</code> で計算する</li>
+          <li>いちばんコストが小さい行き方を答える</li>
+        </ol>
+      </div>
+
+      <p><strong>Notionに書くこと:</strong></p>
+      <ul class="point-list">
+        <li>選んだテーマと、頂点・辺・重みが何を表しているか</li>
+        <li>作ったグラフの図（手描きの写真でもよい）</li>
+        <li>書き換えたコードと実行結果</li>
+        <li>3通り以上の行き方とそれぞれの合計コスト、いちばん小さいもの</li>
+      </ul>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 自分が選んだテーマで、重みを「時間」ではなく「料金」に変えたとしたら、
+      いちばん良い行き方は変わりそうですか。変わる／変わらないの理由を説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> テーマ、グラフの図、書き換えたコード、実行結果、3通り以上の行き方とコスト、いちばん小さい行き方、および重みを料金に変えた場合の考察。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第4回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題2</strong>: 幅優先探索の経路と時間、最短の経路と時間、差、選べない理由</li>
+        <li><strong>例題4</strong>: 大きさごとの行き方の数と時間、5マス四方から6マス四方への倍率</li>
+        <li><strong>標準課題1</strong>: 予測と実際の表、一致するかどうかの考察</li>
+        <li><strong>標準課題2</strong>: 自作の重み付きグラフと計算結果、料金に変えた場合の考察</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="{{RELEASE}}">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-content">
+      <div class="ans-item">
+        <h4>標準課題1: 直通を12分にしたときの結果</h4>
+        <table>
+          <tr><th>行き方</th><th>30分のとき</th><th>12分のとき</th></tr>
+          <tr><td>新宿 → 品川</td><td>30分</td><td><strong style="color:#76B900">12分（いちばん短い）</strong></td></tr>
+          <tr><td>新宿 → 渋谷 → 品川</td><td><strong style="color:#76B900">16分（いちばん短い）</strong></td><td>16分</td></tr>
+          <tr><td>新宿 → 池袋 → 上野 → 東京 → 品川</td><td>38分</td><td>38分</td></tr>
+        </table>
+        <p style="margin-top:0.8rem">幅優先探索が選ぶ経路は<strong>直通（新宿 → 品川）</strong>で、書き換える前と変わりません。
+        いちばん短い経路も<strong>直通の12分</strong>になるので、2つの答えは一致します。</p>
+        <p style="margin-top:0.6rem"><strong>一致は偶然です。</strong>
+        幅優先探索がしていることは、書き換える前とまったく同じ「路線の本数がいちばん少ない経路をさがす」ことだけです。
+        重みが30分から12分に変わったことを、幅優先探索は一切見ていません。
+        たまたま「本数がいちばん少ない経路」と「時間がいちばん短い経路」が同じになっただけです。</p>
+        <p style="margin-top:0.6rem">確かめる方法があります。直通をもう一度30分に戻すと、幅優先探索の答えは直通のまま変わりませんが、
+        いちばん短い経路は渋谷まわりに変わります。
+        <strong>重みを変えても答えが変わらないアルゴリズムは、重みを考えていない</strong>ということです。
+        重みを正しくあつかうには、第5回から学ぶダイクストラ法が必要になります。</p>
+      </div>
+      <div class="ans-item">
+        <h4>標準課題2: 自作の重み付きグラフの例</h4>
+        <p>作り方の一例として、大学の最寄り駅から教室までの経路を重み付きグラフにした場合を示します。
+        自分のテーマで作れていれば、内容が違っていてかまいません。</p>
+<pre><span class="code-label">Python ── AL2-04-std2.py の例</span>
+campus = {
+    <span class="str">"駅"</span>: [(<span class="str">"正門"</span>, <span class="num">8</span>), (<span class="str">"裏門"</span>, <span class="num">12</span>)],
+    <span class="str">"正門"</span>: [(<span class="str">"駅"</span>, <span class="num">8</span>), (<span class="str">"1号館"</span>, <span class="num">3</span>), (<span class="str">"食堂"</span>, <span class="num">5</span>)],
+    <span class="str">"裏門"</span>: [(<span class="str">"駅"</span>, <span class="num">12</span>), (<span class="str">"3号館"</span>, <span class="num">2</span>)],
+    <span class="str">"1号館"</span>: [(<span class="str">"正門"</span>, <span class="num">3</span>), (<span class="str">"教室"</span>, <span class="num">4</span>)],
+    <span class="str">"食堂"</span>: [(<span class="str">"正門"</span>, <span class="num">5</span>), (<span class="str">"教室"</span>, <span class="num">6</span>)],
+    <span class="str">"3号館"</span>: [(<span class="str">"裏門"</span>, <span class="num">2</span>), (<span class="str">"教室"</span>, <span class="num">3</span>)],
+    <span class="str">"教室"</span>: [(<span class="str">"1号館"</span>, <span class="num">4</span>), (<span class="str">"食堂"</span>, <span class="num">6</span>), (<span class="str">"3号館"</span>, <span class="num">3</span>)],
+}</pre>
+        <table style="margin-top:0.8rem">
+          <tr><th>行き方</th><th>合計時間</th></tr>
+          <tr><td>駅 → 正門 → 1号館 → 教室</td><td>8 + 3 + 4 = 15分</td></tr>
+          <tr><td>駅 → 正門 → 食堂 → 教室</td><td>8 + 5 + 6 = 19分</td></tr>
+          <tr><td>駅 → 裏門 → 3号館 → 教室</td><td>12 + 2 + 3 = <strong style="color:#76B900">17分</strong></td></tr>
+        </table>
+        <p style="margin-top:0.8rem">この例では「駅 → 正門 → 1号館 → 教室」の15分がいちばん短くなります。</p>
+        <p style="margin-top:0.6rem"><strong>重みを料金に変えた場合の考え方:</strong>
+        キャンパス内の移動はどの道も無料なので、料金を重みにするとすべての辺が0になり、
+        「どの行き方も同じ」という答えになります。重みの選び方によって、問題そのものが変わってしまうということです。</p>
+        <p style="margin-top:0.6rem">路線図をテーマに選んだ場合は、時間と料金で答えが変わることがよくあります。
+        新幹線を使えば時間は短くなりますが料金は高くなるため、
+        「時間を重みにしたときの最短経路」と「料金を重みにしたときの最短経路」は別のものになります。
+        <strong>何を重みにするかを決めることは、何を大切にするかを決めること</strong>だと言えます。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
