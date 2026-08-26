@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第10回: 巡回セールスマン問題（3）動的計画法 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">動的計画法</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">標準課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第10回: 巡回セールスマン問題（3）動的計画法</h1>
+    <p>部分集合を使った動的計画法（bitDP）で最適解を求め、全探索・貪欲法と結果と速度を比べる</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の表と答え</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の増え方</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>ビット表現を予測</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>3手法の比較表</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>動的計画法（bitDP）</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第8回の全探索は必ず最適解を出しますが、12都市で終わらなくなりました。
+      第9回の貪欲法は一瞬で終わりますが、最適解とはかぎりませんでした。
+      第10回で学ぶ<strong>動的計画法</strong>（どうてきけいかくほう）は、
+      <strong>必ず最適解を出しながら、全探索よりずっと速い</strong>方法です。
+    </p>
+
+    <div class="analogy">
+      同じ計算を何度もしていることに気づいたら、答えをメモしておいて使い回す。
+      たとえば「12×15」を1日に何度も計算するなら、最初の1回で180とメモしておけば、
+      2回目以降は計算し直す必要がありません。
+      動的計画法は、この「一度計算した答えをメモして使い回す」という考え方です。
+    </div>
+
+    <div class="concept-box">
+      <h4>全探索のむだ</h4>
+      <p style="font-size:0.95rem">
+        全探索は「0 → 1 → 2 → 3 → …」と「0 → 2 → 1 → 3 → …」を、まったく別のものとして最後まで調べます。
+        しかし2つの道は、4つ目の都市に着いた時点で<strong>状況がまったく同じ</strong>です。
+        どちらも「0・1・2・3 を回り終えて、いま 3 にいる」という状態だからです。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        残っている都市も同じ、いる場所も同じなので、<strong>ここから先の最短の進み方も同じ</strong>になります。
+        違うのは「ここまでにかかった距離」だけです。
+        だとすれば、<strong>短いほうの距離だけを覚えておけば十分</strong>で、長いほうの道はもう調べる必要がありません。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 364" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索は、同じ計算を何度もくり返している</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">2つの道は、通ってきた順番だけが違う。着いた場所も、回り終えた都市も同じ</text>
+        <text x="40" y="98" fill="#ccc" font-size="12" font-weight="700">道A</text>
+        <circle cx="130" cy="92" r="18" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="130" y="97" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">0</text>
+        <line x1="148" y1="92" x2="190" y2="92" stroke="#76B900" stroke-width="2"/>
+        <polygon points="190,92 182,88 182,96" fill="#76B900"/>
+        <circle cx="208" cy="92" r="18" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="208" y="97" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">1</text>
+        <line x1="226" y1="92" x2="268" y2="92" stroke="#76B900" stroke-width="2"/>
+        <polygon points="268,92 260,88 260,96" fill="#76B900"/>
+        <circle cx="286" cy="92" r="18" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="286" y="97" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">2</text>
+        <line x1="304" y1="92" x2="346" y2="92" stroke="#76B900" stroke-width="2"/>
+        <polygon points="346,92 338,88 338,96" fill="#76B900"/>
+        <circle cx="364" cy="92" r="18" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="364" y="97" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">3</text>
+        <line x1="382" y1="92" x2="434" y2="92" stroke="#555" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="444" y="97" fill="#888888" font-size="11">この先は同じ</text>
+        <text x="40" y="182" fill="#ccc" font-size="12" font-weight="700">道B</text>
+        <circle cx="130" cy="176" r="18" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="130" y="181" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">0</text>
+        <line x1="148" y1="176" x2="190" y2="176" stroke="#76B900" stroke-width="2"/>
+        <polygon points="190,176 182,172 182,180" fill="#76B900"/>
+        <circle cx="208" cy="176" r="18" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="208" y="181" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">2</text>
+        <line x1="226" y1="176" x2="268" y2="176" stroke="#76B900" stroke-width="2"/>
+        <polygon points="268,176 260,172 260,180" fill="#76B900"/>
+        <circle cx="286" cy="176" r="18" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="286" y="181" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">1</text>
+        <line x1="304" y1="176" x2="346" y2="176" stroke="#76B900" stroke-width="2"/>
+        <polygon points="346,176 338,172 338,180" fill="#76B900"/>
+        <circle cx="364" cy="176" r="18" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="364" y="181" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">3</text>
+        <line x1="382" y1="176" x2="434" y2="176" stroke="#555" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="444" y="181" fill="#888888" font-size="11">この先は同じ</text>
+        <rect x="112" y="66" width="274" height="146" rx="12" fill="none" stroke="#FFB800" stroke-width="2" stroke-dasharray="6 4"/>
+        <rect x="130" y="238" width="440" height="86" rx="10" fill="#141414" stroke="#FFB800"/>
+        <text x="350" y="262" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">道Aと道Bに共通していること</text>
+        <text x="350" y="284" text-anchor="middle" fill="#ccc" font-size="11">回った都市の集合 = 0・1・2・3　／　いまいる都市 = 3</text>
+        <text x="350" y="306" text-anchor="middle" fill="#ccc" font-size="11">ここから先の最短の進み方は、どちらの道で来ても同じになる</text>
+        <text x="350" y="348" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">短いほうの距離だけを覚えておけば、長いほうは二度と調べなくてよい</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>覚えておくべき2つのこと</h4>
+      <table>
+        <tr><th>覚えること</th><th>意味</th></tr>
+        <tr><td>回った都市の集合</td><td>どの都市をすでに回ったか（順番は関係ない）</td></tr>
+        <tr><td>いまいる都市</td><td>最後に到着した都市</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        2つが同じなら、そこまでの<strong>いちばん短い距離だけ</strong>を覚えておけば十分です。
+        「どんな順番で来たか」は、この先の判断にまったく影響しません。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 360" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">「回った都市の集合」を、2進数1つで表す</text>
+        <text x="501.0" y="66" text-anchor="middle" fill="#888888" font-size="11">学校</text>
+        <text x="501.0" y="82" text-anchor="middle" fill="#555" font-size="9">0番</text>
+        <text x="423.0" y="66" text-anchor="middle" fill="#888888" font-size="11">郵便局</text>
+        <text x="423.0" y="82" text-anchor="middle" fill="#555" font-size="9">1番</text>
+        <text x="345.0" y="66" text-anchor="middle" fill="#888888" font-size="11">図書館</text>
+        <text x="345.0" y="82" text-anchor="middle" fill="#555" font-size="9">2番</text>
+        <text x="267.0" y="66" text-anchor="middle" fill="#888888" font-size="11">カフェ</text>
+        <text x="267.0" y="82" text-anchor="middle" fill="#555" font-size="9">3番</text>
+        <text x="189.0" y="66" text-anchor="middle" fill="#888888" font-size="11">公園</text>
+        <text x="189.0" y="82" text-anchor="middle" fill="#555" font-size="9">4番</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.020;1" dur="12s" repeatCount="indefinite"/>
+          <text x="130" y="120" text-anchor="end" fill="#ccc" font-size="13" font-weight="700">0</text>
+          <rect x="464" y="96" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="500.0" y="119" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="386" y="96" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="422.0" y="119" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="308" y="96" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="344.0" y="119" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="230" y="96" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="266.0" y="119" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="152" y="96" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="188.0" y="119" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <text x="550" y="119" fill="#888888" font-size="11">まだどこにも行っていない</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.168;0.188;1" dur="12s" repeatCount="indefinite"/>
+          <text x="130" y="164" text-anchor="end" fill="#ccc" font-size="13" font-weight="700">1</text>
+          <rect x="464" y="140" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="500.0" y="163" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="386" y="140" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="422.0" y="163" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="308" y="140" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="344.0" y="163" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="230" y="140" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="266.0" y="163" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="152" y="140" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="188.0" y="163" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <text x="550" y="163" fill="#888888" font-size="11">学校だけ</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.336;0.356;1" dur="12s" repeatCount="indefinite"/>
+          <text x="130" y="208" text-anchor="end" fill="#ccc" font-size="13" font-weight="700">5</text>
+          <rect x="464" y="184" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="500.0" y="207" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="386" y="184" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="422.0" y="207" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="308" y="184" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="344.0" y="207" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="230" y="184" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="266.0" y="207" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="152" y="184" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="188.0" y="207" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <text x="550" y="207" fill="#888888" font-size="11">学校と図書館</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.504;0.524;1" dur="12s" repeatCount="indefinite"/>
+          <text x="130" y="252" text-anchor="end" fill="#ccc" font-size="13" font-weight="700">7</text>
+          <rect x="464" y="228" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="500.0" y="251" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="386" y="228" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="422.0" y="251" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="308" y="228" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="344.0" y="251" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="230" y="228" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="266.0" y="251" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <rect x="152" y="228" width="72" height="34" rx="6" fill="#141414" stroke="#2e2e2e"/>
+          <text x="188.0" y="251" text-anchor="middle" fill="#555" font-size="15" font-weight="700">0</text>
+          <text x="550" y="251" fill="#888888" font-size="11">学校・郵便局・図書館</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.672;0.692;1" dur="12s" repeatCount="indefinite"/>
+          <text x="130" y="296" text-anchor="end" fill="#ccc" font-size="13" font-weight="700">31</text>
+          <rect x="464" y="272" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="500.0" y="295" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="386" y="272" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="422.0" y="295" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="308" y="272" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="344.0" y="295" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="230" y="272" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="266.0" y="295" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <rect x="152" y="272" width="72" height="34" rx="6" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="188.0" y="295" text-anchor="middle" fill="#93D500" font-size="15" font-weight="700">1</text>
+          <text x="550" y="295" fill="#888888" font-size="11">5つ全部</text>
+        </g>
+        <text x="350" y="342" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">5個の都市なら、集合は 0 から 31 までの32通りの数で全部表せる</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>集合をビットで表す</h4>
+      <p style="font-size:0.95rem">
+        「回った都市の集合」を、Pythonのリストや集合ではなく<strong>1つの整数</strong>で表します。
+        都市が5個なら5けたの2進数を使い、i番の都市を回っていれば i けた目を 1 にします。
+      </p>
+      <table>
+        <tr><th>書き方</th><th>意味</th></tr>
+        <tr><td><code>1 &lt;&lt; i</code></td><td>i番の都市だけを表す数（1を左へ i けたずらす）</td></tr>
+        <tr><td><code>visited | (1 &lt;&lt; i)</code></td><td>集合に i番の都市を<strong>足す</strong></td></tr>
+        <tr><td><code>visited &amp; (1 &lt;&lt; i)</code></td><td>集合に i番の都市が<strong>入っているか</strong>調べる（0以外なら入っている）</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        整数1つで集合を表せるので、<code>best[visited][here]</code> のように
+        <strong>リストの番号としてそのまま使えます</strong>。速く、書き方も短くなります。
+        ビットを使った動的計画法なので、<strong>bitDP</strong>（ビットディーピー）と呼ばれます。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 324" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">bitDP が作る表: たてが「回った集合」、よこが「いまいる都市」</text>
+        <rect x="40" y="52" width="620" height="82" rx="10" fill="#141414" stroke="#76B900"/>
+        <text x="350" y="76" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">best[回った集合][いまいる都市] = そこまでの最小の合計距離</text>
+        <text x="350" y="100" text-anchor="middle" fill="#ccc" font-size="11">「00111 の都市を回り終えて、いま 2番の都市にいる」ときの最小距離が 15.3 という意味</text>
+        <text x="350" y="122" text-anchor="middle" fill="#888888" font-size="11">同じマスに何通りの道でたどり着いても、いちばん短い値だけを残す</text>
+        <text x="350" y="164" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">表の1マスから、次のマスへ値を書きこむ</text>
+        <rect x="80" y="188" width="200" height="92" rx="10" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="180" y="212" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">00111 の集合</text>
+        <text x="180" y="232" text-anchor="middle" fill="#ccc" font-size="11">いま 2番にいる</text>
+        <text x="180" y="262" text-anchor="middle" fill="#E0E0E0" font-size="14" font-weight="700">15.3</text>
+        <rect x="420" y="188" width="200" height="92" rx="10" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="520" y="212" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">01111 の集合</text>
+        <text x="520" y="232" text-anchor="middle" fill="#ccc" font-size="11">いま 3番にいる</text>
+        <text x="520" y="262" text-anchor="middle" fill="#E0E0E0" font-size="14" font-weight="700">15.3 + 8.5 = 23.8</text>
+        <line x1="286" y1="234" x2="414" y2="234" stroke="#666" stroke-width="2"/>
+        <polygon points="414,234 404,229 404,239" fill="#666"/>
+        <text x="350" y="224" text-anchor="middle" fill="#888888" font-size="11">3番の都市へ移動</text>
+        <text x="350" y="252" text-anchor="middle" fill="#888888" font-size="10">距離 8.5</text>
+        <text x="350" y="308" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">すべてのマスについて同じことをすれば、全部の状態の最小距離が求まる</text>
+        </svg>
+      </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 470" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索と bitDP の「調べる量」の増え方</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは10倍ごとの目もり</text>
+        <text x="24" y="88" fill="#E0E0E0" font-size="12" font-weight="700">10都市</text>
+        <text x="104" y="80" fill="#FF5252" font-size="10">全探索</text>
+        <rect x="160" y="66" width="117" height="18" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="285" y="80" fill="#FF5252" font-size="10">362,880通り</text>
+        <text x="104" y="104" fill="#76B900" font-size="10">bitDP</text>
+        <rect x="160" y="90" width="84" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="252" y="104" fill="#76B900" font-size="10">10,240マス</text>
+        <text x="24" y="150" fill="#E0E0E0" font-size="12" font-weight="700">12都市</text>
+        <text x="104" y="142" fill="#FF5252" font-size="10">全探索</text>
+        <rect x="160" y="128" width="160" height="18" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="328" y="142" fill="#FF5252" font-size="10">39,916,800通り</text>
+        <text x="104" y="166" fill="#76B900" font-size="10">bitDP</text>
+        <rect x="160" y="152" width="99" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="267" y="166" fill="#76B900" font-size="10">49,152マス</text>
+        <text x="24" y="212" fill="#E0E0E0" font-size="12" font-weight="700">14都市</text>
+        <text x="104" y="204" fill="#FF5252" font-size="10">全探索</text>
+        <rect x="160" y="190" width="206" height="18" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="374" y="204" fill="#FF5252" font-size="10">6,227,020,800通り</text>
+        <text x="104" y="228" fill="#76B900" font-size="10">bitDP</text>
+        <rect x="160" y="214" width="113" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="281" y="228" fill="#76B900" font-size="10">229,376マス</text>
+        <text x="24" y="274" fill="#E0E0E0" font-size="12" font-weight="700">16都市</text>
+        <text x="104" y="266" fill="#FF5252" font-size="10">全探索</text>
+        <rect x="160" y="252" width="255" height="18" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="423" y="266" fill="#FF5252" font-size="10">1,307,674,368,000通り</text>
+        <text x="104" y="290" fill="#76B900" font-size="10">bitDP</text>
+        <rect x="160" y="276" width="127" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="295" y="290" fill="#76B900" font-size="10">1,048,576マス</text>
+        <text x="24" y="336" fill="#E0E0E0" font-size="12" font-weight="700">18都市</text>
+        <text x="104" y="328" fill="#FF5252" font-size="10">全探索</text>
+        <rect x="160" y="314" width="306" height="18" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="474" y="328" fill="#FF5252" font-size="10">355,687,428,096,000通り</text>
+        <text x="104" y="352" fill="#76B900" font-size="10">bitDP</text>
+        <rect x="160" y="338" width="141" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="309" y="352" fill="#76B900" font-size="10">4,718,592マス</text>
+        <text x="24" y="398" fill="#E0E0E0" font-size="12" font-weight="700">20都市</text>
+        <text x="104" y="390" fill="#FF5252" font-size="10">全探索</text>
+        <rect x="160" y="376" width="360" height="18" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="528" y="390" fill="#FF5252" font-size="10">121,645,100,408,832,000通り</text>
+        <text x="104" y="414" fill="#76B900" font-size="10">bitDP</text>
+        <rect x="160" y="400" width="154" height="18" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="322" y="414" fill="#76B900" font-size="10">20,971,520マス</text>
+        <text x="350" y="452" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">20都市では、全探索が1京2千兆通り。bitDP は2千万マスで済む</text>
+        </svg>
+      </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
+    例題4は実行に10秒ほどかかります。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No10</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No09/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No10/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第10回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No10</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No10 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No10 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-10-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-10-ex1.py</code>, <code>AL2-10-ex2.py</code>, <code>AL2-10-ex3.py</code>, <code>AL2-10-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">動的計画法</strong><br><span style="color:#888;font-size:0.8rem">どうてきけいかくほう / DP</span></td><td>一度計算した答えを表に記録しておき、同じ計算をくり返さないようにする方法。</td></tr>
+        <tr><td><strong style="color:#76B900">bitDP</strong><br><span style="color:#888;font-size:0.8rem">ビットディーピー</span></td><td>「どの要素を選んだか」を2進数1つで表して行う動的計画法。巡回セールスマン問題によく使われる。</td></tr>
+        <tr><td><strong style="color:#76B900">ビット演算</strong><br><span style="color:#888;font-size:0.8rem">ビットえんざん</span></td><td>2進数のけたごとに行う計算。<code>&lt;&lt;</code>（ずらす）、<code>|</code>（または）、<code>&amp;</code>（かつ）を使う。</td></tr>
+        <tr><td><strong style="color:#76B900">状態</strong><br><span style="color:#888;font-size:0.8rem">じょうたい / state</span></td><td>動的計画法で「表のどのマスか」を決める情報。巡回セールスマン問題では「回った集合」と「いまいる都市」の2つ。</td></tr>
+        <tr><td><strong style="color:#76B900">メモ化</strong><br><span style="color:#888;font-size:0.8rem">memoization</span></td><td>一度求めた答えを覚えておいて使い回すこと。動的計画法の考え方の中心にある。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>ビットで集合を表す練習</h3>
+      </div>
+      <p>bitDP を書く前に、ビットで集合を表す練習をします。
+      <code>&lt;&lt;</code>、<code>|</code>、<code>&amp;</code> の3つの記号だけ覚えれば足ります。</p>
+
+<pre><span class="code-label">Python ── AL2-10-ex1.py</span>
+<span class="cmt"># 「どの都市を回ったか」を2進数1つで表す練習</span>
+<span class="cmt"># 都市が5個あるとき、「回った・回っていない」を5けたの0と1で表す。</span>
+<span class="cmt">#   いちばん右のけたが 0番の都市、その左が 1番の都市、…</span>
+
+city_names = [<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;図書館&quot;</span>, <span class="str">&quot;カフェ&quot;</span>, <span class="str">&quot;公園&quot;</span>]
+n = <span class="fn">len</span>(city_names)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">show</span>(bits):
+    <span class="str">&quot;&quot;&quot;bits を2進数と、回った都市の名前で表示する&quot;&quot;&quot;</span>
+    binary = <span class="fn">format</span>(bits, <span class="str">&quot;05b&quot;</span>)          <span class="cmt"># 5けたの2進数にそろえる</span>
+    visited = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):               <span class="cmt"># i番目のけたが1かどうかを調べる</span>
+            visited.append(city_names[i])
+    <span class="kw">if</span> <span class="fn">len</span>(visited) == <span class="num">0</span>:
+        names = <span class="str">&quot;（まだどこにも行っていない）&quot;</span>
+    <span class="kw">else</span>:
+        names = <span class="str">&quot;、&quot;</span>.join(visited)
+    <span class="fn">print</span>(<span class="str">f&quot;  {bits:&gt;2} = 2進数 {binary}  →  {names}&quot;</span>)
+
+
+<span class="fn">print</span>(<span class="str">&quot;2進数1つで「回った都市の集合」を表す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">show</span>(<span class="num">0</span>)
+<span class="fn">show</span>(<span class="num">1</span>)
+<span class="fn">show</span>(<span class="num">3</span>)
+<span class="fn">show</span>(<span class="num">5</span>)
+<span class="fn">show</span>(<span class="num">31</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;1つの都市を表す数（1 &lt;&lt; i は「1を左へ i けたずらす」という意味）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="fn">pad</span>(city_names[i], <span class="num">8</span>) + <span class="str">f&quot;→ 1 &lt;&lt; {i} = {1 &lt;&lt; i:&gt;2} = 2進数 {format(1 &lt;&lt; i, &#x27;05b&#x27;)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;集合に都市を1つ足す（| は「または」。けたごとに 1 があれば 1 にする）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+bits = <span class="num">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    before = bits
+    bits = bits | (<span class="num">1</span> &lt;&lt; i)                <span class="cmt"># i番の都市を「回った」ことにする</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  {format(before, &#x27;05b&#x27;)} に {city_names[i]} を足す → {format(bits, &#x27;05b&#x27;)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;集合に都市が入っているか調べる（&amp; は「かつ」。両方 1 のけただけ 1 にする）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+bits = <span class="num">5</span>                                   <span class="cmt"># 2進数 00101 = 学校 と 図書館</span>
+<span class="fn">print</span>(<span class="str">f&quot;  いまの集合: {format(bits, &#x27;05b&#x27;)}&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):
+        <span class="fn">print</span>(<span class="str">f&quot;    {city_names[i]}: 入っている&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;    {city_names[i]}: 入っていない&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;5個の都市なら、集合の種類は 2の5乗 = 32 通り（0 から 31 まで）&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a10_ex1_result.png" alt="AL2-10-ex1.py の実行結果。2進数1つで「回った都市の集合」を表す / ---------------------------------------------------- / 0 = 2進数 00000  →  （まだどこにも行っていない） / 1 = 2進数 00001  →  学校 / 3 = 2進数 00011  →  学校、郵便局 / 5 = 2進数 00101  →  学校、図書館 / 31 = 2進数 11111  →  学校、郵便局、図書館、カフェ、公園 / ---------------------------------------------------- /  / 1つの都市を表す数（1 &lt;&lt; i は「1を左へ i けたずらす」という意味） / ---------------------------------------------------- / 学校    → 1 &lt;&lt; 0 =  1 = 2進数 00001 / 郵便局  → 1 &lt;&lt; 1 =  2 = 2進数 00010 / 図書館  → 1 &lt;&lt; 2 =  4 = 2進数 00100 / カフェ  → 1 &lt;&lt; 3 =  8 = 2進数 01000 / 公園    → 1 &lt;&lt; 4 = 16 = 2進数 10000 / ---------------------------------------------------- /  / 集合に都市を1つ足す（| は「または」。けたごとに 1 があれば 1 にする） / ---------------------------------------------------- / 00000 に 学校 を足す → 00001 / 00001 に 郵便局 を足す → 00011 / 00011 に 図書館 を足す → 00111 / 00111 に カフェ を足す → 01111 / 01111 に 公園 を足す → 11111 / ---------------------------------------------------- /  / 集合に都市が入っているか調べる（&amp; は「かつ」。両方 1 のけただけ 1 にする） / ---------------------------------------------------- / いまの集合: 00101 / 学校: 入っている / 郵便局: 入っていない / 図書館: 入っている / カフェ: 入っていない / 公園: 入っていない / ---------------------------------------------------- /  / 5個の都市なら、集合の種類は 2の5乗 = 32 通り（0 から 31 まで）" width="500" height="808" loading="lazy">
+      </div>
+      <p class="run-note">数 <strong>5</strong> は2進数で <code>00101</code> となり、右から1けた目（0番の学校）と3けた目（2番の図書館）が 1 なので、「学校と図書館を回った」という意味になります。<code>1 &lt;&lt; 3</code> は <code>01000</code> で、3番のカフェだけを表します。<code>|</code> を使うと集合に都市を1つ足せ、<code>&amp;</code> を使うと入っているかどうかを調べられます。5個の都市なら、集合の種類は32通りしかありません。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>bitDP で巡回セールスマン問題を解く</h3>
+      </div>
+      <p>bitDP で巡回セールスマン問題を解きます。
+      <code>best[visited][here]</code> という表を作り、
+      「<code>visited</code> の都市を回り終えて、いま <code>here</code> にいる」ときの最小距離を記録していきます。</p>
+
+<pre><span class="code-label">Python ── AL2-10-ex2.py</span>
+<span class="cmt"># 動的計画法（bitDP）で巡回セールスマン問題を解く</span>
+<span class="cmt"># 考え方: 「どの都市を回ったか」と「いまどこにいるか」が同じなら、</span>
+<span class="cmt">#         そこまでの最小距離だけ覚えておけばよい。</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>        <span class="cmt"># 全部の都市を回った状態（2進数で 11111）</span>
+
+<span class="cmt"># best[visited][here] = 「visited の都市を回り終えて、いま here にいる」ときの最小距離</span>
+best = []
+<span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+    best.append([INF] * n)
+
+<span class="cmt"># 最初は 0番の都市だけを回った状態で、0番にいる。距離は 0。</span>
+best[<span class="num">1</span> &lt;&lt; <span class="num">0</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+
+<span class="cmt"># 回った都市の集合を、小さい順に1つずつ調べていく</span>
+<span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[visited][here] == INF:
+            <span class="kw">continue</span>                       <span class="cmt"># まだたどり着けていない状態</span>
+        <span class="kw">for</span> next_city <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; next_city):
+                <span class="kw">continue</span>                   <span class="cmt"># すでに回った都市には行かない</span>
+            new_visited = visited | (<span class="num">1</span> &lt;&lt; next_city)
+            new_length = best[visited][here] + distance[here][next_city]
+            <span class="kw">if</span> new_length &lt; best[new_visited][next_city]:
+                best[new_visited][next_city] = new_length
+
+<span class="cmt"># 全部回り終えたあと、0番へ戻る分を足していちばん短いものを選ぶ</span>
+answer = INF
+last_city = <span class="kw">None</span>
+<span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">if</span> best[full][here] == INF:
+        <span class="kw">continue</span>
+    total = best[full][here] + distance[here][<span class="num">0</span>]
+    <span class="kw">if</span> total &lt; answer:
+        answer = total
+        last_city = here
+
+<span class="fn">print</span>(<span class="str">&quot;動的計画法（bitDP）の表の一部&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（visited = 回った都市の集合、here = いまいる都市）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;visited(2進数)   here=0   here=1   here=2   here=3   here=4&quot;</span>)
+<span class="kw">for</span> visited <span class="kw">in</span> [<span class="num">1</span>, <span class="num">3</span>, <span class="num">7</span>, <span class="num">15</span>, <span class="num">31</span>]:
+    line = <span class="str">f&quot;   {format(visited, &#x27;05b&#x27;)}        &quot;</span>
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        value = best[visited][here]
+        <span class="kw">if</span> value == INF:
+            line = line + <span class="str">&quot;     -   &quot;</span>
+        <span class="kw">else</span>:
+            line = line + <span class="str">f&quot;{round(value, 1):&gt;8} &quot;</span>
+    <span class="fn">print</span>(line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;「-」は「その状態にはたどり着けない」ことを表す&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;bitDP の答え:&quot;</span>, <span class="fn">round</span>(answer, <span class="num">1</span>))
+<span class="fn">print</span>(<span class="str">&quot;最後に立ち寄った都市:&quot;</span>, cities[last_city][<span class="num">0</span>])
+<span class="fn">print</span>()
+
+<span class="cmt"># 答え合わせ: 全探索でも解いてみる</span>
+brute_best = <span class="kw">None</span>
+<span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    total = total + distance[here][<span class="num">0</span>]
+    <span class="kw">if</span> brute_best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; brute_best:
+        brute_best = total
+
+<span class="fn">print</span>(<span class="str">&quot;全探索の答え:&quot;</span>, <span class="fn">round</span>(brute_best, <span class="num">1</span>))
+<span class="kw">if</span> <span class="fn">abs</span>(answer - brute_best) &lt; <span class="num">0.0001</span>:
+    <span class="fn">print</span>(<span class="str">&quot;2つの答えは一致した。bitDP は必ず最適解を出す。&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;表のマスの数:&quot;</span>, (<span class="num">1</span> &lt;&lt; n) * n, <span class="str">&quot;個（2の5乗 × 5）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;全探索が試した順番の数: 24 通り&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a10_ex2_result.png" alt="AL2-10-ex2.py の実行結果。動的計画法（bitDP）の表の一部 / （visited = 回った都市の集合、here = いまいる都市） / -------------------------------------------------------------- / visited(2進数)   here=0   here=1   here=2   here=3   here=4 / 00001             0.0      -        -        -        - / 00011             -        8.1      -        -        - / 00111             -       21.1     15.3      -        - / 01111             -       26.5     26.5     23.8      - / 11111             -       26.8     28.1     30.4     28.8 / -------------------------------------------------------------- / 「-」は「その状態にはたどり着けない」ことを表す /  / bitDP の答え: 34.9 / 最後に立ち寄った都市: 郵便局 /  / 全探索の答え: 34.9 / 2つの答えは一致した。bitDP は必ず最適解を出す。 /  / 表のマスの数: 160 個（2の5乗 × 5） / 全探索が試した順番の数: 24 通り" width="494" height="448" loading="lazy">
+      </div>
+      <p class="run-note">表の一部が表示されました。<code>00001</code> の行は「学校だけ回った」状態で、いま学校（here=0）にいるときだけ 0.0 が入り、ほかは「-」です。<code>11111</code> の行は全部の都市を回り終えた状態で、5つの都市それぞれにいる場合の最小距離が入っています。いちばん小さいのは郵便局（here=1）の26.8で、そこから学校へ戻る8.1を足して<strong>34.9</strong>が答えになります。全探索の答えと完全に一致しました。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、表の5行をそのまま書き写す。あわせて、<code>11111</code> の行のどの値が選ばれ、そこに何を足して34.9になったかを説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>3つの方法を同じ問題で比べる</h3>
+      </div>
+      <p>これまでに学んだ3つの方法を、同じ8都市の問題で比べます。</p>
+
+<pre><span class="code-label">Python ── AL2-10-ex3.py</span>
+<span class="cmt"># 全探索・貪欲法・動的計画法（bitDP）の3つを同じ問題で比べる</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>),
+    (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>),
+    (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試す&quot;&quot;&quot;</span>
+    best_length = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+    <span class="kw">return</span> best_length
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法: いちばん近い都市へ進むことをくり返す&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+
+<span class="kw">def</span> <span class="fn">bit_dp</span>():
+    <span class="str">&quot;&quot;&quot;動的計画法: 「回った集合」と「いまいる都市」で表を作る&quot;&quot;&quot;</span>
+    full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+    best = []
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        best.append([INF] * n)
+    best[<span class="num">1</span> &lt;&lt; <span class="num">0</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> best[visited][here] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">for</span> next_city <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; next_city):
+                    <span class="kw">continue</span>
+                new_visited = visited | (<span class="num">1</span> &lt;&lt; next_city)
+                new_length = best[visited][here] + distance[here][next_city]
+                <span class="kw">if</span> new_length &lt; best[new_visited][next_city]:
+                    best[new_visited][next_city] = new_length
+
+    answer = INF
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[full][here] == INF:
+            <span class="kw">continue</span>
+        total = best[full][here] + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> total &lt; answer:
+            answer = total
+    <span class="kw">return</span> answer
+
+
+results = []
+<span class="kw">for</span> name, function <span class="kw">in</span> [(<span class="str">&quot;全探索&quot;</span>, brute_force), (<span class="str">&quot;貪欲法&quot;</span>, greedy), (<span class="str">&quot;bitDP&quot;</span>, bit_dp)]:
+    began = time.time()
+    value = <span class="fn">function</span>()
+    elapsed = time.time() - began
+    results.append((name, <span class="fn">round</span>(value, <span class="num">1</span>), elapsed))
+
+<span class="fn">print</span>(<span class="str">f&quot;{n}都市の巡回セールスマン問題を3つの方法で解く&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法          答え（合計距離）      かかった時間      最適か&quot;</span>)
+best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <span class="kw">in</span> results)
+<span class="kw">for</span> name, value, elapsed <span class="kw">in</span> results:
+    judge = <span class="str">&quot;最適&quot;</span> <span class="kw">if</span> value == best_value <span class="kw">else</span> <span class="str">f&quot;最適より{round(value - best_value, 1)}長い&quot;</span>
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">8</span>) + <span class="str">f&quot;   {value:&gt;14}   {elapsed:&gt;12.6f}秒   {judge}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;全探索と bitDP は同じ答えを出している。どちらも必ず最適解になる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;貪欲法だけ答えが長い。速さと引きかえに最適解をあきらめている。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a10_ex3_result.png" alt="AL2-10-ex3.py の実行結果。8都市の巡回セールスマン問題を3つの方法で解く / ------------------------------------------------------------ / 方法          答え（合計距離）      かかった時間      最適か / 全探索               46.8       0.000791秒   最適 / 貪欲法               53.2       0.000005秒   最適より6.4長い / bitDP                46.8       0.000228秒   最適 / ------------------------------------------------------------ /  / 全探索と bitDP は同じ答えを出している。どちらも必ず最適解になる。 / 貪欲法だけ答えが長い。速さと引きかえに最適解をあきらめている。" width="479" height="248" loading="lazy">
+      </div>
+      <p class="run-note">全探索と bitDP はどちらも<strong>46.8</strong>で、答えが一致しました。貪欲法だけが53.2で、最適解より6.4長くなっています。時間を見ると、bitDP は全探索より<strong>3倍以上速く</strong>終わっています。都市が8個ではまだ差が小さいですが、都市が増えるほど差は大きくなります。「必ず最適解が出る」という点では全探索と bitDP は同じで、「速さ」の点で bitDP のほうがすぐれているということです。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>bitDP はどこまで解けるか</h3>
+      </div>
+      <p>bitDP で都市をどこまで増やせるかを確かめます。
+      あわせて、同じ都市数を全探索で解いたら何通り試すことになるかも表示します。</p>
+
+<pre><span class="code-label">Python ── AL2-10-ex4.py</span>
+<span class="cmt"># 動的計画法（bitDP）で、都市をどこまで増やせるかを確かめる</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+
+<span class="cmt"># 都市の位置は計算で決めるので、何度実行しても同じ配置になる</span>
+<span class="kw">def</span> <span class="fn">make_cities</span>(count):
+    cities = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
+        x = (i * <span class="num">7</span>) % <span class="num">23</span>
+        y = (i * <span class="num">11</span>) % <span class="num">19</span>
+        cities.append((<span class="str">f&quot;都市{i}&quot;</span>, x, y))
+    <span class="kw">return</span> cities
+
+
+<span class="kw">def</span> <span class="fn">bit_dp</span>(cities):
+    <span class="str">&quot;&quot;&quot;動的計画法で最短ルートの長さを求める&quot;&quot;&quot;</span>
+    n = <span class="fn">len</span>(cities)
+    INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+    distance = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        row = []
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>
+                          + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+            row.append(d)
+        distance.append(row)
+
+    full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+    best = []
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        best.append([INF] * n)
+    best[<span class="num">1</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        row = best[visited]
+        <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> row[here] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">for</span> next_city <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; next_city):
+                    <span class="kw">continue</span>
+                new_visited = visited | (<span class="num">1</span> &lt;&lt; next_city)
+                new_length = row[here] + distance[here][next_city]
+                <span class="kw">if</span> new_length &lt; best[new_visited][next_city]:
+                    best[new_visited][next_city] = new_length
+
+    answer = INF
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[full][here] == INF:
+            <span class="kw">continue</span>
+        total = best[full][here] + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> total &lt; answer:
+            answer = total
+    <span class="kw">return</span> answer, (<span class="num">1</span> &lt;&lt; n) * n
+
+
+<span class="fn">print</span>(<span class="str">&quot;動的計画法（bitDP）で都市を増やしたときの表の大きさと時間&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
+<span class="fn">print</span>(<span class="str">&quot;都市の数     表のマスの数       最短距離     かかった時間     全探索なら&quot;</span>)
+
+<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">10</span>, <span class="num">12</span>, <span class="num">14</span>, <span class="num">16</span>, <span class="num">18</span>, <span class="num">20</span>]:
+    cities = <span class="fn">make_cities</span>(count)
+    began = time.time()
+    answer, cells = <span class="fn">bit_dp</span>(cities)
+    elapsed = time.time() - began
+
+    brute_orders = <span class="num">1</span>
+    <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, count):
+        brute_orders = brute_orders * k
+
+    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;6}都市   {cells:&gt;12,}   {round(answer, 1):&gt;10}   {elapsed:&gt;10.3f}秒&quot;</span>
+          <span class="str">f&quot;   {brute_orders:&gt;16,}通り&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;表のマスの数は 2の(都市の数)乗 × 都市の数。都市が1つ増えると約2倍になる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;全探索の順番の数は、都市が1つ増えると (都市の数-1) 倍になる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;増え方が「2倍ずつ」と「11倍・12倍…」では、大きな違いがある。&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;bitDP でも 25都市を超えると表が大きすぎて解けなくなる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;それでも全探索の限界（12都市くらい）よりはずっと先まで解ける。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a10_ex4_result.png" alt="AL2-10-ex4.py の実行結果。動的計画法（bitDP）で都市を増やしたときの表の大きさと時間 / ------------------------------------------------------------------ / 都市の数     表のマスの数       最短距離     かかった時間     全探索なら / 10都市         10,240         59.5        0.001秒            362,880通り / 12都市         49,152         73.1        0.008秒         39,916,800通り / 14都市        229,376         75.9        0.044秒      6,227,020,800通り / 16都市      1,048,576         79.7        0.226秒   1,307,674,368,000通り / 18都市      4,718,592         82.5        1.157秒   355,687,428,096,000通り / 20都市     20,971,520         91.1        5.863秒   121,645,100,408,832,000通り / ------------------------------------------------------------------ /  / 表のマスの数は 2の(都市の数)乗 × 都市の数。都市が1つ増えると約2倍になる。 / 全探索の順番の数は、都市が1つ増えると (都市の数-1) 倍になる。 / 増え方が「2倍ずつ」と「11倍・12倍…」では、大きな違いがある。 /  / bitDP でも 25都市を超えると表が大きすぎて解けなくなる。 / それでも全探索の限界（12都市くらい）よりはずっと先まで解ける。" width="639" height="388" loading="lazy">
+      </div>
+      <p class="run-note"><strong>20都市が5.876秒</strong>で解けました。同じ20都市を全探索で解こうとすると1京2千兆通りを試すことになり、まったく終わりません。第8回で確かめたとおり、全探索の限界は12都市くらいでした。bitDP は都市が1つ増えるたびに表がおよそ2倍になるだけなので、20都市あたりまで解けます。ただし「2倍ずつ」も十分に急な増え方なので、25都市を超えると bitDP でも解けなくなります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の表から、都市の数ごとの「表のマスの数」「かかった時間」「全探索なら何通りか」を書き写す。あわせて、都市が2つ増えたとき、表のマスの数と全探索の順番の数がそれぞれ何倍になったかを計算して書く。</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
+    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>ビット表現を予測する</h3>
+      </div>
+      <p>プログラムを実行する<strong>前に</strong>、次の問いに答えてください。
+      都市は5個で、番号と名前は例題1と同じ（0=学校、1=郵便局、2=図書館、3=カフェ、4=公園）です。</p>
+
+      <table>
+        <tr><th>問い</th><th>答え</th></tr>
+        <tr><td>「学校とカフェを回った」を表す数は？（10進数と2進数の両方）</td><td></td></tr>
+        <tr><td>「郵便局・図書館・公園を回った」を表す数は？</td><td></td></tr>
+        <tr><td>2進数 <code>11010</code> はどの都市を回った状態か？</td><td></td></tr>
+        <tr><td><code>18 | (1 &lt;&lt; 2)</code> の結果は？（10進数と2進数）</td><td></td></tr>
+        <tr><td><code>18 &amp; (1 &lt;&lt; 4)</code> の結果は？ 公園は回った状態か？</td><td></td></tr>
+        <tr><td>都市が10個のとき、集合の種類は何通りか？</td><td></td></tr>
+      </table>
+
+      <div class="setup-step">
+        <p class="step-title">答え合わせのしかた</p>
+        <ol>
+          <li>すべての問いに答えてからNotionに書く</li>
+          <li><code>AL2-10-std1.py</code> という名前で新しいファイルを作り、次のコードを貼り付けて実行する</li>
+        </ol>
+      </div>
+
+<pre><span class="code-label">Python ── AL2-10-std1.py</span>
+city_names = [<span class="str">"学校"</span>, <span class="str">"郵便局"</span>, <span class="str">"図書館"</span>, <span class="str">"カフェ"</span>, <span class="str">"公園"</span>]
+
+
+<span class="kw">def</span> <span class="fn">show</span>(bits):
+    names = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+        <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):
+            names.append(city_names[i])
+    <span class="fn">print</span>(<span class="str">f"  {bits:&gt;2} = 2進数 {format(bits, '05b')} → "</span> + <span class="str">"、"</span>.join(names))
+
+
+<span class="fn">show</span>(<span class="num">1</span> | (<span class="num">1</span> &lt;&lt; <span class="num">3</span>))
+<span class="fn">show</span>((<span class="num">1</span> &lt;&lt; <span class="num">1</span>) | (<span class="num">1</span> &lt;&lt; <span class="num">2</span>) | (<span class="num">1</span> &lt;&lt; <span class="num">4</span>))
+<span class="fn">show</span>(<span class="num">26</span>)
+<span class="fn">show</span>(<span class="num">18</span> | (<span class="num">1</span> &lt;&lt; <span class="num">2</span>))
+<span class="fn">print</span>(<span class="str">"18 &amp; (1 &lt;&lt; 4) ="</span>, <span class="num">18</span> &amp; (<span class="num">1</span> &lt;&lt; <span class="num">4</span>))
+<span class="fn">print</span>(<span class="str">"都市が10個のときの集合の種類:"</span>, <span class="num">2</span> ** <span class="num">10</span>, <span class="str">"通り"</span>)</pre>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 6つの問いへの予測、プログラムの実行結果、予測と合っていたか。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>3つの方法を1つの表にまとめる</h3>
+      </div>
+      <p>第8回・第9回・第10回で学んだ3つの方法を、1つの表にまとめます。
+      表はNotionに作り、空欄をすべて埋めてください。</p>
+
+      <table>
+        <tr><th>比べる点</th><th>全探索（第8回）</th><th>貪欲法（第9回）</th><th>bitDP（第10回）</th></tr>
+        <tr><td>やり方をひとことで</td><td></td><td></td><td></td></tr>
+        <tr><td>必ず最適解になるか</td><td></td><td></td><td></td></tr>
+        <tr><td>8都市での答え</td><td></td><td></td><td></td></tr>
+        <tr><td>調べる量の増え方</td><td></td><td></td><td></td></tr>
+        <tr><td>解ける都市の数の目安</td><td></td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem">表を作ったうえで、次の3つの場面には、それぞれどの方法が向いているかを<strong>理由つきで</strong>答えてください。</p>
+      <ul class="point-list">
+        <li><strong>場面A:</strong> 修学旅行で6か所を回る順番を決める（必ず最短にしたい）</li>
+        <li><strong>場面B:</strong> 工場のドリルが18か所の穴をあける順番を決める（1回決めれば10年使う）</li>
+        <li><strong>場面C:</strong> 宅配便が毎日100軒を回る順番を、出発前の5秒で決める</li>
+      </ul>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5行の比較表（空欄をすべて埋める）と、場面A・場面B・場面Cそれぞれに向いている方法とその理由。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第10回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題2</strong>: 表の5行、11111 の行から34.9になるまでの説明</li>
+        <li><strong>例題4</strong>: 都市数ごとの表・時間・全探索の通り数、2都市増えたときの倍率</li>
+        <li><strong>標準課題1</strong>: 6つの問いへの予測と実行結果</li>
+        <li><strong>標準課題2</strong>: 比較表、場面A・B・Cへの答えと理由</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2026-12-09T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="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"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第10回 巡回セールスマン問題（3）動的計画法
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
