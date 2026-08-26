@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全15回の目次 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+
+.lead { font-size: 1.05rem; margin-bottom: 1.5rem; }
+.week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.week-card { display: block; background: #1A1A1A; border: 1px solid #2a2a2a; border-left: 4px solid #76B900;
+  border-radius: 14px; padding: 1.1rem 1.3rem; text-decoration: none; color: inherit; transition: all 0.2s; }
+.week-card:hover { border-color: #4A7A00; border-left-color: #93D500; background: #1e1e1e; transform: translateY(-2px); }
+.week-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+.week-num { font-size: 0.95rem; font-weight: 900; color: #76B900; }
+.week-phase { font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.6rem; border-radius: 100px; }
+.week-date { font-size: 0.75rem; color: #666; margin-left: auto; }
+.week-card h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: 0.45rem; line-height: 1.4; }
+.week-card p { font-size: 0.86rem; color: #999; line-height: 1.7; }
+.week-keywords { margin-top: 0.5rem; font-size: 0.78rem; color: #666; }
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+</style>
+</head>
+
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">2026年度後期 ─ 水曜4限</div>
+    <h1>アルゴリズム論及び演習II</h1>
+    <p>最短経路と最適化のアルゴリズムを、コードを動かしながら学ぶ全15回。担当: 中村 亮太</p>
+  </div>
+</header>
+
+<section id="sec-about">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>この授業について</h2>
+    </div>
+
+    <p class="lead">
+      前期のアルゴリズム論及び演習Iでは「たくさんのデータから目的の1つを探す」方法を学びました。
+      後期は一歩進んで、<strong>やり方が何通りもあるとき、いちばん良いやり方を見つける</strong>方法を学びます。
+      カーナビの経路案内、宅配便の配送計画、工場の作業順番は、すべて同じ形の問題として解けます。
+    </p>
+
+    <div class="info-grid">
+      <div class="mini-card">
+        <h5>身につくこと</h5>
+        <p>地図や迷路をグラフに書き直し、ダイクストラ法・貪欲法・動的計画法で最適な答えを求められるようになる。</p>
+      </div>
+      <div class="mini-card">
+        <h5>使うもの</h5>
+        <p>Visual Studio Code と Python。前期に用意した環境をそのまま使う。デスクトップに AL2 フォルダを作って進める。</p>
+      </div>
+      <div class="mini-card">
+        <h5>評価方法</h5>
+        <p>定期試験なし。毎回の演習課題の提出で100%。Notionに記録し、PDFに書き出してManabaに提出する。</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      前期（アルゴリズム論及び演習I）の資料は
+      <a href="../sessions/session01.html" style="color:#93D500">こちら</a>から見られます。
+      後期の説明では、前期の内容をたびたび参照します。
+    </div>
+
+    <div class="concept-box">
+      <h4>毎回の進め方</h4>
+      <table>
+        <tr><th>順番</th><th>すること</th></tr>
+        <tr><td>1</td><td>ページの上にある<strong>提出ガイド</strong>で、今回の提出物を確かめる</td></tr>
+        <tr><td>2</td><td><strong>説明</strong>を読み、図とアニメーションで仕組みをつかむ</td></tr>
+        <tr><td>3</td><td><strong>例題</strong>のコードをコピーして自分のパソコンで実行し、実行結果と見比べる</td></tr>
+        <tr><td>4</td><td><strong>標準課題</strong>に取り組み、答えをNotionに記録する</td></tr>
+        <tr><td>5</td><td>NotionをPDFに書き出して<strong>Manabaに提出</strong>する</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        解答例は各ページのいちばん下にあります。<strong>次回の授業が始まる時刻に自動で公開</strong>されます。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-weeks">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>全15回</h2>
+    </div>
+
+    <div class="week-grid">
+      <a class="week-card" href="session01.html">
+        <div class="week-head">
+          <span class="week-num">第1回</span>
+          <span class="week-phase" style="background:#88888822;color:#888888;border:1px solid #88888855">復習</span>
+          <span class="week-date">9月30日（水）</span>
+        </div>
+        <h3>ガイダンス・前期の復習</h3>
+        <p>後期の目標（最適化アルゴリズム × ゲーム）を確認し、前期に学んだ探索アルゴリズムを動かして思い出す</p>
+        <p class="week-keywords">二分探索・幅優先探索・全探索</p>
+      </a>
+      <a class="week-card" href="session02.html">
+        <div class="week-head">
+          <span class="week-num">第2回</span>
+          <span class="week-phase" style="background:#88888822;color:#888888;border:1px solid #88888855">復習</span>
+          <span class="week-date">10月7日（水）</span>
+        </div>
+        <h3>幅優先探索・深さ優先探索の発展</h3>
+        <p>障害物を増やした迷路で2つの探索を動かし、幅優先探索と深さ優先探索の得意・不得意を比べる</p>
+        <p class="week-keywords">幅優先探索・深さ優先探索・キュー・スタック</p>
+      </a>
+      <a class="week-card" href="session03.html">
+        <div class="week-head">
+          <span class="week-num">第3回</span>
+          <span class="week-phase" style="background:#76B90022;color:#76B900;border:1px solid #76B90055">グラフ</span>
+          <span class="week-date">10月14日（水）</span>
+        </div>
+        <h3>グラフとデータ構造の再確認</h3>
+        <p>頂点・辺・重みを図で確かめ、隣接リストと隣接行列という2つの表現方法でグラフをPythonに書き写す</p>
+        <p class="week-keywords">頂点・辺・隣接リスト・隣接行列</p>
+      </a>
+      <a class="week-card" href="session04.html">
+        <div class="week-head">
+          <span class="week-num">第4回</span>
+          <span class="week-phase" style="background:#76B90022;color:#76B900;border:1px solid #76B90055">グラフ</span>
+          <span class="week-date">10月21日（水）</span>
+        </div>
+        <h3>重み付きグラフとは</h3>
+        <p>移動のしやすさを「コスト」として扱い、幅優先探索では最短コストを求められない場面を確かめる</p>
+        <p class="week-keywords">重み・コスト・重み付きグラフ</p>
+      </a>
+      <a class="week-card" href="session05.html">
+        <div class="week-head">
+          <span class="week-num">第5回</span>
+          <span class="week-phase" style="background:#76B90022;color:#76B900;border:1px solid #76B90055">最短経路</span>
+          <span class="week-date">10月28日（水）</span>
+        </div>
+        <h3>ダイクストラ法（1）考え方</h3>
+        <p>非負の重み付きグラフで最短経路を求める手順を、手計算で1ステップずつたどる</p>
+        <p class="week-keywords">ダイクストラ法・確定・緩和</p>
+      </a>
+      <a class="week-card" href="session06.html">
+        <div class="week-head">
+          <span class="week-num">第6回</span>
+          <span class="week-phase" style="background:#76B90022;color:#76B900;border:1px solid #76B90055">最短経路</span>
+          <span class="week-date">11月4日（水）</span>
+        </div>
+        <h3>ダイクストラ法（2）実装入門</h3>
+        <p>優先度付きキュー（heapq）の使い方を確認し、ダイクストラ法をPythonで組み上げる</p>
+        <p class="week-keywords">優先度付きキュー・heapq</p>
+      </a>
+      <a class="week-card" href="session07.html">
+        <div class="week-head">
+          <span class="week-num">第7回</span>
+          <span class="week-phase" style="background:#76B90022;color:#76B900;border:1px solid #76B90055">最短経路</span>
+          <span class="week-date">11月11日（水）</span>
+        </div>
+        <h3>ダイクストラ法（3）迷路への応用</h3>
+        <p>床コスト付きの迷路にダイクストラ法を適用し、幅優先探索との違いと実行速度を観察する</p>
+        <p class="week-keywords">床コスト迷路・計算量</p>
+      </a>
+      <a class="week-card" href="session08.html">
+        <div class="week-head">
+          <span class="week-num">第8回</span>
+          <span class="week-phase" style="background:#FFB80022;color:#FFB800;border:1px solid #FFB80055">巡回</span>
+          <span class="week-date">11月18日（水）</span>
+        </div>
+        <h3>巡回セールスマン問題（1）概要</h3>
+        <p>全ての都市を1回ずつ巡って出発点に戻る最短ルートを、全探索で求めて計算量の爆発を体感する</p>
+        <p class="week-keywords">巡回セールスマン問題・階乗・NP困難</p>
+      </a>
+      <a class="week-card" href="session09.html">
+        <div class="week-head">
+          <span class="week-num">第9回</span>
+          <span class="week-phase" style="background:#FFB80022;color:#FFB800;border:1px solid #FFB80055">巡回</span>
+          <span class="week-date">11月25日（水）</span>
+        </div>
+        <h3>巡回セールスマン問題（2）貪欲法による近似</h3>
+        <p>最寄りの都市へ順に進む貪欲法を実装し、全探索が出した最適解とのズレを測る</p>
+        <p class="week-keywords">貪欲法・局所最適・近似解</p>
+      </a>
+      <a class="week-card" href="session10.html">
+        <div class="week-head">
+          <span class="week-num">第10回</span>
+          <span class="week-phase" style="background:#FFB80022;color:#FFB800;border:1px solid #FFB80055">巡回</span>
+          <span class="week-date">12月2日（水）</span>
+        </div>
+        <h3>巡回セールスマン問題（3）動的計画法</h3>
+        <p>部分集合を使った動的計画法（bitDP）で最適解を求め、全探索・貪欲法と結果と速度を比べる</p>
+        <p class="week-keywords">動的計画法・bitDP・ビット演算</p>
+      </a>
+      <a class="week-card" href="session11.html">
+        <div class="week-head">
+          <span class="week-num">第11回</span>
+          <span class="week-phase" style="background:#4FC3F722;color:#4FC3F7;border:1px solid #4FC3F755">整理</span>
+          <span class="week-date">12月9日（水）</span>
+        </div>
+        <h3>アルゴリズム比較・復習</h3>
+        <p>幅優先探索・深さ優先探索・ダイクストラ法・貪欲法・動的計画法を一覧に整理し、同じ問題で実測して比べる</p>
+        <p class="week-keywords">アルゴリズムの使い分け</p>
+      </a>
+      <a class="week-card" href="session12.html">
+        <div class="week-head">
+          <span class="week-num">第12回</span>
+          <span class="week-phase" style="background:#FFB80022;color:#FFB800;border:1px solid #FFB80055">応用</span>
+          <span class="week-date">12月16日（水）</span>
+        </div>
+        <h3>数当てゲーム・パズルの再応用</h3>
+        <p>数当てゲームと宝物集めパズルを、貪欲法と動的計画法の考え方で作り直す</p>
+        <p class="week-keywords">ナップサック問題・アイテム収集</p>
+      </a>
+      <a class="week-card" href="session13.html">
+        <div class="week-head">
+          <span class="week-num">第13回</span>
+          <span class="week-phase" style="background:#4FC3F722;color:#4FC3F7;border:1px solid #4FC3F755">制作</span>
+          <span class="week-date">12月23日（水）</span>
+        </div>
+        <h3>実践的課題（1）設計と実装</h3>
+        <p>自分でテーマを決め、最適化アルゴリズムを使った小さなプログラムの設計と実装に取りかかる</p>
+        <p class="week-keywords">設計シート・動く最小版</p>
+      </a>
+      <a class="week-card" href="session14.html">
+        <div class="week-head">
+          <span class="week-num">第14回</span>
+          <span class="week-phase" style="background:#4FC3F722;color:#4FC3F7;border:1px solid #4FC3F755">制作</span>
+          <span class="week-date">1月13日（水）</span>
+        </div>
+        <h3>実践的課題（2）仕上げとレポート作成</h3>
+        <p>動作を検証して作品を仕上げ、使ったアルゴリズムの構成と実行結果をレポートにまとめる</p>
+        <p class="week-keywords">テスト・デバッグ・レポート</p>
+      </a>
+      <a class="week-card" href="session15.html">
+        <div class="week-head">
+          <span class="week-num">第15回</span>
+          <span class="week-phase" style="background:#76B90022;color:#76B900;border:1px solid #76B90055">まとめ</span>
+          <span class="week-date">1月20日（水）</span>
+        </div>
+        <h3>まとめ：最適化アルゴリズムの振り返り</h3>
+        <p>後期に学んだ最適化アルゴリズムを体系的に振り返り、次に学ぶ手法（焼きなまし法・遺伝的アルゴリズム）を知る</p>
+        <p class="week-keywords">焼きなまし法・遺伝的アルゴリズム</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="sec-flow">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">3</div>
+      <h2>後期の流れ</h2>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 700 200" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="28" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">5つの段階を、15回かけて進む</text>
+        <rect x="20" y="56" width="124" height="92" rx="12" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="82" y="80" text-anchor="middle" fill="#888" font-size="11">第1〜2回</text>
+        <text x="82" y="102" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">前期の復習</text>
+        <text x="82" y="124" text-anchor="middle" fill="#888" font-size="10">探索を思い出す</text>
+        <line x1="144" y1="102" x2="152" y2="102" stroke="#555" stroke-width="2"/>
+        <rect x="154" y="56" width="124" height="92" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="216" y="80" text-anchor="middle" fill="#888" font-size="11">第3〜4回</text>
+        <text x="216" y="102" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">グラフ</text>
+        <text x="216" y="124" text-anchor="middle" fill="#888" font-size="10">地図をデータにする</text>
+        <line x1="278" y1="102" x2="286" y2="102" stroke="#555" stroke-width="2"/>
+        <rect x="288" y="56" width="124" height="92" rx="12" fill="#1A1A1A" stroke="#76B900" stroke-width="1.5"/>
+        <text x="350" y="80" text-anchor="middle" fill="#888" font-size="11">第5〜7回</text>
+        <text x="350" y="102" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">ダイクストラ法</text>
+        <text x="350" y="124" text-anchor="middle" fill="#888" font-size="10">最短コストの道</text>
+        <line x1="412" y1="102" x2="420" y2="102" stroke="#555" stroke-width="2"/>
+        <rect x="422" y="56" width="124" height="92" rx="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="1.5"/>
+        <text x="484" y="80" text-anchor="middle" fill="#888" font-size="11">第8〜12回</text>
+        <text x="484" y="102" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">最適化</text>
+        <text x="484" y="124" text-anchor="middle" fill="#888" font-size="10">いちばん良い順番</text>
+        <line x1="546" y1="102" x2="554" y2="102" stroke="#555" stroke-width="2"/>
+        <rect x="556" y="56" width="124" height="92" rx="12" fill="#1A1A1A" stroke="#4FC3F7" stroke-width="1.5"/>
+        <text x="618" y="80" text-anchor="middle" fill="#888" font-size="11">第13〜15回</text>
+        <text x="618" y="102" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">作品制作</text>
+        <text x="618" y="124" text-anchor="middle" fill="#888" font-size="10">自分のテーマで作る</text>
+        <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">前期は「探す」。後期は「たくさんある選び方の中から、いちばん良い選び方を見つける」</text>
+      </svg>
+    </div>
+
+    <div class="note-warn">
+      <strong>授業日について:</strong> 各回のカードに書かれている日付は予定です。
+      進み方によって前後することがあります。実際の日程はManabaの案内を確認してください。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 2026年度後期 ／ 担当: 中村 亮太
+  </div>
+</footer>
+
+</body>
+</html>
