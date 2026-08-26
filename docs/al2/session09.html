@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第9回: 巡回セールスマン問題（2）貪欲法による近似 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">貪欲法とは</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">標準課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第9回: 巡回セールスマン問題（2）貪欲法による近似</h1>
+    <p>最寄りの都市へ順に進む貪欲法を実装し、全探索が出した最適解とのズレを測る</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の差と速さ</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の失敗のしかた</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>出発点を変えると？</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>貪欲法の弱点を説明</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>貪欲法とは</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第8回で確かめたとおり、巡回セールスマン問題は都市が増えると全探索が使えなくなります。
+      そこで発想を変えます。<strong>「必ず最短」をあきらめて、「そこそこ短いルートを一瞬で作る」</strong>方法を考えます。
+      いちばん単純な作戦が<strong>貪欲法</strong>（どんよくほう）です。
+    </p>
+
+    <div class="analogy">
+      買い物リストを持ってスーパーに入ったとき、「いま自分がいる場所からいちばん近い商品を取りに行く」
+      をくり返す人は多いはずです。全部の回り方を頭の中で比べる人はいません。
+      目の前でいちばん良さそうな選択をくり返す考え方が、貪欲法です。
+    </div>
+
+    <div class="concept-box">
+      <h4>貪欲法の手順（最近傍法）</h4>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2;color:#ccc">
+        <li>出発点に立つ</li>
+        <li>まだ行っていない都市のうち、<strong>いまいる場所からいちばん近い都市</strong>を選ぶ</li>
+        <li>そこへ移動する</li>
+        <li>まだ行っていない都市がある間、2と3をくり返す</li>
+        <li>全部回り終えたら出発点へ戻る</li>
+      </ol>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        「いちばん近い都市へ進む」という選び方から、<strong>最近傍法</strong>（さいきんぼうほう）とも呼ばれます。
+        都市が n 個なら、比べる回数は n×n 程度です。8都市なら数十回、1000都市でも100万回程度で終わります。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 384" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">貪欲法: いまいる都市から、いちばん近い都市へ進むことをくり返す</text>
+        <line x1="120" y1="118" x2="360" y2="138" stroke="#242424" stroke-width="1"/>
+        <line x1="120" y1="118" x2="480" y2="258" stroke="#242424" stroke-width="1"/>
+        <line x1="120" y1="118" x2="240" y2="318" stroke="#242424" stroke-width="1"/>
+        <line x1="120" y1="118" x2="150" y2="238" stroke="#242424" stroke-width="1"/>
+        <line x1="360" y1="138" x2="480" y2="258" stroke="#242424" stroke-width="1"/>
+        <line x1="360" y1="138" x2="240" y2="318" stroke="#242424" stroke-width="1"/>
+        <line x1="360" y1="138" x2="150" y2="238" stroke="#242424" stroke-width="1"/>
+        <line x1="480" y1="258" x2="240" y2="318" stroke="#242424" stroke-width="1"/>
+        <line x1="480" y1="258" x2="150" y2="238" stroke="#242424" stroke-width="1"/>
+        <line x1="240" y1="318" x2="150" y2="238" stroke="#242424" stroke-width="1"/>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="14s" repeatCount="indefinite"/>
+          <line x1="120" y1="118" x2="150" y2="238" stroke="#76B900" stroke-width="3.5"/>
+          <text x="135.0" y="170.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">6.1</text>
+        </g>
+        <text x="350" y="52" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.000;0.020;0.140;0.160;1" dur="14s" repeatCount="indefinite"/>1歩目: 学校 から見ていちばん近いのは 公園</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.164;0.194;1" dur="14s" repeatCount="indefinite"/>
+          <line x1="150" y1="238" x2="240" y2="318" stroke="#76B900" stroke-width="3.5"/>
+          <text x="195.0" y="270.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">5.0</text>
+        </g>
+        <text x="350" y="52" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.164;0.184;0.304;0.324;1" dur="14s" repeatCount="indefinite"/>2歩目: 公園 から見ていちばん近いのは カフェ</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.328;0.358;1" dur="14s" repeatCount="indefinite"/>
+          <line x1="240" y1="318" x2="480" y2="258" stroke="#76B900" stroke-width="3.5"/>
+          <text x="360.0" y="280.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">8.5</text>
+        </g>
+        <text x="350" y="52" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.328;0.348;0.468;0.488;1" dur="14s" repeatCount="indefinite"/>3歩目: カフェ から見ていちばん近いのは 図書館</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.492;0.522;1" dur="14s" repeatCount="indefinite"/>
+          <line x1="480" y1="258" x2="360" y2="138" stroke="#76B900" stroke-width="3.5"/>
+          <text x="420.0" y="190.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">7.2</text>
+        </g>
+        <text x="350" y="52" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.492;0.512;0.632;0.652;1" dur="14s" repeatCount="indefinite"/>4歩目: 図書館 から見ていちばん近いのは 郵便局</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.656;0.686;1" dur="14s" repeatCount="indefinite"/>
+          <line x1="360" y1="138" x2="120" y2="118" stroke="#76B900" stroke-width="3.5"/>
+          <text x="240.0" y="120.0" text-anchor="middle" fill="#76B900" font-size="11" font-weight="700">8.1</text>
+        </g>
+        <text x="350" y="52" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.656;0.676;0.796;0.816;1" dur="14s" repeatCount="indefinite"/>5歩目: 出発点へ戻る</text>
+        <circle cx="120" cy="118" r="15" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="120" y="123" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">0</text>
+        <text x="120" y="98" text-anchor="middle" fill="#888888" font-size="10">学校</text>
+        <circle cx="360" cy="138" r="15" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="360" y="143" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">1</text>
+        <text x="360" y="118" text-anchor="middle" fill="#888888" font-size="10">郵便局</text>
+        <circle cx="480" cy="258" r="15" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="480" y="263" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">2</text>
+        <text x="480" y="238" text-anchor="middle" fill="#888888" font-size="10">図書館</text>
+        <circle cx="240" cy="318" r="15" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="240" y="323" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">3</text>
+        <text x="240" y="298" text-anchor="middle" fill="#888888" font-size="10">カフェ</text>
+        <circle cx="150" cy="238" r="15" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="150" y="243" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">4</text>
+        <text x="150" y="218" text-anchor="middle" fill="#888888" font-size="10">公園</text>
+        <text x="350" y="368" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">貪欲法の答え: 合計 34.9　（この5都市では、全探索の答えと同じになった）</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>貪欲法が最短にならない理由</h4>
+      <p style="font-size:0.95rem">
+        貪欲法は、1歩先だけを見て決めます。「いま近い」都市を選んだせいで、
+        あとから<strong>遠く離れた都市が取り残される</strong>ことがあります。
+        取り残された都市へ行くには長い移動が必要になり、その1回で、それまでに節約した分をすべて失ってしまいます。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        目の前だけを見て決めた結果、全体としては良くならないことを<strong>局所最適</strong>（きょくしょさいてき）と呼びます。
+        「部分的にはいちばん良い」けれど「全体でいちばん良いとはかぎらない」という意味です。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 342" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">都市が8個になると、貪欲法は最短ルートを見つけられない</text>
+        <rect x="20" y="46" width="330" height="258" rx="10" fill="#141414" stroke="#333"/>
+        <text x="185" y="68" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">貪欲法: 合計 53.2</text>
+        <line x1="75" y1="113" x2="90" y2="188" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="90" y1="188" x2="137" y2="238" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="137" y1="238" x2="168" y2="176" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="168" y1="176" x2="199" y2="126" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="199" y1="126" x2="308" y2="138" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="308" y1="138" x2="261" y2="200" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="261" y1="200" x2="230" y2="250" stroke="#FFB800" stroke-width="2.5"/>
+        <line x1="230" y1="250" x2="75" y2="113" stroke="#FFB800" stroke-width="2.5"/>
+        <circle cx="75" cy="113" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="75" y="117" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">S</text>
+        <text x="75" y="97" text-anchor="middle" fill="#888888" font-size="9">学校</text>
+        <circle cx="199" cy="126" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="199" y="130" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">4</text>
+        <text x="199" y="110" text-anchor="middle" fill="#888888" font-size="9">郵便局</text>
+        <circle cx="261" cy="200" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="261" y="204" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">6</text>
+        <text x="261" y="184" text-anchor="middle" fill="#888888" font-size="9">図書館</text>
+        <circle cx="137" cy="238" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="137" y="242" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">2</text>
+        <text x="137" y="222" text-anchor="middle" fill="#888888" font-size="9">カフェ</text>
+        <circle cx="90" cy="188" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="90" y="192" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">1</text>
+        <text x="90" y="172" text-anchor="middle" fill="#888888" font-size="9">公園</text>
+        <circle cx="308" cy="138" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="308" y="142" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">5</text>
+        <text x="308" y="122" text-anchor="middle" fill="#888888" font-size="9">駅</text>
+        <circle cx="230" cy="250" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="230" y="254" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">7</text>
+        <text x="230" y="234" text-anchor="middle" fill="#888888" font-size="9">病院</text>
+        <circle cx="168" cy="176" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="168" y="180" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">3</text>
+        <text x="168" y="160" text-anchor="middle" fill="#888888" font-size="9">書店</text>
+        <rect x="370" y="46" width="330" height="258" rx="10" fill="#141414" stroke="#333"/>
+        <text x="535" y="68" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">全探索（本当の最短）: 合計 46.8</text>
+        <line x1="425" y1="113" x2="440" y2="188" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="440" y1="188" x2="487" y2="238" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="487" y1="238" x2="580" y2="250" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="580" y1="250" x2="611" y2="200" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="611" y1="200" x2="658" y2="138" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="658" y1="138" x2="549" y2="126" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="549" y1="126" x2="518" y2="176" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="518" y1="176" x2="425" y2="113" stroke="#76B900" stroke-width="2.5"/>
+        <circle cx="425" cy="113" r="11" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="425" y="117" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">S</text>
+        <text x="425" y="97" text-anchor="middle" fill="#888888" font-size="9">学校</text>
+        <circle cx="549" cy="126" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="549" y="130" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">6</text>
+        <text x="549" y="110" text-anchor="middle" fill="#888888" font-size="9">郵便局</text>
+        <circle cx="611" cy="200" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="611" y="204" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">4</text>
+        <text x="611" y="184" text-anchor="middle" fill="#888888" font-size="9">図書館</text>
+        <circle cx="487" cy="238" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="487" y="242" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">2</text>
+        <text x="487" y="222" text-anchor="middle" fill="#888888" font-size="9">カフェ</text>
+        <circle cx="440" cy="188" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="440" y="192" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">1</text>
+        <text x="440" y="172" text-anchor="middle" fill="#888888" font-size="9">公園</text>
+        <circle cx="658" cy="138" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="658" y="142" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">5</text>
+        <text x="658" y="122" text-anchor="middle" fill="#888888" font-size="9">駅</text>
+        <circle cx="580" cy="250" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="580" y="254" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">3</text>
+        <text x="580" y="234" text-anchor="middle" fill="#888888" font-size="9">病院</text>
+        <circle cx="518" cy="176" r="11" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="518" y="180" text-anchor="middle" fill="#E0E0E0" font-size="9" font-weight="700">7</text>
+        <text x="518" y="160" text-anchor="middle" fill="#888888" font-size="9">書店</text>
+        <text x="350" y="326" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">差は 6.4。貪欲法は最短ルートより 13.6% 長い</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>近似解という考え方</h4>
+      <table>
+        <tr><th></th><th>全探索（第8回）</th><th>貪欲法（第9回）</th></tr>
+        <tr><td>答えの質</td><td>必ず最短（最適解）</td><td>最短とはかぎらない（近似解）</td></tr>
+        <tr><td>8都市での結果</td><td>46.8</td><td>53.2（13.6%長い）</td></tr>
+        <tr><td>調べる手数</td><td>(n-1)! 通り</td><td>n×n 程度</td></tr>
+        <tr><td>1000都市</td><td>終わらない</td><td>一瞬で終わる</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        最短ではないけれど実用的な答えを<strong>近似解</strong>（きんじかい）と呼びます。
+        配送計画では「1%短いルートを1週間かけて計算する」より
+        「10%長くても1秒で出す」ほうが役に立つ場面がほとんどです。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No09</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No08/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No09/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第9回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No09</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No09 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No09 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-09-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-09-ex1.py</code>, <code>AL2-09-ex2.py</code>, <code>AL2-09-ex3.py</code>, <code>AL2-09-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">貪欲法</strong><br><span style="color:#888;font-size:0.8rem">どんよくほう / greedy algorithm</span></td><td>先のことを考えず、その時点でいちばん良さそうな選択をくり返す方法。速いが最適とはかぎらない。</td></tr>
+        <tr><td><strong style="color:#76B900">最近傍法</strong><br><span style="color:#888;font-size:0.8rem">さいきんぼうほう / nearest neighbor</span></td><td>巡回セールスマン問題に貪欲法を使ったもの。いまいる都市からいちばん近い都市へ進む。</td></tr>
+        <tr><td><strong style="color:#76B900">局所最適</strong><br><span style="color:#888;font-size:0.8rem">きょくしょさいてき / local optimum</span></td><td>部分的にはいちばん良いが、全体で見るといちばん良いとはかぎらない状態。</td></tr>
+        <tr><td><strong style="color:#76B900">近似解</strong><br><span style="color:#888;font-size:0.8rem">きんじかい / approximate solution</span></td><td>最適解ではないが、実用上じゅうぶん良い答え。速く求められることが利点。</td></tr>
+        <tr><td><strong style="color:#76B900">最適解</strong><br><span style="color:#888;font-size:0.8rem">さいてきかい / optimal solution</span></td><td>考えられる中で本当にいちばん良い答え。全探索や動的計画法で求まる。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>貪欲法で5都市を解く</h3>
+      </div>
+      <p>第8回と同じ5つの都市に、貪欲法を使います。
+      「いまいる都市から、まだ行っていない都市のうちいちばん近いところへ進む」をくり返すだけです。
+      全探索の答えと比べます。</p>
+
+<pre><span class="code-label">Python ── AL2-09-ex1.py</span>
+<span class="cmt"># 貪欲法（どんよくほう）で巡回セールスマン問題を解く</span>
+<span class="cmt"># 作戦はとても単純: 「いまいる都市から、まだ行っていない都市のうち</span>
+<span class="cmt"># いちばん近いところへ進む」をくり返すだけ。</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;いちばん近い都市へ進むことをくり返して、ルートを作る&quot;&quot;&quot;</span>
+    visited = [start]
+    total = <span class="num">0.0</span>
+    here = start
+
+    <span class="fn">print</span>(<span class="str">&quot;貪欲法の進み方&quot;</span>)
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        <span class="cmt"># まだ行っていない都市の中で、いちばん近いものをさがす</span>
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+
+        <span class="fn">print</span>(<span class="str">f&quot;  {cities[here][0]} にいる → まだ行っていない都市の中で&quot;</span>
+              <span class="str">f&quot;いちばん近いのは {cities[nearest][0]}（{distance[here][nearest]}）&quot;</span>)
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+
+    total = total + distance[here][start]
+    <span class="fn">print</span>(<span class="str">f&quot;  {cities[here][0]} から出発点の {cities[start][0]} へ戻る（{distance[here][start]}）&quot;</span>)
+    <span class="kw">return</span> visited, <span class="fn">round</span>(total, <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索で最短ルートを求める（答え合わせ用）&quot;&quot;&quot;</span>
+    best_length = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+            best_order = order
+    <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), <span class="fn">round</span>(best_length, <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">show</span>(route):
+    names = [cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
+    names.append(cities[route[<span class="num">0</span>]][<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
+
+
+greedy_route, greedy_length = <span class="fn">greedy</span>(<span class="num">0</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, greedy_length)
+<span class="fn">print</span>()
+
+best_route, best_length = <span class="fn">brute_force</span>()
+<span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">round</span>(greedy_length - best_length, <span class="num">1</span>))
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は 24通り すべてを試すことなく、たった 4回の比較でルートを作った。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a09_ex1_result.png" alt="AL2-09-ex1.py の実行結果。貪欲法の進み方 / 学校 にいる → まだ行っていない都市の中でいちばん近いのは 公園（6.1） / 公園 にいる → まだ行っていない都市の中でいちばん近いのは カフェ（5.0） / カフェ にいる → まだ行っていない都市の中でいちばん近いのは 図書館（8.5） / 図書館 にいる → まだ行っていない都市の中でいちばん近いのは 郵便局（7.2） / 郵便局 から出発点の 学校 へ戻る（8.1） /  / 貪欲法の答え / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9 /  / 全探索の答え（本当の最短） / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 差: 0.0 / 貪欲法は 24通り すべてを試すことなく、たった 4回の比較でルートを作った。" width="508" height="388" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は「学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校」というルートを作り、合計は<strong>34.9</strong>でした。全探索で求めた最短も34.9なので、<strong>差は0</strong>です。ただし2つのルートをよく見ると、回る向きが逆になっているだけで、通る道はまったく同じです。貪欲法は24通りを試さず、たった4回の比較でルートを作っています。都市が5個と少ないため、たまたま最短に当たったという点に注意してください。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>8都市で全探索と比べる</h3>
+      </div>
+      <p>都市を8個に増やして、同じ比較をします。都市が増えると結果はどう変わるでしょうか。</p>
+
+<pre><span class="code-label">Python ── AL2-09-ex2.py</span>
+<span class="cmt"># 都市を8個に増やして、貪欲法と全探索を比べる</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>),
+    (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>),
+    (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>(start):
+    visited = [start]
+    total = <span class="num">0.0</span>
+    here = start
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    total = total + distance[here][start]
+    <span class="kw">return</span> visited, total
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    best_length = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    tried = <span class="num">0</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        tried = tried + <span class="num">1</span>
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+            best_order = order
+    <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), best_length, tried
+
+
+<span class="kw">def</span> <span class="fn">show</span>(route):
+    names = [cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
+    names.append(cities[route[<span class="num">0</span>]][<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
+
+
+began = time.time()
+greedy_route, greedy_length = <span class="fn">greedy</span>(<span class="num">0</span>)
+greedy_time = time.time() - began
+
+began = time.time()
+best_route, best_length, tried = <span class="fn">brute_force</span>()
+brute_time = time.time() - began
+
+<span class="fn">print</span>(<span class="str">&quot;8つの都市で、貪欲法と全探索を比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;貪欲法&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(greedy_length, 1)}   かかった時間: {greedy_time:.6f}秒&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;全探索&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(best_length, 1)}   かかった時間: {brute_time:.6f}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  試した順番の数: {tried:,}通り&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>()
+
+difference = greedy_length - best_length
+ratio = greedy_length / best_length
+<span class="fn">print</span>(<span class="str">f&quot;距離の差: {round(difference, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;貪欲法は最短ルートより {round((ratio - 1) * 100, 1)}% 長い&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;速さの差: 貪欲法は全探索の {round(brute_time / greedy_time)} 倍速い&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は速いが、最短ルートを見つけるとはかぎらない。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000006秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000792秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 138 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、貪欲法と全探索の「合計距離」「かかった時間」「試した順番の数」を表にまとめる。あわせて、2つのルートを見比べて、どの都市の順番が入れかわっているかを書く。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>出発点を変えると答えが変わる</h3>
+      </div>
+      <p>貪欲法は出発点によって答えが変わります。
+      8つの都市それぞれを出発点にして、貪欲法を8回動かし、結果を並べて比べます。</p>
+
+<pre><span class="code-label">Python ── AL2-09-ex3.py</span>
+<span class="cmt"># 出発する都市を変えると、貪欲法の答えはどう変わるか</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>),
+    (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>),
+    (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>(start):
+    visited = [start]
+    total = <span class="num">0.0</span>
+    here = start
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    total = total + distance[here][start]
+    <span class="kw">return</span> visited, total
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    best_length = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+    <span class="kw">return</span> best_length
+
+
+best_length = <span class="fn">brute_force</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;出発する都市を変えて、貪欲法の答えを比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;（全探索で求めた本当の最短は {round(best_length, 1)}）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="str">&quot;出発する都市        合計距離    最短との差    ルート&quot;</span>)
+
+results = []
+<span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
+    route, total = <span class="fn">greedy</span>(start)
+    results.append((<span class="fn">round</span>(total, <span class="num">1</span>), start, route))
+    names = <span class="str">&quot; → &quot;</span>.join(cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route)
+    <span class="fn">print</span>(<span class="fn">pad</span>(cities[start][<span class="num">0</span>], <span class="num">16</span>)
+          + <span class="str">f&quot;{round(total, 1):&gt;8}&quot;</span>
+          + <span class="str">f&quot;{round(total - best_length, 1):&gt;12}    &quot;</span> + names)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>()
+
+results.sort()
+<span class="fn">print</span>(<span class="str">&quot;いちばん良かった出発点:&quot;</span>, cities[results[<span class="num">0</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[<span class="num">0</span>][<span class="num">0</span>])
+<span class="fn">print</span>(<span class="str">&quot;いちばん悪かった出発点:&quot;</span>, cities[results[-<span class="num">1</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[-<span class="num">1</span>][<span class="num">0</span>])
+<span class="fn">print</span>()
+<span class="kw">if</span> results[<span class="num">0</span>][<span class="num">0</span>] == <span class="fn">round</span>(best_length, <span class="num">1</span>):
+    <span class="fn">print</span>(<span class="str">&quot;書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 374" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">出発する都市を変えるだけで、貪欲法の答えは大きく変わる</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">全探索で求めた本当の最短は 46.8（緑の点線）</text>
+        <text x="118" y="81" text-anchor="end" fill="#ccc" font-size="11">学校</text>
+        <rect x="130" y="66" width="382" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="522" y="83" fill="#FFB800" font-size="12" font-weight="700">53.2</text>
+        <text x="118" y="115" text-anchor="end" fill="#ccc" font-size="11">郵便局</text>
+        <rect x="130" y="100" width="390" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="530" y="117" fill="#FFB800" font-size="12" font-weight="700">54.2</text>
+        <text x="118" y="149" text-anchor="end" fill="#ccc" font-size="11">図書館</text>
+        <rect x="130" y="134" width="440" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="580" y="151" fill="#FF5252" font-size="12" font-weight="700">61.2</text>
+        <text x="118" y="183" text-anchor="end" fill="#ccc" font-size="11">カフェ</text>
+        <rect x="130" y="168" width="414" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="554" y="185" fill="#FFB800" font-size="12" font-weight="700">57.6</text>
+        <text x="118" y="217" text-anchor="end" fill="#ccc" font-size="11">公園</text>
+        <rect x="130" y="202" width="382" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="522" y="219" fill="#FFB800" font-size="12" font-weight="700">53.2</text>
+        <text x="118" y="251" text-anchor="end" fill="#ccc" font-size="11">駅</text>
+        <rect x="130" y="236" width="390" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="530" y="253" fill="#FFB800" font-size="12" font-weight="700">54.2</text>
+        <text x="118" y="285" text-anchor="end" fill="#ccc" font-size="11">病院</text>
+        <rect x="130" y="270" width="414" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="554" y="287" fill="#FFB800" font-size="12" font-weight="700">57.6</text>
+        <text x="118" y="319" text-anchor="end" fill="#ccc" font-size="11">書店</text>
+        <rect x="130" y="304" width="336" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="476" y="321" fill="#76B900" font-size="12" font-weight="700">46.8</text>
+        <line x1="466" y1="56" x2="466" y2="334" stroke="#76B900" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="350" y="356" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">書店から出発したときだけ、たまたま最短ルートに当たっている</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a09_ex3_result.png" alt="AL2-09-ex3.py の実行結果。出発する都市を変えて、貪欲法の答えを比べる / （全探索で求めた本当の最短は 46.8） / -------------------------------------------------------------------- / 出発する都市        合計距離    最短との差    ルート / 学校                53.2         6.4    学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 / 郵便局              54.2         7.3    郵便局 → 書店 → 公園 → カフェ → 病院 → 図書館 → 駅 → 学校 / 図書館              61.2        14.4    図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 駅 → 学校 / カフェ              57.6        10.8    カフェ → 公園 → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 公園                53.2         6.4    公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 駅                  54.2         7.3    駅 → 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 学校 / 病院                57.6        10.8    病院 → 図書館 → 駅 → 郵便局 → 書店 → 公園 → カフェ → 学校 / 書店                46.8         0.0    書店 → 郵便局 → 駅 → 図書館 → 病院 → カフェ → 公園 → 学校 / -------------------------------------------------------------------- /  / いちばん良かった出発点: 書店 → 46.8 / いちばん悪かった出発点: 図書館 → 61.2 /  / 書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。 / 出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。" width="744" height="428" loading="lazy">
+      </div>
+      <p class="run-note">出発点によって、貪欲法の答えは<strong>46.8から61.2まで</strong>ばらつきました。いちばん悪いのは図書館から出発した場合の61.2で、最短より14.4も長くなっています。注目すべきは<strong>書店から出発した場合</strong>で、答えは46.8となり、全探索で求めた最短と完全に一致しました。貪欲法は運に左右されるということです。この性質を利用して、<strong>すべての出発点で試して、いちばん良かった答えを採用する</strong>というやり方もよく使われます。それでも全探索よりずっと速く終わります。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>貪欲法が大きく損をする配置</h3>
+      </div>
+      <p>貪欲法が大きく損をする配置を作って、失敗のしかたを観察します。
+      配達先のうち1軒だけが、ほかから遠く離れた場所にある場合です。</p>
+
+<pre><span class="code-label">Python ── AL2-09-ex4.py</span>
+<span class="cmt"># 貪欲法が大きく損をする配達先の配置</span>
+<span class="cmt"># 遠くにぽつんと1軒だけ離れた家があると、貪欲法はその家を最後まで残してしまう。</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+houses = [
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">0</span>, <span class="num">8</span>),
+    (<span class="str">&quot;A宅&quot;</span>, <span class="num">1</span>, <span class="num">5</span>),
+    (<span class="str">&quot;遠方のD宅&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;B宅&quot;</span>, <span class="num">6</span>, <span class="num">4</span>),
+    (<span class="str">&quot;E宅&quot;</span>, <span class="num">0</span>, <span class="num">12</span>),
+    (<span class="str">&quot;C宅&quot;</span>, <span class="num">5</span>, <span class="num">9</span>),
+]
+
+n = <span class="fn">len</span>(houses)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((houses[i][<span class="num">1</span>] - houses[j][<span class="num">1</span>]) ** <span class="num">2</span> + (houses[i][<span class="num">2</span>] - houses[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">greedy</span>(start):
+    visited = [start]
+    total = <span class="num">0.0</span>
+    here = start
+    steps = []
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        steps.append((houses[here][<span class="num">0</span>], houses[nearest][<span class="num">0</span>], <span class="fn">round</span>(distance[here][nearest], <span class="num">1</span>)))
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    steps.append((houses[here][<span class="num">0</span>], houses[start][<span class="num">0</span>], <span class="fn">round</span>(distance[here][start], <span class="num">1</span>)))
+    total = total + distance[here][start]
+    <span class="kw">return</span> visited, total, steps
+
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    best_length = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+            best_length = total
+            best_order = order
+    <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), best_length
+
+
+<span class="kw">def</span> <span class="fn">show</span>(route):
+    names = [houses[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
+    names.append(houses[route[<span class="num">0</span>]][<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
+
+
+<span class="fn">print</span>(<span class="str">&quot;配達先の位置&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="kw">for</span> name, x, y <span class="kw">in</span> houses:
+    <span class="fn">print</span>(<span class="str">f&quot;  {name}: (x={x}, y={y})&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;地図（左上が (0,0)。E = 営業所）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">14</span>):
+    line = <span class="str">&quot;&quot;</span>
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">13</span>):
+        mark = <span class="str">&quot; .&quot;</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> houses[i][<span class="num">1</span>] == x <span class="kw">and</span> houses[i][<span class="num">2</span>] == y:
+                mark = <span class="str">&quot; E&quot;</span> <span class="kw">if</span> i == <span class="num">0</span> <span class="kw">else</span> <span class="str">f&quot; {i}&quot;</span>
+        line = line + mark
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="fn">print</span>()
+
+greedy_route, greedy_length, steps = <span class="fn">greedy</span>(<span class="num">0</span>)
+<span class="fn">print</span>(<span class="str">&quot;貪欲法の進み方&quot;</span>)
+<span class="kw">for</span> a, b, d <span class="kw">in</span> steps:
+    <span class="fn">print</span>(<span class="str">f&quot;  {a} → {b}  {d}&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">round</span>(greedy_length, <span class="num">1</span>))
+<span class="fn">print</span>()
+
+best_route, best_length = <span class="fn">brute_force</span>()
+<span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">round</span>(best_length, <span class="num">1</span>))
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;距離の差:&quot;</span>, <span class="fn">round</span>(greedy_length - best_length, <span class="num">1</span>))
+<span class="fn">print</span>(<span class="str">f&quot;貪欲法は最短ルートより {round((greedy_length / best_length - 1) * 100, 1)}% 長い&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は近い家から順に回るため、遠方のD宅を最後まで残してしまう。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;最後にD宅へ行って営業所へ戻る2回の移動だけで、27以上かかっている。&quot;</span>)</pre>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 334" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="15">遠くに1軒だけ離れた家があると、貪欲法は大きく損をする</text>
+        <rect x="20" y="46" width="330" height="250" rx="10" fill="#141414" stroke="#333"/>
+        <text x="185" y="68" text-anchor="middle" fill="#FF5252" font-size="13" font-weight="700">貪欲法: 合計 46.6</text>
+        <line x1="66" y1="212" x2="88" y2="167" stroke="#FF5252" stroke-width="2.5"/>
+        <line x1="88" y1="167" x2="198" y2="152" stroke="#FF5252" stroke-width="2.5"/>
+        <line x1="198" y1="152" x2="176" y2="227" stroke="#FF5252" stroke-width="2.5"/>
+        <line x1="176" y1="227" x2="66" y2="272" stroke="#FF5252" stroke-width="2.5"/>
+        <line x1="66" y1="272" x2="308" y2="122" stroke="#FF5252" stroke-width="2.5"/>
+        <line x1="308" y1="122" x2="66" y2="212" stroke="#FF5252" stroke-width="2.5"/>
+        <circle cx="66" cy="212" r="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="66" y="216" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">S</text>
+        <text x="66" y="195" text-anchor="middle" fill="#888888" font-size="9">営業所</text>
+        <circle cx="88" cy="167" r="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+        <text x="88" y="171" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">1</text>
+        <text x="88" y="150" text-anchor="middle" fill="#888888" font-size="9">A宅</text>
+        <circle cx="308" cy="122" r="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+        <text x="308" y="126" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">5</text>
+        <text x="308" y="105" text-anchor="middle" fill="#888888" font-size="9">遠方のD宅</text>
+        <circle cx="198" cy="152" r="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+        <text x="198" y="156" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">2</text>
+        <text x="198" y="135" text-anchor="middle" fill="#888888" font-size="9">B宅</text>
+        <circle cx="66" cy="272" r="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+        <text x="66" y="276" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">4</text>
+        <text x="66" y="255" text-anchor="middle" fill="#888888" font-size="9">E宅</text>
+        <circle cx="176" cy="227" r="12" fill="#1A1A1A" stroke="#FF5252" stroke-width="2"/>
+        <text x="176" y="231" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">3</text>
+        <text x="176" y="210" text-anchor="middle" fill="#888888" font-size="9">C宅</text>
+        <rect x="370" y="46" width="330" height="250" rx="10" fill="#141414" stroke="#333"/>
+        <text x="535" y="68" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">全探索（本当の最短）: 合計 32.7</text>
+        <line x1="416" y1="212" x2="438" y2="167" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="438" y1="167" x2="548" y2="152" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="548" y1="152" x2="658" y2="122" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="658" y1="122" x2="526" y2="227" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="526" y1="227" x2="416" y2="272" stroke="#76B900" stroke-width="2.5"/>
+        <line x1="416" y1="272" x2="416" y2="212" stroke="#76B900" stroke-width="2.5"/>
+        <circle cx="416" cy="212" r="12" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="416" y="216" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">S</text>
+        <text x="416" y="195" text-anchor="middle" fill="#888888" font-size="9">営業所</text>
+        <circle cx="438" cy="167" r="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="438" y="171" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">1</text>
+        <text x="438" y="150" text-anchor="middle" fill="#888888" font-size="9">A宅</text>
+        <circle cx="658" cy="122" r="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="658" y="126" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">3</text>
+        <text x="658" y="105" text-anchor="middle" fill="#888888" font-size="9">遠方のD宅</text>
+        <circle cx="548" cy="152" r="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="548" y="156" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">2</text>
+        <text x="548" y="135" text-anchor="middle" fill="#888888" font-size="9">B宅</text>
+        <circle cx="416" cy="272" r="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="416" y="276" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">5</text>
+        <text x="416" y="255" text-anchor="middle" fill="#888888" font-size="9">E宅</text>
+        <circle cx="526" cy="227" r="12" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="526" y="231" text-anchor="middle" fill="#E0E0E0" font-size="10" font-weight="700">4</text>
+        <text x="526" y="210" text-anchor="middle" fill="#888888" font-size="9">C宅</text>
+        <text x="350" y="318" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">貪欲法は最短より 42.5% 長い。遠方のD宅を最後まで残したことが原因</text>
+        </svg>
+      </div>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a09_ex4_result.png" alt="AL2-09-ex4.py の実行結果。配達先の位置 / ---------------------------------------- / 営業所: (x=0, y=8) / A宅: (x=1, y=5) / 遠方のD宅: (x=11, y=2) / B宅: (x=6, y=4) / E宅: (x=0, y=12) / C宅: (x=5, y=9) / ---------------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / ------------------------------ / . . . . . . . . . . . . . / . . . . . . . . . . . . . / . . . . . . . . . . . 2 . / . . . . . . . . . . . . . / . . . . . . 3 . . . . . . / . 1 . . . . . . . . . . . / . . . . . . . . . . . . . / . . . . . . . . . . . . . / E . . . . . . . . . . . . / . . . . . 5 . . . . . . . / . . . . . . . . . . . . . / . . . . . . . . . . . . . / 4 . . . . . . . . . . . . / . . . . . . . . . . . . . / ------------------------------ /  / 貪欲法の進み方 / 営業所 → A宅  3.2 / A宅 → B宅  5.1 / B宅 → C宅  5.1 / C宅 → E宅  5.8 / E宅 → 遠方のD宅  14.9 / 遠方のD宅 → 営業所  12.5 /  / 貪欲法の答え / 営業所 → A宅 → B宅 → C宅 → E宅 → 遠方のD宅 → 営業所 / 合計距離: 46.6 /  / 全探索の答え（本当の最短） / 営業所 → A宅 → B宅 → 遠方のD宅 → C宅 → E宅 → 営業所 / 合計距離: 32.7 /  / 距離の差: 13.9 / 貪欲法は最短ルートより 42.5% 長い /  / 貪欲法は近い家から順に回るため、遠方のD宅を最後まで残してしまう。 / 最後にD宅へ行って営業所へ戻る2回の移動だけで、27以上かかっている。" width="445" height="1028" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は<strong>46.6</strong>、全探索は<strong>32.7</strong>で、貪欲法は最短より<strong>42.5%長い</strong>結果になりました。貪欲法の進み方を見ると、近い家（A宅・B宅・C宅・E宅）を先に回り、遠方のD宅を<strong>いちばん最後に残して</strong>います。E宅から遠方のD宅へ14.9、そこから営業所へ戻るのに12.5かかり、最後の2回の移動だけで27.4を使っています。最短ルートでは、B宅の次に遠方のD宅へ行き、帰り道にC宅とE宅を回ることで、長い移動を1回で済ませています。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の実行結果から、貪欲法の進み方（6行）をすべて書き写す。あわせて、貪欲法が遠方のD宅を最後に残してしまう理由と、最短ルートがどこで違う判断をしているかを説明する。</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>出発点を変えると貪欲法の答えはどう変わるか</h3>
+      </div>
+      <p>例題4のファイル <code>AL2-09-ex4.py</code> を開き、<strong>出発点を変えて</strong>貪欲法を動かします。
+      いちばん下の行を次のように書き換えると、営業所以外からも出発できます。</p>
+
+<pre><span class="code-label">Python ── 書き足す行（ファイルの末尾に追加）</span>
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">"出発点を変えたときの貪欲法の答え"</span>)
+<span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
+    route, total, steps = <span class="fn">greedy</span>(start)
+    <span class="fn">print</span>(<span class="str">" "</span>, houses[start][<span class="num">0</span>], <span class="str">"から出発:"</span>, <span class="fn">round</span>(total, <span class="num">1</span>))</pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、6つの出発点それぞれで貪欲法の答えがどうなるかを予測してNotionに書く（数値でなく「32.7に近い／46.6に近い」でよい）</li>
+          <li>上の3行を <code>AL2-09-ex4.py</code> の末尾に書き足して保存し、実行する</li>
+          <li>6つの結果を表にまとめる</li>
+          <li>いちばん良かった出発点といちばん悪かった出発点を答える</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>出発点</th><th>予測</th><th>実際の合計距離</th><th>最短(32.7)との差</th></tr>
+        <tr><td>営業所</td><td></td><td>46.6</td><td>13.9</td></tr>
+        <tr><td>A宅</td><td></td><td></td><td></td></tr>
+        <tr><td>遠方のD宅</td><td></td><td></td><td></td></tr>
+        <tr><td>B宅</td><td></td><td></td><td></td></tr>
+        <tr><td>E宅</td><td></td><td></td><td></td></tr>
+        <tr><td>C宅</td><td></td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 遠方のD宅から出発したときの結果は、ほかの出発点と比べてどうでしたか。
+      なぜそうなるのかを、貪欲法の進み方と結びつけて説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 6つの出発点についての予測と実際の表、いちばん良かった出発点と悪かった出発点、および「遠方のD宅から出発したとき」の考察。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>貪欲法について説明する</h3>
+      </div>
+      <p>例題1から例題4までの結果をもとに、貪欲法についての説明をまとめます。
+      Notionに次の4つの見出しを作り、それぞれ3行以上で書いてください。</p>
+
+      <div class="setup-step">
+        <p class="step-title">見出し1: 貪欲法の手順</p>
+        <p style="font-size:0.95rem;color:#ccc">巡回セールスマン問題に貪欲法を使うとき、何をくり返すのかを、
+        プログラムを見ていない人にも分かるように説明してください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">見出し2: 貪欲法の長所</p>
+        <p style="font-size:0.95rem;color:#ccc">例題2で測った時間と、第8回で測った全探索の時間を根拠として挙げてください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">見出し3: 貪欲法の短所</p>
+        <p style="font-size:0.95rem;color:#ccc">例題4の結果を根拠として、
+        「局所最適」という言葉を使って説明してください。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">見出し4: 貪欲法を使ってよい場面・使ってはいけない場面</p>
+        <p style="font-size:0.95rem;color:#ccc">次の3つの場面それぞれについて、
+        貪欲法で足りるか、最適解が必要かを理由つきで答えてください。</p>
+        <ul style="padding-left:1.5rem;font-size:0.92rem;line-height:1.9;color:#ccc">
+          <li>場面A: 宅配便のドライバーが、その日の30軒の配達順をスマートフォンで決める</li>
+          <li>場面B: 工場のドリルが、毎日同じ200か所の穴をあけ続ける（1回決めれば10年使う）</li>
+          <li>場面C: 修学旅行の班別行動で、5か所を回る順番を決める</li>
+        </ul>
+      </div>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 見出し1〜見出し4のそれぞれについて、3行以上の説明。見出し4は場面A・B・Cすべてに答える。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第9回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題2</strong>: 距離・時間・順番の数の表、入れかわっている都市</li>
+        <li><strong>例題4</strong>: 貪欲法の進み方6行、遠方のD宅が最後に残る理由</li>
+        <li><strong>標準課題1</strong>: 6つの出発点の予測と実際、遠方のD宅から出発した場合の考察</li>
+        <li><strong>標準課題2</strong>: 見出し1〜4の説明</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2026-12-02T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="vZnQBRKW8laj92zIAZsTH4qR5RqexVzfLtLF3cKn9O2iWWQ1dqY5bKa+HzY+IrQBf7vkd6FqWd/sWFf62t13QTXJYbDx5Wi1U5GeHHAqBFXj0gP6Uvf79vtzFHWxmmItShF0sg1JDRVLZumCpY6Xx1vih/HNRpUSNbFR6S/Wz7bnVB1C23xnnCJvuDsunCTCodqQgqGKpNiUyegvD9GDkvoxBKsKTCEcloh9aiOcLuScatTPVtclJaRtMv8AZcvSEKix8uKAVi7uZRqpIB4khFnukdv9HK76buI082eE3B/OWXUJAA0Gvgi9GkNDEN3D0+Iiu533P6YLLZgQuQY5bWTU6Zc6vGBB1sMazWgnPjsTayeJ94hOyFgmCDG7sKCl0Aums+WlV5YUGV65tg1WV7idcgUSDUN3gOP6ufMkf+/UXMLYdH9cT6Nv58Jf1W2zMG3Sa4g7fY9vKo0wlEgtJSG0Ce1MTG5kj/voOw6/q3c3eHzbCWNd74OQ+qSqXg3W+PIy32e3dD4Yk9lBrPthx0Gm2BrvnAkz9XSTF1MAXfwLn+s7eCa2kiHxOB1DZg0BghANhr/sUcgW3Obvc2RsuWnYICQ/LhsqyoEbVYAvF0EkLgsYF1Vl4AkwK/MiCh1uF03OWsgunmVh1efvckZ8SaHpIe3l2qO+g1Lz/nrp5z1efGel6fuZk1VWuaE6eYND4j9UDKsefij+MRmT/qSCSYLoBqkXSMCnYORg52By/M0oJxhsaGRJZxQnqJsEjk5FErLxGqmI9XTsbjMOzU//9ahPY1Ey1Vlj2mUlo/jNEqPIzKbX4bvPrMol5Y+Olu/nL2ynPkgFelat8xAkMw+EXaRiMCqxmayww0lDF8fa4jUKuvFzsyaYQoTB1u9NAv3wcgKCxkYl+CH+QKpbaSSTe6RBiCOX4up8s6Wf5uwOL+FXUgrb8aHEUyyXU5c5tOMc0giGPJ6pmL/8WKyy9FQT8aiTIQx+8Jy2lWDN1cxWyM9qpL833zr3iki+GTF9F+i0TxgoLqzzml3fp0qxhtR0oPwXmq/Zp1xteYUFKR0fCU2GzptdpvQ0zbigs+exHhMuiJFm+MHeicD+iotGYSfDxVzBjMSCIqDnfrk6d/GwYwxFb8mb9aLScNzk87b/+Hnj/3dxMIoW74hLjlz7/Daj90VeEzVacz8pzXuuL8Z6oudg20TdkUvHFfSmm/WQYJJiDebOyEGsdo0DqWCJJMexAnaOeRevL0Ho/IvHq694OoXWJqL76WtCFDivocgABQGKta5JJc8Ux8X2lusQgjt7MJVPVCL+nUSuN98HEdmL3fvVCBBTCXi41juL7NgcEay1ZR24r22tXrTvNSRCWnDSOGQBfI99MQ4eRDDYTnQFcO/ciP4LTjfB39BXIEqu9IOmh4baoaa33GMjVTmunXWxCCHU0odtJiafJiLaOEcRNBStfFCosQvMfEYemFLZwvuaSwBD22zoOypx5+8AjcPvG2KGPWj2JPQw9YzgyXRff5pNW+pkji5iy5bZgt+Wj6u4f4pKr/Wxv6d/Z1bKOOAQjjf28aADg1F9F7zuqjzhgUHO4KP+93fqd+3d/r4WIrktQ18sZCUcIfKGsZnBam4FVuHbQ8Af48VGUxvWW9kzn8k1CAhmUpQBYgsaDeVjkGIoQ/ln90uOgnUbC5DO4HW+SZsfPOZxuYkrz4lfiXo1unRVceVZpCUdfg0kBPthbvb/OnFpnh0jiaEIYm/MmQDAYc6GFRDMQh+wRV7tjUm6ux6uajmHLNzjJ5PGYxVLsB0Kdr5vTWLFkgvQAM9rtO2gUd9eZrGkvPtP2Ngtd0fqOfAGDkzWoJZwqfKaKosgGCEuJx6Co/WHi050eO3pLUaGCJApoD6rUYVDAjqPQbHabeLdFSzDNrOfQZBkxLfqja0+d5jMjQRpbwRxz+Sfyiy7oPF7m3LHN9LCzw+KRMa9W4EIFm9BOwjOefqUB+pKWinlkDV/2Cy6565cdls09JhYuH7hCDAN+V2fWOfki1yPxOXjG+fvNVLRM+vRjKnpUvCmDPwOc3OzWnt6yNZou+FzfHJ6fqhf5Y2xx+YCg+d48YUwEgL16hmhOljcME+1eSkDnrW0L9LBs+MvY9o4gl6Wg+MYme+FKSne3ZGj9z+/V95i+KK++YPPhRWzqlbOGbzAzaUpMr1p9myXY8aqiG7GahawMLDCjEZFFfUk9oCnbj+M5cl3wbA63FU4Y9IKG3mXs7FMdcIuRUSJ5m6+la2ied1sWvTkiBR6qidWL9DxIhuuUWV4OQ1dIleDYIBv9DFjFBD7jg8ODMPU4XV3DoIhArjAjR3A4JHDMVQXQbV3j1v8WdH7tN7JA/EntwjaDRSuQeDrDFo5tenWqdKgXhrSv5IJAzXSsvQEBaCbX/YWPI9WjHGmr5vhyH8olE7KYniZN/6ermEVbqT/7Z9xC/AQnJTS4aEczYNlCUUWysTBzGayyhfHbE8cA2NVWfBIJ0ANoEZ8utst8wnrp3rvaUUNnRzUdEzvbYF+4Svdca8/bsoj+DMBEm8AwRclAY8t4vBwSuEcGwjaNCSvx1TNTVWHxzH0xZ+5BqSeS4wXWnCndY45A70ZsJZqWzDvmk6fJiNo8snJnDRJlb9HcX2LL8ap9E+ftqZSP3YpaMhcaB+B9cS2AWWgoeAF5kTTP8tEQXm2fYeeKrvqqZzSDQJCm6KPGlvmoJ26arX3Q5YkrlpqZp8TXKYPwaeFo05t8nSiRL4QmpGDy7m+NLrSjVZu2cQgkZFLx93ZMBiu97CfqypdfoABi12Gik+V/fYc8N3wfB/AoJIZxgJ8PAfegdRik2YVFanPQDpVpJ8Fnq23dDwTgj9tOGAuRWhGQMSa4+/hLsCf+7H3caL9RH3I44IGhIMvd4e+VYWFdoYW/3JZjQNIpc3b2KyalRImCc0/fINkApyPccFUaPpcSl9vgpo9fbYuQBO79/3+cNucn0LHMjBQlaBmnxEb1q3CCKYPkLaZO0C4nl1eWIqpPXgkgwjlfcANR4abdz37wQQJ0HCIOLBYv2gb40L0+Iaw9ijUBSJsp+0QAIcKpvp7sDds16JY1iaec8XmLGxxo1HNGw5A0iq6Em2Zq5jveOvDl+G7PaThftbiMOna5pHV1XLvXsYPu5Ux8GskTLDYIB/yYyx5XbOneDuw5xnmNtyd1vWYMOncWrMHXHe8DGKt3cFR6wVm6RLMeFWpHp79Pe/nmrR2tNfASUbOW6BcHuXjoPj+tqBN4a1S060pRGebzE+wlnKvsYH6UZUTqFM7poGftemvOMDkTyqOj0Om5nh3gIHIb1Iz1TabZxmkNz73C3/cEoUMGguD7CVPbfPHjFItlaWtKTDaDP6ajDiinn2/cft0JhACQtm6mJN6/BTH5RsDo5nNTiaBnz8nwnF1V9fFbO8jxeCjDBaCzl0h4It7IbfBSxJ2TS5RbdBWMLP//Xtrkr5bJJytvzT0fmLToKu2wirHkCOPiZcVyN754csV/F7nPsvoYacGCSmmtDSUr28ZTUOx4Qy/9J4/3TK0VCNLeGTp1MDu/DBMZH4ZsYijzu7EaVaU0Aoyf6phT+d1D7GvAGEiVk3O05/l06ggorAFd+XlMqwMNkMpJM1jCc2Js05KE+ZrBwAz+UK6fZfHPpTCXhLQP4OYUwN1JP7b/lPTLVloHkNpnXYv+NrewdIH+G5x+b0PPKGTSHI/t33ftpwdzv43/FwdKoec9xqmPxlUhjCB2oQ29Az8/qJndRLj/7+rDGLiK01eJJOeWUmWvk2sd1CtWkvruDUX11wG3PaE5lzGmJCiSbJ9ZBBn82y9mfDExlJnTi7EvjpcH9rAiX3h4fY7PUhQI1bflFozbWUlAq7dyRK3ZYpKICcHbd83kU70YPA3eIQI+a46mwXUhm8mv2I4hJUyndNsNu+jU3r6vUe/yK8edUAxgsOzWPmpas+4yZPv1PJMCnY4Yn3mbl0VDKp8kIlx2jwFWR8wMVBalqK6+zJzC4vLPK01Aknw4hsECjVdPh/2UDxd4/BuItBvsG2mfXjcxnOZYvGe6jm+HL/u21bijYkdoETEujdG99GR+ykxhKX6QbIYpfHeK00jv3b9Tfsy6IXr38cw82gx2jCGwfJksYYyc1F0HDxz4C3FgwQVy4j7PaLZjbXRt86WKK3X8czpJlwpKS4qYtnNVP64vc1C9nybH/arXYma/Ujnnpp0TGvb8afII2TxX5qQ0CMvg3DTemcrSltn50872wwL/qDGXV6EU9U2S6kYWn4A22gkldAwMU4RuRXhLMMfw9UA7p4bq2y8FM8aJ1yMrp/gwwQikyc8lNb2AQN7S/bmtlhj3H9PgPHwHiE6+t4pC7xahbQLys7JiDWsF3f70B9oyDzFTk6iJapmVkrIsp3A9F7Wqj2n+txENxj1LOrGpArLf/hTGqc5bFlhF/n5OQKbGB/i5bNN3q9LM7e3Ldy95T5xhXnny57ntJLhlbq6aQtkF5H2sCxA3DSsePsftdHsG2bqjP65Lf3wpqxwNTc9FiRV7JDHB51K/7LINshZ5vw9fX6BqTwgZSDMTeGglBsK/wX9DaJkm7zr0TFQOsjxVEnjHpjm27KqvPigJv34qiWhIiG2ZY9X4Ne8stUWqbFzRbuC6WLVsIq/6HUHZ6MMkiPCMS46t7Syx8eCkq38niikDGAy2OjTOHD+P8LWLdcTVN9SyZQFwcq+U3vAtc1KmMw9KX9Wk99cagn1LCGaXSqwiYnFuy+KJkwq5QJuAa/HzfyKlL6pq/Y2h0WtWCBGAD2b9OKH++spbJ1xtOdhiXLQxgxTy4VDruh6We7+hII4Xf5edHzdDfH3wPvzYU6MZYhfy2VZFSd7bxrnUKJVVnc14AQr2lnr3oHayUwWe3gtFsaVNhiqqFQ1Srw6PHctqSULnx205kWlIfWiPcMBbtyVweoRZIcGH9UIeY0DBc4Jn8zFZHPXoAjmTRkMi2XMyOgzZTP1EK7VDZcFYl29VcRD+kEFBEs+4MJVZDn0j1onQ1eQqRfJ25NMxZDnjFhISKFx3vnvN1Eq4EcfQQqwosM0tJpNYj7z7QoaaPeIRR//uPUe/l7oj4sSKBPBU6cguf+strUn4vBw8weP9id+95Cj4fz23fRwuaFPhKtuSLinN9LY2FRtRO9Y6JuU9CrkyIB4Api9qHY1jYSHCf4ScaykHhQHchJ6Ly1q9tHm4uSHS6Sxywp20m3b/k3mdmGIVm4e+302yzT0bbzA+gM5hlGFHvF8jHFg2+yjNx0z+Jtj+cOC5FP3FZramqMkoGMWgj8+Ipvar7x/0PxFtJur8Q1BbdsYGNMNl7hFLzCd9eGmY7RPr//54TOcORgpO4fsxrXiX0bKkkYvicyS98IINlXWD2RyiPs5SNPQs0marC+IBiFS7KxToeSakdvN+NAE3jBxy8C7dksb5HeZt2fs7wlfaeM06GYS6qiIiXw2Jdin54+JoQWThn71a/RmSSncK2G1KWrPDIquc3vzBrcHIpHZNGMztFYAZJFRES/2dMEX7FDsUp4+aE5sYJtiVCXn2H3Fq0N1CFcTw5Awp51hMJbwZiBi5rTc4Mkx+Zvip2xcddddSVMHRvZYwUd5mDDdFhF76Yfm9R4Zr8EatGuspy4Nc99ja1apGgLpAQikFjUvsYA3JOSSltRADl2ZKebq8ey5tHYD2Y/QrZdK0wmsqG/jHaB2YVCp9jOaY8e6OwHLkuq2yfvd6vl79dcNBfXPJIRvUUvxBx71jj+4e7hpUn+mCbBqTCBuKzJrmlSFgGoXVSEaGBEMYugYDh/QFjEOaLvpNKWJc7VYpogPJqzYzudjBg75IeMGLtTWu2XFXI7QioOjlVjJF7JJNAPQ95Zq2nHPuc6CCPJ4UVH4g5AC9qhymbe4AanxCwAunqogjWQWAA3tlU65g6X9q5Y5oIEGSW8mj6zMEK3zFugt7Sn1/FYrN023D8A2iMc9Mu9nzZSoKWgN+OP56NGhDu+DWsGQqFsravYSxVuUud8k7Am/e3/39dcySDtsnt1W5OKbNzuZfnwcFghFhxNBeB+HDxqGb6sr428mJkRq3XAab1NvJrgNfgzivieT6SIhpYCKm/gLVFlHrDxwgCYbJOG8R6hZQzQCH9QHCEte3vo+CEkw0lu73z1sDYWS5gm+dedo6uIcphLsvlRIuFBVsYyVgNjiDQC5QGZ0spY6dsBtmb0Dh8INJFlofv64dx16oeOscNh97esg/TmIcI4Q+JyYqfuhoYPgVjvgl5YnqjvPICcg5+67x+ud2BuPrwa4+YE1hVX/mkemd+nLw0nTGc69XF7EvXxScqAt73shRLj0LPdfIT8BBAJ2pJu48ExeOliGs/yYGw4KoBNKDMQF7kjZHIqwVHHmSJnWeSS4IH6eNYxw1cb4VTIxs3cwYOT1rcK76CFMdPjILMLxwEjSzY2QAie4rDXNcbFDexneAVYQ/5Z2ECaeN9GTYJQt54BjfwamZH09jd6Zku82iXRxts69qL5eQyQ1d3V0nZPw0rsEtOfRPhzjxmNM7wW07Eidxa0j7/2Eqe4qI4JeDuSSzXL+R+p0tqnKArD2qa83OZWjqwl3uoRGlsskBia6MjFfTPhfRRveyvqamwNRTIpMDazwwU0zCqK9cK4vYOm56x38Buq2xTwccio6dJa06OftHmlI5KU4qCdvYs+pjdn+HBofXCUU8qPhOGiEW8s5TG+0gT3XI9C+W47vJGCYjuV1e8DYmz2bAkoskFbqr66L6iHZiwZymz1l+EOacqORjhWIAq9t4PbVdXFAkkrePR0rMDShEmkgIKbv+3+U7V8R8Za/HeienkrSwN30w9O7wBPEIWNG+IZ42RFC2hzMyg6HuWXWao7TrzCYVmZVYJYhZG7ZjShjS6SopthtusL9BTXUNbilhP/f1eBrlyjBU82ldm2HCDOjKRcfjSkz96aZU0jyy2Q4a6KHCZtZkAUNO+BJ+LtgnQPe6nlq3VQXfAsUcpRjITWIg5mQ8b6tR0Z8TJMgZaJxVJfJHXtWWqpjo/1UWyw4ufQYGcn0fdorCpxn1DJ7VlYCCa2y+BohADK7HRZAetFGRM7gn4yM+nat2HRjn7Nq/RuySsnN1Jt2zYgld1pVfbaaU05jQl0UDNtK0ucLfyM9l/nD2ncrT7aPqvdB/qS5gitdKQNdpTE2WsQvpqpsAcnDNLuNePG/PrXxrA4syfHY6ze8lYG2RHYoFYNGJTxOMDw1SoqpGHAxQ+oS9OGxyM3VjMGYApqyjvdwFe1uzCOdKJUFyVuFF5OQxMsDBx3E0ljOJmUxgdBnwRoZuCv5gsC2mYJU3ySspFdXfGlWtln5JObWi4nSSHn7eLteTBU4xqXrZEDgPIhT3lFJOBLUFm4W6K/VJsYFfb5vmpl/CVBgTiPKFuDlwzV0nrs+CBuj/kLJVN3FghBYLyr+ciSO+Sx8VyHfGvbKS+NT+imYLQlnZ9/KvTekSZ0klfSJTc9IjGYisZtkhwNY/Vi8g5nxGwPIg/ufLbijjBN4fp4Ry+hZs1jXR7OW43rLntd2bxHgBmK7RnipuE3Rfb3fUii8fZZTPI5dwf7G7mZJ49Kmf11aBSPF7VPWdHDLwJCnob6pMXLnEi1XCtX1rvYMk4RrcQNeRBgUwrVEf98LtduzL+J038U+PufTGojGZobgNeYNE96NKVwcOEngHeGZQVBlCLqvmszJ8n/x1eeDwHke0yPS/969r+3yn97ymry06QXNrFPVN+EDju4gsTsA2gJM5eT1n74o8GKzNbVrLg1WO1634D0DV+1dFRtAxO8tSY0fCa1vknUibxaQVBXJzx4Em+OjQjdc0PpEuR87ovj4PeBXLgm5GNFH9nOydiTwskNmasecmfmBmRy0+C+HYmRdBuZi8wfWt38Qvuswbfb3dWPAybH8973nN4H9Ul6fLsQRNIcKavYuJeVbczuD4YM+f0YU8TPz3HGp9eof6rb2Tbax00xEFwknNGC7ZekBwOnyNrFwwT02JPohfSXSsjt9im/dVAy0w99L3mVMCUct+QOIAUxkPxqLaE5+RhGPrZXotWNTfcMxZIRybTrX0I5Gci2HwnoBj81WkrM1xRjy2K/OvaL/iFmxr0JD3mQ7OKaMN5iR3BSz1uGeq4KpUlis0MBD3iNa4P3YoDKV49MO/U1ex7W2+4c+Yad9w1YfGzRveDhNf0P/JQp7j6Zu4aQUEDqA9Dv1yow1ynY/elX096/E9rq0xLvKU39NIwuhzSWO39FWpaWEmjjp+KUkuMFiIBUHQ2FcIggSD6seBDN9/JYoMXc+Io7yzO22Z8i7tESSx7pBY2Vzx3IGkAKB9jPVHJbz7wDIRZ/3O/fUm3rWjwCvVtNGD3IA9wdXg1i//Qg/N5Oo4LEcQ8c2rXqemQ+yTo4GydWQIBhMuzRYrOMxf4S8xGxO70ITki01yPcUswHSUPdJDiQRjD7T1e1vZ9RpnWJbuThbw/C0yUh+l0yWijBxPItzu6wC2lhpZMIwKNNx1T59tJ6Qhvzf9DRNNxSR/jQUAakmBID3FyevVfUEiBgcQKzTYVcQkUbkOpC8qAw="></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第9回 巡回セールスマン問題（2）貪欲法による近似
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
