@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第12回: 数当てゲーム・パズルの再応用 | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>
+
+<body>
+
+<nav class="section-nav"><div style="display:flex;align-items:center;gap:0.1rem;margin-right:0.8rem;border-right:1px solid #333;padding-right:0.8rem"><span style="color:#666;font-size:0.5rem;white-space:nowrap">回:</span><a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session01.html">1</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session02.html">2</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session03.html">3</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session04.html">4</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session05.html">5</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session06.html">6</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session07.html">7</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session08.html">8</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session09.html">9</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session10.html">10</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session11.html">11</a> <a style="color:#76B900;background:rgba(118,185,0,0.15);font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px" href="session12.html">12</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session13.html">13</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session14.html">14</a> <a style="color:#666;font-size:0.6rem;padding:0.2rem 0.5rem" href="session15.html">15</a></div>
+  <a href="#sec-submission">提出</a>
+  <a href="#sec-explanation">ゲームと最適化</a>
+  <a href="#sec-examples">例題</a>
+  <a href="#sec-standard" class="nav-assignment">標準課題</a>
+  <a href="#sec-notion">提出まとめ</a>
+  <a href="#answers-section">解答</a>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">アルゴリズム論及び演習II ─ 2026年度後期</div>
+    <h1>第12回: 数当てゲーム・パズルの再応用</h1>
+    <p>数当てゲームと宝物集めパズルを、貪欲法と動的計画法の考え方で作り直す</p>
+  </div>
+</header>
+
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題1の候補の減り方</a>
+        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題3の差</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>アイテムを動かすと？</a>
+        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>使える時間を変えると？</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-explanation">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">1</div>
+      <h2>ゲームと最適化</h2>
+    </div>
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+      第12回では、前期に作った数当てゲームと、迷路を使ったパズルを、
+      後期に学んだ考え方で<strong>作り直します</strong>。
+      同じゲームでも、「どのアルゴリズムで動かすか」を変えると、遊びごたえが大きく変わります。
+    </p>
+
+    <div class="analogy">
+      ゲームの「敵の動き」や「ヒントの出し方」は、すべてアルゴリズムで決まっています。
+      敵がプレイヤーへまっすぐ向かってくるなら貪欲法、
+      壁を回りこんで最短で追ってくるなら幅優先探索やダイクストラ法が使われています。
+      アルゴリズムを変えると、敵の「賢さ」が変わるということです。
+    </div>
+
+    <div class="concept-box">
+      <h4>数当てゲームを最適化の目で見直す</h4>
+      <p style="font-size:0.95rem">
+        前期の数当てゲームでは「まん中を聞く」作戦を使いました。
+        なぜまん中がよいのかを、後期の言葉で説明できます。
+        <strong>1回の質問で、残る候補をいちばん多く減らせる選び方</strong>だからです。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        「その時点でいちばん得な選択をする」という点で、まん中を聞く作戦は<strong>貪欲法</strong>です。
+        ただし第9回の貪欲法と違い、数当てゲームでは<strong>貪欲な選び方がそのまま最適</strong>になります。
+        貪欲法がいつも損をするわけではない、という良い例です。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 382" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">1回の質問で「残る候補」がどれだけ減るか</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さが残っている候補の数（秘密の数が73のとき）</text>
+        <text x="24" y="88" fill="#ccc" font-size="11">1回目</text>
+        <text x="86" y="80" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="68" width="440" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="598" y="80" fill="#FF5252" font-size="10">100個</text>
+        <text x="86" y="98" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="86" width="440" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="598" y="98" fill="#76B900" font-size="10">100個</text>
+        <text x="24" y="128" fill="#ccc" font-size="11">2回目</text>
+        <text x="86" y="120" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="108" width="436" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="594" y="120" fill="#FF5252" font-size="10">99個</text>
+        <text x="86" y="138" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="126" width="220" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="378" y="138" fill="#76B900" font-size="10">50個</text>
+        <text x="24" y="168" fill="#ccc" font-size="11">3回目</text>
+        <text x="86" y="160" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="148" width="431" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="589" y="160" fill="#FF5252" font-size="10">98個</text>
+        <text x="86" y="178" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="166" width="106" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="264" y="178" fill="#76B900" font-size="10">24個</text>
+        <text x="24" y="208" fill="#ccc" font-size="11">4回目</text>
+        <text x="86" y="200" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="188" width="427" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="585" y="200" fill="#FF5252" font-size="10">97個</text>
+        <text x="86" y="218" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="206" width="53" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="211" y="218" fill="#76B900" font-size="10">12個</text>
+        <text x="24" y="248" fill="#ccc" font-size="11">5回目</text>
+        <text x="86" y="240" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="228" width="422" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="580" y="240" fill="#FF5252" font-size="10">96個</text>
+        <text x="86" y="258" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="246" width="26" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="184" y="258" fill="#76B900" font-size="10">6個</text>
+        <text x="24" y="288" fill="#ccc" font-size="11">6回目</text>
+        <text x="86" y="280" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="268" width="418" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="576" y="280" fill="#FF5252" font-size="10">95個</text>
+        <text x="86" y="298" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="286" width="13" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="171" y="298" fill="#76B900" font-size="10">3個</text>
+        <text x="24" y="328" fill="#ccc" font-size="11">7回目</text>
+        <text x="86" y="320" fill="#FF5252" font-size="10">1から順</text>
+        <rect x="150" y="308" width="414" height="15" rx="4" fill="#FF5252" opacity="0.85"/>
+        <text x="572" y="320" fill="#FF5252" font-size="10">94個</text>
+        <text x="86" y="338" fill="#76B900" font-size="10">まん中</text>
+        <rect x="150" y="326" width="4" height="15" rx="4" fill="#76B900" opacity="0.85"/>
+        <text x="162" y="338" fill="#76B900" font-size="10">1個</text>
+        <text x="350" y="364" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">「1回でいちばん多く候補を減らす」選び方をすると、まん中を聞くことになる</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>アイテム集めパズルは巡回セールスマン問題</h4>
+      <p style="font-size:0.95rem">
+        迷路の中にアイテムがいくつか置いてあり、全部拾ってゴールへ向かうパズルを考えます。
+        アイテムを拾う<strong>順番</strong>を決める問題なので、形は巡回セールスマン問題と同じです。
+        違うのは、2地点のあいだの距離が「直線距離」ではなく<strong>迷路の中の最短歩数</strong>である点だけです。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        そこで2段階で解きます。
+      </p>
+      <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2;color:#ccc">
+        <li><strong>幅優先探索</strong>で、スタート・各アイテム・ゴールのあいだの歩数を全部求めて表にする</li>
+        <li>できた表に対して、<strong>貪欲法</strong>や<strong>全探索</strong>を使って回る順番を決める</li>
+      </ol>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        前期に学んだ幅優先探索と、後期に学んだ巡回セールスマン問題の解き方を、
+        <strong>組み合わせて使う</strong>ということです。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 404" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">アイテム集めパズル: 4つのアイテムを拾ってゴールへ</text>
+        <rect x="20" y="46" width="310" height="322" rx="10" fill="#141414" stroke="#333"/>
+        <text x="175" y="68" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">貪欲法: 38歩</text>
+        <rect x="40" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="55.5" y="102.5" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">S</text>
+        <rect x="74" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="108" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="123.5" y="102.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">A</text>
+        <rect x="142" y="82" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="157.5" y="102.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="176" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="210" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="244" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="278" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="40" y="116" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="74" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="89.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="108" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="142" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="157.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="176" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="210" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="225.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="244" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="259.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="278" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="293.5" y="136.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">B</text>
+        <rect x="40" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="55.5" y="170.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">C</text>
+        <rect x="74" y="150" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="89.5" y="170.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="108" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="142" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="157.5" y="170.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">D</text>
+        <rect x="176" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="210" y="150" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="225.5" y="170.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="244" y="150" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="278" y="150" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="40" y="184" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="74" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="89.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="108" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="123.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="142" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="157.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="176" y="184" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="210" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="225.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="244" y="184" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="278" y="184" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="40" y="218" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="74" y="218" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="108" y="218" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="142" y="218" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="176" y="218" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="210" y="218" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="225.5" y="238.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="244" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="278" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="40" y="252" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="55.5" y="272.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="74" y="252" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="108" y="252" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="123.5" y="272.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="142" y="252" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="157.5" y="272.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="176" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="210" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="244" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="278" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="40" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="74" y="286" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="108" y="286" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="142" y="286" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="157.5" y="306.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="176" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="210" y="286" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="225.5" y="306.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="244" y="286" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="259.5" y="306.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="278" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="40" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="74" y="320" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="89.5" y="340.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="108" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="142" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="176" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="210" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="244" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <rect x="278" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#FFB800"/>
+        <text x="293.5" y="340.5" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">G</text>
+        <polyline points="55.5,97.5 89.5,97.5 123.5,97.5 123.5,131.5 123.5,165.5 157.5,165.5 191.5,165.5 191.5,131.5 191.5,97.5 225.5,97.5 259.5,97.5 293.5,97.5 293.5,131.5 293.5,97.5 259.5,97.5 225.5,97.5 191.5,97.5 191.5,131.5 191.5,165.5 191.5,199.5 191.5,233.5 157.5,233.5 123.5,233.5 89.5,233.5 55.5,233.5 55.5,199.5 55.5,165.5 55.5,199.5 55.5,233.5 89.5,233.5 89.5,267.5 89.5,301.5 123.5,301.5 123.5,335.5 157.5,335.5 191.5,335.5 225.5,335.5 259.5,335.5 293.5,335.5" fill="none" stroke="#FFB800" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="12s" repeatCount="indefinite"/></polyline>
+        <text x="175" y="374" text-anchor="middle" fill="#888888" font-size="11">拾う順番: S → A → D → B → C → G</text>
+        <rect x="370" y="46" width="310" height="322" rx="10" fill="#141414" stroke="#333"/>
+        <text x="525" y="68" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">全探索: 22歩（最短）</text>
+        <rect x="390" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="405.5" y="102.5" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">S</text>
+        <rect x="424" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="458" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="473.5" y="102.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">A</text>
+        <rect x="492" y="82" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="507.5" y="102.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="526" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="560" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="594" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="628" y="82" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="390" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="424" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="439.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="458" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="492" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="507.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="526" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="560" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="575.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="594" y="116" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="609.5" y="136.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="628" y="116" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="643.5" y="136.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">B</text>
+        <rect x="390" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="405.5" y="170.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">C</text>
+        <rect x="424" y="150" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="439.5" y="170.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="458" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="492" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="507.5" y="170.5" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">D</text>
+        <rect x="526" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="560" y="150" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="575.5" y="170.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="594" y="150" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="628" y="150" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="390" y="184" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="424" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="439.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="458" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="473.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="492" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="507.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="526" y="184" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="560" y="184" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="575.5" y="204.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="594" y="184" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="628" y="184" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="390" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="424" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="458" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="492" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="526" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="560" y="218" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="575.5" y="238.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="594" y="218" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="628" y="218" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="390" y="252" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="405.5" y="272.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="424" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="458" y="252" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="473.5" y="272.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="492" y="252" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="507.5" y="272.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="526" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="560" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="594" y="252" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="628" y="252" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="390" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="424" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="458" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="492" y="286" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="507.5" y="306.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="526" y="286" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="560" y="286" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="575.5" y="306.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="594" y="286" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="609.5" y="306.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="628" y="286" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <rect x="390" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="424" y="320" width="31" height="31" rx="4" fill="#33302a" stroke="#4a453a"/>
+        <text x="439.5" y="340.5" text-anchor="middle" fill="#7a7060" font-size="13" font-weight="700">#</text>
+        <rect x="458" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="492" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="526" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="560" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="594" y="320" width="31" height="31" rx="4" fill="#141414" stroke="#2a2a2a"/>
+        <rect x="628" y="320" width="31" height="31" rx="4" fill="#1a2e0a" stroke="#76B900"/>
+        <text x="643.5" y="340.5" text-anchor="middle" fill="#4FC3F7" font-size="13" font-weight="700">G</text>
+        <polyline points="405.5,97.5 405.5,131.5 405.5,165.5 405.5,131.5 405.5,97.5 439.5,97.5 473.5,97.5 473.5,131.5 473.5,165.5 507.5,165.5 541.5,165.5 541.5,131.5 541.5,97.5 575.5,97.5 609.5,97.5 643.5,97.5 643.5,131.5 643.5,165.5 643.5,199.5 643.5,233.5 643.5,267.5 643.5,301.5 643.5,335.5" fill="none" stroke="#76B900" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="12s" repeatCount="indefinite"/></polyline>
+        <text x="525" y="374" text-anchor="middle" fill="#888888" font-size="11">拾う順番: S → C → A → D → B → G</text>
+        <text x="350" y="388" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">貪欲法はスタートのすぐ近くにあるCを後回しにして、大きく遠回りしている</text>
+        </svg>
+      </div>
+
+    <div class="concept-box">
+      <h4>ナップサック問題</h4>
+      <p style="font-size:0.95rem">
+        限られた時間や重さの中で、得点がいちばん高くなる組み合わせを選ぶ問題を
+        <strong>ナップサック問題</strong>と呼びます。
+        遠足のリュックに何を詰めるか、制限時間内にどのイベントをこなすか、といった場面にあたります。
+      </p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        巡回セールスマン問題が「<strong>順番</strong>を決める問題」だったのに対し、
+        ナップサック問題は「<strong>選ぶか選ばないか</strong>を決める問題」です。
+        第10回で学んだ動的計画法が、そのまま使えます。
+      </p>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">ナップサック問題の表: 使える時間ごとに最高得点を記録する</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">たて = 上から何個目まで使ってよいか　／　よこ = 使える時間（分）</text>
+        <text x="169.0" y="86" text-anchor="middle" fill="#888888" font-size="11">0</text>
+        <text x="215.0" y="86" text-anchor="middle" fill="#888888" font-size="11">2</text>
+        <text x="261.0" y="86" text-anchor="middle" fill="#888888" font-size="11">4</text>
+        <text x="307.0" y="86" text-anchor="middle" fill="#888888" font-size="11">6</text>
+        <text x="353.0" y="86" text-anchor="middle" fill="#888888" font-size="11">8</text>
+        <text x="399.0" y="86" text-anchor="middle" fill="#888888" font-size="11">10</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="12s" repeatCount="indefinite"/>
+          <text x="136" y="118" text-anchor="end" fill="#ccc" font-size="11">何も使わない</text>
+          <text x="136" y="132" text-anchor="end" fill="#666" font-size="9"></text>
+          <rect x="148" y="96" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="169.0" y="116" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="194" y="96" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="215.0" y="116" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="240" y="96" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="261.0" y="116" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="286" y="96" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="307.0" y="116" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="332" y="96" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="353.0" y="116" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="378" y="96" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="399.0" y="116" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.168;0.198;1" dur="12s" repeatCount="indefinite"/>
+          <text x="136" y="158" text-anchor="end" fill="#ccc" font-size="11">村人を助ける</text>
+          <text x="136" y="172" text-anchor="end" fill="#666" font-size="9">（6分 10点）</text>
+          <rect x="148" y="136" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="169.0" y="156" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="194" y="136" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="215.0" y="156" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="240" y="136" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="261.0" y="156" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="286" y="136" width="42" height="30" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="307.0" y="156" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">10</text>
+          <rect x="332" y="136" width="42" height="30" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="353.0" y="156" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">10</text>
+          <rect x="378" y="136" width="42" height="30" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="399.0" y="156" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">10</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.336;0.366;1" dur="12s" repeatCount="indefinite"/>
+          <text x="136" y="198" text-anchor="end" fill="#ccc" font-size="11">宝箱をあける</text>
+          <text x="136" y="212" text-anchor="end" fill="#666" font-size="9">（5分 8点）</text>
+          <rect x="148" y="176" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="169.0" y="196" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="194" y="176" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="215.0" y="196" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="240" y="176" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="261.0" y="196" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="286" y="176" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="307.0" y="196" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+          <rect x="332" y="176" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="353.0" y="196" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+          <rect x="378" y="176" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="399.0" y="196" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.504;0.534;1" dur="12s" repeatCount="indefinite"/>
+          <text x="136" y="238" text-anchor="end" fill="#ccc" font-size="11">鉱石を掘る</text>
+          <text x="136" y="252" text-anchor="end" fill="#666" font-size="9">（5分 8点）</text>
+          <rect x="148" y="216" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="169.0" y="236" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="194" y="216" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="215.0" y="236" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="240" y="216" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="261.0" y="236" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="286" y="216" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="307.0" y="236" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+          <rect x="332" y="216" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="353.0" y="236" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+          <rect x="378" y="216" width="42" height="30" rx="5" fill="#1a2e0a" stroke="#76B900"/>
+          <text x="399.0" y="236" text-anchor="middle" fill="#93D500" font-size="13" font-weight="700">16</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.672;0.702;1" dur="12s" repeatCount="indefinite"/>
+          <text x="136" y="278" text-anchor="end" fill="#ccc" font-size="11">釣りをする</text>
+          <text x="136" y="292" text-anchor="end" fill="#666" font-size="9">（9分 12点）</text>
+          <rect x="148" y="256" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="169.0" y="276" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="194" y="256" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="215.0" y="276" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="240" y="256" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="261.0" y="276" text-anchor="middle" fill="#888" font-size="13" font-weight="400">0</text>
+          <rect x="286" y="256" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="307.0" y="276" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+          <rect x="332" y="256" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="353.0" y="276" text-anchor="middle" fill="#888" font-size="13" font-weight="400">10</text>
+          <rect x="378" y="256" width="42" height="30" rx="5" fill="#141414" stroke="#2a2a2a"/>
+          <text x="399.0" y="276" text-anchor="middle" fill="#888" font-size="13" font-weight="400">16</text>
+        </g>
+        <text x="350" y="312" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">10分のマスの答えは16点。宝箱(5分8点)と鉱石(5分8点)を選んだときの得点</text>
+        </svg>
+      </div>
+  </div>
+</section>
+
+<section id="sec-examples">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">2</div>
+      <h2>例題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>VS Code でフォルダとファイルを用意する</h3>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 1: 作業フォルダを作る</p>
+        <ol>
+          <li>デスクトップに <strong>AL2</strong> という名前のフォルダを作る（後期の授業ではずっと同じフォルダを使う）</li>
+          <li>AL2 フォルダの中に <strong>No12</strong> という名前のフォルダを作る</li>
+        </ol>
+        <div class="tree">
+          デスクトップ/<br>
+          └── AL2/<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;├── No11/&nbsp;&nbsp;&nbsp;<span style="color:#555">← 前回のファイル</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#76B900;font-weight:600">No12/</span>&nbsp;&nbsp;&nbsp;<span style="color:#76B900">← 第12回はここに保存</span>
+        </div>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 2: VS Code でフォルダを開く</p>
+        <ol>
+          <li><strong>Visual Studio Code</strong> を起動する</li>
+          <li>メニューから <strong>「ファイル」→「フォルダーを開く」</strong>を選ぶ</li>
+          <li>Step 1 で作った <strong>AL2/No12</strong> フォルダを選んで開く</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">左側のエクスプローラーに No12 フォルダの中身が表示される（最初は空）。</p>
+      </div>
+
+      <div class="setup-step">
+        <p class="step-title">Step 3: 例題ごとにファイルを作って実行する</p>
+        <ol>
+          <li>左側エクスプローラーの No12 の横にある <strong>新しいファイルアイコン</strong>をクリック</li>
+          <li>ファイル名を入力して Enter（例題1なら <code>AL2-12-ex1.py</code>）</li>
+          <li>例題のコードブロック右上の <strong>コピー</strong>ボタンをクリック</li>
+          <li>VS Code の編集画面に <strong>貼り付ける</strong>（Ctrl+V / Cmd+V）</li>
+          <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
+          <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-12-ex1.py</code>, <code>AL2-12-ex2.py</code>, <code>AL2-12-ex3.py</code>, <code>AL2-12-ex4.py</code></p>
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-bottom:1.5rem">
+      <h4>今回のキーワード</h4>
+      <table>
+        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><td><strong style="color:#76B900">ナップサック問題</strong><br><span style="color:#888;font-size:0.8rem">knapsack problem</span></td><td>決められた容量や時間の中で、価値の合計がいちばん高くなる組み合わせを選ぶ問題。</td></tr>
+        <tr><td><strong style="color:#76B900">組み合わせ最適化</strong><br><span style="color:#888;font-size:0.8rem">くみあわせさいてきか</span></td><td>「順番を決める」「選ぶか選ばないかを決める」など、有限の候補からいちばん良いものを選ぶ問題のまとめ。</td></tr>
+        <tr><td><strong style="color:#76B900">前処理</strong><br><span style="color:#888;font-size:0.8rem">まえしょり / preprocessing</span></td><td>本題を解く前に、必要な情報を計算して表にしておくこと。例題2では幅優先探索で歩数の表を作ることが前処理にあたる。</td></tr>
+        <tr><td><strong style="color:#76B900">復元</strong><br><span style="color:#888;font-size:0.8rem">ふくげん / traceback</span></td><td>動的計画法の表から「どれを選んだか」を逆にたどって調べること。</td></tr>
+      </table>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 1</span>
+        <h3>数当てゲームを最適化の目で見直す</h3>
+      </div>
+      <p>前期の数当てゲームを、「1回の質問で候補がどれだけ減るか」という目で見直します。
+      1から100までのすべての数について、2つの作戦の質問回数を数えます。</p>
+
+<pre><span class="code-label">Python ── AL2-12-ex1.py</span>
+<span class="cmt"># 数当てゲームを「1回の質問でどれだけ候補を減らせるか」という目で見直す</span>
+<span class="cmt"># 作戦A: 1から順に「1ですか」「2ですか」…と聞く（逐次探索）</span>
+<span class="cmt"># 作戦B: いつも残っている範囲のまん中を聞く（二分探索）</span>
+
+
+<span class="kw">def</span> <span class="fn">count_linear</span>(secret, low, high):
+    <span class="str">&quot;&quot;&quot;1から順に聞いたときの質問回数&quot;&quot;&quot;</span>
+    count = <span class="num">0</span>
+    <span class="kw">for</span> guess <span class="kw">in</span> <span class="fn">range</span>(low, high + <span class="num">1</span>):
+        count = count + <span class="num">1</span>
+        <span class="kw">if</span> guess == secret:
+            <span class="kw">return</span> count
+    <span class="kw">return</span> count
+
+
+<span class="kw">def</span> <span class="fn">count_binary</span>(secret, low, high):
+    <span class="str">&quot;&quot;&quot;まん中を聞いたときの質問回数&quot;&quot;&quot;</span>
+    count = <span class="num">0</span>
+    <span class="kw">while</span> low &lt;= high:
+        count = count + <span class="num">1</span>
+        middle = (low + high) // <span class="num">2</span>
+        <span class="kw">if</span> middle == secret:
+            <span class="kw">return</span> count
+        <span class="kw">elif</span> middle &lt; secret:
+            low = middle + <span class="num">1</span>
+        <span class="kw">else</span>:
+            high = middle - <span class="num">1</span>
+    <span class="kw">return</span> count
+
+
+low = <span class="num">1</span>
+high = <span class="num">100</span>
+
+linear_counts = []
+binary_counts = []
+<span class="kw">for</span> secret <span class="kw">in</span> <span class="fn">range</span>(low, high + <span class="num">1</span>):
+    linear_counts.append(<span class="fn">count_linear</span>(secret, low, high))
+    binary_counts.append(<span class="fn">count_binary</span>(secret, low, high))
+
+<span class="fn">print</span>(<span class="str">&quot;1から100までの100個の数すべてを、2つの作戦で当ててみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>(<span class="str">&quot;作戦                 最悪の回数   平均の回数&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;A: 1から順に聞く    {max(linear_counts):&gt;10}回 {sum(linear_counts)/len(linear_counts):&gt;11.2f}回&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;B: まん中を聞く      {max(binary_counts):&gt;10}回 {sum(binary_counts)/len(binary_counts):&gt;11.2f}回&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 1回の質問で候補がどれだけ減るかを見る</span>
+<span class="fn">print</span>(<span class="str">&quot;1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>(<span class="str">&quot;質問  作戦A: 1から順に聞く      作戦B: まん中を聞く&quot;</span>)
+
+low_a = <span class="num">1</span>
+high_a = <span class="num">100</span>
+low_b = <span class="num">1</span>
+high_b = <span class="num">100</span>
+secret = <span class="num">73</span>
+
+<span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">8</span>):
+    <span class="cmt"># 作戦A: step 番目の数を聞く</span>
+    remain_a = high_a - low_a + <span class="num">1</span>
+    <span class="kw">if</span> low_a &lt;= secret &lt;= high_a:
+        low_a = low_a + <span class="num">1</span>              <span class="cmt"># 外れたので候補が1つ減るだけ</span>
+    after_a = high_a - low_a + <span class="num">1</span>
+
+    <span class="cmt"># 作戦B: まん中を聞く</span>
+    remain_b = high_b - low_b + <span class="num">1</span>
+    <span class="kw">if</span> low_b &lt;= high_b:
+        middle = (low_b + high_b) // <span class="num">2</span>
+        <span class="kw">if</span> middle &lt; secret:
+            low_b = middle + <span class="num">1</span>
+        <span class="kw">elif</span> middle &gt; secret:
+            high_b = middle - <span class="num">1</span>
+        <span class="kw">else</span>:
+            low_b = middle
+            high_b = middle
+    after_b = high_b - low_b + <span class="num">1</span>
+
+    <span class="fn">print</span>(<span class="str">f&quot;{step:&gt;3}回目  {remain_a:&gt;4}個 → {after_a:&gt;4}個&quot;</span>
+          <span class="str">f&quot;            {remain_b:&gt;4}個 → {after_b:&gt;4}個&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;「1回の質問でいちばん多く候補を減らす」選び方が、まん中を聞く作戦になっている。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a12_ex1_result.png" alt="AL2-12-ex1.py の実行結果。1から100までの100個の数すべてを、2つの作戦で当ててみる / -------------------------------------------------------- / 作戦                 最悪の回数   平均の回数 / A: 1から順に聞く           100回       50.50回 / B: まん中を聞く               7回        5.80回 / -------------------------------------------------------- /  / 1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき） / -------------------------------------------------------- / 質問  作戦A: 1から順に聞く      作戦B: まん中を聞く / 1回目   100個 →   99個             100個 →   50個 / 2回目    99個 →   98個              50個 →   24個 / 3回目    98個 →   97個              24個 →   12個 / 4回目    97個 →   96個              12個 →    6個 / 5回目    96個 →   95個               6個 →    3個 / 6回目    95個 →   94個               3個 →    1個 / 7回目    94個 →   93個               1個 →    1個 / -------------------------------------------------------- /  / 作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。 / 「1回の質問でいちばん多く候補を減らす」選び方が、まん中を聞く作戦になっている。" width="523" height="468" loading="lazy">
+      </div>
+      <p class="run-note">1から順に聞く作戦は、最悪で<strong>100回</strong>、平均で<strong>50.50回</strong>かかります。まん中を聞く作戦は、最悪でも<strong>7回</strong>、平均<strong>5.80回</strong>で終わります。下の表を見ると、1から順に聞く作戦は候補が 100個 → 99個 → 98個 と1個ずつしか減らないのに対し、まん中を聞く作戦は 100個 → 50個 → 24個 → 12個 と半分ずつ減っています。「1回の質問でいちばん多く候補を減らす」という貪欲な選び方が、そのままいちばん良い作戦になっています。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題1の実行結果から、2つの作戦の「最悪の回数」と「平均の回数」を書く。あわせて、下の表を見て、7回目の時点で残っている候補の数がそれぞれいくつかを書く。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 2</span>
+        <h3>アイテム集めパズルを貪欲法で解く</h3>
+      </div>
+      <p>迷路の中に置かれた4つのアイテムを、全部拾ってゴールへ向かうパズルを貪欲法で解きます。
+      まず幅優先探索で地点どうしの歩数を表にしてから、いちばん近いアイテムへ向かうことをくり返します。</p>
+
+<pre><span class="code-label">Python ── AL2-12-ex2.py</span>
+<span class="cmt"># アイテム集めパズルを貪欲法で解く</span>
+<span class="cmt"># 迷路の中に4つのアイテムがある。全部拾ってゴールへ行くまでの歩数を短くしたい。</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+maze = [
+    <span class="str">&quot;S..#....&quot;</span>,
+    <span class="str">&quot;.#.#.##.&quot;</span>,
+    <span class="str">&quot;.#...#..&quot;</span>,
+    <span class="str">&quot;.###.#..&quot;</span>,
+    <span class="str">&quot;.....#..&quot;</span>,
+    <span class="str">&quot;#.##....&quot;</span>,
+    <span class="str">&quot;...#.##.&quot;</span>,
+    <span class="str">&quot;.#......&quot;</span>,
+]
+
+items = {
+    <span class="str">&quot;A&quot;</span>: (<span class="num">0</span>, <span class="num">2</span>),
+    <span class="str">&quot;B&quot;</span>: (<span class="num">1</span>, <span class="num">7</span>),
+    <span class="str">&quot;C&quot;</span>: (<span class="num">2</span>, <span class="num">0</span>),
+    <span class="str">&quot;D&quot;</span>: (<span class="num">2</span>, <span class="num">3</span>),
+}
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">steps_from</span>(origin):
+    <span class="str">&quot;&quot;&quot;origin から、通れるすべてのマスまでの歩数を求める（幅優先探索）&quot;&quot;&quot;</span>
+    dist = {origin: <span class="num">0</span>}
+    queue = <span class="fn">deque</span>([origin])
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        r, c = queue.popleft()
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> dist:
+                <span class="kw">continue</span>
+            dist[(nr, nc)] = dist[(r, c)] + <span class="num">1</span>
+            queue.append((nr, nc))
+    <span class="kw">return</span> dist
+
+
+<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁）とアイテムの位置&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+picture[<span class="num">0</span>][<span class="num">0</span>] = <span class="str">&quot;S&quot;</span>
+picture[rows - <span class="num">1</span>][cols - <span class="num">1</span>] = <span class="str">&quot;G&quot;</span>
+<span class="kw">for</span> name, (r, c) <span class="kw">in</span> items.items():
+    picture[r][c] = name
+<span class="kw">for</span> line <span class="kw">in</span> picture:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># すべての地点どうしの歩数を、幅優先探索で先に求めておく</span>
+places = {<span class="str">&quot;S&quot;</span>: start, <span class="str">&quot;G&quot;</span>: goal}
+<span class="kw">for</span> name, position <span class="kw">in</span> items.items():
+    places[name] = position
+
+table = {}
+<span class="kw">for</span> name, position <span class="kw">in</span> places.items():
+    dist = <span class="fn">steps_from</span>(position)
+    table[name] = {}
+    <span class="kw">for</span> other, other_position <span class="kw">in</span> places.items():
+        table[name][other] = dist[other_position]
+
+<span class="fn">print</span>(<span class="str">&quot;地点どうしの歩数の表&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+names = [<span class="str">&quot;S&quot;</span>, <span class="str">&quot;A&quot;</span>, <span class="str">&quot;B&quot;</span>, <span class="str">&quot;C&quot;</span>, <span class="str">&quot;D&quot;</span>, <span class="str">&quot;G&quot;</span>]
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{m:&gt;6}&quot;</span> <span class="kw">for</span> m <span class="kw">in</span> names))
+<span class="kw">for</span> name <span class="kw">in</span> names:
+    <span class="fn">print</span>(<span class="str">f&quot;  {name}   &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{table[name][m]:&gt;6}&quot;</span> <span class="kw">for</span> m <span class="kw">in</span> names))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- 貪欲法: いまいる場所からいちばん近いアイテムへ向かう ---</span>
+here = <span class="str">&quot;S&quot;</span>
+remaining = [<span class="str">&quot;A&quot;</span>, <span class="str">&quot;B&quot;</span>, <span class="str">&quot;C&quot;</span>, <span class="str">&quot;D&quot;</span>]
+total = <span class="num">0</span>
+order = [<span class="str">&quot;S&quot;</span>]
+
+<span class="fn">print</span>(<span class="str">&quot;貪欲法の進み方&quot;</span>)
+<span class="kw">while</span> <span class="fn">len</span>(remaining) &gt; <span class="num">0</span>:
+    nearest = <span class="kw">None</span>
+    <span class="kw">for</span> name <span class="kw">in</span> remaining:
+        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> table[here][name] &lt; table[here][nearest]:
+            nearest = name
+    <span class="fn">print</span>(<span class="str">f&quot;  {here} にいる → いちばん近いアイテムは {nearest}（{table[here][nearest]}歩）&quot;</span>)
+    total = total + table[here][nearest]
+    order.append(nearest)
+    remaining.remove(nearest)
+    here = nearest
+
+total = total + table[here][<span class="str">&quot;G&quot;</span>]
+order.append(<span class="str">&quot;G&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {here} からゴールへ（{table[here][&#x27;G&#x27;]}歩）&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  拾う順番:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(order))
+<span class="fn">print</span>(<span class="str">&quot;  合計歩数:&quot;</span>, total, <span class="str">&quot;歩&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a12_ex2_result.png" alt="AL2-12-ex2.py の実行結果。迷路（S=スタート  G=ゴール  #=壁）とアイテムの位置 / ------------------------------ / S.A#.... / .#.#.##B / C#.D.#.. / .###.#.. / .....#.. / #.##.... / ...#.##. / .#.....G / ------------------------------ /  / 地点どうしの歩数の表 / -------------------------------------------- / S     A     B     C     D     G / S        0     2    12     2     5    14 / A        2     0    10     4     3    12 / B       12    10     0    14     7     6 / C        2     4    14     0     7    12 / D        5     3     7     7     0     9 / G       14    12     6    12     9     0 / -------------------------------------------- /  / 貪欲法の進み方 / S にいる → いちばん近いアイテムは A（2歩） / A にいる → いちばん近いアイテムは D（3歩） / D にいる → いちばん近いアイテムは B（7歩） / B にいる → いちばん近いアイテムは C（14歩） / C からゴールへ（12歩） /  / 貪欲法の答え / 拾う順番: S → A → D → B → C → G / 合計歩数: 38 歩" width="380" height="708" loading="lazy">
+      </div>
+      <p class="run-note">6つの地点（S・A・B・C・D・G）のあいだの歩数が表になりました。表を見ると、SからAは2歩、SからCも2歩で、どちらもスタートのすぐ近くにあります。貪欲法は最初にAを選び、A → D → B → C と進んで、合計<strong>38歩</strong>になりました。最後に選んだCまでが14歩と、とても遠い移動になっています。第9回の「遠方のD宅」と同じ失敗のしかたです。</p>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 3</span>
+        <h3>同じパズルを全探索で解く</h3>
+      </div>
+      <p>同じパズルを全探索で解いて、貪欲法の答えと比べます。
+      アイテムは4つなので、拾う順番は 4×3×2×1 = 24通りです。</p>
+
+<pre><span class="code-label">Python ── AL2-12-ex3.py</span>
+<span class="cmt"># 同じアイテム集めパズルを全探索で解いて、貪欲法と比べる</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+maze = [
+    <span class="str">&quot;S..#....&quot;</span>,
+    <span class="str">&quot;.#.#.##.&quot;</span>,
+    <span class="str">&quot;.#...#..&quot;</span>,
+    <span class="str">&quot;.###.#..&quot;</span>,
+    <span class="str">&quot;.....#..&quot;</span>,
+    <span class="str">&quot;#.##....&quot;</span>,
+    <span class="str">&quot;...#.##.&quot;</span>,
+    <span class="str">&quot;.#......&quot;</span>,
+]
+
+items = {
+    <span class="str">&quot;A&quot;</span>: (<span class="num">0</span>, <span class="num">2</span>),
+    <span class="str">&quot;B&quot;</span>: (<span class="num">1</span>, <span class="num">7</span>),
+    <span class="str">&quot;C&quot;</span>: (<span class="num">2</span>, <span class="num">0</span>),
+    <span class="str">&quot;D&quot;</span>: (<span class="num">2</span>, <span class="num">3</span>),
+}
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">steps_from</span>(origin):
+    dist = {origin: <span class="num">0</span>}
+    queue = <span class="fn">deque</span>([origin])
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        r, c = queue.popleft()
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> dist:
+                <span class="kw">continue</span>
+            dist[(nr, nc)] = dist[(r, c)] + <span class="num">1</span>
+            queue.append((nr, nc))
+    <span class="kw">return</span> dist
+
+
+places = {<span class="str">&quot;S&quot;</span>: start, <span class="str">&quot;G&quot;</span>: goal}
+<span class="kw">for</span> name, position <span class="kw">in</span> items.items():
+    places[name] = position
+
+table = {}
+<span class="kw">for</span> name, position <span class="kw">in</span> places.items():
+    dist = <span class="fn">steps_from</span>(position)
+    table[name] = {}
+    <span class="kw">for</span> other, other_position <span class="kw">in</span> places.items():
+        table[name][other] = dist[other_position]
+
+
+<span class="kw">def</span> <span class="fn">route_steps</span>(order):
+    <span class="str">&quot;&quot;&quot;S から order の順にアイテムを拾い、G へ行くまでの合計歩数&quot;&quot;&quot;</span>
+    total = table[<span class="str">&quot;S&quot;</span>][order[<span class="num">0</span>]]
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(order) - <span class="num">1</span>):
+        total = total + table[order[i]][order[i + <span class="num">1</span>]]
+    total = total + table[order[-<span class="num">1</span>]][<span class="str">&quot;G&quot;</span>]
+    <span class="kw">return</span> total
+
+
+<span class="fn">print</span>(<span class="str">&quot;4つのアイテムを拾う順番は 4×3×2×1 = 24通り&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;すべて試して合計歩数を求める&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+
+best_order = <span class="kw">None</span>
+best_steps = <span class="kw">None</span>
+<span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="str">&quot;ABCD&quot;</span>):
+    steps = <span class="fn">route_steps</span>(order)
+    mark = <span class="str">&quot;&quot;</span>
+    <span class="kw">if</span> best_steps <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> steps &lt; best_steps:
+        best_steps = steps
+        best_order = order
+        mark = <span class="str">&quot;  ← いまのところ最短&quot;</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  S → {&#x27; → &#x27;.join(order)} → G   {steps:&gt;3}歩&quot;</span> + mark)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>()
+
+greedy_order = (<span class="str">&quot;A&quot;</span>, <span class="str">&quot;D&quot;</span>, <span class="str">&quot;B&quot;</span>, <span class="str">&quot;C&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;貪欲法の答え（例題2）&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  S → {&#x27; → &#x27;.join(greedy_order)} → G   {route_steps(greedy_order)}歩&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  S → {&#x27; → &#x27;.join(best_order)} → G   {best_steps}歩&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_steps</span>(greedy_order) - best_steps, <span class="str">&quot;歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;貪欲法は最短より {round((route_steps(greedy_order) / best_steps - 1) * 100)}% 長い&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は最初にAへ向かったが、最短ルートは先にCを拾っている。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;Cはスタートのすぐ近くにあるのに、貪欲法は後回しにして遠回りしてしまった。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a12_ex3_result.png" alt="AL2-12-ex3.py の実行結果。4つのアイテムを拾う順番は 4×3×2×1 = 24通り / すべて試して合計歩数を求める / -------------------------------------------- / S → A → B → C → D → G    42歩  ← いまのところ最短 / S → A → B → D → C → G    38歩  ← いまのところ最短 / S → A → C → B → D → G    36歩  ← いまのところ最短 / S → A → C → D → B → G    26歩  ← いまのところ最短 / S → A → D → B → C → G    38歩 / S → A → D → C → B → G    32歩 / S → B → A → C → D → G    42歩 / S → B → A → D → C → G    44歩 / S → B → C → A → D → G    42歩 / S → B → C → D → A → G    48歩 / S → B → D → A → C → G    38歩 / S → B → D → C → A → G    42歩 / S → C → A → B → D → G    32歩 / S → C → A → D → B → G    22歩  ← いまのところ最短 / S → C → B → A → D → G    38歩 / S → C → B → D → A → G    38歩 / S → C → D → A → B → G    28歩 / S → C → D → B → A → G    38歩 / S → D → A → B → C → G    44歩 / S → D → A → C → B → G    32歩 / S → D → B → A → C → G    38歩 / S → D → B → C → A → G    42歩 / S → D → C → A → B → G    32歩 / S → D → C → B → A → G    48歩 / -------------------------------------------- /  / 貪欲法の答え（例題2） / S → A → D → B → C → G   38歩 /  / 全探索の答え（本当の最短） / S → C → A → D → B → G   22歩 /  / 差: 16 歩 / 貪欲法は最短より 73% 長い /  / 貪欲法は最初にAへ向かったが、最短ルートは先にCを拾っている。 / Cはスタートのすぐ近くにあるのに、貪欲法は後回しにして遠回りしてしまった。" width="485" height="848" loading="lazy">
+      </div>
+      <p class="run-note">全探索が見つけた最短は「S → C → A → D → B → G」の<strong>22歩</strong>でした。貪欲法の38歩と比べて16歩も短く、貪欲法は最短より<strong>73%も長い</strong>という結果です。最短ルートは、スタートのすぐ近くにあるCを<strong>最初に</strong>拾っています。貪欲法はAとCがどちらも2歩なのでAを選びましたが、Cを先に拾っておけば、あとで14歩も戻る必要がなくなります。「その場でいちばん近い」を選ぶだけでは足りない、という良い例です。</p>
+
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の実行結果から、貪欲法の答えと全探索の答え、その差を書く。あわせて、24通りの中でいちばん長かったルートとその歩数を書き、貪欲法がCを後回しにしてしまった理由を説明する。</span></div>
+    </div>
+
+    <div class="card example">
+      <div class="card-header">
+        <span class="tag tag-example">例題 4</span>
+        <h3>ナップサック問題を動的計画法で解く</h3>
+      </div>
+      <p>限られた時間の中で、得点がいちばん高くなる組み合わせを選ぶナップサック問題を、
+      貪欲法と動的計画法の両方で解いて比べます。</p>
+
+<pre><span class="code-label">Python ── AL2-12-ex4.py</span>
+<span class="cmt"># ナップサック問題: 決められた時間の中で、得点がいちばん高くなる組み合わせを選ぶ</span>
+<span class="cmt"># ゲームの「制限時間内にどのイベントをこなすか」という場面にあたる。</span>
+
+<span class="cmt"># (名前, かかる分数, もらえる得点)</span>
+quests = [
+    (<span class="str">&quot;村人を助ける&quot;</span>, <span class="num">6</span>, <span class="num">10</span>),
+    (<span class="str">&quot;宝箱をあける&quot;</span>, <span class="num">5</span>, <span class="num">8</span>),
+    (<span class="str">&quot;鉱石を掘る&quot;</span>, <span class="num">5</span>, <span class="num">8</span>),
+    (<span class="str">&quot;釣りをする&quot;</span>, <span class="num">9</span>, <span class="num">12</span>),
+]
+
+limit = <span class="num">10</span>          <span class="cmt"># 使える時間（分）</span>
+n = <span class="fn">len</span>(quests)
+
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+
+<span class="fn">print</span>(<span class="str">f&quot;使える時間: {limit}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;できること              かかる分   得点   1分あたり&quot;</span>)
+<span class="kw">for</span> name, minutes, score <span class="kw">in</span> quests:
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">24</span>) + <span class="str">f&quot;{minutes:&gt;6}分{score:&gt;7}点{score/minutes:&gt;10.2f}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- 方法1: 貪欲法（1分あたりの得点が高いものから選ぶ） ---</span>
+order = <span class="fn">sorted</span>(<span class="fn">range</span>(n), key=<span class="kw">lambda</span> i: quests[i][<span class="num">2</span>] / quests[i][<span class="num">1</span>], reverse=<span class="kw">True</span>)
+used = <span class="num">0</span>
+greedy_score = <span class="num">0</span>
+greedy_names = []
+<span class="kw">for</span> i <span class="kw">in</span> order:
+    name, minutes, score = quests[i]
+    <span class="kw">if</span> used + minutes &lt;= limit:
+        used = used + minutes
+        greedy_score = greedy_score + score
+        greedy_names.append(name)
+
+<span class="fn">print</span>(<span class="str">&quot;方法1: 貪欲法（1分あたりの得点が高い順に、入るだけ入れる）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  選んだもの:&quot;</span>, <span class="str">&quot;、&quot;</span>.join(greedy_names))
+<span class="fn">print</span>(<span class="str">f&quot;  使った時間: {used}分 ／ 合計得点: {greedy_score}点&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- 方法2: 動的計画法（表を作って最適解を求める） ---</span>
+<span class="cmt"># best[i][t] = 「前から i 個まで見て、使える時間が t 分のときの最高得点」</span>
+best = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n + <span class="num">1</span>):
+    best.append([<span class="num">0</span>] * (limit + <span class="num">1</span>))
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n + <span class="num">1</span>):
+    name, minutes, score = quests[i - <span class="num">1</span>]
+    <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(limit + <span class="num">1</span>):
+        <span class="cmt"># i番目を選ばない場合</span>
+        best[i][t] = best[i - <span class="num">1</span>][t]
+        <span class="cmt"># i番目を選ぶ場合（時間が足りるときだけ）</span>
+        <span class="kw">if</span> t &gt;= minutes:
+            <span class="kw">if</span> best[i - <span class="num">1</span>][t - minutes] + score &gt; best[i][t]:
+                best[i][t] = best[i - <span class="num">1</span>][t - minutes] + score
+
+<span class="fn">print</span>(<span class="str">&quot;動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{t:&gt;4}&quot;</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(limit + <span class="num">1</span>)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n + <span class="num">1</span>):
+    label = <span class="str">&quot;なし&quot;</span> <span class="kw">if</span> i == <span class="num">0</span> <span class="kw">else</span> <span class="str">f&quot;{i}個目&quot;</span>
+    <span class="fn">print</span>(<span class="fn">pad</span>(label, <span class="num">6</span>) + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{best[i][t]:&gt;4}&quot;</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(limit + <span class="num">1</span>)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># どれを選んだかを逆にたどって調べる</span>
+chosen = []
+t = limit
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n, <span class="num">0</span>, -<span class="num">1</span>):
+    <span class="kw">if</span> best[i][t] != best[i - <span class="num">1</span>][t]:
+        name, minutes, score = quests[i - <span class="num">1</span>]
+        chosen.append(name)
+        t = t - minutes
+chosen.reverse()
+
+<span class="fn">print</span>(<span class="str">&quot;方法2: 動的計画法（すべての組み合わせを表で調べる）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  選んだもの:&quot;</span>, <span class="str">&quot;、&quot;</span>.join(chosen))
+<span class="fn">print</span>(<span class="str">f&quot;  合計得点: {best[n][limit]}点&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, best[n][limit] - greedy_score, <span class="str">&quot;点&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は「1分あたりの得点」だけを見るので、時間がぴったり収まる組み合わせを見のがす。&quot;</span>)</pre>
+
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a12_ex4_result.png" alt="AL2-12-ex4.py の実行結果。使える時間: 10分 / ---------------------------------------------- / できること              かかる分   得点   1分あたり / 村人を助ける                 6分     10点      1.67 / 宝箱をあける                 5分      8点      1.60 / 鉱石を掘る                   5分      8点      1.60 / 釣りをする                   9分     12点      1.33 / ---------------------------------------------- /  / 方法1: 貪欲法（1分あたりの得点が高い順に、入るだけ入れる） / 選んだもの: 村人を助ける / 使った時間: 6分 ／ 合計得点: 10点 /  / 動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間） / -------------------------------------------------------------- / 0   1   2   3   4   5   6   7   8   9  10 / なし     0   0   0   0   0   0   0   0   0   0   0 / 1個目    0   0   0   0   0   0  10  10  10  10  10 / 2個目    0   0   0   0   0   8  10  10  10  10  10 / 3個目    0   0   0   0   0   8  10  10  10  10  16 / 4個目    0   0   0   0   0   8  10  10  10  12  16 / -------------------------------------------------------------- /  / 方法2: 動的計画法（すべての組み合わせを表で調べる） / 選んだもの: 宝箱をあける、鉱石を掘る / 合計得点: 16点 /  / 差: 6 点 / 貪欲法は「1分あたりの得点」だけを見るので、時間がぴったり収まる組み合わせを見のがす。" width="560" height="628" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は「1分あたりの得点」がいちばん高い「村人を助ける」（6分10点）を選び、残り4分では何もできず、合計<strong>10点</strong>で終わりました。動的計画法は「宝箱をあける」（5分8点）と「鉱石を掘る」（5分8点）を選び、10分をぴったり使い切って<strong>16点</strong>を取っています。差は6点で、貪欲法は最適解の6割ほどしか取れていません。表の右下（4個目・10分）が16になっており、そこから逆にたどると何を選んだかが分かります。</p>
+    </div>
+  </div>
+</section>
+
+<section id="sec-standard">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#76B900">3</div>
+      <h2>標準課題</h2>
+    </div>
+    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
+    どちらも<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 1</span>
+        <h3>アイテムの位置を変えると答えはどう変わるか</h3>
+      </div>
+      <p>例題2と例題3のファイルを開き、アイテム <strong>B</strong> の位置を変えます。
+      いまの位置は迷路の右上のすみ (1, 7) ですが、ゴールのすぐ近くの (6, 7) に移します。</p>
+
+<pre><span class="code-label">Python ── AL2-12-ex2.py と AL2-12-ex3.py の両方で書き換える行</span>
+    <span class="str">"B"</span>: (<span class="num">6</span>, <span class="num">7</span>),   <span class="cmt"># ← (1, 7) を (6, 7) に変える</span></pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、貪欲法と全探索それぞれの合計歩数がどうなるかを予測してNotionに書く</li>
+          <li>2つのファイルの <code>items</code> を書き換えて保存し、両方を実行する</li>
+          <li>歩数の表・貪欲法の答え・全探索の答えを記録する</li>
+          <li>貪欲法が拾う順番が、書き換える前とどう変わったかを書く</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>方法</th><th>Bが(1,7)のとき</th><th>予測</th><th>実際</th></tr>
+        <tr><td>貪欲法</td><td>38歩（S→A→D→B→C→G）</td><td></td><td></td></tr>
+        <tr><td>全探索</td><td>22歩（S→C→A→D→B→G）</td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> Bをゴールの近くに移したことで、
+      貪欲法と最短ルートの差はどうなりましたか。差が変わった理由を説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 2つの方法についての予測と実際の表、拾う順番の変化、および差が変わった理由の説明。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">標準課題 2</span>
+        <h3>使える時間を変えると得点はどう変わるか</h3>
+      </div>
+      <p>例題4のファイル <code>AL2-12-ex4.py</code> を開き、使える時間 <code>limit</code> を変えて実行します。
+      <strong>11分</strong>と<strong>16分</strong>の2通りを試してください。</p>
+
+<pre><span class="code-label">Python ── 書き換える行</span>
+limit = <span class="num">11</span>          <span class="cmt"># ← 10 を 11 に。次は 16 にする</span></pre>
+
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li>実行する<strong>前に</strong>、11分と16分それぞれで貪欲法と動的計画法が何点になるかを予測してNotionに書く</li>
+          <li><code>limit</code> を 11 に書き換えて実行し、結果を記録する</li>
+          <li><code>limit</code> を 16 に書き換えて実行し、結果を記録する</li>
+          <li>予測と実際を比べる</li>
+        </ol>
+      </div>
+
+      <table>
+        <tr><th>使える時間</th><th>貪欲法の予測</th><th>貪欲法の実際</th><th>DPの予測</th><th>DPの実際</th></tr>
+        <tr><td>10分</td><td>—</td><td>10点</td><td>—</td><td>16点</td></tr>
+        <tr><td>11分</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>16分</td><td></td><td></td><td></td><td></td></tr>
+      </table>
+
+      <p style="margin-top:1rem"><strong>問い:</strong> 使える時間を増やすと、
+      貪欲法と動的計画法の差はどうなりましたか。
+      差が小さくなる時間と大きくなる時間があるとしたら、それはなぜかを説明してください。</p>
+
+    </div>
+      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 11分と16分それぞれの予測と実際の表、および「差が小さくなる／大きくなる時間」の考察。</span></div>
+  </div>
+</section>
+
+<section id="sec-notion">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#FFB800">4</div>
+      <h2>提出まとめ</h2>
+    </div>
+    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+      </div>
+      <p>第12回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
+      <ul class="point-list">
+        <li><strong>例題1</strong>: 2つの作戦の最悪・平均の回数、7回目の残り候補</li>
+        <li><strong>例題3</strong>: 貪欲法と全探索の答えと差、いちばん長いルート、Cを後回しにした理由</li>
+        <li><strong>標準課題1</strong>: 予測と実際の表、拾う順番の変化、差が変わった理由</li>
+        <li><strong>標準課題2</strong>: 11分・16分の予測と実際、差についての考察</li>
+      </ul>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
+        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      </div>
+      <div class="note-warn" style="margin-top:1rem">
+        <strong>次回の予告:</strong> 第13回からは、自分でテーマを決めた作品づくりに入ります。
+        第12回であつかった「アイテム集めパズル」や「ナップサック問題」は、そのまま作品の土台に使えます。
+        どんな作品を作りたいか、次回までに考えておいてください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANSWERS ============ -->
+<section style="background:#0A0A0A" id="answers-section" data-release="2026-12-23T14:40">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num" style="background:#616161">解</div>
+      <h2>解答例</h2>
+    </div>
+
+    <div id="answers-encrypted" data-cipher="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"></div>
+
+  </div>
+</section>
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── 第12回 数当てゲーム・パズルの再応用
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
