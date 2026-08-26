@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #111111; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+section + section { border-top: 1px solid #222; }
+.hero { background: linear-gradient(135deg, #111111, #1a2e0a, #0a1a0a); color: white; padding: clamp(3rem, 8vw, 6rem) 0; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(118,185,0,0.3), transparent 50%), radial-gradient(circle at 20% 80%, rgba(118,185,0,0.15), transparent 50%); }
+.hero .container { position: relative; z-index: 1; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 0.35rem 1.2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); opacity: 0.85; max-width: 600px; }
+.section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.section-num { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: white; flex-shrink: 0; }
+.section-header h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; line-height: 1.3; }
+.card { background: #1A1A1A; border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.3); border: 1px solid #2a2a2a; }
+.card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #222; }
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.card.example { border-left: 4px solid #76B900; }
+.tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.85rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle; }
+.tag-example { background: rgba(118,185,0,0.15); color: #76B900; }
+.tag-standard  { background: #1a2e0a; color: #93D500; }
+.tag-advanced  { background: #2e1a0a; color: #FFB800; }
+.tag-group     { background: #0a1a2e; color: #4FC3F7; }
+.card.standard  { border-left: 4px solid #76B900; }
+.card.advanced  { border-left: 4px solid #FFB800; }
+.notion-submit {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.notion-submit strong { color: #FFB800; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
+td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
+tr:nth-child(even) td { background: #111; }
+pre { background: #0A0A0A; color: #cdd6f4; border-radius: 12px; padding: clamp(0.8rem, 2vw, 1.4rem); overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+  font-variant-ligatures: none; font-size: clamp(0.75rem, 1.3vw, 0.88rem); line-height: 1.7; margin: 1rem 0; position: relative; }
+pre .kw { color: #76B900; }
+pre .fn { color: #93D500; }
+pre .str { color: #FFB800; }
+pre .cmt { color: #616161; font-style: italic; }
+pre .num { color: #fab387; }
+pre .op { color: #89dceb; }
+.code-label { position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.08); color: #888888; padding: 0.2rem 0.8rem; border-radius: 0 12px 0 8px; font-size: 0.7rem; font-weight: 500; }
+.concept-box { background: #1A1A1A; border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1rem 0; border: 1px solid #333; }
+.concept-box h4 { font-size: 0.95rem; font-weight: 700; color: #76B900; margin-bottom: 0.5rem; }
+.analogy { background: #1a1700; border-radius: 10px; padding: 1rem 1.2rem; margin: 0.75rem 0; border-left: 3px solid #FFB800; font-size: 0.95rem; }
+.analogy::before { content: '日常の例'; display: block; font-weight: 700; font-size: 0.8rem; color: #FFB800; margin-bottom: 0.3rem; }
+.point-list { list-style: none; padding: 0; }
+.point-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.4rem; font-size: 0.95rem; }
+.point-list li::before { content: '\25B8'; position: absolute; left: 0; color: #76B900; font-weight: 700; }
+.run-label { font-size: 0.8rem; font-weight: 700; color: #76B900; letter-spacing: 0.04em; margin-top: 1.1rem; margin-bottom: 0.35rem; }
+.run-capture { margin: 0 0 0.6rem; }
+.run-capture img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #2a2a2a; }
+.run-note { font-size: 0.85rem; color: #999999; line-height: 1.75; margin-bottom: 0.5rem; }
+.diagram-container { display: flex; justify-content: center; margin: 1.5rem 0; overflow-x: auto; }
+.diagram-container svg { max-width: 100%; height: auto; background: #1A1A1A; border-radius: 12px; padding: 1rem; border: 1px solid #444; }
+footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: center; font-size: 0.85rem; }
+@media (max-width: 640px) { .section-num { width: 36px; height: 36px; font-size: 0.95rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============ SECTION NAV ============ */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(17,17,17,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  padding: 0.2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.section-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.45rem;
+  font-weight: 500;
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.section-nav a:hover { color: #76B900; background: rgba(118,185,0,0.1); }
+.section-nav a.nav-assignment { color: #93D500; }
+.section-nav a.nav-advanced { color: #FFB800; }
+
+/* ============ SCROLL TARGET OFFSET ============ */
+[id] { scroll-margin-top: 3rem; }
+
+/* ============ COPY BUTTON ============ */
+pre { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #444;
+  color: #999;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover { background: #76B900; color: white; border-color: #76B900; }
+.copy-btn.copied { background: #76B900; color: white; border-color: #76B900; }
+
+
+.submission-box {
+  background: linear-gradient(135deg, #1A1A1A, #1a2e0a);
+  border: 2px solid #76B900;
+  border-radius: 16px;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  margin: 2rem 0;
+}
+.submission-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #76B900;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.submission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.sub-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sub-count {
+  background: #76B900;
+  color: white;
+  border-radius: 6px;
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* ============ AL2 ADDITIONS ============ */
+.setup-step { background: #1A1A1A; border: 1px solid #333; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+.setup-step .step-title { color: #e0e0e0; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+.setup-step ol, .setup-step ul { padding-left: 1.5rem; font-size: 0.9rem; line-height: 2; color: #ccc; }
+.tree { background: #0A0A0A; border: 1px solid #333; border-radius: 6px; padding: 0.6rem 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #888; line-height: 1.9; }
+.note-warn { background: #1a1000; border-left: 3px solid #FFB800; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0; font-size: 0.92rem; }
+.note-warn strong { color: #FFB800; }
+.ans-item { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.ans-item h4 { color: #76B900; font-size: 1rem; margin-bottom: 0.6rem; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.mini-card { background: #1A1A1A; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.2rem; }
+.mini-card h5 { color: #76B900; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+.mini-card p { font-size: 0.88rem; color: #ccc; }
+.recap { background: #141414; border: 1px dashed #444; border-radius: 12px; padding: 1rem 1.3rem; margin: 1rem 0; font-size: 0.92rem; color: #bbb; }
+.recap strong { color: #93D500; }
+.sub-item, a.sub-item { color: inherit; text-decoration: none; flex-wrap: wrap; }
+a.sub-item:hover { border-color: #4A7A00; }
+.tag { white-space: nowrap; }
+.code-label { right: 84px; border-radius: 0 0 8px 8px; }
+</style>
+</head>

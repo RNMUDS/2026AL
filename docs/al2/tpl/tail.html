@@ -1,0 +1,34 @@
+<footer>
+  <div class="container">
+    アルゴリズム論及び演習II ── {{FOOTER}}
+  </div>
+</footer>
+
+<script src="answer-gate.js"></script>
+
+<script>
+// Copy button for pre blocks
+document.querySelectorAll('pre').forEach(function(pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'コピー';
+  btn.addEventListener('click', function() {
+    var clone = pre.cloneNode(true);
+    clone.querySelectorAll(".copy-btn").forEach(function(b){b.remove();});
+    clone.querySelectorAll(".code-label").forEach(function(l){l.remove();});
+    var code = clone.textContent.trim().replace(/^(Python|JavaScript|HTML|Bash|JSON|Terminal|Directory Tree|Notion テンプレート)( ── [^\n]+)?\n/, '');
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
