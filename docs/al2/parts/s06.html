@@ -414,6 +414,7 @@ settled = <span class="fn">set</span>()
 
 
 <span class="kw">def</span> <span class="fn">build_route</span>(goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
     route = []
     node = goal
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
@@ -477,7 +478,9 @@ settled = <span class="fn">set</span>()
 <span class="kw">def</span> <span class="fn">dijkstra_linear</span>(graph, start):
     <span class="str">&quot;&quot;&quot;第5回のやり方: まだ決まっていない頂点を全部見て、いちばん小さいものをさがす&quot;&quot;&quot;</span>
     INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-    distance = {v: INF <span class="kw">for</span> v <span class="kw">in</span> graph}
+    distance = {}
+    <span class="kw">for</span> v <span class="kw">in</span> graph:
+        distance[v] = INF
     distance[start] = <span class="num">0</span>
     settled = <span class="fn">set</span>()
 
@@ -502,7 +505,9 @@ settled = <span class="fn">set</span>()
 <span class="kw">def</span> <span class="fn">dijkstra_heap</span>(graph, start):
     <span class="str">&quot;&quot;&quot;heapq のやり方: いちばん小さいものを取り出す作業を heapq に任せる&quot;&quot;&quot;</span>
     INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-    distance = {v: INF <span class="kw">for</span> v <span class="kw">in</span> graph}
+    distance = {}
+    <span class="kw">for</span> v <span class="kw">in</span> graph:
+        distance[v] = INF
     distance[start] = <span class="num">0</span>
     queue = [(<span class="num">0</span>, start)]
     settled = <span class="fn">set</span>()
@@ -521,7 +526,7 @@ settled = <span class="fn">set</span>()
 
 <span class="fn">print</span>(<span class="str">&quot;2つのやり方で、同じグラフの最短距離を求めて時間を測る&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>(<span class="str">&quot;マス目の大きさ    頂点の数    全部見る方法    heapqの方法    何倍速いか&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか&quot;</span>)
 
 <span class="kw">for</span> size <span class="kw">in</span> [<span class="num">20</span>, <span class="num">40</span>, <span class="num">80</span>, <span class="num">120</span>]:
     graph = <span class="fn">make_grid_graph</span>(size)
@@ -552,7 +557,7 @@ settled = <span class="fn">set</span>()
       <div class="diagram-container">
         <svg viewBox="0 0 700 402" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じ答えを出すのにかかる時間の比較</text>
-        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは、全部見る方法の時間を6.14秒＝いっぱいとしたときの割合</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは、全部見る方法にかかった時間の割合（数値は測ったときの一例）</text>
         <text x="24" y="86" fill="#E0E0E0" font-size="12" font-weight="700">20×20</text>
         <text x="24" y="104" fill="#888888" font-size="10">頂点400個</text>
         <text x="120" y="84" fill="#FFB800" font-size="10">全部見る</text>
@@ -595,9 +600,9 @@ settled = <span class="fn">set</span>()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / マス目の大きさ    頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        23.5倍 / 40×40           1600         0.068秒        0.001秒        83.4倍 / 80×80           6400         1.068秒        0.004秒       285.9倍 / 120×120         14400         5.901秒        0.009秒       644.4倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
+        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        21.8倍 / 40×40           1600         0.067秒        0.001秒        81.8倍 / 80×80           6400         1.053秒        0.004秒       300.2倍 / 120×120         14400         5.988秒        0.009秒       694.5倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
       </div>
-      <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>6.140秒</strong>、heapq を使う方法が<strong>0.009秒</strong>で、<strong>656倍</strong>の差が出ました。20マス四方のときは23倍だったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
+      <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
 
       <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の表から、4つの大きさそれぞれの「全部見る方法の時間」「heapqの方法の時間」「何倍速いか」を書き写す。あわせて、頂点の数が増えるほど差が広がる理由を説明する。</span></div>
     </div>

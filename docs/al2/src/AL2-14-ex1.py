@@ -76,13 +76,15 @@ print("=" * 58)
 for name, moves in tests:
     route, message = move_to_route_fixed(moves)
     if route is None:
-        print(f"入力: {name}（\"{moves}\"） → 受けつけない: {message}")
+        print(f"入力: {name}（\"{moves}\"）")
+        print(f"  → 受けつけない: {message}")
     else:
         total = 0
         for i in range(1, len(route)):
             r, c = route[i]
             total = total + cost_map[r][c]
-        print(f"入力: {name}（\"{moves}\"） → OK: {len(route)-1}歩 ／ {total}秒")
+        print(f"入力: {name}（\"{moves}\"）")
+        print(f"  → OK: {len(route)-1}歩 ／ {total}秒")
 print("=" * 58)
 print()
 print("修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。")

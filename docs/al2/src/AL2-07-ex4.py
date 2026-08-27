@@ -80,6 +80,7 @@ def solve(cost_map):
 
 
 def show(cost_map, name):
+    """地形の名前・最短ルート・地図をまとめて表示する"""
     route, best = solve(cost_map)
     print(f"{name}: {len(route)-1}歩 ／ 合計 {best}秒")
     for r in range(len(cost_map)):

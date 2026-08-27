@@ -85,6 +85,7 @@ print("バグのある関数の結果")
 print("=" * 62)
 result = greedy_buggy()
 print("  訪問した順番:", result)
+# set() は同じものを1つにまとめる。もとの数と減っていれば、同じ場所が2回入っている
 print("  同じ場所が2回入っていないか:", len(result) != len(set(result)))
 print()
 

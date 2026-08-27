@@ -288,6 +288,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">route_cost</span>(route):
+    <span class="str">&quot;&quot;&quot;通った順番 route の合計コストを返す（スタートのマスは数えない）&quot;&quot;&quot;</span>
     total = <span class="num">0</span>
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
         r, c = route[i]
@@ -331,6 +332,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">draw</span>(route, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
     <span class="fn">print</span>(title)
     <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
         line = <span class="str">&quot;&quot;</span>
@@ -400,18 +402,19 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
 <span class="cmt"># ここを書き換えれば、自分の配達先が作れる（8件までなら全探索が使える）</span>
 places = [
     (<span class="str">&quot;営業所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
-    (<span class="str">&quot;田中さん宅&quot;</span>, <span class="num">12</span>, <span class="num">3</span>),
-    (<span class="str">&quot;鈴木さん宅&quot;</span>, <span class="num">2</span>, <span class="num">11</span>),
-    (<span class="str">&quot;佐藤さん宅&quot;</span>, <span class="num">15</span>, <span class="num">12</span>),
-    (<span class="str">&quot;高橋さん宅&quot;</span>, <span class="num">8</span>, <span class="num">14</span>),
-    (<span class="str">&quot;伊藤さん宅&quot;</span>, <span class="num">19</span>, <span class="num">1</span>),
-    (<span class="str">&quot;渡辺さん宅&quot;</span>, <span class="num">1</span>, <span class="num">2</span>),
+    (<span class="str">&quot;田中宅&quot;</span>, <span class="num">12</span>, <span class="num">3</span>),
+    (<span class="str">&quot;鈴木宅&quot;</span>, <span class="num">2</span>, <span class="num">11</span>),
+    (<span class="str">&quot;佐藤宅&quot;</span>, <span class="num">15</span>, <span class="num">12</span>),
+    (<span class="str">&quot;高橋宅&quot;</span>, <span class="num">8</span>, <span class="num">14</span>),
+    (<span class="str">&quot;伊藤宅&quot;</span>, <span class="num">19</span>, <span class="num">1</span>),
+    (<span class="str">&quot;渡辺宅&quot;</span>, <span class="num">1</span>, <span class="num">2</span>),
 ]
 
 n = <span class="fn">len</span>(places)
 
 
 <span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
     length = <span class="num">0</span>
     <span class="kw">for</span> ch <span class="kw">in</span> text:
         <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
@@ -431,6 +434,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">route_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す&quot;&quot;&quot;</span>
     total = <span class="num">0.0</span>
     here = <span class="num">0</span>
     <span class="kw">for</span> city <span class="kw">in</span> order:
@@ -440,6 +444,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [<span class="num">0</span>]
     here = <span class="num">0</span>
     <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
@@ -455,6 +460,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best = <span class="kw">None</span>
     best_order = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
@@ -466,6 +472,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">show</span>(order, title):
+    <span class="str">&quot;&quot;&quot;ルートと合計距離を表示する&quot;&quot;&quot;</span>
     <span class="fn">print</span>(title)
     names = [places[<span class="num">0</span>][<span class="num">0</span>]]
     <span class="kw">for</span> city <span class="kw">in</span> order:
@@ -525,7 +532,7 @@ best_value = <span class="fn">route_length</span>(best_order)
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中さん宅    (x=12, y= 3) / 鈴木さん宅    (x= 2, y=11) / 佐藤さん宅    (x=15, y=12) / 高橋さん宅    (x= 8, y=14) / 伊藤さん宅    (x=19, y= 1) / 渡辺さん宅    (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺さん宅 → 鈴木さん宅 → 高橋さん宅 → 佐藤さん宅 → 田中さん宅 → 伊藤さん宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000128秒で作成） / 営業所 → 田中さん宅 → 伊藤さん宅 → 佐藤さん宅 → 高橋さん宅 → 鈴木さん宅 → 渡辺さん宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="685" height="1028" loading="lazy">
+        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000004秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000114秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。</p>
     </div>
@@ -573,6 +580,7 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
 
 
 <span class="kw">def</span> <span class="fn">steps_from</span>(origin):
+    <span class="str">&quot;&quot;&quot;origin から、通れるすべてのマスまでの歩数を求める（幅優先探索）&quot;&quot;&quot;</span>
     dist = {origin: <span class="num">0</span>}
     queue = <span class="fn">deque</span>([origin])
     <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
@@ -598,14 +606,16 @@ places = {<span class="str">&quot;S&quot;</span>: start, <span class="str">&quot
 table = {}
 <span class="kw">for</span> name, position <span class="kw">in</span> places.items():
     dist = <span class="fn">steps_from</span>(position)
-    <span class="kw">for</span> other, other_position <span class="kw">in</span> places.items():
-        <span class="kw">if</span> other_position <span class="kw">not</span> <span class="kw">in</span> dist:
+    table[name] = {}
+    <span class="kw">for</span> other <span class="kw">in</span> places:
+        <span class="kw">if</span> places[other] <span class="kw">not</span> <span class="kw">in</span> dist:
             <span class="fn">print</span>(<span class="str">f&quot;エラー: {name} から {other} へ行けません。迷路を作り直してください。&quot;</span>)
-            <span class="kw">raise</span> SystemExit
-    table[name] = {other: dist[places[other]] <span class="kw">for</span> other <span class="kw">in</span> places}
+            <span class="kw">raise</span> SystemExit          <span class="cmt"># ここでプログラムを終わりにする</span>
+        table[name][other] = dist[places[other]]
 
 
 <span class="kw">def</span> <span class="fn">route_steps</span>(order):
+    <span class="str">&quot;&quot;&quot;S から order の順にアイテムを拾い、G へ行くまでの合計歩数を返す&quot;&quot;&quot;</span>
     total = table[<span class="str">&quot;S&quot;</span>][order[<span class="num">0</span>]]
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(order) - <span class="num">1</span>):
         total = total + table[order[i]][order[i + <span class="num">1</span>]]
@@ -637,7 +647,10 @@ here = <span class="str">&quot;S&quot;</span>
 remaining = [<span class="str">&quot;A&quot;</span>, <span class="str">&quot;B&quot;</span>, <span class="str">&quot;C&quot;</span>, <span class="str">&quot;D&quot;</span>]
 greedy_order = []
 <span class="kw">while</span> <span class="fn">len</span>(remaining) &gt; <span class="num">0</span>:
-    nearest = <span class="fn">min</span>(remaining, key=<span class="kw">lambda</span> name: table[here][name])
+    nearest = <span class="kw">None</span>
+    <span class="kw">for</span> name <span class="kw">in</span> remaining:
+        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> table[here][name] &lt; table[here][nearest]:
+            nearest = name
     greedy_order.append(nearest)
     remaining.remove(nearest)
     here = nearest
@@ -689,17 +702,15 @@ best_steps = <span class="kw">None</span>
 <span class="cmt"># 自分の作品では True に変えると、キーボードから入力できるようになる。</span>
 USE_INPUT = <span class="kw">False</span>
 sample_answers = [<span class="str">&quot;3&quot;</span>, <span class="str">&quot;たなか&quot;</span>, <span class="str">&quot;DDRR&quot;</span>]
-answer_index = <span class="num">0</span>
 
 
 <span class="kw">def</span> <span class="fn">ask</span>(question, default):
-    <span class="str">&quot;&quot;&quot;質問を表示して答えを受け取る。USE_INPUT が False なら決められた答えを返す。&quot;&quot;&quot;</span>
-    <span class="kw">global</span> answer_index
+    <span class="str">&quot;&quot;&quot;質問を表示して答えを受け取る。
+    USE_INPUT が False のときは、sample_answers の先頭から順に使う。&quot;&quot;&quot;</span>
     <span class="kw">if</span> USE_INPUT:
         <span class="kw">return</span> <span class="fn">input</span>(question)
-    <span class="kw">if</span> answer_index &lt; <span class="fn">len</span>(sample_answers):
-        answer = sample_answers[answer_index]
-        answer_index = answer_index + <span class="num">1</span>
+    <span class="kw">if</span> <span class="fn">len</span>(sample_answers) &gt; <span class="num">0</span>:
+        answer = sample_answers.pop(<span class="num">0</span>)     <span class="cmt"># 先頭を1つ取り出す（リストからは消える）</span>
     <span class="kw">else</span>:
         answer = default
     <span class="fn">print</span>(question + answer + <span class="str">&quot;  ← 入力のかわりに用意した答え&quot;</span>)
@@ -803,9 +814,9 @@ elapsed = time.time() - began
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex4_result.png" alt="AL2-13-ex4.py の実行結果。==================================================== / 部品1: 入力を受け取る / ==================================================== / 難易度を選んでください（1〜3）: 3  ← 入力のかわりに用意した答え / 名前を入力してください: たなか  ← 入力のかわりに用意した答え / → 難易度 3 で、たなか さんとして始めます /  / ==================================================== / 部品2: 数字だけを受け取る / ==================================================== / 配達先の数を入力してください（3〜8）: DDRR  ← 入力のかわりに用意した答え / 数字を入力してください / → 配達先を 5 件にします /  / ==================================================== / 部品3: 時間を測る / ==================================================== / 1から100万までの合計: 499,999,500,000 / かかった時間: 0.0426秒 /  / ==================================================== / 部品4: スコアを表示する / ==================================================== / あなたの結果: 42 / 最適な結果  : 18 / スコア      : 42点 / [##########...............] / 評価: ★☆☆ もう一度考えてみよう /  / あなたの結果: 19 / 最適な結果  : 18 / スコア      : 94点 / [#######################..] / 評価: ★★☆ あと少し /  / ==================================================== / 4つの部品を組み合わせれば、遊べる作品になる / ====================================================" width="498" height="808" loading="lazy">
+        <img src="images/a13_ex4_result.png" alt="AL2-13-ex4.py の実行結果。==================================================== / 部品1: 入力を受け取る / ==================================================== / 難易度を選んでください（1〜3）: 3  ← 入力のかわりに用意した答え / 名前を入力してください: たなか  ← 入力のかわりに用意した答え / → 難易度 3 で、たなか さんとして始めます /  / ==================================================== / 部品2: 数字だけを受け取る / ==================================================== / 配達先の数を入力してください（3〜8）: DDRR  ← 入力のかわりに用意した答え / 数字を入力してください / → 配達先を 5 件にします /  / ==================================================== / 部品3: 時間を測る / ==================================================== / 1から100万までの合計: 499,999,500,000 / かかった時間: 0.0400秒 /  / ==================================================== / 部品4: スコアを表示する / ==================================================== / あなたの結果: 42 / 最適な結果  : 18 / スコア      : 42点 / [##########...............] / 評価: ★☆☆ もう一度考えてみよう /  / あなたの結果: 19 / 最適な結果  : 18 / スコア      : 94点 / [#######################..] / 評価: ★★☆ あと少し /  / ==================================================== / 4つの部品を組み合わせれば、遊べる作品になる / ====================================================" width="498" height="808" loading="lazy">
       </div>
-      <p class="run-note">4つの部品が順に動きました。部品2では、用意した答え「DDRR」が数字でないため<strong>「数字を入力してください」と表示され、はじかれて</strong>います。まちがった入力をそのまま受け取ると、あとでプログラムが止まる原因になります。部品3では100万回の足し算に0.04秒かかりました。部品4では、スコアに応じて <code>#</code> の棒グラフと星の評価が表示されています。文字だけでも、見せ方をくふうすれば作品らしくなります。</p>
+      <p class="run-note">4つの部品が順に動きました。部品2では、用意した答え「DDRR」が数字でないため<strong>「数字を入力してください」と表示され、はじかれて</strong>います。まちがった入力をそのまま受け取ると、あとでプログラムが止まる原因になります。部品3では100万回の足し算が0.05秒ほどで終わりました。部品4では、スコアに応じて <code>#</code> の棒グラフと星の評価が表示されています。文字だけでも、見せ方をくふうすれば作品らしくなります。</p>
     </div>
   </div>
 </section>

@@ -109,8 +109,11 @@ for name, function in [("全探索", brute_force), ("貪欲法", greedy), ("bitD
 
 print(f"{n}都市の巡回セールスマン問題を3つの方法で解く")
 print("-" * 60)
-print("方法          答え（合計距離）      かかった時間      最適か")
-best_value = min(v for _, v, _ in results)
+print("方法                 答え     かかった時間   最適か")
+best_value = None
+for name, value, elapsed in results:
+    if best_value is None or value < best_value:
+        best_value = value
 for name, value, elapsed in results:
     judge = "最適" if value == best_value else f"最適より{round(value - best_value, 1)}長い"
     print(pad(name, 8) + f"   {value:>14}   {elapsed:>12.6f}秒   {judge}")

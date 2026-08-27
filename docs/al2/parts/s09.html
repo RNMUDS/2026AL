@@ -364,7 +364,8 @@ distance = []
     <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), <span class="fn">round</span>(best_length, <span class="num">1</span>)
 
 
-<span class="kw">def</span> <span class="fn">show</span>(route):
+<span class="kw">def</span> <span class="fn">route_names</span>(route):
+    <span class="str">&quot;&quot;&quot;ルートを都市名でつないだ文字列にして返す&quot;&quot;&quot;</span>
     names = [cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
     names.append(cities[route[<span class="num">0</span>]][<span class="num">0</span>])
     <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
@@ -373,13 +374,13 @@ distance = []
 greedy_route, greedy_length = <span class="fn">greedy</span>(<span class="num">0</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(greedy_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, greedy_length)
 <span class="fn">print</span>()
 
 best_route, best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(best_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
 <span class="fn">print</span>()
 
@@ -429,6 +430,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -447,6 +449,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best_length = <span class="kw">None</span>
     best_order = <span class="kw">None</span>
     tried = <span class="num">0</span>
@@ -464,7 +467,8 @@ distance = []
     <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), best_length, tried
 
 
-<span class="kw">def</span> <span class="fn">show</span>(route):
+<span class="kw">def</span> <span class="fn">route_names</span>(route):
+    <span class="str">&quot;&quot;&quot;ルートを都市名でつないだ文字列にして返す&quot;&quot;&quot;</span>
     names = [cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
     names.append(cities[route[<span class="num">0</span>]][<span class="num">0</span>])
     <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
@@ -481,11 +485,11 @@ brute_time = time.time() - began
 <span class="fn">print</span>(<span class="str">&quot;8つの都市で、貪欲法と全探索を比べる&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(greedy_route))
 <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(greedy_length, 1)}   かかった時間: {greedy_time:.6f}秒&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;全探索&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(best_route))
 <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(best_length, 1)}   かかった時間: {brute_time:.6f}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;  試した順番の数: {tried:,}通り&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
@@ -501,7 +505,7 @@ ratio = greedy_length / best_length
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000006秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000792秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 138 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000802秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 153 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
 
@@ -555,6 +559,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -573,6 +578,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best_length = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
         total = <span class="num">0.0</span>
@@ -591,21 +597,26 @@ best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>(<span class="str">&quot;出発する都市を変えて、貪欲法の答えを比べる&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;（全探索で求めた本当の最短は {round(best_length, 1)}）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
-<span class="fn">print</span>(<span class="str">&quot;出発する都市        合計距離    最短との差    ルート&quot;</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;出発する都市&quot;</span>, <span class="num">16</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計距離&quot;</span>, <span class="num">10</span>) + <span class="str">&quot;最短との差&quot;</span>)
 
 results = []
 <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
     route, total = <span class="fn">greedy</span>(start)
     results.append((<span class="fn">round</span>(total, <span class="num">1</span>), start, route))
-    names = <span class="str">&quot; → &quot;</span>.join(cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route)
+
+    names = []
+    <span class="kw">for</span> i <span class="kw">in</span> route:
+        names.append(cities[i][<span class="num">0</span>])
+
     <span class="fn">print</span>(<span class="fn">pad</span>(cities[start][<span class="num">0</span>], <span class="num">16</span>)
-          + <span class="str">f&quot;{round(total, 1):&gt;8}&quot;</span>
-          + <span class="str">f&quot;{round(total - best_length, 1):&gt;12}    &quot;</span> + names)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{round(total, 1)}&quot;</span>, <span class="num">10</span>)
+          + <span class="str">f&quot;{round(total - best_length, 1):&gt;7}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot; → &quot;</span>.join(names))
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
 <span class="fn">print</span>()
 
-results.sort()
+results.sort()          <span class="cmt"># タプルの1つ目（合計距離）が小さい順に並べかえる</span>
 <span class="fn">print</span>(<span class="str">&quot;いちばん良かった出発点:&quot;</span>, cities[results[<span class="num">0</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[<span class="num">0</span>][<span class="num">0</span>])
 <span class="fn">print</span>(<span class="str">&quot;いちばん悪かった出発点:&quot;</span>, cities[results[-<span class="num">1</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[-<span class="num">1</span>][<span class="num">0</span>])
 <span class="fn">print</span>()
@@ -648,7 +659,7 @@ results.sort()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex3_result.png" alt="AL2-09-ex3.py の実行結果。出発する都市を変えて、貪欲法の答えを比べる / （全探索で求めた本当の最短は 46.8） / -------------------------------------------------------------------- / 出発する都市        合計距離    最短との差    ルート / 学校                53.2         6.4    学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 / 郵便局              54.2         7.3    郵便局 → 書店 → 公園 → カフェ → 病院 → 図書館 → 駅 → 学校 / 図書館              61.2        14.4    図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 駅 → 学校 / カフェ              57.6        10.8    カフェ → 公園 → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 公園                53.2         6.4    公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 駅                  54.2         7.3    駅 → 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 学校 / 病院                57.6        10.8    病院 → 図書館 → 駅 → 郵便局 → 書店 → 公園 → カフェ → 学校 / 書店                46.8         0.0    書店 → 郵便局 → 駅 → 図書館 → 病院 → カフェ → 公園 → 学校 / -------------------------------------------------------------------- /  / いちばん良かった出発点: 書店 → 46.8 / いちばん悪かった出発点: 図書館 → 61.2 /  / 書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。 / 出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。" width="744" height="428" loading="lazy">
+        <img src="images/a09_ex3_result.png" alt="AL2-09-ex3.py の実行結果。出発する都市を変えて、貪欲法の答えを比べる / （全探索で求めた本当の最短は 46.8） / -------------------------------------------------------------------- / 出発する都市    合計距離  最短との差 / 学校            53.2          6.4 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 / 郵便局          54.2          7.3 / 郵便局 → 書店 → 公園 → カフェ → 病院 → 図書館 → 駅 → 学校 / 図書館          61.2         14.4 / 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 駅 → 学校 / カフェ          57.6         10.8 / カフェ → 公園 → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 公園            53.2          6.4 / 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 駅              54.2          7.3 / 駅 → 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 学校 / 病院            57.6         10.8 / 病院 → 図書館 → 駅 → 郵便局 → 書店 → 公園 → カフェ → 学校 / 書店            46.8          0.0 / 書店 → 郵便局 → 駅 → 図書館 → 病院 → カフェ → 公園 → 学校 / -------------------------------------------------------------------- /  / いちばん良かった出発点: 書店 → 46.8 / いちばん悪かった出発点: 図書館 → 61.2 /  / 書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。 / 出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。" width="539" height="588" loading="lazy">
       </div>
       <p class="run-note">出発点によって、貪欲法の答えは<strong>46.8から61.2まで</strong>ばらつきました。いちばん悪いのは図書館から出発した場合の61.2で、最短より14.4も長くなっています。注目すべきは<strong>書店から出発した場合</strong>で、答えは46.8となり、全探索で求めた最短と完全に一致しました。貪欲法は運に左右されるということです。この性質を利用して、<strong>すべての出発点で試して、いちばん良かった答えを採用する</strong>というやり方もよく使われます。それでも全探索よりずっと速く終わります。</p>
     </div>
@@ -688,6 +699,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -709,6 +721,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best_length = <span class="kw">None</span>
     best_order = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
@@ -724,7 +737,8 @@ distance = []
     <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), best_length
 
 
-<span class="kw">def</span> <span class="fn">show</span>(route):
+<span class="kw">def</span> <span class="fn">route_names</span>(route):
+    <span class="str">&quot;&quot;&quot;ルートを都市名でつないだ文字列にして返す&quot;&quot;&quot;</span>
     names = [houses[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
     names.append(houses[route[<span class="num">0</span>]][<span class="num">0</span>])
     <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
@@ -757,13 +771,13 @@ greedy_route, greedy_length, steps = <span class="fn">greedy</span>(<span class=
     <span class="fn">print</span>(<span class="str">f&quot;  {a} → {b}  {d}&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(greedy_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">round</span>(greedy_length, <span class="num">1</span>))
 <span class="fn">print</span>()
 
 best_route, best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(best_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">round</span>(best_length, <span class="num">1</span>))
 <span class="fn">print</span>()
 
@@ -1008,7 +1022,7 @@ best_route, best_length = <span class="fn">brute_force</span>()
         例題2の8都市では、全探索が5,040通りを調べて0.00089秒かかったのに対し、
         貪欲法は0.000006秒で、およそ<strong>150倍</strong>速く終わりました。
         差は都市が増えるほど広がります。第8回で確かめたように、全探索は12都市で8.7秒、
-        15都市では24時間以上かかりますが、貪欲法は1000都市でも一瞬で終わります。
+        15都市では約5時間かかりますが、貪欲法は1000都市でも一瞬で終わります。
         調べる手数が (n-1)! 通りから n×n 程度に減るためです。</p>
 
         <p style="margin-top:0.8rem"><strong>見出し3: 貪欲法の短所</strong></p>

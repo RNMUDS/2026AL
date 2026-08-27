@@ -22,6 +22,7 @@ for i in range(n):
 
 
 def tour_length(order):
+    """0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す"""
     total = 0.0
     here = 0
     for city in order:
@@ -42,7 +43,12 @@ def choose_parent(population):
     a = random.choice(population)
     b = random.choice(population)
     c = random.choice(population)
-    return min([a, b, c], key=tour_length)
+    best = a
+    if tour_length(b) < tour_length(best):
+        best = b
+    if tour_length(c) < tour_length(best):
+        best = c
+    return best
 
 
 def crossover(parent1, parent2):
@@ -86,7 +92,10 @@ population = []
 for i in range(population_size):
     population.append(make_random_order())
 
-best_order = min(population, key=tour_length)
+best_order = population[0]
+for order in population:
+    if tour_length(order) < tour_length(best_order):
+        best_order = order
 best_length = tour_length(best_order)
 
 print("遺伝的アルゴリズムで20都市のルートを短くしていく")
@@ -122,5 +131,6 @@ print()
 print(f"  最後のルート: {round(best_length, 1)}")
 print("-" * 62)
 print()
-print("最初はばらばらのルートしかないが、良いものどうしを組み合わせるうちに短くなっていく。")
+print("最初はばらばらのルートしかないが、")
+print("良いものどうしを組み合わせるうちに短くなっていく。")
 print("集団の平均も、世代が進むにつれて下がっていく。")

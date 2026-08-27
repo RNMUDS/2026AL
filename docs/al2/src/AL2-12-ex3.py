@@ -27,6 +27,7 @@ goal = (rows - 1, cols - 1)
 
 
 def steps_from(origin):
+    """origin から、通れるすべてのマスまでの歩数を求める（幅優先探索）"""
     dist = {origin: 0}
     queue = deque([origin])
     while len(queue) > 0:

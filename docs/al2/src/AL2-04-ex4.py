@@ -10,6 +10,7 @@ def count_all_routes(size):
     result = {"count": 0, "best": None}
 
     def walk(r, c, total):
+        """ここから先の行き方を、同じ場所を2度通らないようにすべてたどる"""
         if (r, c) == goal:
             result["count"] = result["count"] + 1
             if result["best"] is None or total < result["best"]:
@@ -24,7 +25,7 @@ def count_all_routes(size):
                 continue
             visited.add((nr, nc))
             walk(nr, nc, total + 1)
-            visited.discard((nr, nc))
+            visited.discard((nr, nc))    # 調べ終わったら「通っていない」状態に戻す
 
     visited.add((0, 0))
     walk(0, 0, 0)
@@ -33,7 +34,7 @@ def count_all_routes(size):
 
 print("全探索で「すべての行き方」を数えたときの通り数と時間")
 print("-" * 56)
-print("迷路の大きさ         行き方の数        かかった時間")
+print("迷路の大きさ             行き方の数   かかった時間")
 
 for size in [3, 4, 5, 6]:
     started = time.time()

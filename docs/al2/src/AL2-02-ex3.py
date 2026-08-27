@@ -31,6 +31,7 @@ for r in range(rows):
 
 
 def neighbors(r, c):
+    """上・下・左・右のうち、迷路の中にあって壁ではないマスを返す"""
     result = []
     for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
         nr = r + dr
@@ -44,6 +45,7 @@ def neighbors(r, c):
 
 
 def search(mode):
+    """mode が "bfs" なら幅優先探索、"dfs" なら深さ優先探索で迷路を解く"""
     memo = deque([start])
     came_from = {start: None}
     checked = 0
@@ -70,6 +72,7 @@ def search(mode):
 
 
 def draw(path, title):
+    """通り道に * を付けて迷路を表示する"""
     picture = [list(line) for line in maze]
     for (r, c) in path:
         if picture[r][c] == ".":
@@ -85,7 +88,7 @@ dfs_path, dfs_checked = search("dfs")
 
 print("15マス×15マスの迷路（通れるマスは全部で", rows * cols - sum(line.count("#") for line in maze), "マス）")
 print("-" * 46)
-print("方法              歩数    調べたマス数")
+print("方法               歩数   調べたマス数")
 print("幅優先探索      ", f"{len(bfs_path)-1:>4}歩", f"{bfs_checked:>10}マス")
 print("深さ優先探索    ", f"{len(dfs_path)-1:>4}歩", f"{dfs_checked:>10}マス")
 print("-" * 46)

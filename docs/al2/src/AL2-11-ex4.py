@@ -3,6 +3,7 @@
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -34,7 +35,7 @@ def choose(kind, weighted, size, need_best):
         return "全探索", f"{size}都市なら順番の数が少なく、全部試しても一瞬で終わる"
     if size <= 20:
         return "bitDP", f"{size}都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる"
-    return "貪欲法", f"{size}都市では bitDP でも表が大きすぎる。最適解はあきらめて近似解を使うしかない"
+    return "貪欲法", f"{size}都市では bitDP でも表が大きすぎる。近似解を使うしかない"
 
 
 cases = [
@@ -52,8 +53,8 @@ print("条件から使うべきアルゴリズムを選ぶ")
 print("=" * 76)
 for description, kind, weighted, size, need_best in cases:
     name, reason = choose(kind, weighted, size, need_best)
-    print(pad(description, 52) + "→ " + name)
-    print(" " * 54 + reason)
+    print(pad(description, 48) + "→ " + name)
+    print("    理由: " + reason)
     print()
 print("=" * 76)
 print()

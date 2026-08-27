@@ -551,9 +551,9 @@ binary_counts = []
 
 <span class="fn">print</span>(<span class="str">&quot;1から100までの100個の数すべてを、2つの作戦で当ててみる&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>(<span class="str">&quot;作戦                 最悪の回数   平均の回数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;作戦                  最悪の回数    平均の回数&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;A: 1から順に聞く    {max(linear_counts):&gt;10}回 {sum(linear_counts)/len(linear_counts):&gt;11.2f}回&quot;</span>)
-<span class="fn">print</span>(<span class="str">f&quot;B: まん中を聞く      {max(binary_counts):&gt;10}回 {sum(binary_counts)/len(binary_counts):&gt;11.2f}回&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;B: まん中を聞く     {max(binary_counts):&gt;10}回 {sum(binary_counts)/len(binary_counts):&gt;11.2f}回&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>()
 
@@ -598,7 +598,7 @@ secret = <span class="num">73</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a12_ex1_result.png" alt="AL2-12-ex1.py の実行結果。1から100までの100個の数すべてを、2つの作戦で当ててみる / -------------------------------------------------------- / 作戦                 最悪の回数   平均の回数 / A: 1から順に聞く           100回       50.50回 / B: まん中を聞く               7回        5.80回 / -------------------------------------------------------- /  / 1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき） / -------------------------------------------------------- / 質問  作戦A: 1から順に聞く      作戦B: まん中を聞く / 1回目   100個 →   99個             100個 →   50個 / 2回目    99個 →   98個              50個 →   24個 / 3回目    98個 →   97個              24個 →   12個 / 4回目    97個 →   96個              12個 →    6個 / 5回目    96個 →   95個               6個 →    3個 / 6回目    95個 →   94個               3個 →    1個 / 7回目    94個 →   93個               1個 →    1個 / -------------------------------------------------------- /  / 作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。 / 「1回の質問でいちばん多く候補を減らす」選び方が、まん中を聞く作戦になっている。" width="523" height="468" loading="lazy">
+        <img src="images/a12_ex1_result.png" alt="AL2-12-ex1.py の実行結果。1から100までの100個の数すべてを、2つの作戦で当ててみる / -------------------------------------------------------- / 作戦                  最悪の回数    平均の回数 / A: 1から順に聞く           100回       50.50回 / B: まん中を聞く              7回        5.80回 / -------------------------------------------------------- /  / 1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき） / -------------------------------------------------------- / 質問  作戦A: 1から順に聞く      作戦B: まん中を聞く / 1回目   100個 →   99個             100個 →   50個 / 2回目    99個 →   98個              50個 →   24個 / 3回目    98個 →   97個              24個 →   12個 / 4回目    97個 →   96個              12個 →    6個 / 5回目    96個 →   95個               6個 →    3個 / 6回目    95個 →   94個               3個 →    1個 / 7回目    94個 →   93個               1個 →    1個 / -------------------------------------------------------- /  / 作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。 / 「1回の質問でいちばん多く候補を減らす」選び方が、まん中を聞く作戦になっている。" width="523" height="468" loading="lazy">
       </div>
       <p class="run-note">1から順に聞く作戦は、最悪で<strong>100回</strong>、平均で<strong>50.50回</strong>かかります。まん中を聞く作戦は、最悪でも<strong>7回</strong>、平均<strong>5.80回</strong>で終わります。下の表を見ると、1から順に聞く作戦は候補が 100個 → 99個 → 98個 と1個ずつしか減らないのに対し、まん中を聞く作戦は 100個 → 50個 → 24個 → 12個 と半分ずつ減っています。「1回の質問でいちばん多く候補を減らす」という貪欲な選び方が、そのままいちばん良い作戦になっています。</p>
 
@@ -767,6 +767,7 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
 
 
 <span class="kw">def</span> <span class="fn">steps_from</span>(origin):
+    <span class="str">&quot;&quot;&quot;origin から、通れるすべてのマスまでの歩数を求める（幅優先探索）&quot;&quot;&quot;</span>
     dist = {origin: <span class="num">0</span>}
     queue = <span class="fn">deque</span>([origin])
     <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
@@ -871,6 +872,7 @@ n = <span class="fn">len</span>(quests)
 
 
 <span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
     length = <span class="num">0</span>
     <span class="kw">for</span> ch <span class="kw">in</span> text:
         <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
@@ -882,13 +884,16 @@ n = <span class="fn">len</span>(quests)
 
 <span class="fn">print</span>(<span class="str">f&quot;使える時間: {limit}分&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>(<span class="str">&quot;できること              かかる分   得点   1分あたり&quot;</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;できること&quot;</span>, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">&quot;かかる分&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="str">&quot;得点&quot;</span>, <span class="num">8</span>) + <span class="str">&quot; 1分あたり&quot;</span>)
 <span class="kw">for</span> name, minutes, score <span class="kw">in</span> quests:
-    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">24</span>) + <span class="str">f&quot;{minutes:&gt;6}分{score:&gt;7}点{score/minutes:&gt;10.2f}&quot;</span>)
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{minutes}分&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{score}点&quot;</span>, <span class="num">8</span>)
+          + <span class="str">f&quot;{score / minutes:&gt;10.2f}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 <span class="fn">print</span>()
 
 <span class="cmt"># --- 方法1: 貪欲法（1分あたりの得点が高いものから選ぶ） ---</span>
+<span class="cmt"># 「1分あたりの得点」を計算して、大きい順に番号を並べる</span>
+<span class="cmt"># key= には「並べかえの基準にする値を返す関数」を渡す。reverse=True で大きい順になる</span>
 order = <span class="fn">sorted</span>(<span class="fn">range</span>(n), key=<span class="kw">lambda</span> i: quests[i][<span class="num">2</span>] / quests[i][<span class="num">1</span>], reverse=<span class="kw">True</span>)
 used = <span class="num">0</span>
 greedy_score = <span class="num">0</span>
@@ -945,11 +950,12 @@ chosen.reverse()
 <span class="fn">print</span>(<span class="str">f&quot;  合計得点: {best[n][limit]}点&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, best[n][limit] - greedy_score, <span class="str">&quot;点&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;貪欲法は「1分あたりの得点」だけを見るので、時間がぴったり収まる組み合わせを見のがす。&quot;</span>)</pre>
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は「1分あたりの得点」だけを見るので、&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;時間がぴったり収まる組み合わせを見のがしてしまう。&quot;</span>)</pre>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a12_ex4_result.png" alt="AL2-12-ex4.py の実行結果。使える時間: 10分 / ---------------------------------------------- / できること              かかる分   得点   1分あたり / 村人を助ける                 6分     10点      1.67 / 宝箱をあける                 5分      8点      1.60 / 鉱石を掘る                   5分      8点      1.60 / 釣りをする                   9分     12点      1.33 / ---------------------------------------------- /  / 方法1: 貪欲法（1分あたりの得点が高い順に、入るだけ入れる） / 選んだもの: 村人を助ける / 使った時間: 6分 ／ 合計得点: 10点 /  / 動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間） / -------------------------------------------------------------- / 0   1   2   3   4   5   6   7   8   9  10 / なし     0   0   0   0   0   0   0   0   0   0   0 / 1個目    0   0   0   0   0   0  10  10  10  10  10 / 2個目    0   0   0   0   0   8  10  10  10  10  10 / 3個目    0   0   0   0   0   8  10  10  10  10  16 / 4個目    0   0   0   0   0   8  10  10  10  12  16 / -------------------------------------------------------------- /  / 方法2: 動的計画法（すべての組み合わせを表で調べる） / 選んだもの: 宝箱をあける、鉱石を掘る / 合計得点: 16点 /  / 差: 6 点 / 貪欲法は「1分あたりの得点」だけを見るので、時間がぴったり収まる組み合わせを見のがす。" width="560" height="628" loading="lazy">
+        <img src="images/a12_ex4_result.png" alt="AL2-12-ex4.py の実行結果。使える時間: 10分 / ---------------------------------------------- / できること              かかる分  得点     1分あたり / 村人を助ける            6分       10点          1.67 / 宝箱をあける            5分       8点           1.60 / 鉱石を掘る              5分       8点           1.60 / 釣りをする              9分       12点          1.33 / ---------------------------------------------- /  / 方法1: 貪欲法（1分あたりの得点が高い順に、入るだけ入れる） / 選んだもの: 村人を助ける / 使った時間: 6分 ／ 合計得点: 10点 /  / 動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間） / -------------------------------------------------------------- / 0   1   2   3   4   5   6   7   8   9  10 / なし     0   0   0   0   0   0   0   0   0   0   0 / 1個目    0   0   0   0   0   0  10  10  10  10  10 / 2個目    0   0   0   0   0   8  10  10  10  10  10 / 3個目    0   0   0   0   0   8  10  10  10  10  16 / 4個目    0   0   0   0   0   8  10  10  10  12  16 / -------------------------------------------------------------- /  / 方法2: 動的計画法（すべての組み合わせを表で調べる） / 選んだもの: 宝箱をあける、鉱石を掘る / 合計得点: 16点 /  / 差: 6 点 / 貪欲法は「1分あたりの得点」だけを見るので、 / 時間がぴったり収まる組み合わせを見のがしてしまう。" width="494" height="648" loading="lazy">
       </div>
       <p class="run-note">貪欲法は「1分あたりの得点」がいちばん高い「村人を助ける」（6分10点）を選び、残り4分では何もできず、合計<strong>10点</strong>で終わりました。動的計画法は「宝箱をあける」（5分8点）と「鉱石を掘る」（5分8点）を選び、10分をぴったり使い切って<strong>16点</strong>を取っています。差は6点で、貪欲法は最適解の6割ほどしか取れていません。表の右下（4個目・10分）が16になっており、そこから逆にたどると何を選んだかが分かります。</p>
     </div>

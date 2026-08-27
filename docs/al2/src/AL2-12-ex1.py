@@ -39,9 +39,9 @@ for secret in range(low, high + 1):
 
 print("1から100までの100個の数すべてを、2つの作戦で当ててみる")
 print("-" * 56)
-print("作戦                 最悪の回数   平均の回数")
+print("作戦                  最悪の回数    平均の回数")
 print(f"A: 1から順に聞く    {max(linear_counts):>10}回 {sum(linear_counts)/len(linear_counts):>11.2f}回")
-print(f"B: まん中を聞く      {max(binary_counts):>10}回 {sum(binary_counts)/len(binary_counts):>11.2f}回")
+print(f"B: まん中を聞く     {max(binary_counts):>10}回 {sum(binary_counts)/len(binary_counts):>11.2f}回")
 print("-" * 56)
 print()
 

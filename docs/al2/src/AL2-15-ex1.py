@@ -9,6 +9,7 @@ INF = float("inf")
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -34,6 +35,7 @@ goal = "東京"
 
 
 def build(came_from, goal):
+    """ゴールからスタートへ逆にたどって道順を組み立てる"""
     route = []
     node = goal
     while node is not None:
@@ -44,6 +46,7 @@ def build(came_from, goal):
 
 
 def route_minutes(route):
+    """駅を順に通ったときの合計時間を返す"""
     total = 0
     for i in range(len(route) - 1):
         for name, minutes in railway[route[i]]:
@@ -54,6 +57,7 @@ def route_minutes(route):
 
 
 def bfs():
+    """幅優先探索: 乗る路線の本数がいちばん少ない道をさがす"""
     came_from = {start: None}
     queue = deque([start])
     while len(queue) > 0:
@@ -69,6 +73,7 @@ def bfs():
 
 
 def dfs():
+    """深さ優先探索: 行けるところまで進む道をさがす"""
     came_from = {start: None}
     stack = [start]
     while len(stack) > 0:
@@ -84,8 +89,12 @@ def dfs():
 
 
 def dijkstra():
-    distance = {s: INF for s in railway}
-    came_from = {s: None for s in railway}
+    """ダイクストラ法: 合計時間がいちばん短い道をさがす"""
+    distance = {}
+    came_from = {}
+    for station in railway:
+        distance[station] = INF
+        came_from[station] = None
     distance[start] = 0
     queue = [(0, start)]
     settled = set()
@@ -134,6 +143,7 @@ for i in range(n):
 
 
 def brute_force():
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     best = None
     for order in permutations(range(1, n)):
         total = 0.0
@@ -148,6 +158,7 @@ def brute_force():
 
 
 def greedy():
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
     visited = [0]
     here = 0
     total = 0.0
@@ -165,8 +176,11 @@ def greedy():
 
 
 def bit_dp():
+    """動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める"""
     full = (1 << n) - 1
-    best = [[INF] * n for _ in range(1 << n)]
+    best = []
+    for visited in range(1 << n):
+        best.append([INF] * n)
     best[1][0] = 0.0
     for visited in range(1 << n):
         row = best[visited]

@@ -56,6 +56,7 @@ def all_routes(here, visited):
 
 
 def route_price(route):
+    """route の順に進んだときの合計金額を返す"""
     total = 0
     for i in range(len(route) - 1):
         for name, price in shops[route[i]]:
@@ -70,7 +71,10 @@ for shop in shops:
     if len(shops[shop]) == 0:
         print(f"  {shop}: つながる先なし")
     else:
-        print(f"  {shop}: " + "、".join(f"{n}({p}円)" for n, p in shops[shop]))
+        parts = []
+        for name, price in shops[shop]:
+            parts.append(f"{name}({price}円)")
+        print(f"  {shop}: " + "、".join(parts))
 print("-" * 60)
 print()
 

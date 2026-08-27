@@ -39,6 +39,7 @@ def route_cost(route):
 
 
 def build_route(came_from, goal):
+    """ゴールからスタートへ逆にたどって道順を組み立てる"""
     route = []
     node = goal
     while node is not None:
@@ -89,6 +90,7 @@ dij_route = build_route(came_from_dij, goal)
 
 
 def draw(route, title):
+    """通り道に * を付けて迷路を表示する"""
     print(title)
     for r in range(rows):
         line = ""

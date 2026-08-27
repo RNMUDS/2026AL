@@ -399,10 +399,11 @@ lines = [
 n = <span class="fn">len</span>(stations)
 
 <span class="cmt"># 全部のマスを0にした表を作る</span>
-matrix = [[<span class="num">0</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n)]
+matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n)]
 
 <span class="cmt"># 路線があるマスだけ1にする（行き帰りの両方を1にする）</span>
 <span class="kw">for</span> a, b <span class="kw">in</span> lines:
+    <span class="cmt"># index() は「リストの中で何番目にあるか」を返す。stations.index(&quot;渋谷&quot;) なら 1</span>
     i = stations.index(a)
     j = stations.index(b)
     matrix[i][j] = <span class="num">1</span>
@@ -446,7 +447,7 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
 
 <span class="fn">print</span>(<span class="str">&quot;駅の数を増やしたときの比較（1駅あたり3路線とした場合）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)
-<span class="fn">print</span>(<span class="str">&quot;    駅の数     隣接行列のマス数     隣接リストのマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;    駅の数   隣接行列のマス数   隣接リストのマス数&quot;</span>)
 <span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
     <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
@@ -489,7 +490,7 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数     隣接行列のマス数     隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
+        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
       </div>
       <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
 
@@ -712,7 +713,8 @@ node = goal
 route.reverse()
 
 <span class="fn">print</span>(<span class="str">&quot;スタートからゴールまでの歩数:&quot;</span>, steps[goal], <span class="str">&quot;歩&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;通る順番:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))
+<span class="fn">print</span>(<span class="str">&quot;通る順番:&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot; → &quot;</span>.join(route))
 <span class="fn">print</span>()
 
 picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
@@ -830,7 +832,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a03_ex4_result.png" alt="AL2-03-ex4.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.#.. / ..#.. / ....# / #.#.. / ...#G /  / 迷路を隣接リストに変換した結果（最初の6個だけ表示） / -------------------------------------------- / (0,0): (1,0)、(0,1) / (0,1): (1,1)、(0,0) / (0,3): (1,3)、(0,4) / (0,4): (1,4)、(0,3) / (1,0): (0,0)、(2,0)、(1,1) / (1,1): (0,1)、(2,1)、(1,0) / ... / -------------------------------------------- / 頂点（通れるマス）の数: 19 /  / スタートからゴールまでの歩数: 8 歩 / 通る順番: (0,0) → (1,0) → (2,0) → (2,1) → (2,2) → (2,3) → (3,3) → (3,4) → (4,4) /  / 最短経路（* が通り道） / S.#.. / *.#.. / ****# / #.#** / ...#G" width="651" height="608" loading="lazy">
+        <img src="images/a03_ex4_result.png" alt="AL2-03-ex4.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.#.. / ..#.. / ....# / #.#.. / ...#G /  / 迷路を隣接リストに変換した結果（最初の6個だけ表示） / -------------------------------------------- / (0,0): (1,0)、(0,1) / (0,1): (1,1)、(0,0) / (0,3): (1,3)、(0,4) / (0,4): (1,4)、(0,3) / (1,0): (0,0)、(2,0)、(1,1) / (1,1): (0,1)、(2,1)、(1,0) / ... / -------------------------------------------- / 頂点（通れるマス）の数: 19 /  / スタートからゴールまでの歩数: 8 歩 / 通る順番: / (0,0) → (1,0) → (2,0) → (2,1) → (2,2) → (2,3) → (3,3) → (3,4) → (4,4) /  / 最短経路（* が通り道） / S.#.. / *.#.. / ****# / #.#** / ...#G" width="601" height="628" loading="lazy">
       </div>
       <p class="run-note">5マス×5マスの迷路のうち、壁ではないマスは<strong>19個</strong>ありました。19個の頂点と、となり合うマスどうしの辺からなるグラフに書き直せています。書き直したあとは、例題3の路線図とまったく同じコードで最短経路（8歩）が求まりました。見た目がまったく違う迷路と路線図が、グラフという同じ形に書き直すことで、同じプログラムで解けるようになります。</p>
 

@@ -4,6 +4,7 @@ from itertools import permutations
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -14,6 +15,7 @@ def pad(text, width):
 
 
 def make_distance(count):
+    """都市どうしの直線距離を表にして返す"""
     cities = []
     for i in range(count):
         cities.append(((i * 7) % 23, (i * 11) % 19))
@@ -28,6 +30,7 @@ def make_distance(count):
 
 
 def brute_force(distance):
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     n = len(distance)
     best = None
     for order in permutations(range(1, n)):
@@ -43,6 +46,7 @@ def brute_force(distance):
 
 
 def greedy(distance):
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
     n = len(distance)
     visited = [0]
     here = 0
@@ -92,7 +96,10 @@ def bar(value, biggest, width):
 
 print("図1: 貪欲法が最適解より何%長いか")
 print("-" * 56)
-biggest = max(gap for _, _, _, gap in results)
+biggest = 0
+for count, best, fast, gap in results:
+    if gap > biggest:
+        biggest = gap
 if biggest == 0:
     biggest = 1
 for count, best, fast, gap in results:
@@ -102,7 +109,12 @@ print()
 
 print("図2: 最適解と貪欲法の答えを並べて比べる")
 print("-" * 56)
-biggest = max(max(best, fast) for _, best, fast, _ in results)
+biggest = 0
+for count, best, fast, gap in results:
+    if best > biggest:
+        biggest = best
+    if fast > biggest:
+        biggest = fast
 for count, best, fast, gap in results:
     print(pad(f"{count}都市", 10) + "最適 " + pad(bar(best, biggest, 30), 32) + str(best))
     print(pad("", 10) + "貪欲 " + pad(bar(fast, biggest, 30), 32) + str(fast))

@@ -44,6 +44,7 @@ def move_to_route(moves):
 
 
 def route_cost(route):
+    """通った順番 route の合計コストを返す（スタートのマスは数えない）"""
     total = 0
     for i in range(1, len(route)):
         r, c = route[i]
@@ -87,6 +88,7 @@ def solve():
 
 
 def draw(route, title):
+    """通り道に * を付けて迷路を表示する"""
     print(title)
     for r in range(rows):
         line = ""

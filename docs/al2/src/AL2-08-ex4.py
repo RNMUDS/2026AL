@@ -26,6 +26,7 @@ def pad(text, width):
 
 
 def make_distance(cities):
+    """都市どうしの直線距離を表にして返す"""
     n = len(cities)
     table = []
     for i in range(n):
@@ -80,6 +81,7 @@ def draw_map(cities, order):
 
 
 def show(count):
+    """先頭から count 個の都市で最短ルートを求め、区間ごとに表示する"""
     cities = all_cities[:count]
     order, length = best_tour(cities)
     distance = make_distance(cities)

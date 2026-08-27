@@ -44,6 +44,7 @@ def brute_force(start):
     best = {start: 0}
 
     def walk(here, total, visited):
+        """ここから先の行き方を、同じ場所を2度通らないようにすべてたどる"""
         for name, minutes in railway[here]:
             if name in visited:
                 continue

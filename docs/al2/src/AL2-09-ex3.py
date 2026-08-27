@@ -36,6 +36,7 @@ def pad(text, width):
 
 
 def greedy(start):
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
     visited = [start]
     total = 0.0
     here = start
@@ -54,6 +55,7 @@ def greedy(start):
 
 
 def brute_force():
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     best_length = None
     for order in permutations(range(1, n)):
         total = 0.0
@@ -72,21 +74,26 @@ best_length = brute_force()
 print("出発する都市を変えて、貪欲法の答えを比べる")
 print(f"（全探索で求めた本当の最短は {round(best_length, 1)}）")
 print("-" * 68)
-print("出発する都市        合計距離    最短との差    ルート")
+print(pad("出発する都市", 16) + pad("合計距離", 10) + "最短との差")
 
 results = []
 for start in range(n):
     route, total = greedy(start)
     results.append((round(total, 1), start, route))
-    names = " → ".join(cities[i][0] for i in route)
+
+    names = []
+    for i in route:
+        names.append(cities[i][0])
+
     print(pad(cities[start][0], 16)
-          + f"{round(total, 1):>8}"
-          + f"{round(total - best_length, 1):>12}    " + names)
+          + pad(f"{round(total, 1)}", 10)
+          + f"{round(total - best_length, 1):>7}")
+    print("      " + " → ".join(names))
 
 print("-" * 68)
 print()
 
-results.sort()
+results.sort()          # タプルの1つ目（合計距離）が小さい順に並べかえる
 print("いちばん良かった出発点:", cities[results[0][1]][0], "→", results[0][0])
 print("いちばん悪かった出発点:", cities[results[-1][1]][0], "→", results[-1][0])
 print()

@@ -78,7 +78,8 @@ while node is not None:
 route.reverse()
 
 print("スタートからゴールまでの歩数:", steps[goal], "歩")
-print("通る順番:", " → ".join(route))
+print("通る順番:")
+print("  " + " → ".join(route))
 print()
 
 picture = [list(line) for line in maze]

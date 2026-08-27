@@ -15,6 +15,7 @@ def make_cities(count):
 
 
 def make_distance(cities):
+    """都市どうしの直線距離を表にして返す"""
     n = len(cities)
     table = []
     for i in range(n):
@@ -27,6 +28,7 @@ def make_distance(cities):
 
 
 def brute_force(distance):
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     n = len(distance)
     best = None
     for order in permutations(range(1, n)):
@@ -42,6 +44,7 @@ def brute_force(distance):
 
 
 def greedy(distance):
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
     n = len(distance)
     visited = [0]
     total = 0.0
@@ -60,6 +63,7 @@ def greedy(distance):
 
 
 def bit_dp(distance):
+    """動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める"""
     n = len(distance)
     full = (1 << n) - 1
     best = []

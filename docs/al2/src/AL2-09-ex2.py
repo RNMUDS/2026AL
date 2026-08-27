@@ -26,6 +26,7 @@ for i in range(n):
 
 
 def greedy(start):
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
     visited = [start]
     total = 0.0
     here = start
@@ -44,6 +45,7 @@ def greedy(start):
 
 
 def brute_force():
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     best_length = None
     best_order = None
     tried = 0
@@ -61,7 +63,8 @@ def brute_force():
     return [0] + list(best_order), best_length, tried
 
 
-def show(route):
+def route_names(route):
+    """ルートを都市名でつないだ文字列にして返す"""
     names = [cities[i][0] for i in route]
     names.append(cities[route[0]][0])
     return " → ".join(names)
@@ -78,11 +81,11 @@ brute_time = time.time() - began
 print("8つの都市で、貪欲法と全探索を比べる")
 print("-" * 62)
 print("貪欲法")
-print(" ", show(greedy_route))
+print(" ", route_names(greedy_route))
 print(f"  合計距離: {round(greedy_length, 1)}   かかった時間: {greedy_time:.6f}秒")
 print()
 print("全探索")
-print(" ", show(best_route))
+print(" ", route_names(best_route))
 print(f"  合計距離: {round(best_length, 1)}   かかった時間: {brute_time:.6f}秒")
 print(f"  試した順番の数: {tried:,}通り")
 print("-" * 62)

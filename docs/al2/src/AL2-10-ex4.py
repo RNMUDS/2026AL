@@ -4,6 +4,7 @@ import time
 
 # 都市の位置は計算で決めるので、何度実行しても同じ配置になる
 def make_cities(count):
+    """都市の位置を計算で決める（何度実行しても同じ配置になる）"""
     cities = []
     for i in range(count):
         x = (i * 7) % 23
@@ -55,9 +56,17 @@ def bit_dp(cities):
     return answer, (1 << n) * n
 
 
+def big_number(value):
+    """大きすぎる数を「約1.2京」のように読みやすくする"""
+    for size, unit in [(10 ** 16, "京"), (10 ** 12, "兆"), (10 ** 8, "億"), (10 ** 4, "万")]:
+        if value >= size:
+            return f"約{value / size:.1f}{unit}通り"
+    return f"{value:,}通り"
+
+
 print("動的計画法（bitDP）で都市を増やしたときの表の大きさと時間")
 print("-" * 66)
-print("都市の数     表のマスの数       最短距離     かかった時間     全探索なら")
+print("  都市の数   表のマスの数     最短距離   かかった時間             全探索なら")
 
 for count in [10, 12, 14, 16, 18, 20]:
     cities = make_cities(count)
@@ -70,7 +79,7 @@ for count in [10, 12, 14, 16, 18, 20]:
         brute_orders = brute_orders * k
 
     print(f"{count:>6}都市   {cells:>12,}   {round(answer, 1):>10}   {elapsed:>10.3f}秒"
-          f"   {brute_orders:>16,}通り")
+          f"   {big_number(brute_orders):>16}")
 
 print("-" * 66)
 print()

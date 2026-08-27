@@ -41,7 +41,7 @@ def search(size, mode):
 
 print("壁のない広場（左上から右下まで）")
 print("-" * 62)
-print("広さ        幅優先の歩数  幅優先の調査数   深さ優先の歩数  深さ優先の調査数")
+print("広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数")
 for size in [10, 20, 40]:
     bfs_path, bfs_checked = search(size, "bfs")
     dfs_path, dfs_checked = search(size, "dfs")
@@ -53,7 +53,7 @@ print()
 # 10×10 の広場で、それぞれの経路を絵にして比べる
 for mode, title in [("bfs", "幅優先探索の経路（最短）"), ("dfs", "深さ優先探索の経路（遠回り）")]:
     path, checked = search(10, mode)
-    picture = [["." for _ in range(10)] for _ in range(10)]
+    picture = [["." for c in range(10)] for r in range(10)]
     for (r, c) in path:
         picture[r][c] = "*"
     picture[0][0] = "S"

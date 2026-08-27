@@ -67,7 +67,8 @@ def brute_force():
     return [0] + list(best_order), round(best_length, 1)
 
 
-def show(route):
+def route_names(route):
+    """ルートを都市名でつないだ文字列にして返す"""
     names = [cities[i][0] for i in route]
     names.append(cities[route[0]][0])
     return " → ".join(names)
@@ -76,13 +77,13 @@ def show(route):
 greedy_route, greedy_length = greedy(0)
 print()
 print("貪欲法の答え")
-print(" ", show(greedy_route))
+print(" ", route_names(greedy_route))
 print("  合計距離:", greedy_length)
 print()
 
 best_route, best_length = brute_force()
 print("全探索の答え（本当の最短）")
-print(" ", show(best_route))
+print(" ", route_names(best_route))
 print("  合計距離:", best_length)
 print()
 

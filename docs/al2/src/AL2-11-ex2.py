@@ -21,6 +21,7 @@ for i in range(n):
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -31,6 +32,7 @@ def pad(text, width):
 
 
 def brute_force():
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     best = None
     for order in permutations(range(1, n)):
         total = 0.0
@@ -45,6 +47,7 @@ def brute_force():
 
 
 def greedy_from(start):
+    """start を出発点にして、貪欲法でルートを作る"""
     visited = [start]
     total = 0.0
     here = start
@@ -62,6 +65,7 @@ def greedy_from(start):
 
 
 def greedy():
+    """貪欲法（出発点は0番の都市に固定）"""
     return greedy_from(0)
 
 
@@ -76,6 +80,7 @@ def greedy_all_starts():
 
 
 def bit_dp():
+    """動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める"""
     full = (1 << n) - 1
     best = []
     for visited in range(1 << n):
@@ -113,11 +118,14 @@ for name, function, note in methods:
     elapsed = time.time() - began
     results.append((name, value, elapsed, note))
 
-best_value = min(v for _, v, _, _ in results)
+best_value = None
+for name, value, elapsed, note in results:
+    if best_value is None or value < best_value:
+        best_value = value
 
 print(f"{n}都市の巡回セールスマン問題を4つの方法で解く")
 print("-" * 72)
-print("方法                    答え     最適との差       時間          性質")
+print("方法                    答え  最適との差          時間   性質")
 for name, value, elapsed, note in results:
     print(pad(name, 20)
           + f"{round(value, 1):>8}"

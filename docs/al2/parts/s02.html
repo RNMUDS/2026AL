@@ -383,13 +383,14 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
 <span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法              歩数    調べたマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 
 
 <span class="kw">def</span> <span class="fn">draw</span>(path, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
     picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
     <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
         <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
@@ -752,7 +753,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法              歩数    調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G /  / 深さ優先探索の経路（18歩・最短ではない） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="528" loading="lazy">
+        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G /  / 深さ優先探索の経路（18歩・最短ではない） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="528" loading="lazy">
       </div>
       <p class="run-note">幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。</p>
 
@@ -801,6 +802,7 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
 
 
 <span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
+    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではないマスを返す&quot;&quot;&quot;</span>
     result = []
     <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
         nr = r + dr
@@ -814,6 +816,7 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
 
 
 <span class="kw">def</span> <span class="fn">search</span>(mode):
+    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
     memo = <span class="fn">deque</span>([start])
     came_from = {start: <span class="kw">None</span>}
     checked = <span class="num">0</span>
@@ -840,6 +843,7 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
 
 
 <span class="kw">def</span> <span class="fn">draw</span>(path, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
     picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
     <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
         <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
@@ -855,7 +859,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
 <span class="fn">print</span>(<span class="str">&quot;15マス×15マスの迷路（通れるマスは全部で&quot;</span>, rows * cols - <span class="fn">sum</span>(line.count(<span class="str">&quot;#&quot;</span>) <span class="kw">for</span> line <span class="kw">in</span> maze), <span class="str">&quot;マス）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法              歩数    調べたマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
@@ -887,7 +891,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a02_ex3_result.png" alt="AL2-02-ex3.py の実行結果。15マス×15マスの迷路（通れるマスは全部で 128 マス） / ---------------------------------------------- / 方法              歩数    調べたマス数 / 幅優先探索         48歩        127マス / 深さ優先探索       64歩         76マス / ---------------------------------------------- /  / 幅優先探索の経路 / S*****........# / .####*#####.#.. / .#...*#...#.#.# / .#.##*#.#.#.#.# / .#.#**#.#...#.. / .#.#*##.####.#. / ...#*...#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G /  / 深さ優先探索の経路 / S***********..# / .####.#####*#.. / .#....#***#*#.# / .#.##.#*#*#*#.# / .#.#..#*#***#.. / .#.#.##*####.#. / ...#****#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G" width="380" height="848" loading="lazy">
+        <img src="images/a02_ex3_result.png" alt="AL2-02-ex3.py の実行結果。15マス×15マスの迷路（通れるマスは全部で 128 マス） / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         48歩        127マス / 深さ優先探索       64歩         76マス / ---------------------------------------------- /  / 幅優先探索の経路 / S*****........# / .####*#####.#.. / .#...*#...#.#.# / .#.##*#.#.#.#.# / .#.#**#.#...#.. / .#.#*##.####.#. / ...#*...#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G /  / 深さ優先探索の経路 / S***********..# / .####.#####*#.. / .#....#***#*#.# / .#.##.#*#*#*#.# / .#.#..#*#***#.. / .#.#.##*####.#. / ...#****#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G" width="380" height="848" loading="lazy">
       </div>
       <p class="run-note">幅優先探索は<strong>48歩・127マス調査</strong>、深さ優先探索は<strong>64歩・76マス調査</strong>でした。通れるマスは全部で128マスなので、幅優先探索はほぼ全部のマスを調べています。迷路が大きくなっても、「幅優先探索は道が短いが手間が重い」「深さ優先探索は手間が軽いが道が長い」という関係は変わりません。</p>
     </div>
@@ -944,7 +948,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
 <span class="fn">print</span>(<span class="str">&quot;壁のない広場（左上から右下まで）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;広さ        幅優先の歩数  幅優先の調査数   深さ優先の歩数  深さ優先の調査数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数&quot;</span>)
 <span class="kw">for</span> size <span class="kw">in</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>]:
     bfs_path, bfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;bfs&quot;</span>)
     dfs_path, dfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;dfs&quot;</span>)
@@ -956,7 +960,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 <span class="cmt"># 10×10 の広場で、それぞれの経路を絵にして比べる</span>
 <span class="kw">for</span> mode, title <span class="kw">in</span> [(<span class="str">&quot;bfs&quot;</span>, <span class="str">&quot;幅優先探索の経路（最短）&quot;</span>), (<span class="str">&quot;dfs&quot;</span>, <span class="str">&quot;深さ優先探索の経路（遠回り）&quot;</span>)]:
     path, checked = <span class="fn">search</span>(<span class="num">10</span>, mode)
-    picture = [[<span class="str">&quot;.&quot;</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
+    picture = [[<span class="str">&quot;.&quot;</span> <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)] <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
     <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
         picture[r][c] = <span class="str">&quot;*&quot;</span>
     picture[<span class="num">0</span>][<span class="num">0</span>] = <span class="str">&quot;S&quot;</span>
@@ -1183,7 +1187,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a02_ex4_result.png" alt="AL2-02-ex4.py の実行結果。壁のない広場（左上から右下まで） / -------------------------------------------------------------- / 広さ        幅優先の歩数  幅優先の調査数   深さ優先の歩数  深さ優先の調査数 / 10×10           18歩          100マス           54歩           55マス / 20×20           38歩          400マス          190歩          229マス / 40×40           78歩         1600マス          780歩          859マス / -------------------------------------------------------------- /  / 幅優先探索の経路（最短） ／ 18 歩 / S......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *********G /  / 深さ優先探索の経路（遠回り） ／ 54 歩 / S********* / .........* / ********** / *......... / ********** / .........* / ********** / *......... / ********** / .........G" width="531" height="668" loading="lazy">
+        <img src="images/a02_ex4_result.png" alt="AL2-02-ex4.py の実行結果。壁のない広場（左上から右下まで） / -------------------------------------------------------------- / 広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数 / 10×10           18歩          100マス           54歩           55マス / 20×20           38歩          400マス          190歩          229マス / 40×40           78歩         1600マス          780歩          859マス / -------------------------------------------------------------- /  / 幅優先探索の経路（最短） ／ 18 歩 / S......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *********G /  / 深さ優先探索の経路（遠回り） ／ 54 歩 / S********* / .........* / ********** / *......... / ********** / .........* / ********** / *......... / ********** / .........G" width="531" height="668" loading="lazy">
       </div>
       <p class="run-note">40マス×40マスの広場では、幅優先探索が<strong>78歩</strong>なのに対し、深さ優先探索は<strong>780歩</strong>でした。10倍の差です。一方で調べたマスの数は、幅優先探索が1600マス（広場のすべて）、深さ優先探索は859マスと約半分です。10マス×10マスの経路の絵を見ると、深さ優先探索が行をまたいで蛇のように往復していることが分かります。</p>
 

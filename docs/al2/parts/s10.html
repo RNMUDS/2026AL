@@ -295,7 +295,7 @@
         <text x="104" y="414" fill="#76B900" font-size="10">bitDP</text>
         <rect x="160" y="400" width="154" height="18" rx="4" fill="#76B900" opacity="0.85"/>
         <text x="322" y="414" fill="#76B900" font-size="10">20,971,520マス</text>
-        <text x="350" y="452" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">20都市では、全探索が1京2千兆通り。bitDP は2千万マスで済む</text>
+        <text x="350" y="452" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">20都市では、全探索が約12京通り。bitDP は2千万マスで済む</text>
         </svg>
       </div>
   </div>
@@ -525,9 +525,9 @@ last_city = <span class="kw">None</span>
         last_city = here
 
 <span class="fn">print</span>(<span class="str">&quot;動的計画法（bitDP）の表の一部&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;（visited = 回った都市の集合、here = いまいる都市）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（visited = 回った都市の集合を2進数で表したもの、here = いまいる都市）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;visited(2進数)   here=0   here=1   here=2   here=3   here=4&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;visited           here=0 here=1   here=2   here=3   here=4&quot;</span>)
 <span class="kw">for</span> visited <span class="kw">in</span> [<span class="num">1</span>, <span class="num">3</span>, <span class="num">7</span>, <span class="num">15</span>, <span class="num">31</span>]:
     line = <span class="str">f&quot;   {format(visited, &#x27;05b&#x27;)}        &quot;</span>
     <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
@@ -567,7 +567,7 @@ brute_best = <span class="kw">None</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a10_ex2_result.png" alt="AL2-10-ex2.py の実行結果。動的計画法（bitDP）の表の一部 / （visited = 回った都市の集合、here = いまいる都市） / -------------------------------------------------------------- / visited(2進数)   here=0   here=1   here=2   here=3   here=4 / 00001             0.0      -        -        -        - / 00011             -        8.1      -        -        - / 00111             -       21.1     15.3      -        - / 01111             -       26.5     26.5     23.8      - / 11111             -       26.8     28.1     30.4     28.8 / -------------------------------------------------------------- / 「-」は「その状態にはたどり着けない」ことを表す /  / bitDP の答え: 34.9 / 最後に立ち寄った都市: 郵便局 /  / 全探索の答え: 34.9 / 2つの答えは一致した。bitDP は必ず最適解を出す。 /  / 表のマスの数: 160 個（2の5乗 × 5） / 全探索が試した順番の数: 24 通り" width="494" height="448" loading="lazy">
+        <img src="images/a10_ex2_result.png" alt="AL2-10-ex2.py の実行結果。動的計画法（bitDP）の表の一部 / （visited = 回った都市の集合を2進数で表したもの、here = いまいる都市） / -------------------------------------------------------------- / visited           here=0 here=1   here=2   here=3   here=4 / 00001             0.0      -        -        -        - / 00011             -        8.1      -        -        - / 00111             -       21.1     15.3      -        - / 01111             -       26.5     26.5     23.8      - / 11111             -       26.8     28.1     30.4     28.8 / -------------------------------------------------------------- / 「-」は「その状態にはたどり着けない」ことを表す /  / bitDP の答え: 34.9 / 最後に立ち寄った都市: 郵便局 /  / 全探索の答え: 34.9 / 2つの答えは一致した。bitDP は必ず最適解を出す。 /  / 表のマスの数: 160 個（2の5乗 × 5） / 全探索が試した順番の数: 24 通り" width="494" height="448" loading="lazy">
       </div>
       <p class="run-note">表の一部が表示されました。<code>00001</code> の行は「学校だけ回った」状態で、いま学校（here=0）にいるときだけ 0.0 が入り、ほかは「-」です。<code>11111</code> の行は全部の都市を回り終えた状態で、5つの都市それぞれにいる場合の最小距離が入っています。いちばん小さいのは郵便局（here=1）の26.8で、そこから学校へ戻る8.1を足して<strong>34.9</strong>が答えになります。全探索の答えと完全に一致しました。</p>
 
@@ -693,8 +693,11 @@ results = []
 
 <span class="fn">print</span>(<span class="str">f&quot;{n}都市の巡回セールスマン問題を3つの方法で解く&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法          答え（合計距離）      かかった時間      最適か&quot;</span>)
-best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <span class="kw">in</span> results)
+<span class="fn">print</span>(<span class="str">&quot;方法                 答え     かかった時間   最適か&quot;</span>)
+best_value = <span class="kw">None</span>
+<span class="kw">for</span> name, value, elapsed <span class="kw">in</span> results:
+    <span class="kw">if</span> best_value <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best_value:
+        best_value = value
 <span class="kw">for</span> name, value, elapsed <span class="kw">in</span> results:
     judge = <span class="str">&quot;最適&quot;</span> <span class="kw">if</span> value == best_value <span class="kw">else</span> <span class="str">f&quot;最適より{round(value - best_value, 1)}長い&quot;</span>
     <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">8</span>) + <span class="str">f&quot;   {value:&gt;14}   {elapsed:&gt;12.6f}秒   {judge}&quot;</span>)
@@ -705,7 +708,7 @@ best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a10_ex3_result.png" alt="AL2-10-ex3.py の実行結果。8都市の巡回セールスマン問題を3つの方法で解く / ------------------------------------------------------------ / 方法          答え（合計距離）      かかった時間      最適か / 全探索               46.8       0.000791秒   最適 / 貪欲法               53.2       0.000005秒   最適より6.4長い / bitDP                46.8       0.000228秒   最適 / ------------------------------------------------------------ /  / 全探索と bitDP は同じ答えを出している。どちらも必ず最適解になる。 / 貪欲法だけ答えが長い。速さと引きかえに最適解をあきらめている。" width="479" height="248" loading="lazy">
+        <img src="images/a10_ex3_result.png" alt="AL2-10-ex3.py の実行結果。8都市の巡回セールスマン問題を3つの方法で解く / ------------------------------------------------------------ / 方法                 答え     かかった時間   最適か / 全探索               46.8       0.000745秒   最適 / 貪欲法               53.2       0.000005秒   最適より6.4長い / bitDP                46.8       0.000222秒   最適 / ------------------------------------------------------------ /  / 全探索と bitDP は同じ答えを出している。どちらも必ず最適解になる。 / 貪欲法だけ答えが長い。速さと引きかえに最適解をあきらめている。" width="479" height="248" loading="lazy">
       </div>
       <p class="run-note">全探索と bitDP はどちらも<strong>46.8</strong>で、答えが一致しました。貪欲法だけが53.2で、最適解より6.4長くなっています。時間を見ると、bitDP は全探索より<strong>3倍以上速く</strong>終わっています。都市が8個ではまだ差が小さいですが、都市が増えるほど差は大きくなります。「必ず最適解が出る」という点では全探索と bitDP は同じで、「速さ」の点で bitDP のほうがすぐれているということです。</p>
     </div>
@@ -725,6 +728,7 @@ best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <
 
 <span class="cmt"># 都市の位置は計算で決めるので、何度実行しても同じ配置になる</span>
 <span class="kw">def</span> <span class="fn">make_cities</span>(count):
+    <span class="str">&quot;&quot;&quot;都市の位置を計算で決める（何度実行しても同じ配置になる）&quot;&quot;&quot;</span>
     cities = []
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
         x = (i * <span class="num">7</span>) % <span class="num">23</span>
@@ -776,9 +780,17 @@ best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <
     <span class="kw">return</span> answer, (<span class="num">1</span> &lt;&lt; n) * n
 
 
+<span class="kw">def</span> <span class="fn">big_number</span>(value):
+    <span class="str">&quot;&quot;&quot;大きすぎる数を「約1.2京」のように読みやすくする&quot;&quot;&quot;</span>
+    <span class="kw">for</span> size, unit <span class="kw">in</span> [(<span class="num">10</span> ** <span class="num">16</span>, <span class="str">&quot;京&quot;</span>), (<span class="num">10</span> ** <span class="num">12</span>, <span class="str">&quot;兆&quot;</span>), (<span class="num">10</span> ** <span class="num">8</span>, <span class="str">&quot;億&quot;</span>), (<span class="num">10</span> ** <span class="num">4</span>, <span class="str">&quot;万&quot;</span>)]:
+        <span class="kw">if</span> value &gt;= size:
+            <span class="kw">return</span> <span class="str">f&quot;約{value / size:.1f}{unit}通り&quot;</span>
+    <span class="kw">return</span> <span class="str">f&quot;{value:,}通り&quot;</span>
+
+
 <span class="fn">print</span>(<span class="str">&quot;動的計画法（bitDP）で都市を増やしたときの表の大きさと時間&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>(<span class="str">&quot;都市の数     表のマスの数       最短距離     かかった時間     全探索なら&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  都市の数   表のマスの数     最短距離   かかった時間             全探索なら&quot;</span>)
 
 <span class="kw">for</span> count <span class="kw">in</span> [<span class="num">10</span>, <span class="num">12</span>, <span class="num">14</span>, <span class="num">16</span>, <span class="num">18</span>, <span class="num">20</span>]:
     cities = <span class="fn">make_cities</span>(count)
@@ -791,7 +803,7 @@ best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <
         brute_orders = brute_orders * k
 
     <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;6}都市   {cells:&gt;12,}   {round(answer, 1):&gt;10}   {elapsed:&gt;10.3f}秒&quot;</span>
-          <span class="str">f&quot;   {brute_orders:&gt;16,}通り&quot;</span>)
+          <span class="str">f&quot;   {big_number(brute_orders):&gt;16}&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
 <span class="fn">print</span>()
@@ -804,9 +816,9 @@ best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _ <
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a10_ex4_result.png" alt="AL2-10-ex4.py の実行結果。動的計画法（bitDP）で都市を増やしたときの表の大きさと時間 / ------------------------------------------------------------------ / 都市の数     表のマスの数       最短距離     かかった時間     全探索なら / 10都市         10,240         59.5        0.001秒            362,880通り / 12都市         49,152         73.1        0.008秒         39,916,800通り / 14都市        229,376         75.9        0.044秒      6,227,020,800通り / 16都市      1,048,576         79.7        0.226秒   1,307,674,368,000通り / 18都市      4,718,592         82.5        1.157秒   355,687,428,096,000通り / 20都市     20,971,520         91.1        5.863秒   121,645,100,408,832,000通り / ------------------------------------------------------------------ /  / 表のマスの数は 2の(都市の数)乗 × 都市の数。都市が1つ増えると約2倍になる。 / 全探索の順番の数は、都市が1つ増えると (都市の数-1) 倍になる。 / 増え方が「2倍ずつ」と「11倍・12倍…」では、大きな違いがある。 /  / bitDP でも 25都市を超えると表が大きすぎて解けなくなる。 / それでも全探索の限界（12都市くらい）よりはずっと先まで解ける。" width="639" height="388" loading="lazy">
+        <img src="images/a10_ex4_result.png" alt="AL2-10-ex4.py の実行結果。動的計画法（bitDP）で都市を増やしたときの表の大きさと時間 / ------------------------------------------------------------------ / 都市の数   表のマスの数     最短距離   かかった時間             全探索なら / 10都市         10,240         59.5        0.001秒           約36.3万通り / 12都市         49,152         73.1        0.008秒         約3991.7万通り / 14都市        229,376         75.9        0.043秒           約62.3億通り / 16都市      1,048,576         79.7        0.224秒            約1.3兆通り / 18都市      4,718,592         82.5        1.149秒          約355.7兆通り / 20都市     20,971,520         91.1        5.992秒           約12.2京通り / ------------------------------------------------------------------ /  / 表のマスの数は 2の(都市の数)乗 × 都市の数。都市が1つ増えると約2倍になる。 / 全探索の順番の数は、都市が1つ増えると (都市の数-1) 倍になる。 / 増え方が「2倍ずつ」と「11倍・12倍…」では、大きな違いがある。 /  / bitDP でも 25都市を超えると表が大きすぎて解けなくなる。 / それでも全探索の限界（12都市くらい）よりはずっと先まで解ける。" width="581" height="388" loading="lazy">
       </div>
-      <p class="run-note"><strong>20都市が5.876秒</strong>で解けました。同じ20都市を全探索で解こうとすると1京2千兆通りを試すことになり、まったく終わりません。第8回で確かめたとおり、全探索の限界は12都市くらいでした。bitDP は都市が1つ増えるたびに表がおよそ2倍になるだけなので、20都市あたりまで解けます。ただし「2倍ずつ」も十分に急な増え方なので、25都市を超えると bitDP でも解けなくなります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
+      <p class="run-note"><strong>20都市が6秒ほど</strong>で解けました。同じ20都市を全探索で解こうとすると約12京通りを試すことになり、まったく終わりません。第8回で確かめたとおり、全探索の限界は12都市くらいでした。bitDP は都市が1つ増えるたびに表がおよそ2倍になるだけなので、20都市あたりまで解けます。ただし「2倍ずつ」も十分に急な増え方なので、25都市を超えると bitDP でも解けなくなります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
 
       <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の表から、都市の数ごとの「表のマスの数」「かかった時間」「全探索なら何通りか」を書き写す。あわせて、都市が2つ増えたとき、表のマスの数と全探索の順番の数がそれぞれ何倍になったかを計算して書く。</span></div>
     </div>
@@ -971,7 +983,7 @@ city_names = [<span class="str">"学校"</span>, <span class="str">"郵便局"</
         「小さい問題なら全探索がいちばん簡単で確実」という判断です。</p>
         <p style="margin-top:0.6rem"><strong>場面B（18か所・10年使う）: bitDP</strong><br>
         必ず最短にしたいので、貪欲法は使えません。
-        18か所の全探索は 17! = 約3,556兆通りで終わりません。
+        18か所の全探索は 17! = 約356兆通りあり、第8回の実測の速さでも約2年半かかります。
         例題4のとおり bitDP なら18都市が約1.2秒で解けます。
         1回決めれば10年使うので、数秒の計算はまったく問題になりません。</p>
         <p style="margin-top:0.6rem"><strong>場面C（100軒・5秒で決める）: 貪欲法</strong><br>

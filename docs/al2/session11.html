@@ -518,6 +518,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">build</span>(came_from, goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
     route = []
     node = goal
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
@@ -595,7 +596,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} まで、3つの方法で経路を求める&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法              路線の本数   合計時間   経路&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法            路線の本数   合計時間   経路&quot;</span>)
 <span class="kw">for</span> name, function <span class="kw">in</span> [(<span class="str">&quot;幅優先探索&quot;</span>, bfs), (<span class="str">&quot;深さ優先探索&quot;</span>, dfs), (<span class="str">&quot;ダイクストラ法&quot;</span>, dijkstra)]:
     route = <span class="fn">function</span>()
     <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">16</span>)
@@ -609,7 +610,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex1_result.png" alt="AL2-11-ex1.py の実行結果。新宿 から 東京 まで、3つの方法で経路を求める / ------------------------------------------------------------------ / 方法              路線の本数   合計時間   経路 / 幅優先探索             2本       41分   新宿 → 品川 → 東京 / 深さ優先探索           2本       41分   新宿 → 品川 → 東京 / ダイクストラ法         3本       27分   新宿 → 渋谷 → 品川 → 東京 / ------------------------------------------------------------------ /  / 幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。 / 深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。" width="524" height="248" loading="lazy">
+        <img src="images/a11_ex1_result.png" alt="AL2-11-ex1.py の実行結果。新宿 から 東京 まで、3つの方法で経路を求める / ------------------------------------------------------------------ / 方法            路線の本数   合計時間   経路 / 幅優先探索             2本       41分   新宿 → 品川 → 東京 / 深さ優先探索           2本       41分   新宿 → 品川 → 東京 / ダイクストラ法         3本       27分   新宿 → 渋谷 → 品川 → 東京 / ------------------------------------------------------------------ /  / 幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。 / 深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。" width="524" height="248" loading="lazy">
       </div>
       <p class="run-note">幅優先探索とダイクストラ法は、はっきり違う経路を返しました。幅優先探索は<strong>2本・41分</strong>の「新宿 → 品川 → 東京」を選び、ダイクストラ法は<strong>3本・27分</strong>の「新宿 → 渋谷 → 品川 → 東京」を選んでいます。乗りかえが1回増えるかわりに、14分も早く着くということです。深さ優先探索は、たまたま幅優先探索と同じ経路になりました。深さ優先探索は「本数」も「時間」も最小にしないので、同じになるかどうかは、たまたま調べた順番で決まります。</p>
 
@@ -648,6 +649,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
     length = <span class="num">0</span>
     <span class="kw">for</span> ch <span class="kw">in</span> text:
         <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
@@ -658,6 +660,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
         total = <span class="num">0.0</span>
@@ -672,6 +675,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy_from</span>(start):
+    <span class="str">&quot;&quot;&quot;start を出発点にして、貪欲法でルートを作る&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -689,6 +693,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法（出発点は0番の都市に固定）&quot;&quot;&quot;</span>
     <span class="kw">return</span> <span class="fn">greedy_from</span>(<span class="num">0</span>)
 
 
@@ -703,6 +708,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">bit_dp</span>():
+    <span class="str">&quot;&quot;&quot;動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める&quot;&quot;&quot;</span>
     full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
     best = []
     <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
@@ -740,11 +746,14 @@ results = []
     elapsed = time.time() - began
     results.append((name, value, elapsed, note))
 
-best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _, _ <span class="kw">in</span> results)
+best_value = <span class="kw">None</span>
+<span class="kw">for</span> name, value, elapsed, note <span class="kw">in</span> results:
+    <span class="kw">if</span> best_value <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best_value:
+        best_value = value
 
 <span class="fn">print</span>(<span class="str">f&quot;{n}都市の巡回セールスマン問題を4つの方法で解く&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">72</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法                    答え     最適との差       時間          性質&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法                    答え  最適との差          時間   性質&quot;</span>)
 <span class="kw">for</span> name, value, elapsed, note <span class="kw">in</span> results:
     <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">20</span>)
           + <span class="str">f&quot;{round(value, 1):&gt;8}&quot;</span>
@@ -757,7 +766,7 @@ best_value = <span class="fn">min</span>(v <span class="kw">for</span> _, v, _, 
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex2_result.png" alt="AL2-11-ex2.py の実行結果。8都市の巡回セールスマン問題を4つの方法で解く / ------------------------------------------------------------------------ / 方法                    答え     最適との差       時間          性質 / 全探索                  46.8         0.0    0.000740秒   必ず最適 / 貪欲法                  53.2         6.4    0.000005秒   最適とはかぎらない / 貪欲法(全出発点)        46.8         0.0    0.000020秒   最適とはかぎらない / bitDP                   46.8         0.0    0.000231秒   必ず最適 / ------------------------------------------------------------------------ /  / 貪欲法は出発点を全部試すだけで、答えが最適に近づく。 / それでも全探索や bitDP より圧倒的に速い。" width="569" height="268" loading="lazy">
+        <img src="images/a11_ex2_result.png" alt="AL2-11-ex2.py の実行結果。8都市の巡回セールスマン問題を4つの方法で解く / ------------------------------------------------------------------------ / 方法                    答え  最適との差          時間   性質 / 全探索                  46.8         0.0    0.000740秒   必ず最適 / 貪欲法                  53.2         6.4    0.000004秒   最適とはかぎらない / 貪欲法(全出発点)        46.8         0.0    0.000020秒   最適とはかぎらない / bitDP                   46.8         0.0    0.000229秒   必ず最適 / ------------------------------------------------------------------------ /  / 貪欲法は出発点を全部試すだけで、答えが最適に近づく。 / それでも全探索や bitDP より圧倒的に速い。" width="569" height="268" loading="lazy">
       </div>
       <p class="run-note">全探索・bitDP・貪欲法(全出発点) の3つが、いずれも<strong>46.8</strong>という同じ答えを出しました。出発点を1つに固定した貪欲法だけが53.2で、6.4長くなっています。注目すべきは<strong>貪欲法(全出発点)</strong>で、8回ぶん計算しても0.000022秒しかかからず、全探索の約40分の1の時間で同じ答えにたどり着いています。ただし、たまたま最適に当たっただけで、いつでも当たる保証はありません。「必ず最適」と書けるのは全探索と bitDP だけです。</p>
     </div>
@@ -788,6 +797,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">make_distance</span>(cities):
+    <span class="str">&quot;&quot;&quot;都市どうしの直線距離を表にして返す&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(cities)
     table = []
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
@@ -800,6 +810,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>(distance):
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(distance)
     best = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
@@ -815,6 +826,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(distance):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(distance)
     visited = [<span class="num">0</span>]
     total = <span class="num">0.0</span>
@@ -833,6 +845,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">bit_dp</span>(distance):
+    <span class="str">&quot;&quot;&quot;動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(distance)
     full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
     best = []
@@ -893,9 +906,9 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex3_result.png" alt="AL2-11-ex3.py の実行結果。都市の数を変えて、3つの方法の答えと時間を測る / （全探索は12都市までで打ち切る。時間がかかりすぎるため） / ---------------------------------------------------------------------------- / 都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間 / 6都市     57.8 /   0.000秒     57.8 /0.000003秒     57.8 /   0.000秒 / 8都市     58.0 /   0.001秒     58.7 /0.000004秒     58.0 /   0.000秒 / 10都市     59.5 /   0.066秒     60.2 /0.000008秒     59.5 /   0.001秒 / 12都市     73.1 /   8.517秒     80.5 /0.000014秒     73.1 /   0.009秒 / 14都市        （長すぎるため省略）     83.3 /0.000009秒     75.9 /   0.045秒 / 16都市        （長すぎるため省略）     87.1 /0.000014秒     79.7 /   0.231秒 / ---------------------------------------------------------------------------- /  / 全探索と bitDP の答えは、どの大きさでも完全に一致している。 / 貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。" width="599" height="328" loading="lazy">
+        <img src="images/a11_ex3_result.png" alt="AL2-11-ex3.py の実行結果。都市の数を変えて、3つの方法の答えと時間を測る / （全探索は12都市までで打ち切る。時間がかかりすぎるため） / ---------------------------------------------------------------------------- / 都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間 / 6都市     57.8 /   0.000秒     57.8 /0.000003秒     57.8 /   0.000秒 / 8都市     58.0 /   0.001秒     58.7 /0.000004秒     58.0 /   0.000秒 / 10都市     59.5 /   0.067秒     60.2 /0.000006秒     59.5 /   0.001秒 / 12都市     73.1 /   8.518秒     80.5 /0.000013秒     73.1 /   0.009秒 / 14都市        （長すぎるため省略）     83.3 /0.000009秒     75.9 /   0.044秒 / 16都市        （長すぎるため省略）     87.1 /0.000012秒     79.7 /   0.227秒 / ---------------------------------------------------------------------------- /  / 全探索と bitDP の答えは、どの大きさでも完全に一致している。 / 貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。" width="599" height="328" loading="lazy">
       </div>
-      <p class="run-note">全探索と bitDP の答えは、どの大きさでも<strong>完全に一致</strong>しています。12都市では、全探索が8.334秒かかったのに対し、bitDP は0.009秒で、およそ<strong>900倍</strong>の差がつきました。14都市と16都市では、全探索は終わらないため省略しています。貪欲法の答えは、12都市で80.5（最適は73.1）と約10%長くなっていますが、時間はほとんどゼロです。「必ず最適・遅い」「必ず最適・速い」「近似・非常に速い」の3種類がそろっていることを確かめてください。</p>
+      <p class="run-note">全探索と bitDP の答えは、どの大きさでも<strong>完全に一致</strong>しています。12都市では、全探索に<strong>約8秒</strong>かかったのに対し、bitDP は0.01秒ほどで、<strong>数百倍</strong>の差がつきました。14都市と16都市では、全探索は終わらないため省略しています。貪欲法の答えは、12都市で80.5（最適は73.1）と約10%長くなっていますが、時間はほとんどゼロです。「必ず最適・遅い」「必ず最適・速い」「近似・非常に速い」の3種類がそろっていることを確かめてください。</p>
 
       <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の表から、都市の数ごとの3つの答えと時間を書き写す。あわせて、12都市のときに全探索と bitDP の時間が何倍違うかを計算し、答えが同じである理由を説明する。</span></div>
     </div>
@@ -914,6 +927,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
     length = <span class="num">0</span>
     <span class="kw">for</span> ch <span class="kw">in</span> text:
         <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
@@ -945,7 +959,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
         <span class="kw">return</span> <span class="str">&quot;全探索&quot;</span>, <span class="str">f&quot;{size}都市なら順番の数が少なく、全部試しても一瞬で終わる&quot;</span>
     <span class="kw">if</span> size &lt;= <span class="num">20</span>:
         <span class="kw">return</span> <span class="str">&quot;bitDP&quot;</span>, <span class="str">f&quot;{size}都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる&quot;</span>
-    <span class="kw">return</span> <span class="str">&quot;貪欲法&quot;</span>, <span class="str">f&quot;{size}都市では bitDP でも表が大きすぎる。最適解はあきらめて近似解を使うしかない&quot;</span>
+    <span class="kw">return</span> <span class="str">&quot;貪欲法&quot;</span>, <span class="str">f&quot;{size}都市では bitDP でも表が大きすぎる。近似解を使うしかない&quot;</span>
 
 
 cases = [
@@ -963,8 +977,8 @@ cases = [
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
 <span class="kw">for</span> description, kind, weighted, size, need_best <span class="kw">in</span> cases:
     name, reason = <span class="fn">choose</span>(kind, weighted, size, need_best)
-    <span class="fn">print</span>(<span class="fn">pad</span>(description, <span class="num">52</span>) + <span class="str">&quot;→ &quot;</span> + name)
-    <span class="fn">print</span>(<span class="str">&quot; &quot;</span> * <span class="num">54</span> + reason)
+    <span class="fn">print</span>(<span class="fn">pad</span>(description, <span class="num">48</span>) + <span class="str">&quot;→ &quot;</span> + name)
+    <span class="fn">print</span>(<span class="str">&quot;    理由: &quot;</span> + reason)
     <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
 <span class="fn">print</span>()
@@ -973,7 +987,7 @@ cases = [
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex4_result.png" alt="AL2-11-ex4.py の実行結果。条件から使うべきアルゴリズムを選ぶ / ============================================================================ / 駅の乗りかえ回数を最小にする                        → 幅優先探索 / 重みがないので、歩数の少ない順に広げれば必ず最短になる /  / 迷路のゴールに行けるかだけ判定する                  → 深さ優先探索 / 最短でなくてよいなら、調べるマスが少ない深さ優先探索で足りる /  / カーナビで最も早く着く道を案内する                  → ダイクストラ法 / 重みがあるので、コストの小さい順に確定していく必要がある /  / 床コストのある迷路を最小コストで抜ける              → ダイクストラ法 / 重みがあるので、コストの小さい順に確定していく必要がある /  / 修学旅行で6か所を回る順番を決める                   → 全探索 / 6都市なら順番の数が少なく、全部試しても一瞬で終わる /  / 工場のドリルが18か所をあける順番を決める            → bitDP / 18都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる /  / 宅配便が100軒を回る順番を5秒で決める                → 貪欲法 / 最適でなくてよいので、いちばん近い都市へ進むだけで一瞬で終わる /  / 配送センターが30軒の最適な順番を1晩かけて求める     → 貪欲法 / 30都市では bitDP でも表が大きすぎる。最適解はあきらめて近似解を使うしかない /  / ============================================================================ /  / 同じ「巡回」の問題でも、都市の数と「最適解が必要か」で答えが変わる。 / アルゴリズムは1つを覚えるのではなく、使い分けられることが大切。" width="914" height="648" loading="lazy">
+        <img src="images/a11_ex4_result.png" alt="AL2-11-ex4.py の実行結果。条件から使うべきアルゴリズムを選ぶ / ============================================================================ / 駅の乗りかえ回数を最小にする                    → 幅優先探索 / 理由: 重みがないので、歩数の少ない順に広げれば必ず最短になる /  / 迷路のゴールに行けるかだけ判定する              → 深さ優先探索 / 理由: 最短でなくてよいなら、調べるマスが少ない深さ優先探索で足りる /  / カーナビで最も早く着く道を案内する              → ダイクストラ法 / 理由: 重みがあるので、コストの小さい順に確定していく必要がある /  / 床コストのある迷路を最小コストで抜ける          → ダイクストラ法 / 理由: 重みがあるので、コストの小さい順に確定していく必要がある /  / 修学旅行で6か所を回る順番を決める               → 全探索 / 理由: 6都市なら順番の数が少なく、全部試しても一瞬で終わる /  / 工場のドリルが18か所をあける順番を決める        → bitDP / 理由: 18都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる /  / 宅配便が100軒を回る順番を5秒で決める            → 貪欲法 / 理由: 最適でなくてよいので、いちばん近い都市へ進むだけで一瞬で終わる /  / 配送センターが30軒の最適な順番を1晩かけて求める → 貪欲法 / 理由: 30都市では bitDP でも表が大きすぎる。近似解を使うしかない /  / ============================================================================ /  / 同じ「巡回」の問題でも、都市の数と「最適解が必要か」で答えが変わる。 / アルゴリズムは1つを覚えるのではなく、使い分けられることが大切。" width="599" height="648" loading="lazy">
       </div>
       <p class="run-note">8つの場面について、それぞれ使うべきアルゴリズムと理由が表示されました。同じ「巡回」の問題でも、6都市なら全探索、18都市なら bitDP、100軒なら貪欲法と、答えが変わっています。注目すべきは最後の<strong>「30軒の最適な順番を1晩かけて求める」</strong>で、最適解がほしくても、30都市では bitDP の表が大きすぎるため、貪欲法を選ぶしかありません。<code>choose</code> 関数の中身を読むと、条件がそのまま <code>if</code> 文になっていることが分かります。</p>
     </div>
@@ -1092,7 +1106,7 @@ cases = [
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

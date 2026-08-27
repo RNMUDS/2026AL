@@ -680,6 +680,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
     result = {<span class="str">&quot;count&quot;</span>: <span class="num">0</span>, <span class="str">&quot;best&quot;</span>: <span class="kw">None</span>}
 
     <span class="kw">def</span> <span class="fn">walk</span>(r, c, total):
+        <span class="str">&quot;&quot;&quot;ここから先の行き方を、同じ場所を2度通らないようにすべてたどる&quot;&quot;&quot;</span>
         <span class="kw">if</span> (r, c) == goal:
             result[<span class="str">&quot;count&quot;</span>] = result[<span class="str">&quot;count&quot;</span>] + <span class="num">1</span>
             <span class="kw">if</span> result[<span class="str">&quot;best&quot;</span>] <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; result[<span class="str">&quot;best&quot;</span>]:
@@ -694,7 +695,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
                 <span class="kw">continue</span>
             visited.add((nr, nc))
             <span class="fn">walk</span>(nr, nc, total + <span class="num">1</span>)
-            visited.discard((nr, nc))
+            visited.discard((nr, nc))    <span class="cmt"># 調べ終わったら「通っていない」状態に戻す</span>
 
     visited.add((<span class="num">0</span>, <span class="num">0</span>))
     <span class="fn">walk</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>)
@@ -703,7 +704,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 
 <span class="fn">print</span>(<span class="str">&quot;全探索で「すべての行き方」を数えたときの通り数と時間&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>(<span class="str">&quot;迷路の大きさ         行き方の数        かかった時間&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;迷路の大きさ             行き方の数   かかった時間&quot;</span>)
 
 <span class="kw">for</span> size <span class="kw">in</span> [<span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]:
     started = time.time()
@@ -747,7 +748,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ         行き方の数        かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.034秒 / 6マス×6マス          1,262,816通り        7.164秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
+        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ             行き方の数   かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.032秒 / 6マス×6マス          1,262,816通り        6.713秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
       </div>
       <p class="run-note">3マス四方は12通り、4マス四方は184通り、5マス四方は8,512通り、6マス四方は1,262,816通りでした。たった1マス大きくなるだけで、行き方の数は<strong>およそ150倍</strong>に増えています。6マス四方で約7秒かかったので、7マス四方（5億7千万通り）では1時間近くかかる計算になります。カーナビが数万の交差点をあつかうことを考えると、全探索はまったく使えません。</p>
 

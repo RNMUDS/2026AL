@@ -70,13 +70,14 @@ dfs_path, dfs_checked = search("dfs")
 
 print("同じ迷路を2つの方法で解いた結果")
 print("-" * 46)
-print("方法              歩数    調べたマス数")
+print("方法               歩数   調べたマス数")
 print("幅優先探索      ", f"{len(bfs_path)-1:>4}歩", f"{bfs_checked:>10}マス")
 print("深さ優先探索    ", f"{len(dfs_path)-1:>4}歩", f"{dfs_checked:>10}マス")
 print("-" * 46)
 
 
 def draw(path, title):
+    """通り道に * を付けて迷路を表示する"""
     picture = [list(line) for line in maze]
     for (r, c) in path:
         if picture[r][c] == ".":

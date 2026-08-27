@@ -9,17 +9,15 @@ import time
 # 自分の作品では True に変えると、キーボードから入力できるようになる。
 USE_INPUT = False
 sample_answers = ["3", "たなか", "DDRR"]
-answer_index = 0
 
 
 def ask(question, default):
-    """質問を表示して答えを受け取る。USE_INPUT が False なら決められた答えを返す。"""
-    global answer_index
+    """質問を表示して答えを受け取る。
+    USE_INPUT が False のときは、sample_answers の先頭から順に使う。"""
     if USE_INPUT:
         return input(question)
-    if answer_index < len(sample_answers):
-        answer = sample_answers[answer_index]
-        answer_index = answer_index + 1
+    if len(sample_answers) > 0:
+        answer = sample_answers.pop(0)     # 先頭を1つ取り出す（リストからは消える）
     else:
         answer = default
     print(question + answer + "  ← 入力のかわりに用意した答え")

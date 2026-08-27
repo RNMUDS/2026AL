@@ -535,6 +535,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 
 <span class="kw">def</span> <span class="fn">build_route</span>(came_from, goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
     route = []
     node = goal
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
@@ -585,6 +586,7 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
 
 
 <span class="kw">def</span> <span class="fn">draw</span>(route, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
     <span class="fn">print</span>(title)
     <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
         line = <span class="str">&quot;&quot;</span>
@@ -678,7 +680,7 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
 line = <span class="str">&quot;&quot;</span>
 <span class="kw">for</span> i, (cell, total) <span class="kw">in</span> <span class="fn">enumerate</span>(order):
-    line = line + <span class="str">f&quot;{cell}={total}秒  &quot;</span>
+    line = line + <span class="str">f&quot;{str(cell) + &#x27;=&#x27; + str(total) + &#x27;秒&#x27;:&lt;14}&quot;</span>
     <span class="kw">if</span> (i + <span class="num">1</span>) % <span class="num">4</span> == <span class="num">0</span>:
         <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
         line = <span class="str">&quot;&quot;</span>
@@ -704,7 +706,7 @@ line = <span class="str">&quot;&quot;</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex2_result.png" alt="AL2-07-ex2.py の実行結果。確定した順番（コストが小さいマスから順に決まっていく） / ------------------------------------------------------------ / (0, 0)=0秒  (0, 1)=1秒  (0, 2)=2秒  (1, 2)=3秒 / (2, 2)=4秒  (2, 1)=5秒  (2, 0)=6秒  (3, 0)=7秒 / (4, 0)=8秒  (1, 0)=9秒  (4, 1)=9秒  (1, 1)=10秒 / (4, 2)=10秒  (0, 3)=11秒  (4, 3)=11秒  (0, 4)=12秒 / (1, 3)=12秒  (4, 4)=12秒  (1, 4)=13秒  (2, 3)=13秒 / (3, 2)=13秒  (3, 4)=13秒  (2, 4)=14秒  (3, 1)=14秒 / (3, 3)=20秒 / ------------------------------------------------------------ /  / スタート(0,0)から各マスまでの最小コスト / ------------------------------ / 0    1    2   11   12 / 9   10    3   12   13 / 6    5    4   13   14 / 7   14   13   20   13 / 8    9   10   11   12 / ------------------------------ /  / もとの迷路（そのマスを通るのにかかる秒数） / ------------------------------ / 1    1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている" width="502" height="648" loading="lazy">
+        <img src="images/a07_ex2_result.png" alt="AL2-07-ex2.py の実行結果。確定した順番（コストが小さいマスから順に決まっていく） / ------------------------------------------------------------ / (0, 0)=0秒     (0, 1)=1秒     (0, 2)=2秒     (1, 2)=3秒 / (2, 2)=4秒     (2, 1)=5秒     (2, 0)=6秒     (3, 0)=7秒 / (4, 0)=8秒     (1, 0)=9秒     (4, 1)=9秒     (1, 1)=10秒 / (4, 2)=10秒    (0, 3)=11秒    (4, 3)=11秒    (0, 4)=12秒 / (1, 3)=12秒    (4, 4)=12秒    (1, 4)=13秒    (2, 3)=13秒 / (3, 2)=13秒    (3, 4)=13秒    (2, 4)=14秒    (3, 1)=14秒 / (3, 3)=20秒 / ------------------------------------------------------------ /  / スタート(0,0)から各マスまでの最小コスト / ------------------------------ / 0    1    2   11   12 / 9   10    3   12   13 / 6    5    4   13   14 / 7   14   13   20   13 / 8    9   10   11   12 / ------------------------------ /  / もとの迷路（そのマスを通るのにかかる秒数） / ------------------------------ / 1    1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている" width="502" height="648" loading="lazy">
       </div>
       <p class="run-note">確定した順番は (0,0)=0秒 → (0,1)=1秒 → (0,2)=2秒 → (1,2)=3秒 … と、<strong>コストが小さいマスから順</strong>になっています。いちばん最後に確定した (3,3) は20秒で、9のマスに囲まれているためコストが高くなっています。真ん中の表は、スタートからそれぞれのマスへ行くのにかかる最小の秒数です。9のマスがある右上の (0,3) は11秒、(0,4) は12秒と、遠回りしてたどり着く形になっています。</p>
     </div>
@@ -779,7 +781,7 @@ line = <span class="str">&quot;&quot;</span>
 
 <span class="fn">print</span>(<span class="str">&quot;迷路の大きさを変えて、ダイクストラ法の実行時間を測る&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;迷路の大きさ      マスの数      最小コスト   調べたマス   かかった時間&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;大きさ         マスの数   最小コスト  調べたマス  かかった時間&quot;</span>)
 
 <span class="kw">for</span> size <span class="kw">in</span> [<span class="num">50</span>, <span class="num">100</span>, <span class="num">200</span>, <span class="num">400</span>]:
     cost_map = <span class="fn">make_cost_map</span>(size)
@@ -794,35 +796,36 @@ line = <span class="str">&quot;&quot;</span>
 <span class="fn">print</span>(<span class="str">&quot;第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。&quot;</span>)</pre>
 
       <div class="diagram-container">
-        <svg viewBox="0 0 700 352" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <svg viewBox="0 0 700 362" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">マスの数が4倍になっても、時間は4倍すこしにしかならない</text>
-        <text x="24" y="78" fill="#E0E0E0" font-size="12" font-weight="700">50×50</text>
-        <text x="118" y="78" fill="#888888" font-size="10">2,500マス</text>
-        <rect x="200" y="62" width="4" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="214" y="79" fill="#76B900" font-size="12" font-weight="700">0.002秒</text>
-        <text x="24" y="130" fill="#E0E0E0" font-size="12" font-weight="700">100×100</text>
-        <text x="118" y="130" fill="#888888" font-size="10">10,000マス</text>
-        <rect x="200" y="114" width="18" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="228" y="131" fill="#76B900" font-size="12" font-weight="700">0.008秒</text>
-        <text x="24" y="182" fill="#E0E0E0" font-size="12" font-weight="700">200×200</text>
-        <text x="118" y="182" fill="#888888" font-size="10">40,000マス</text>
-        <rect x="200" y="166" width="84" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="294" y="183" fill="#76B900" font-size="12" font-weight="700">0.038秒</text>
-        <text x="24" y="234" fill="#E0E0E0" font-size="12" font-weight="700">400×400</text>
-        <text x="118" y="234" fill="#888888" font-size="10">160,000マス</text>
-        <rect x="200" y="218" width="400" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="610" y="235" fill="#76B900" font-size="12" font-weight="700">0.182秒</text>
-        <rect x="24" y="274" width="652" height="60" rx="10" fill="#2b1a00" stroke="#FF5252"/>
-        <text x="350" y="298" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">第4回の全探索: 6マス×6マス（36マス）で 約7秒</text>
-        <text x="350" y="319" text-anchor="middle" fill="#ccc" font-size="11">ダイクストラ法なら160,000マスを0.182秒。あつかえる大きさがまるで違う</text>
+        <text x="350" y="44" text-anchor="middle" fill="#888888" font-size="11">秒数は測ったときの一例。パソコンによって変わる</text>
+        <text x="24" y="88" fill="#E0E0E0" font-size="12" font-weight="700">50×50</text>
+        <text x="118" y="88" fill="#888888" font-size="10">2,500マス</text>
+        <rect x="200" y="72" width="4" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="214" y="89" fill="#76B900" font-size="12" font-weight="700">0.002秒</text>
+        <text x="24" y="140" fill="#E0E0E0" font-size="12" font-weight="700">100×100</text>
+        <text x="118" y="140" fill="#888888" font-size="10">10,000マス</text>
+        <rect x="200" y="124" width="18" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="228" y="141" fill="#76B900" font-size="12" font-weight="700">0.008秒</text>
+        <text x="24" y="192" fill="#E0E0E0" font-size="12" font-weight="700">200×200</text>
+        <text x="118" y="192" fill="#888888" font-size="10">40,000マス</text>
+        <rect x="200" y="176" width="84" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="294" y="193" fill="#76B900" font-size="12" font-weight="700">0.038秒</text>
+        <text x="24" y="244" fill="#E0E0E0" font-size="12" font-weight="700">400×400</text>
+        <text x="118" y="244" fill="#888888" font-size="10">160,000マス</text>
+        <rect x="200" y="228" width="400" height="22" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="610" y="245" fill="#76B900" font-size="12" font-weight="700">0.182秒</text>
+        <rect x="24" y="284" width="652" height="60" rx="10" fill="#2b1a00" stroke="#FF5252"/>
+        <text x="350" y="308" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">第4回の全探索: 6マス×6マス（36マス）で 約7秒</text>
+        <text x="350" y="329" text-anchor="middle" fill="#ccc" font-size="11">ダイクストラ法なら160,000マスが1秒もかからない。あつかえる大きさがまるで違う</text>
         </svg>
       </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 迷路の大きさ      マスの数      最小コスト   調べたマス   かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.008秒 / 200×200        40,000          398      39,997       0.036秒 / 400×400       160,000          798     159,997       0.174秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
+        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.008秒 / 200×200        40,000          398      39,997       0.035秒 / 400×400       160,000          798     159,997       0.169秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
       </div>
-      <p class="run-note">400マス四方（160,000マス）でも<strong>0.182秒</strong>で解けています。マスの数が4倍になるたびに、かかる時間も4倍すこしずつ増えています。第4回の例題4で、全探索が6マス四方（36マス）に約7秒かかったことと比べてください。全探索では6マス四方が限界でしたが、ダイクストラ法なら400マス四方が一瞬で終わります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
+      <p class="run-note">400マス四方（160,000マス）でも<strong>0.2秒ほど</strong>で解けています。マスの数が4倍になるたびに、かかる時間も4倍すこしずつ増えています。第4回の例題4で、全探索が6マス四方（36マス）に約7秒かかったことと比べてください。全探索では6マス四方が限界でしたが、ダイクストラ法なら400マス四方が一瞬で終わります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
 
       <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の表から、4つの大きさそれぞれの「マスの数」「最小コスト」「かかった時間」を書き写す。あわせて、マスの数が4倍になったとき、かかった時間が何倍になったかを計算して書く。</span></div>
     </div>
@@ -918,6 +921,7 @@ forest = [
 
 
 <span class="kw">def</span> <span class="fn">show</span>(cost_map, name):
+    <span class="str">&quot;&quot;&quot;地形の名前・最短ルート・地図をまとめて表示する&quot;&quot;&quot;</span>
     route, best = <span class="fn">solve</span>(cost_map)
     <span class="fn">print</span>(<span class="str">f&quot;{name}: {len(route)-1}歩 ／ 合計 {best}秒&quot;</span>)
     <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(cost_map)):

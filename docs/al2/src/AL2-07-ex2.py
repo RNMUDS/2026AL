@@ -45,7 +45,7 @@ print("確定した順番（コストが小さいマスから順に決まって�
 print("-" * 60)
 line = ""
 for i, (cell, total) in enumerate(order):
-    line = line + f"{cell}={total}秒  "
+    line = line + f"{str(cell) + '=' + str(total) + '秒':<14}"
     if (i + 1) % 4 == 0:
         print("  " + line)
         line = ""

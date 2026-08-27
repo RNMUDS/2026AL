@@ -17,10 +17,11 @@ lines = [
 n = len(stations)
 
 # 全部のマスを0にした表を作る
-matrix = [[0 for _ in range(n)] for _ in range(n)]
+matrix = [[0 for j in range(n)] for i in range(n)]
 
 # 路線があるマスだけ1にする（行き帰りの両方を1にする）
 for a, b in lines:
+    # index() は「リストの中で何番目にあるか」を返す。stations.index("渋谷") なら 1
     i = stations.index(a)
     j = stations.index(b)
     matrix[i][j] = 1
@@ -64,7 +65,7 @@ print()
 
 print("駅の数を増やしたときの比較（1駅あたり3路線とした場合）")
 print("-" * 48)
-print("    駅の数     隣接行列のマス数     隣接リストのマス数")
+print("    駅の数   隣接行列のマス数   隣接リストのマス数")
 for count in [6, 50, 500, 5000]:
     print(f"{count:>10}   {count*count:>16}   {count*3*2:>18}")
 print("-" * 48)

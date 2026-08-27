@@ -174,20 +174,22 @@ def fig_scale():
     rows = [("50×50", 2500, 0.002), ("100×100", 10000, 0.008),
             ("200×200", 40000, 0.038), ("400×400", 160000, 0.182)]
     s = [f'        <text x="350" y="26" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
-         'マスの数が4倍になっても、時間は4倍すこしにしかならない</text>']
+         'マスの数が4倍になっても、時間は4倍すこしにしかならない</text>',
+         f'        <text x="350" y="44" text-anchor="middle" fill="{GRAY}" font-size="11">'
+         '秒数は測ったときの一例。パソコンによって変わる</text>']
     for i, (size, cells, t) in enumerate(rows):
-        y = 56 + i * 52
+        y = 66 + i * 52
         w = t / 0.182 * 400
         s.append(f'        <text x="24" y="{y+22}" fill="#E0E0E0" font-size="12" font-weight="700">{size}</text>')
         s.append(f'        <text x="118" y="{y+22}" fill="{GRAY}" font-size="10">{cells:,}マス</text>')
         s.append(f'        <rect x="200" y="{y+6}" width="{max(w,3):.0f}" height="22" rx="5" fill="{GREEN}" opacity="0.85"/>')
         s.append(f'        <text x="{200+max(w,3)+10:.0f}" y="{y+23}" fill="{GREEN}" font-size="12" font-weight="700">{t:.3f}秒</text>')
-    y = 56 + 4 * 52 + 10
+    y = 66 + 4 * 52 + 10
     s.append(f'        <rect x="24" y="{y}" width="652" height="60" rx="10" fill="#2b1a00" stroke="{RED}"/>')
     s.append(f'        <text x="350" y="{y+24}" text-anchor="middle" fill="{RED}" font-size="12" font-weight="700">'
              '第4回の全探索: 6マス×6マス（36マス）で 約7秒</text>')
     s.append(f'        <text x="350" y="{y+45}" text-anchor="middle" fill="#ccc" font-size="11">'
-             'ダイクストラ法なら160,000マスを0.182秒。あつかえる大きさがまるで違う</text>')
+             'ダイクストラ法なら160,000マスが1秒もかからない。あつかえる大きさがまるで違う</text>')
     return fig(700, y + 78, "\n".join(s))
 
 
@@ -332,7 +334,7 @@ ex3_body = f"""      <p>迷路を大きくしていったとき、ダイクス�
 
 {fig_scale()}
 
-{run('a07_ex3_result.png', '400マス四方（160,000マス）でも<strong>0.182秒</strong>で解けています。'
+{run('a07_ex3_result.png', '400マス四方（160,000マス）でも<strong>0.2秒ほど</strong>で解けています。'
      'マスの数が4倍になるたびに、かかる時間も4倍すこしずつ増えています。'
      '第4回の例題4で、全探索が6マス四方（36マス）に約7秒かかったことと比べてください。'
      '全探索では6マス四方が限界でしたが、ダイクストラ法なら400マス四方が一瞬で終わります。'

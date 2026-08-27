@@ -31,8 +31,8 @@ def show_table(step, chosen):
         text = "-" if value == INF else str(value)
         if station in settled:
             text = text + "*"
-        parts.append(f"{station}:{text:>4}")
-    print(f"手順{step}  選んだ駅: {chosen:<4}  " + " ".join(parts))
+        parts.append(f"{station}:{text:>3}")
+    print(f"手順{step} {chosen}を選ぶ  " + " ".join(parts))
 
 
 print("ダイクストラ法で、新宿から各駅までの最短時間を求める")

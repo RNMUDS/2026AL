@@ -146,7 +146,7 @@ def fig_speed():
     s = [f'        <text x="350" y="26" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
          '同じ答えを出すのにかかる時間の比較</text>',
          f'        <text x="350" y="46" text-anchor="middle" fill="{GRAY}" font-size="11">'
-         '棒の長さは、全部見る方法の時間を6.14秒＝いっぱいとしたときの割合</text>']
+         '棒の長さは、全部見る方法にかかった時間の割合（数値は測ったときの一例）</text>']
     for i, (size, v, tl, th, ratio) in enumerate(rows):
         y = 66 + i * 76
         s.append(f'        <text x="24" y="{y+20}" fill="#E0E0E0" font-size="12" font-weight="700">{size}</text>')
@@ -299,9 +299,9 @@ ex3_body = f"""      <p>第5回のやり方（全部見る）と、第6回のや
 
 {fig_speed()}
 
-{run('a06_ex3_result.png', '120マス四方（頂点14,400個）では、全部見る方法が<strong>6.140秒</strong>、'
-     'heapq を使う方法が<strong>0.009秒</strong>で、<strong>656倍</strong>の差が出ました。'
-     '20マス四方のときは23倍だったので、頂点が増えるほど差が広がっています。'
+{run('a06_ex3_result.png', '120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、'
+     'heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。'
+     '20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。'
      '2つの方法が出した答えは、どの大きさでも完全に一致しています。'
      '秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。')}
 

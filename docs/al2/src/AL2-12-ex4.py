@@ -14,6 +14,7 @@ n = len(quests)
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -25,13 +26,16 @@ def pad(text, width):
 
 print(f"使える時間: {limit}分")
 print("-" * 46)
-print("できること              かかる分   得点   1分あたり")
+print(pad("できること", 24) + pad("かかる分", 10) + pad("得点", 8) + " 1分あたり")
 for name, minutes, score in quests:
-    print(pad(name, 24) + f"{minutes:>6}分{score:>7}点{score/minutes:>10.2f}")
+    print(pad(name, 24) + pad(f"{minutes}分", 10) + pad(f"{score}点", 8)
+          + f"{score / minutes:>10.2f}")
 print("-" * 46)
 print()
 
 # --- 方法1: 貪欲法（1分あたりの得点が高いものから選ぶ） ---
+# 「1分あたりの得点」を計算して、大きい順に番号を並べる
+# key= には「並べかえの基準にする値を返す関数」を渡す。reverse=True で大きい順になる
 order = sorted(range(n), key=lambda i: quests[i][2] / quests[i][1], reverse=True)
 used = 0
 greedy_score = 0
@@ -88,4 +92,5 @@ print("  選んだもの:", "、".join(chosen))
 print(f"  合計得点: {best[n][limit]}点")
 print()
 print("差:", best[n][limit] - greedy_score, "点")
-print("貪欲法は「1分あたりの得点」だけを見るので、時間がぴったり収まる組み合わせを見のがす。")
+print("貪欲法は「1分あたりの得点」だけを見るので、")
+print("時間がぴったり収まる組み合わせを見のがしてしまう。")

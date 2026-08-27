@@ -31,6 +31,7 @@ goal = (rows - 1, cols - 1)
 
 
 def steps_from(origin):
+    """origin から、通れるすべてのマスまでの歩数を求める（幅優先探索）"""
     dist = {origin: 0}
     queue = deque([origin])
     while len(queue) > 0:
@@ -56,14 +57,16 @@ for name, position in items.items():
 table = {}
 for name, position in places.items():
     dist = steps_from(position)
-    for other, other_position in places.items():
-        if other_position not in dist:
+    table[name] = {}
+    for other in places:
+        if places[other] not in dist:
             print(f"エラー: {name} から {other} へ行けません。迷路を作り直してください。")
-            raise SystemExit
-    table[name] = {other: dist[places[other]] for other in places}
+            raise SystemExit          # ここでプログラムを終わりにする
+        table[name][other] = dist[places[other]]
 
 
 def route_steps(order):
+    """S から order の順にアイテムを拾い、G へ行くまでの合計歩数を返す"""
     total = table["S"][order[0]]
     for i in range(len(order) - 1):
         total = total + table[order[i]][order[i + 1]]
@@ -95,7 +98,10 @@ here = "S"
 remaining = ["A", "B", "C", "D"]
 greedy_order = []
 while len(remaining) > 0:
-    nearest = min(remaining, key=lambda name: table[here][name])
+    nearest = None
+    for name in remaining:
+        if nearest is None or table[here][name] < table[here][nearest]:
+            nearest = name
     greedy_order.append(nearest)
     remaining.remove(nearest)
     here = nearest

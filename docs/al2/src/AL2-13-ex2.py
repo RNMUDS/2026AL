@@ -7,18 +7,19 @@ from itertools import permutations
 # ここを書き換えれば、自分の配達先が作れる（8件までなら全探索が使える）
 places = [
     ("営業所", 5, 5),
-    ("田中さん宅", 12, 3),
-    ("鈴木さん宅", 2, 11),
-    ("佐藤さん宅", 15, 12),
-    ("高橋さん宅", 8, 14),
-    ("伊藤さん宅", 19, 1),
-    ("渡辺さん宅", 1, 2),
+    ("田中宅", 12, 3),
+    ("鈴木宅", 2, 11),
+    ("佐藤宅", 15, 12),
+    ("高橋宅", 8, 14),
+    ("伊藤宅", 19, 1),
+    ("渡辺宅", 1, 2),
 ]
 
 n = len(places)
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -38,6 +39,7 @@ for i in range(n):
 
 
 def route_length(order):
+    """0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す"""
     total = 0.0
     here = 0
     for city in order:
@@ -47,6 +49,7 @@ def route_length(order):
 
 
 def greedy():
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
     visited = [0]
     here = 0
     while len(visited) < n:
@@ -62,6 +65,7 @@ def greedy():
 
 
 def brute_force():
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     best = None
     best_order = None
     for order in permutations(range(1, n)):
@@ -73,6 +77,7 @@ def brute_force():
 
 
 def show(order, title):
+    """ルートと合計距離を表示する"""
     print(title)
     names = [places[0][0]]
     for city in order:

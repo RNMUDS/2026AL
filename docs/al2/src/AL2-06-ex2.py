@@ -53,6 +53,7 @@ print()
 
 
 def build_route(goal):
+    """ゴールからスタートへ逆にたどって道順を組み立てる"""
     route = []
     node = goal
     while node is not None:

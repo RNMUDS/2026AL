@@ -58,9 +58,9 @@ for here in range(n):
         last_city = here
 
 print("動的計画法（bitDP）の表の一部")
-print("（visited = 回った都市の集合、here = いまいる都市）")
+print("（visited = 回った都市の集合を2進数で表したもの、here = いまいる都市）")
 print("-" * 62)
-print("visited(2進数)   here=0   here=1   here=2   here=3   here=4")
+print("visited           here=0 here=1   here=2   here=3   here=4")
 for visited in [1, 3, 7, 15, 31]:
     line = f"   {format(visited, '05b')}        "
     for here in range(n):

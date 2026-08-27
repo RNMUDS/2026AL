@@ -35,6 +35,7 @@ def tour_length(order):
 
 
 def tour_name(order):
+    """ルートを「学校 → 郵便局 → …」という文字列にして返す"""
     names = [cities[0][0]]
     for city in order:
         names.append(cities[city][0])

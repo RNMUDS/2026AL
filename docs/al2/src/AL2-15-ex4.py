@@ -23,6 +23,7 @@ for i in range(n):
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -33,6 +34,7 @@ def pad(text, width):
 
 
 def tour_length(order):
+    """0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す"""
     total = 0.0
     here = 0
     for city in order:
@@ -42,6 +44,7 @@ def tour_length(order):
 
 
 def greedy_from(start):
+    """start を出発点にして、貪欲法でルートを作る"""
     visited = [start]
     here = start
     while len(visited) < n:
@@ -61,11 +64,13 @@ def greedy_from(start):
 
 
 def greedy():
+    """貪欲法（出発点は0番の都市に固定）"""
     total, visited = greedy_from(0)
     return total
 
 
 def greedy_all_starts():
+    """すべての都市を出発点にして貪欲法を試し、いちばん良い答えを選ぶ"""
     best = None
     for start in range(n):
         total, visited = greedy_from(start)
@@ -75,6 +80,7 @@ def greedy_all_starts():
 
 
 def annealing():
+    """焼きなまし法: 悪くなる変更もときどき受け入れながら、少しずつ短くする"""
     total, visited = greedy_from(0)
     order = visited[1:]
     current = tour_length(order)
@@ -99,6 +105,7 @@ def annealing():
 
 
 def genetic():
+    """遺伝的アルゴリズム: 良いルートどうしを組み合わせて世代を進める"""
     population = []
     for i in range(100):
         order = list(range(1, n))
@@ -112,8 +119,15 @@ def genetic():
         while len(next_population) < 100:
             parents = []
             for k in range(2):
-                three = [random.choice(population) for _ in range(3)]
-                parents.append(min(three, key=tour_length))
+                # 3つをランダムに選び、その中でいちばん短いものを親にする
+                three = []
+                for t in range(3):
+                    three.append(random.choice(population))
+                best_of_three = three[0]
+                for candidate in three:
+                    if tour_length(candidate) < tour_length(best_of_three):
+                        best_of_three = candidate
+                parents.append(best_of_three)
             size = n - 1
             left = random.randrange(size)
             right = random.randrange(size)
@@ -145,8 +159,11 @@ def genetic():
 
 
 def bit_dp():
+    """動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める"""
     full = (1 << n) - 1
-    best = [[INF] * n for _ in range(1 << n)]
+    best = []
+    for visited in range(1 << n):
+        best.append([INF] * n)
     best[1][0] = 0.0
     for visited in range(1 << n):
         row = best[visited]
@@ -186,7 +203,10 @@ for name, function, week, note in methods:
     elapsed = time.time() - began
     results.append((name, value, elapsed, week, note))
 
-best_value = min(v for _, v, _, _, _ in results)
+best_value = None
+for name, value, elapsed, week, note in results:
+    if best_value is None or value < best_value:
+        best_value = value
 for name, value, elapsed, week, note in results:
     gap = value - best_value
     print(pad(name, 24) + pad(f"{round(value, 1)}", 10)

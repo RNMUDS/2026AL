@@ -59,7 +59,7 @@ def dijkstra(cost_map):
 
 print("迷路の大きさを変えて、ダイクストラ法の実行時間を測る")
 print("-" * 62)
-print("迷路の大きさ      マスの数      最小コスト   調べたマス   かかった時間")
+print("大きさ         マスの数   最小コスト  調べたマス  かかった時間")
 
 for size in [50, 100, 200, 400]:
     cost_map = make_cost_map(size)

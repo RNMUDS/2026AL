@@ -29,6 +29,7 @@ def route_minutes(route):
 
 
 def build(came_from, goal):
+    """ゴールからスタートへ逆にたどって道順を組み立てる"""
     route = []
     node = goal
     while node is not None:
@@ -106,7 +107,7 @@ def pad(text, width):
 
 print(f"{start} から {goal} まで、3つの方法で経路を求める")
 print("-" * 66)
-print("方法              路線の本数   合計時間   経路")
+print("方法            路線の本数   合計時間   経路")
 for name, function in [("幅優先探索", bfs), ("深さ優先探索", dfs), ("ダイクストラ法", dijkstra)]:
     route = function()
     print(pad(name, 16)

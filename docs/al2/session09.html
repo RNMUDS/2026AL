@@ -561,7 +561,8 @@ distance = []
     <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), <span class="fn">round</span>(best_length, <span class="num">1</span>)
 
 
-<span class="kw">def</span> <span class="fn">show</span>(route):
+<span class="kw">def</span> <span class="fn">route_names</span>(route):
+    <span class="str">&quot;&quot;&quot;ルートを都市名でつないだ文字列にして返す&quot;&quot;&quot;</span>
     names = [cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
     names.append(cities[route[<span class="num">0</span>]][<span class="num">0</span>])
     <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
@@ -570,13 +571,13 @@ distance = []
 greedy_route, greedy_length = <span class="fn">greedy</span>(<span class="num">0</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(greedy_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, greedy_length)
 <span class="fn">print</span>()
 
 best_route, best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(best_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
 <span class="fn">print</span>()
 
@@ -626,6 +627,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -644,6 +646,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best_length = <span class="kw">None</span>
     best_order = <span class="kw">None</span>
     tried = <span class="num">0</span>
@@ -661,7 +664,8 @@ distance = []
     <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), best_length, tried
 
 
-<span class="kw">def</span> <span class="fn">show</span>(route):
+<span class="kw">def</span> <span class="fn">route_names</span>(route):
+    <span class="str">&quot;&quot;&quot;ルートを都市名でつないだ文字列にして返す&quot;&quot;&quot;</span>
     names = [cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
     names.append(cities[route[<span class="num">0</span>]][<span class="num">0</span>])
     <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
@@ -678,11 +682,11 @@ brute_time = time.time() - began
 <span class="fn">print</span>(<span class="str">&quot;8つの都市で、貪欲法と全探索を比べる&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(greedy_route))
 <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(greedy_length, 1)}   かかった時間: {greedy_time:.6f}秒&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;全探索&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(best_route))
 <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(best_length, 1)}   かかった時間: {brute_time:.6f}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;  試した順番の数: {tried:,}通り&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
@@ -698,7 +702,7 @@ ratio = greedy_length / best_length
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000006秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000792秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 138 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000802秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 153 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
 
@@ -752,6 +756,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -770,6 +775,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best_length = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
         total = <span class="num">0.0</span>
@@ -788,21 +794,26 @@ best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>(<span class="str">&quot;出発する都市を変えて、貪欲法の答えを比べる&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;（全探索で求めた本当の最短は {round(best_length, 1)}）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
-<span class="fn">print</span>(<span class="str">&quot;出発する都市        合計距離    最短との差    ルート&quot;</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;出発する都市&quot;</span>, <span class="num">16</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計距離&quot;</span>, <span class="num">10</span>) + <span class="str">&quot;最短との差&quot;</span>)
 
 results = []
 <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
     route, total = <span class="fn">greedy</span>(start)
     results.append((<span class="fn">round</span>(total, <span class="num">1</span>), start, route))
-    names = <span class="str">&quot; → &quot;</span>.join(cities[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route)
+
+    names = []
+    <span class="kw">for</span> i <span class="kw">in</span> route:
+        names.append(cities[i][<span class="num">0</span>])
+
     <span class="fn">print</span>(<span class="fn">pad</span>(cities[start][<span class="num">0</span>], <span class="num">16</span>)
-          + <span class="str">f&quot;{round(total, 1):&gt;8}&quot;</span>
-          + <span class="str">f&quot;{round(total - best_length, 1):&gt;12}    &quot;</span> + names)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{round(total, 1)}&quot;</span>, <span class="num">10</span>)
+          + <span class="str">f&quot;{round(total - best_length, 1):&gt;7}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot; → &quot;</span>.join(names))
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
 <span class="fn">print</span>()
 
-results.sort()
+results.sort()          <span class="cmt"># タプルの1つ目（合計距離）が小さい順に並べかえる</span>
 <span class="fn">print</span>(<span class="str">&quot;いちばん良かった出発点:&quot;</span>, cities[results[<span class="num">0</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[<span class="num">0</span>][<span class="num">0</span>])
 <span class="fn">print</span>(<span class="str">&quot;いちばん悪かった出発点:&quot;</span>, cities[results[-<span class="num">1</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[-<span class="num">1</span>][<span class="num">0</span>])
 <span class="fn">print</span>()
@@ -845,7 +856,7 @@ results.sort()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex3_result.png" alt="AL2-09-ex3.py の実行結果。出発する都市を変えて、貪欲法の答えを比べる / （全探索で求めた本当の最短は 46.8） / -------------------------------------------------------------------- / 出発する都市        合計距離    最短との差    ルート / 学校                53.2         6.4    学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 / 郵便局              54.2         7.3    郵便局 → 書店 → 公園 → カフェ → 病院 → 図書館 → 駅 → 学校 / 図書館              61.2        14.4    図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 駅 → 学校 / カフェ              57.6        10.8    カフェ → 公園 → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 公園                53.2         6.4    公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 駅                  54.2         7.3    駅 → 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 学校 / 病院                57.6        10.8    病院 → 図書館 → 駅 → 郵便局 → 書店 → 公園 → カフェ → 学校 / 書店                46.8         0.0    書店 → 郵便局 → 駅 → 図書館 → 病院 → カフェ → 公園 → 学校 / -------------------------------------------------------------------- /  / いちばん良かった出発点: 書店 → 46.8 / いちばん悪かった出発点: 図書館 → 61.2 /  / 書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。 / 出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。" width="744" height="428" loading="lazy">
+        <img src="images/a09_ex3_result.png" alt="AL2-09-ex3.py の実行結果。出発する都市を変えて、貪欲法の答えを比べる / （全探索で求めた本当の最短は 46.8） / -------------------------------------------------------------------- / 出発する都市    合計距離  最短との差 / 学校            53.2          6.4 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 / 郵便局          54.2          7.3 / 郵便局 → 書店 → 公園 → カフェ → 病院 → 図書館 → 駅 → 学校 / 図書館          61.2         14.4 / 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 駅 → 学校 / カフェ          57.6         10.8 / カフェ → 公園 → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 公園            53.2          6.4 / 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 駅              54.2          7.3 / 駅 → 図書館 → 病院 → カフェ → 公園 → 書店 → 郵便局 → 学校 / 病院            57.6         10.8 / 病院 → 図書館 → 駅 → 郵便局 → 書店 → 公園 → カフェ → 学校 / 書店            46.8          0.0 / 書店 → 郵便局 → 駅 → 図書館 → 病院 → カフェ → 公園 → 学校 / -------------------------------------------------------------------- /  / いちばん良かった出発点: 書店 → 46.8 / いちばん悪かった出発点: 図書館 → 61.2 /  / 書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。 / 出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。" width="539" height="588" loading="lazy">
       </div>
       <p class="run-note">出発点によって、貪欲法の答えは<strong>46.8から61.2まで</strong>ばらつきました。いちばん悪いのは図書館から出発した場合の61.2で、最短より14.4も長くなっています。注目すべきは<strong>書店から出発した場合</strong>で、答えは46.8となり、全探索で求めた最短と完全に一致しました。貪欲法は運に左右されるということです。この性質を利用して、<strong>すべての出発点で試して、いちばん良かった答えを採用する</strong>というやり方もよく使われます。それでも全探索よりずっと速く終わります。</p>
     </div>
@@ -885,6 +896,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(start):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     visited = [start]
     total = <span class="num">0.0</span>
     here = start
@@ -906,6 +918,7 @@ distance = []
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     best_length = <span class="kw">None</span>
     best_order = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
@@ -921,7 +934,8 @@ distance = []
     <span class="kw">return</span> [<span class="num">0</span>] + <span class="fn">list</span>(best_order), best_length
 
 
-<span class="kw">def</span> <span class="fn">show</span>(route):
+<span class="kw">def</span> <span class="fn">route_names</span>(route):
+    <span class="str">&quot;&quot;&quot;ルートを都市名でつないだ文字列にして返す&quot;&quot;&quot;</span>
     names = [houses[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> route]
     names.append(houses[route[<span class="num">0</span>]][<span class="num">0</span>])
     <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
@@ -954,13 +968,13 @@ greedy_route, greedy_length, steps = <span class="fn">greedy</span>(<span class=
     <span class="fn">print</span>(<span class="str">f&quot;  {a} → {b}  {d}&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(greedy_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(greedy_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">round</span>(greedy_length, <span class="num">1</span>))
 <span class="fn">print</span>()
 
 best_route, best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>(<span class="str">&quot;全探索の答え（本当の最短）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">show</span>(best_route))
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">route_names</span>(best_route))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">round</span>(best_length, <span class="num">1</span>))
 <span class="fn">print</span>()
 
@@ -1163,7 +1177,7 @@ best_route, best_length = <span class="fn">brute_force</span>()
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

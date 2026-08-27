@@ -24,7 +24,9 @@ def make_grid_graph(size):
 def dijkstra_linear(graph, start):
     """第5回のやり方: まだ決まっていない頂点を全部見て、いちばん小さいものをさがす"""
     INF = float("inf")
-    distance = {v: INF for v in graph}
+    distance = {}
+    for v in graph:
+        distance[v] = INF
     distance[start] = 0
     settled = set()
 
@@ -49,7 +51,9 @@ def dijkstra_linear(graph, start):
 def dijkstra_heap(graph, start):
     """heapq のやり方: いちばん小さいものを取り出す作業を heapq に任せる"""
     INF = float("inf")
-    distance = {v: INF for v in graph}
+    distance = {}
+    for v in graph:
+        distance[v] = INF
     distance[start] = 0
     queue = [(0, start)]
     settled = set()
@@ -68,7 +72,7 @@ def dijkstra_heap(graph, start):
 
 print("2つのやり方で、同じグラフの最短距離を求めて時間を測る")
 print("-" * 66)
-print("マス目の大きさ    頂点の数    全部見る方法    heapqの方法    何倍速いか")
+print("大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか")
 
 for size in [20, 40, 80, 120]:
     graph = make_grid_graph(size)

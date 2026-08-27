@@ -6,6 +6,7 @@ from itertools import permutations
 
 
 def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -16,6 +17,7 @@ def pad(text, width):
 
 
 def make_distance(count):
+    """都市どうしの直線距離を表にして返す"""
     cities = []
     for i in range(count):
         cities.append(((i * 7) % 23, (i * 11) % 19))
@@ -30,6 +32,7 @@ def make_distance(count):
 
 
 def brute_force(distance):
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
     n = len(distance)
     best = None
     for order in permutations(range(1, n)):

@@ -335,13 +335,15 @@ tests = [
 <span class="kw">for</span> name, moves <span class="kw">in</span> tests:
     route, message = <span class="fn">move_to_route_fixed</span>(moves)
     <span class="kw">if</span> route <span class="kw">is</span> <span class="kw">None</span>:
-        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;） → 受けつけない: {message}&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  → 受けつけない: {message}&quot;</span>)
     <span class="kw">else</span>:
         total = <span class="num">0</span>
         <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
             r, c = route[i]
             total = total + cost_map[r][c]
-        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;） → OK: {len(route)-1}歩 ／ {total}秒&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  → OK: {len(route)-1}歩 ／ {total}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
@@ -349,7 +351,7 @@ tests = [
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a14_ex1_result.png" alt="AL2-14-ex1.py の実行結果。バグのある関数に、6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / 最後にいるマス: (2, 2)   迷路の中か: True /  / 入力: 空の道（&quot;&quot;） / 最後にいるマス: (0, 0)   迷路の中か: True /  / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / 最後にいるマス: (6, 0)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / 入力: ゴールに着かない道（&quot;DR&quot;） / 最後にいるマス: (1, 1)   迷路の中か: True /  / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / 最後にいるマス: (2, 1)   迷路の中か: True /  / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / 最後にいるマス: (2, 3)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / ========================================================== / 修正版に、同じ6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） → OK: 4歩 ／ 12秒 / 入力: 空の道（&quot;&quot;） → 受けつけない: ゴールに着いていません / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） → 受けつけない: 迷路の外に出てしまいました / 入力: ゴールに着かない道（&quot;DR&quot;） → 受けつけない: ゴールに着いていません / 入力: 使えない文字が入った道（&quot;DDXR&quot;） → 受けつけない: 「X」は使えない文字です（D/U/R/L だけ使えます） / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） → OK: 6歩 ／ 22秒 / ========================================================== /  / 修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。 / 「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。" width="698" height="748" loading="lazy">
+        <img src="images/a14_ex1_result.png" alt="AL2-14-ex1.py の実行結果。バグのある関数に、6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / 最後にいるマス: (2, 2)   迷路の中か: True /  / 入力: 空の道（&quot;&quot;） / 最後にいるマス: (0, 0)   迷路の中か: True /  / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / 最後にいるマス: (6, 0)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / 入力: ゴールに着かない道（&quot;DR&quot;） / 最後にいるマス: (1, 1)   迷路の中か: True /  / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / 最後にいるマス: (2, 1)   迷路の中か: True /  / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / 最後にいるマス: (2, 3)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / ========================================================== / 修正版に、同じ6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / → OK: 4歩 ／ 12秒 / 入力: 空の道（&quot;&quot;） / → 受けつけない: ゴールに着いていません / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / → 受けつけない: 迷路の外に出てしまいました / 入力: ゴールに着かない道（&quot;DR&quot;） / → 受けつけない: ゴールに着いていません / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / → 受けつけない: 「X」は使えない文字です（D/U/R/L だけ使えます） / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / → OK: 6歩 ／ 22秒 / ========================================================== /  / 修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。 / 「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。" width="477" height="868" loading="lazy">
       </div>
       <p class="run-note">バグのある関数では、「迷路の外に出る道」と「行ったり戻ったりする道」が<strong>迷路の外のマスを指したまま</strong>返ってきています。このあと <code>cost_map[r][c]</code> を計算するとエラーで止まります。また「使えない文字が入った道」では、<code>X</code> が無視されて別の場所に着いてしまいました。修正版は、6種類すべてに対してエラーで止まらず、受けつけない場合は<strong>理由を文章で返して</strong>います。「行ったり戻ったりする道」は、ルールの上では正しい道なので受けつけている点にも注目してください。</p>
 
@@ -452,6 +454,7 @@ distance = []
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
 result = <span class="fn">greedy_buggy</span>()
 <span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+<span class="cmt"># set() は同じものを1つにまとめる。もとの数と減っていれば、同じ場所が2回入っている</span>
 <span class="fn">print</span>(<span class="str">&quot;  同じ場所が2回入っていないか:&quot;</span>, <span class="fn">len</span>(result) != <span class="fn">len</span>(<span class="fn">set</span>(result)))
 <span class="fn">print</span>()
 
@@ -495,6 +498,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
 
 
 <span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
     length = <span class="num">0</span>
     <span class="kw">for</span> ch <span class="kw">in</span> text:
         <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
@@ -505,6 +509,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
 
 
 <span class="kw">def</span> <span class="fn">make_distance</span>(count):
+    <span class="str">&quot;&quot;&quot;都市どうしの直線距離を表にして返す&quot;&quot;&quot;</span>
     cities = []
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
         cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
@@ -519,6 +524,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>(distance):
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(distance)
     best = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
@@ -580,7 +586,7 @@ records = <span class="fn">measure</span>(brute_force, distance, <span class="nu
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a14_ex3_result.png" alt="AL2-14-ex3.py の実行結果。同じ処理を5回ずつ測ってみる（10都市の全探索） / ---------------------------------------------------------- / 1回目: 0.0648秒 / 2回目: 0.0653秒 / 3回目: 0.0654秒 / 4回目: 0.0657秒 / 5回目: 0.0650秒 / ---------------------------------------------------------- / いちばん速い: 0.0648秒 / いちばん遅い: 0.0657秒 / 平均:         0.0652秒 / ばらつき（遅い÷速い）: 1.01倍 / ---------------------------------------------------------- /  / 同じ処理でも、測るたびに時間が違う。1回だけの結果を書くのは正しくない。 / レポートには「5回測った平均」のように、測り方も書く。 /  / ========================================================== / レポート用の表（都市の数を変えて、5回ずつ測った平均） / ========================================================== / 都市の数    平均        最速        最遅 / 7都市       0.0001秒    0.0001秒    0.0001秒 / 8都市       0.0008秒    0.0008秒    0.0008秒 / 9都市       0.0068秒    0.0068秒    0.0068秒 / 10都市      0.0665秒    0.0650秒    0.0683秒 / ========================================================== /  / 測り方の書き方の例: / 「MacBook Air (M4) 上の Python 3.11 で、同じ処理を5回ずつ実行し、 / その平均を記録した。時間は time.time() で計測した。」" width="488" height="648" loading="lazy">
+        <img src="images/a14_ex3_result.png" alt="AL2-14-ex3.py の実行結果。同じ処理を5回ずつ測ってみる（10都市の全探索） / ---------------------------------------------------------- / 1回目: 0.0635秒 / 2回目: 0.0647秒 / 3回目: 0.0650秒 / 4回目: 0.0648秒 / 5回目: 0.0648秒 / ---------------------------------------------------------- / いちばん速い: 0.0635秒 / いちばん遅い: 0.0650秒 / 平均:         0.0645秒 / ばらつき（遅い÷速い）: 1.02倍 / ---------------------------------------------------------- /  / 同じ処理でも、測るたびに時間が違う。1回だけの結果を書くのは正しくない。 / レポートには「5回測った平均」のように、測り方も書く。 /  / ========================================================== / レポート用の表（都市の数を変えて、5回ずつ測った平均） / ========================================================== / 都市の数    平均        最速        最遅 / 7都市       0.0001秒    0.0001秒    0.0001秒 / 8都市       0.0008秒    0.0007秒    0.0008秒 / 9都市       0.0066秒    0.0064秒    0.0067秒 / 10都市      0.0665秒    0.0662秒    0.0671秒 / ========================================================== /  / 測り方の書き方の例: / 「MacBook Air (M4) 上の Python 3.11 で、同じ処理を5回ずつ実行し、 / その平均を記録した。時間は time.time() で計測した。」" width="488" height="648" loading="lazy">
       </div>
       <p class="run-note">同じ処理を5回測ったところ、いちばん速い回といちばん遅い回で差が出ました。差はわずかですが、<strong>毎回同じ値にはならない</strong>ことが確かめられます。パソコンは同時にほかの仕事もしているため、実行時間は必ずばらつきます。レポートには「5回測った平均」のように<strong>測り方も書く</strong>ことが大切です。「0.07秒でした」とだけ書かれていると、読んだ人は本当かどうか確かめられません。</p>
     </div>
@@ -600,6 +606,7 @@ records = <span class="fn">measure</span>(brute_force, distance, <span class="nu
 
 
 <span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
     length = <span class="num">0</span>
     <span class="kw">for</span> ch <span class="kw">in</span> text:
         <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
@@ -610,6 +617,7 @@ records = <span class="fn">measure</span>(brute_force, distance, <span class="nu
 
 
 <span class="kw">def</span> <span class="fn">make_distance</span>(count):
+    <span class="str">&quot;&quot;&quot;都市どうしの直線距離を表にして返す&quot;&quot;&quot;</span>
     cities = []
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(count):
         cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
@@ -624,6 +632,7 @@ records = <span class="fn">measure</span>(brute_force, distance, <span class="nu
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>(distance):
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(distance)
     best = <span class="kw">None</span>
     <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
@@ -639,6 +648,7 @@ records = <span class="fn">measure</span>(brute_force, distance, <span class="nu
 
 
 <span class="kw">def</span> <span class="fn">greedy</span>(distance):
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
     n = <span class="fn">len</span>(distance)
     visited = [<span class="num">0</span>]
     here = <span class="num">0</span>
@@ -688,7 +698,10 @@ results = []
 
 <span class="fn">print</span>(<span class="str">&quot;図1: 貪欲法が最適解より何%長いか&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-biggest = <span class="fn">max</span>(gap <span class="kw">for</span> _, _, _, gap <span class="kw">in</span> results)
+biggest = <span class="num">0</span>
+<span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
+    <span class="kw">if</span> gap &gt; biggest:
+        biggest = gap
 <span class="kw">if</span> biggest == <span class="num">0</span>:
     biggest = <span class="num">1</span>
 <span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
@@ -698,7 +711,12 @@ biggest = <span class="fn">max</span>(gap <span class="kw">for</span> _, _, _, g
 
 <span class="fn">print</span>(<span class="str">&quot;図2: 最適解と貪欲法の答えを並べて比べる&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-biggest = <span class="fn">max</span>(<span class="fn">max</span>(best, fast) <span class="kw">for</span> _, best, fast, _ <span class="kw">in</span> results)
+biggest = <span class="num">0</span>
+<span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
+    <span class="kw">if</span> best &gt; biggest:
+        biggest = best
+    <span class="kw">if</span> fast &gt; biggest:
+        biggest = fast
 <span class="kw">for</span> count, best, fast, gap <span class="kw">in</span> results:
     <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">f&quot;{count}都市&quot;</span>, <span class="num">10</span>) + <span class="str">&quot;最適 &quot;</span> + <span class="fn">pad</span>(<span class="fn">bar</span>(best, biggest, <span class="num">30</span>), <span class="num">32</span>) + <span class="fn">str</span>(best))
     <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;&quot;</span>, <span class="num">10</span>) + <span class="str">&quot;貪欲 &quot;</span> + <span class="fn">pad</span>(<span class="fn">bar</span>(fast, biggest, <span class="num">30</span>), <span class="num">32</span>) + <span class="fn">str</span>(fast))
