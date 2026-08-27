@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """第14回: 実践的課題（2）仕上げとレポート作成 の本文を組み立てる。"""
-from common import (AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 
 # ────────────────────────────────────────────────────────────
@@ -92,17 +94,12 @@ NAV = [
     "提出 #sec-submission",
     "テストと仕上げ #sec-explanation",
     "例題 #sec-examples",
-    "課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "実行確認", "例題1のテスト結果"),
-    ("#sec-standard", "tag-standard", "課題1", "作品を仕上げる"),
-    ("#sec-standard", "tag-standard", "課題1", "テスト結果を記録"),
-    ("#sec-standard", "tag-standard", "課題2", "レポートを書く"),
-], 4)
+sub = slide_submission("14")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第14回では、第13回で作りはじめた作品を<strong>仕上げて</strong>、レポートにまとめます。
@@ -231,169 +228,26 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, 'レポート用の表とグラフを作る', ex4_body)}"""
 
-std1_body = """      <p>第13回で作りはじめた <code>AL2-13-work.py</code> を仕上げます。
-      作業用のファイルは <code>AL2-14-work.py</code> という名前でコピーしてから始めてください。</p>
-
-      <div class="setup-step">
-        <p class="step-title">Step 1: テストする</p>
-        <p style="font-size:0.95rem;color:#ccc;margin-bottom:0.5rem">次の4種類の入力を、実際に自分の作品に与えてください。</p>
-        <ol>
-          <li><strong>空っぽ</strong>: 何も入力しない／空のリストを渡す</li>
-          <li><strong>はしっこ</strong>: いちばん小さい値・いちばん大きい値を入れる</li>
-          <li><strong>範囲の外</strong>: マイナス、迷路の外、大きすぎる数を入れる</li>
-          <li><strong>形がちがう</strong>: 数字のかわりに文字、使えない記号を入れる</li>
-        </ol>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">Step 2: 直す</p>
-        <ol>
-          <li>エラーで止まったものを、<strong>止まらないように</strong>直す</li>
-          <li>受けつけない入力には、<strong>理由を文章で表示する</strong></li>
-          <li>直したら、もう一度4種類すべてを試す</li>
-        </ol>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">Step 3: 記録する</p>
-        <p style="font-size:0.95rem;color:#ccc">次の表をNotionに作り、4種類すべてについて記入してください。</p>
-      </div>
-
-      <table>
-        <tr><th>試した入力</th><th>直す前の動き</th><th>直したあとの動き</th><th>直した内容</th></tr>
-        <tr><td>空っぽ</td><td></td><td></td><td></td></tr>
-        <tr><td>はしっこ</td><td></td><td></td><td></td></tr>
-        <tr><td>範囲の外</td><td></td><td></td><td></td></tr>
-        <tr><td>形がちがう</td><td></td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>もともと正しく動いていた場合:</strong>
-      「直す前から正しく動いた」と書き、<strong>なぜ正しく動いたのか</strong>（どの行が守っているのか）を説明してください。</p>
-"""
-
-std2_body = """      <p>作品についてのレポートをNotionに書きます。次の7つの見出しをすべて作ってください。</p>
-
-      <table>
-        <tr><th>見出し</th><th>書くこと</th><th>目安</th></tr>
-        <tr><td>1. 作品の名前と概要</td><td>何を作ったか</td><td>3行以上</td></tr>
-        <tr><td>2. 使ったアルゴリズム</td><td>名前と、なぜ選んだか（第11回の3つの問いに沿って）</td><td>5行以上</td></tr>
-        <tr><td>3. 動かし方</td><td>実行手順、入力の例、出力の見方</td><td>3行以上</td></tr>
-        <tr><td>4. 実行結果</td><td>画面のコピーと、そこから読み取れること</td><td>結果＋3行以上</td></tr>
-        <tr><td>5. 調べたこと</td><td><strong>表を1つ以上</strong>と<strong>図を1つ以上</strong></td><td>表1・図1として番号を付ける</td></tr>
-        <tr><td>6. 苦労した点</td><td>つまずいた内容と、どう解決したか</td><td>2つ以上</td></tr>
-        <tr><td>7. これからやりたいこと</td><td>足せなかった機能と、その理由</td><td>2つ以上</td></tr>
-      </table>
-
-      <div class="note-warn">
-        <strong>見出し5「調べたこと」のヒント:</strong>
-        自分の作品で、条件を変えると結果がどう変わるかを調べて表にします。次のような例があります。
-        <ul style="padding-left:1.2rem;margin-top:0.5rem;font-size:0.92rem;line-height:1.9">
-          <li>ステージの大きさを 5×5、8×8、12×12 と変えて、実行時間を測る</li>
-          <li>配達先を 4件、6件、8件と増やして、貪欲法と全探索の差を測る</li>
-          <li>沼のマスの割合を 0%、20%、40% と変えて、最短時間がどう変わるかを測る</li>
-        </ul>
-        例題3のように<strong>5回測った平均</strong>を書き、例題4のように<strong>表と図</strong>にしてください。
-      </div>
-
-      <p style="margin-top:1rem"><strong>書き方の注意:</strong></p>
-      <ul class="point-list">
-        <li>「動きました」「うまくいきました」だけでは足りません。<strong>数値</strong>を書いてください</li>
-        <li>本文からは「表1のとおり」「図1を見ると」のように<strong>番号で指して</strong>ください</li>
-        <li>うまくいかなかったことも、正直に書いてください。減点にはなりません</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">課題1と課題2に取り組み、解答をNotionに記録してください。
-    第14回が作品づくりの<strong>最終回</strong>です。</p>
-
-{standard(1, '作品をテストして仕上げる', std1_body)}
-{notion('4種類のテストの表（直す前・直したあと・直した内容）、および仕上げたコード全体。')}
-
-{standard(2, 'レポートを書く', std2_body)}
-{notion('7つの見出しをすべて埋めたレポート。見出し5には表と図を必ず1つ以上ずつ入れる。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第14回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題1</strong>: 6種類の入力についての表、「行ったり戻ったりする道」を受けつける理由</li>
-        <li><strong>課題1</strong>: 4種類のテストの表</li>
-        <li><strong>課題1</strong>: 仕上げたコード全体と、最終的な実行結果</li>
-        <li><strong>課題2</strong>: 7つの見出しを埋めたレポート</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-      <div class="note-warn" style="margin-top:1rem">
-        <strong>第15回について:</strong> 第15回は後期のまとめです。
-        提出物の最終チェックを行い、後期に学ばなかった発展的な手法（焼きなまし法・遺伝的アルゴリズム）を体験します。
-        作品とレポートは第15回の授業中まで修正できます。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("例題1: 6種類の入力についての表", """        <table>
-          <tr><th>入力</th><th>バグのある関数</th><th>修正版</th></tr>
-          <tr><td>ふつうの道 "DDRR"</td><td>(2,2) 迷路の中</td><td>OK: 4歩 ／ 12秒</td></tr>
-          <tr><td>空の道 ""</td><td>(0,0) 迷路の中</td><td>受けつけない: ゴールに着いていません</td></tr>
-          <tr><td>迷路の外に出る道 "DDDDDD"</td><td><strong style="color:#FF5252">(6,0) 迷路の外</strong></td><td>受けつけない: 迷路の外に出てしまいました</td></tr>
-          <tr><td>ゴールに着かない道 "DR"</td><td>(1,1) 迷路の中</td><td>受けつけない: ゴールに着いていません</td></tr>
-          <tr><td>使えない文字 "DDXR"</td><td>(2,1) 迷路の中（Xが無視された）</td><td>受けつけない: 「X」は使えない文字です</td></tr>
-          <tr><td>行ったり戻ったりする道 "DRLDRR"</td><td><strong style="color:#FF5252">(2,3) 迷路の外</strong></td><td>OK: 6歩 ／ 22秒</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>バグのある関数の問題点:</strong></p>
-        <ul class="point-list">
-          <li>迷路の外に出ても気づかず、そのまま返している。あとで <code>cost_map[6][0]</code> を計算しようとして <code>IndexError</code> で止まる</li>
-          <li><code>U</code> と <code>L</code> をあつかっていないため、"DRLDRR" の <code>L</code>（左）が無視され、右へ進みすぎて外に出た</li>
-          <li>使えない文字 <code>X</code> も無視されるので、プレイヤーは打ちまちがいに気づけない</li>
-          <li>空の道やゴールに着かない道も「OK」として返してしまう</li>
-        </ul>
-        <p style="margin-top:0.8rem"><strong>「行ったり戻ったりする道」を受けつけている理由:</strong>
-        "DRLDRR" は 下→右→左→下→右→右 と動き、途中で1歩戻っていますが、
-        <strong>迷路の外に出ておらず、最後にゴールへ着いている</strong>ので、ルールの上では正しい道です。
-        遠回りをしたぶん歩数が増え、合計時間も長くなるだけで、反則ではありません。</p>
-        <p style="margin-top:0.6rem">テストで大切なのは「変な入力をすべて拒む」ことではなく、
-        <strong>「正しい入力は受けつけ、正しくない入力は理由をつけて断る」</strong>ことです。
-        正しい入力まで断ってしまうと、遊べる道が減ってゲームがつまらなくなります。</p>"""),
-    ("課題1・課題2: 仕上げとレポートのヒント", """        <p>作品は人によって違うので、ここでは評価される書き方の例を示します。</p>
-        <p style="margin-top:0.6rem"><strong>課題1のテスト表の記入例:</strong></p>
+    ("テストの答え合わせ", """        <p>作品は人によって違うので、数値の正解はありません。
+        4種類のテストで「何が起きれば正しいか」を挙げます。</p>
         <table>
-          <tr><th>試した入力</th><th>直す前</th><th>直したあと</th><th>直した内容</th></tr>
-          <tr><td>空っぽ（道を入力しない）</td><td>0秒・スコア100点と表示された</td><td>「ゴールに着いていません」と表示</td><td>最後のマスがゴールかを確かめる <code>if</code> を追加</td></tr>
-          <tr><td>はしっこ（1歩だけの道 "D"）</td><td>エラーにはならないが100点と出た</td><td>「ゴールに着いていません」と表示</td><td>同上</td></tr>
-          <tr><td>範囲の外（"DDDDDDDDDD"）</td><td><code>IndexError</code> で止まった</td><td>「迷路の外に出てしまいました」と表示</td><td>1歩進むたびに範囲内かを確かめる <code>if</code> を追加</td></tr>
-          <tr><td>形がちがう（"DD1R"）</td><td>1 が無視されて別の場所に着いた</td><td>「1 は使えない文字です」と表示</td><td><code>else</code> で使えない文字をはじく</td></tr>
+          <tr><th>試す入力</th><th>正しい動き</th><th>直っていない例</th></tr>
+          <tr><td>空っぽ</td><td>「入力してください」と伝えて止まらない</td><td>0点や100点と表示される／エラーで止まる</td></tr>
+          <tr><td>はしっこ（0、1、最大）</td><td>正しく計算できる</td><td>1つずれた答えが出る</td></tr>
+          <tr><td>範囲の外</td><td>「範囲の外です」と伝えて受けつけない</td><td><code>IndexError</code> で止まる</td></tr>
+          <tr><td>形がちがう（文字・記号）</td><td>「使えない文字です」と伝える</td><td>無視されて別の答えが出る</td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>課題2の見出し2（使ったアルゴリズム）の記入例:</strong></p>
-        <p style="margin-top:0.4rem">「ダイクストラ法を使った。第11回の3つの問いに当てはめると、
-        まず問題の種類は『2地点をつなぐ道をさがす』であり、巡回セールスマン問題ではない。
-        次に、マスごとに通り抜ける時間が1秒・5秒・9秒と違うので、重みに差がある。
-        最後に、ゲームの採点に使うため、最短時間は必ず正確でなければならない。
-        以上から、重み付きグラフで必ず最適解を出せるダイクストラ法を選んだ。
-        幅優先探索では歩数しか見ないため、沼を通る道を最短と判断してしまい、採点が正しくならない。」</p>
-        <p style="margin-top:0.8rem"><strong>課題2の見出し5（調べたこと）の記入例:</strong></p>
-        <p style="margin-top:0.4rem">「ステージの大きさを変えたときの実行時間を、5回ずつ測って平均した（表1）。
-        マスの数が4倍になると、実行時間もおよそ4倍になった。
-        図1のとおり、増え方はまっすぐで、急に遅くなる大きさは見られなかった。
-        第7回の例題3で確かめたダイクストラ法の性質と一致している。」</p>
-        <p style="margin-top:0.8rem"><strong>評価が低くなる書き方:</strong></p>
-        <ul class="point-list">
-          <li><span style="color:#FF5252">「ダイクストラ法を使いました。動いてよかったです。」</span> — なぜ選んだかがない</li>
-          <li><span style="color:#FF5252">「速く動きました。」</span> — 数値がない</li>
-          <li><span style="color:#FF5252">「特に苦労はありませんでした。」</span> — 何も試していない可能性が高い</li>
-          <li><span style="color:#FF5252">表や図に番号と題がない</span> — 本文から指せない</li>
-        </ul>"""),
+        <p style="margin-top:0.8rem"><strong>例題1の確認</strong>:
+        修正版は「行ったり戻ったりする道」（"DRLDRR"）は<strong>受けつけます</strong>。
+        遠回りなだけで反則ではないからです。正しい入力まで断ってしまうと、遊べる道が減ります。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "テストと仕上げ", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("14", SLIDES),
+    rubric_section("14"),
     ans,
 ])
 

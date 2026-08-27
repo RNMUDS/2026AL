@@ -33,7 +33,7 @@ section + section { border-top: 1px solid #222; }
 .tag-group     { background: #0a1a2e; color: #4FC3F7; }
 .card.standard  { border-left: 4px solid #76B900; }
 .card.advanced  { border-left: 4px solid #FFB800; }
-.notion-submit {
+.slide-hint {
   background: #141414;
   border: 1px solid #333;
   border-radius: 8px;
@@ -44,8 +44,8 @@ section + section { border-top: 1px solid #222; }
   gap: 0.5rem;
   font-size: 0.85rem;
 }
-.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
-.notion-submit strong { color: #FFB800; }
+.slide-hint::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.slide-hint strong { color: #FFB800; }
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
 th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
 td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
@@ -191,8 +191,8 @@ a.sub-item:hover { border-color: #4A7A00; }
   <a href="#sec-submission">提出</a>
   <a href="#sec-explanation">グラフとは</a>
   <a href="#sec-examples">例題</a>
-  <a href="#sec-standard" class="nav-assignment">標準課題</a>
-  <a href="#sec-notion">提出まとめ</a>
+  <a href="#sec-slides" class="nav-assignment">課題</a>
+  <a href="#sec-submit">提出と評価</a>
   <a href="#answers-section">解答</a>
 </nav>
 
@@ -208,15 +208,15 @@ a.sub-item:hover { border-color: #4A7A00; }
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <h3>提出ガイド（今回の提出物: 解説スライド3枚）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2のマス数の比較</a>
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題4の変換結果</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>路線を1本足すと？</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>2つの表現の使い分け</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">A</span><span class="tag tag-standard">しくみ</span>自分で作った図で説明する</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">B</span><span class="tag tag-standard">動かした</span>自分の実行画面と読み取り</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">C</span><span class="tag tag-standard">考えた</span>問いに自分の数値で答える</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+        <strong>提出方法:</strong> 自分のGoogleスライドに第3回の3枚を追加 →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る
       </div>
     </div>
   </div>
@@ -691,7 +691,7 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
       </div>
       <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
     </div>
 
     <div class="card example">
@@ -1033,105 +1033,145 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       </div>
       <p class="run-note">5マス×5マスの迷路のうち、壁ではないマスは<strong>19個</strong>ありました。19個の頂点と、となり合うマスどうしの辺からなるグラフに書き直せています。書き直したあとは、例題3の路線図とまったく同じコードで最短経路（8歩）が求まりました。見た目がまったく違う迷路と路線図が、グラフという同じ形に書き直すことで、同じプログラムで解けるようになります。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題4の実行結果から、迷路の頂点の数と、(0,0) の頂点につながっている頂点を書き写す。あわせて、迷路をグラフに書き直したことで何が便利になったかを、自分の言葉で説明する。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題4の実行結果から、迷路の頂点の数と、(0,0) の頂点につながっている頂点を書き写す。あわせて、迷路をグラフに書き直したことで何が便利になったかを、自分の言葉で説明する。</span></div>
     </div>
   </div>
 </section>
 
-<section id="sec-standard">
+<section id="sec-slides">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">3</div>
-      <h2>標準課題</h2>
+      <h2>課題: 解説スライドを3枚つくる</h2>
     </div>
-    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+    <p style="margin-bottom:1.5rem">
+      自分のGoogleスライドに、第3回ぶんの<strong>3枚</strong>を追加してください。
+      見出しは「第3回: グラフ（頂点と辺）」にします。
+      説明する相手は<strong>前期のアルゴリズム論及び演習Iを受けていない友達</strong>です。
+      専門用語をそのまま書いても伝わりません。
+    </p>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 1</span>
-        <h3>路線を1本足すと、乗る路線の数はどう変わるか</h3>
+        <span class="tag tag-standard">スライドA</span>
+        <h3>しくみを、自分で作った図で説明する</h3>
       </div>
-      <p>例題3のファイル <code>AL2-03-ex3.py</code> を開き、路線図に<strong>新宿と品川を直接つなぐ新しい路線</strong>を1本追加します。
-      隣接リストは両方の駅を書き換える必要があります。</p>
+      <p>次の3つが伝わる図を、<strong>自分で作って</strong>1枚に入れてください。</p>
+      <div class="setup-step">
+        <p class="step-title">図に必ず入れる3つ</p>
+        <ol>
+          <li>頂点と辺が何にあたるかを、自分で決めた身近な例で描いたもの</li>
+          <li>同じグラフを隣接リストで書き写した形</li>
+          <li>同じグラフを隣接行列で書き写した形</li>
+        </ol>
+      </div>
+      <div class="note-warn">
+        <strong>図の作り方:</strong> Googleスライドの「挿入 → 図形」で四角・丸・矢印を並べて作ります。
+        紙に手描きして写真を撮り、貼りつけてもかまいません。
+        <strong>授業ページの図をそのまま貼るのは不可</strong>です。自分で線を引いたものだけを認めます。
+      </div>
+      <p style="margin-top:1rem">図のほかに、<strong>1文だけ</strong>説明を書いてください。
+      「グラフ（頂点と辺）とは、○○を○○する方法です」の形で、20〜40字におさめます。</p>
+    </div>
 
-<pre><span class="code-label">Python ── 書き換える2行</span>
-    <span class="str">"新宿"</span>: [<span class="str">"渋谷"</span>, <span class="str">"池袋"</span>, <span class="str">"東京"</span>, <span class="str">"品川"</span>],   <span class="cmt"># ← "品川" を足す</span>
-    <span class="str">"品川"</span>: [<span class="str">"渋谷"</span>, <span class="str">"東京"</span>, <span class="str">"新宿"</span>],           <span class="cmt"># ← "新宿" を足す</span></pre>
-
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドB</span>
+        <h3>自分で動かした結果をのせる</h3>
+      </div>
       <div class="setup-step">
         <p class="step-title">やること</p>
         <ol>
-          <li>実行する<strong>前に</strong>、6つの駅それぞれについて「乗る路線の数」がどうなるかを予測してNotionに書く</li>
-          <li>2行を書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>新宿から品川への行き方が、書き換える前とどう変わったかを書く</li>
+          <li><code>AL2-03-ex2.py</code> を自分のパソコンで実行する</li>
+          <li><strong>VS Codeのウィンドウごと</strong>スクリーンショットを撮る
+              （左のエクスプローラーに <code>AL2/No03</code> のフォルダ名とファイル名が写っている状態）</li>
+          <li>スクリーンショットをスライドに貼る</li>
+          <li>実行結果から読み取れることを、<strong>数値を挙げて</strong>2つ書く</li>
         </ol>
       </div>
-
-      <table>
-        <tr><th>駅</th><th>書き換える前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>渋谷</td><td>1本</td><td></td><td></td></tr>
-        <tr><td>池袋</td><td>1本</td><td></td><td></td></tr>
-        <tr><td>東京</td><td>1本</td><td></td><td></td></tr>
-        <tr><td>品川</td><td>2本</td><td></td><td></td></tr>
-        <tr><td>上野</td><td>2本</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 隣接リストの片方（<code>"新宿"</code> の行）だけを書き換えて、
-      もう片方（<code>"品川"</code> の行）を書き換え忘れると、どんな問題が起きるかを説明してください。</p>
-
+      <div class="setup-step">
+        <p class="step-title">読み取ること（この2つに答える）</p>
+        <ul>
+          <li>駅が6個・50個・500個・5000個のとき、2つの表し方が使うマスの数</li>
+          <li>駅の数が10倍になると、それぞれのマスの数は何倍になるか</li>
+        </ul>
+      </div>
+      <div class="note-warn">
+        <strong>スクリーンショットの撮り方:</strong>
+        Windows は <strong>Windows キー ＋ Shift ＋ S</strong>、Mac は <strong>Shift ＋ Command ＋ 4</strong> のあと
+        <strong>スペースキー</strong>を押してウィンドウをクリックします。
+        画面の一部だけを切り取ったものは受けつけません。フォルダ名とファイル名が読める状態にしてください。
+      </div>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの駅についての予測と実際の表、新宿から品川への行き方の変化、および「片方だけ書き換えたときに起きる問題」の説明。</span></div>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 2</span>
-        <h3>隣接リストと隣接行列の使い分け</h3>
+        <span class="tag tag-standard">スライドC</span>
+        <h3>問いに、自分の数値を根拠にして答える</h3>
       </div>
-      <p>例題1から例題4までの結果をもとに、隣接リストと隣接行列の使い分けを表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。</p>
-
-      <table>
-        <tr><th>比べる点</th><th>隣接リスト</th><th>隣接行列</th></tr>
-        <tr><td>書き方</td><td></td><td></td></tr>
-        <tr><td>駅が5000個のときのマス数</td><td></td><td></td></tr>
-        <tr><td>「2駅が直接つながっているか」の調べやすさ</td><td></td><td></td></tr>
-        <tr><td>「ある駅のとなりの駅をすべて並べる」調べやすさ</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の2つの場面には、それぞれどちらの表し方が向いているかを<strong>理由つきで</strong>答えてください。</p>
+      <p>次の2つの問いに答えてください。答えの中で、
+      <strong>スライドBに貼った自分の実行結果の数値を必ず引用</strong>してください。</p>
       <ul class="point-list">
-        <li><strong>場面A:</strong> 日本全国の鉄道路線図（駅が約9000個、1駅あたりつながる駅は2〜4個）をあつかう</li>
-        <li><strong>場面B:</strong> 30人のクラス全員について、「誰と誰が同じ委員会か」を何度も繰り返し調べる</li>
+        <li><strong>問い1:</strong> 日本全国の鉄道（駅が約9000個、1つの駅につながるのは2〜4駅）をあつかうなら、どちらの表し方を選びますか。自分の実行結果の数値を根拠に答えてください。</li>
+        <li><strong>問い2:</strong> <code>AL2-03-ex3.py</code> の路線図に「新宿—品川」を直接つなぐ路線を足して実行してください。乗る路線の数がどう変わったかを、6つの駅すべてについて数値で書いてください。</li>
       </ul>
-
+      <div class="note-warn">
+        <strong>「〜が分かった」「うまくいった」だけでは点になりません。</strong>
+        「自分の実行結果では○○が△△だった。だから□□と言える」の形で書いてください。
+      </div>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 4行の比較表（空欄をすべて埋める）と、場面A・場面Bそれぞれに向いている表し方とその理由。</span></div>
   </div>
 </section>
 
-<section id="sec-notion">
+<section id="sec-submit">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">4</div>
-      <h2>提出まとめ</h2>
+      <h2>提出と評価</h2>
     </div>
     <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
         <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+        <h3>提出のしかた</h3>
       </div>
-      <p>第3回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 駅の数ごとのマス数の表、10倍になったときの増え方</li>
-        <li><strong>例題4</strong>: 迷路の頂点の数、(0,0) につながる頂点、書き直して便利になったこと</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、行き方の変化、片方だけ書き換えたときの問題</li>
-        <li><strong>標準課題2</strong>: 比較表、場面A・場面Bへの答えと理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      <div class="setup-step">
+        <p class="step-title">手順</p>
+        <ol>
+          <li>自分のGoogleスライドを開き、第3回の3枚（A・B・C）を追加する</li>
+          <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
+          <li>ManabaにPDFを提出する</li>
+          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
+        </ol>
       </div>
+      <div class="note-warn">
+        <strong>共有URLも毎回必ず提出してください。</strong>
+        Googleスライドには変更履歴が残ります。
+        いつ・どのスライドを作ったかを確認するために使います。
+        まとめて作ると履歴に残るので、毎回の授業の中で少しずつ進めてください。
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-top:1.5rem">
+      <h4>評価の観点（毎回同じ・10点満点）</h4>
+      <table>
+        <tr><th>観点</th><th>点</th><th>見るところ</th></tr>
+        <tr><td>図を自分で作ったか</td><td>3</td><td>授業ページの図の貼りつけは0点。指定の3要素が図に入っているか</td></tr>
+        <tr><td>自分で動かした証拠があるか</td><td>2</td><td>VS Codeのウィンドウごとのスクリーンショット。フォルダ名が読めるか</td></tr>
+        <tr><td>数値を根拠にしているか</td><td>3</td><td>自分の実行結果の数値を引用しているか。数値と説明が合っているか</td></tr>
+        <tr><td>言葉が自分のものか</td><td>2</td><td>専門用語をそのまま並べていないか。前期未履修の友達に伝わるか</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>よくある不十分な例</h4>
+      <table>
+        <tr><th>不十分な例</th><th>どう直すか</th></tr>
+        <tr><td>授業ページの図をスクリーンショットして貼る</td><td>同じ内容でよいので、図形を自分で並べ直す。手描きの写真でもよい</td></tr>
+        <tr><td>ターミナルの文字だけを切り取って貼る</td><td>VS Codeのウィンドウ全体を撮る。フォルダ名とファイル名が写るようにする</td></tr>
+        <tr><td>「速いことが分かりました」で終わる</td><td>「自分の結果では6秒と0.01秒で、600倍ほど違った」と数値を書く</td></tr>
+        <tr><td>教材の文をそのまま写す</td><td>専門用語を1つ選び、それを使わずに言いかえてみる</td></tr>
+        <tr><td>3枚を最後の週にまとめて作る</td><td>変更履歴で分かります。毎回の授業中に作ってください</td></tr>
+      </table>
     </div>
   </div>
 </section>
@@ -1144,7 +1184,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="/yTirzTYToUqdMOwbjqN05PyDZ1aoB2ujqm262eEkLQrJAK6KQnl2K9yAl2TTq4uZ6lr2hnCiakQb2C6AtAXRMSjk7fjn3NE1VQL4VpObPyBcKJKiKHpZEqCFoJMcpyn4gWQohYvqSLn2FWg4bo4sCmn3lsSKRu6ZC56Ka3q3nIDeRAEmQ8pk/ijMFQbiVBqkQI3qvHtCPnuiZvrWOah5dcl1XxpGkNiFSg997UTm6oUULILAyqpx/z9xPGi1h8VP9sQn0xWxG3zRtBbfEgxaW58qo+9Fu83VqLywYZ3qBYXS3MevZJuyb1wt09d8eyFMQEy9b742UPVOF2ceFdAUTxTwj2RSqb4taR2eJHl8nCXutnUlS+IpxYibjOpPHt39vPO7LtQYSKfPrNFSpmWOOvnJqG1Z0QhUzvFj5jYMJxgK2eMGN/ZD9cf//Ie8jMEvduSCQuIpdus+dyR3KEyS0hLriARv3Qh0UftXa/sDXoD43eA08gO+i2WoViztAq9rhUHPkQ2XhPT1wDtq2Ffox+Kn/A1ncQggFCq2hPjb7iVCteCsF8f5Yon1NT+H/ZvGrv6eO/6zo847dzEef3La90jLlbw9qeSxifLk9zsALGGmFbI8TUgptHB9DcKUGbbW4l9cpBsI8met8OuTCLjJJJfcwIxTou93Zy8HoLOsLLwUjpkVjCin8ap8GUjutcVjwxJn17boJe7rR16RsJsSrTpahyzDOuKsFAplYiEGTpniDqgUrCZ3iD4s/CtpxwBKSGdj8YYclu2Vxj9fsff+mn75RqTmE6e3iwzTAd2B5e+xFNhCO88x0WDWrswBySQaR7FqvQFvSE5D3VOL0s0UeJVMjJusj3rv6vpUiz5CKnyGARz8EF629glqeD178ghCVdznlEat5cK/7lipCDes0TADpQ/Nzx6HMsACnN1aZqn/9N4ad+VvmzzgUFs4ICytD/VDJyoPJUVzbAGJ+xHmW2aAPzxHRagwnHw/XRLiPH3z+Bm8TC5f+ZUwH6uVnnXBE4x4JR+R+MoZtGp0IO+c3eNCQ8IrXPHBCjQFdmwBu7ZqLdRbvAo9ZlAznL+qqNRDpBuCmaANHnWSLOuNXWDIW0rhHDH45oQzdObp76DAs7CGYNz91rX/KuEWtJsQ6yVbbreKYz+ck1ocX/iKN4HlMyghkkVma09613HyDy71GSPWRgg2SgUlbbnn3aeng6amMB+h0q6iM+yAJX2/EMPdXX10n1Bckh+r0sx7OXDOh47DYbf9pRHnysVCAwD3UJrkkRpi7ZrLbqFMIp1IIA2QxGa4NR2cJMiRC4IRUbDMiHFEG9vQ7JtCNfQOSFPBQdY2woLv8j8obnT2/taGFK7f+aQ58gxzA7ktINCHU6M3TuvxunvgRYQyXejcd3pbZG8rw=="></div>
 
   </div>
 </section>

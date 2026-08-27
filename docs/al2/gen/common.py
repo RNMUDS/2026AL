@@ -48,7 +48,7 @@ def standard(n, title, body):
 
 
 def notion(text):
-    return f'      <div class="notion-submit"><span><strong>Notionへの記録:</strong> {text}</span></div>'
+    return f'      <div class="slide-hint"><span><strong>スライドに使えること:</strong> {text}</span></div>'
 
 
 def section(sid, num, title, body, color="#76B900"):
@@ -82,28 +82,6 @@ def answers(items):
 {inner}
     </div>
 
-  </div>
-</section>"""
-
-
-def submission(items, count):
-    rows = "\n".join(
-        f'        <a class="sub-item" href="{href}"><span class="sub-count">1</span>'
-        f'<span class="tag {cls}">{tag}</span>{text}</a>'
-        for href, cls, tag, text in items)
-    return f"""
-<!-- ============ SUBMISSION GUIDE ============ -->
-<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
-  <div class="container">
-    <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: 計{count}項目）</h3>
-      <div class="submission-items">
-{rows}
-      </div>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
-      </div>
-    </div>
   </div>
 </section>"""
 
@@ -212,3 +190,174 @@ def svg_text(x, y, text, fill="#E0E0E0", size=12, anchor="middle", weight=None, 
     w = f' font-weight="{weight}"' if weight else ""
     return (f'        <text x="{x}" y="{y}" text-anchor="{anchor}" fill="{fill}" '
             f'font-size="{size}"{w}{extra}>{text}</text>')
+
+
+# ── Googleスライド課題のための共通部品 ──────────────────
+def slide_submission(week):
+    """毎回の提出ガイド。提出物はスライド3枚とその提出だけ。"""
+    n = int(week)
+    return f"""
+<!-- ============ SUBMISSION GUIDE ============ -->
+<section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
+  <div class="container">
+    <div class="submission-box">
+      <h3>提出ガイド（今回の提出物: 解説スライド3枚）</h3>
+      <div class="submission-items">
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">A</span><span class="tag tag-standard">しくみ</span>自分で作った図で説明する</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">B</span><span class="tag tag-standard">動かした</span>自分の実行画面と読み取り</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">C</span><span class="tag tag-standard">考えた</span>問いに自分の数値で答える</a>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
+        <strong>提出方法:</strong> 自分のGoogleスライドに第{n}回の3枚を追加 →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る
+      </div>
+    </div>
+  </div>
+</section>"""
+
+
+def slides_section(week, topic, figure_points, run_file, run_points, questions):
+    """「解説スライドを3枚つくる」課題のセクションを組み立てる。
+
+    week          : "05" のような回番号
+    topic         : スライドの見出しにするテーマ名
+    figure_points : スライドAの図に必ず入れる要素（3つ）
+    run_file      : スライドBで動かすファイル名
+    run_points    : スライドBで読み取ること（2つ）
+    questions     : スライドCの問い（2つ）
+    """
+    n = int(week)
+    fig_items = "\n".join(f"          <li>{t}</li>" for t in figure_points)
+    run_items = "\n".join(f"          <li>{t}</li>" for t in run_points)
+    q_items = "\n".join(f"        <li><strong>問い{i+1}:</strong> {t}</li>"
+                        for i, t in enumerate(questions))
+    body = f"""    <p style="margin-bottom:1.5rem">
+      自分のGoogleスライドに、第{n}回ぶんの<strong>3枚</strong>を追加してください。
+      見出しは「第{n}回: {topic}」にします。
+      説明する相手は<strong>前期のアルゴリズム論及び演習Iを受けていない友達</strong>です。
+      専門用語をそのまま書いても伝わりません。
+    </p>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドA</span>
+        <h3>しくみを、自分で作った図で説明する</h3>
+      </div>
+      <p>次の3つが伝わる図を、<strong>自分で作って</strong>1枚に入れてください。</p>
+      <div class="setup-step">
+        <p class="step-title">図に必ず入れる3つ</p>
+        <ol>
+{fig_items}
+        </ol>
+      </div>
+      <div class="note-warn">
+        <strong>図の作り方:</strong> Googleスライドの「挿入 → 図形」で四角・丸・矢印を並べて作ります。
+        紙に手描きして写真を撮り、貼りつけてもかまいません。
+        <strong>授業ページの図をそのまま貼るのは不可</strong>です。自分で線を引いたものだけを認めます。
+      </div>
+      <p style="margin-top:1rem">図のほかに、<strong>1文だけ</strong>説明を書いてください。
+      「{topic}とは、○○を○○する方法です」の形で、20〜40字におさめます。</p>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドB</span>
+        <h3>自分で動かした結果をのせる</h3>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">やること</p>
+        <ol>
+          <li><code>{run_file}</code> を自分のパソコンで実行する</li>
+          <li><strong>VS Codeのウィンドウごと</strong>スクリーンショットを撮る
+              （左のエクスプローラーに <code>AL2/No{week}</code> のフォルダ名とファイル名が写っている状態）</li>
+          <li>スクリーンショットをスライドに貼る</li>
+          <li>実行結果から読み取れることを、<strong>数値を挙げて</strong>2つ書く</li>
+        </ol>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">読み取ること（この2つに答える）</p>
+        <ul>
+{run_items}
+        </ul>
+      </div>
+      <div class="note-warn">
+        <strong>スクリーンショットの撮り方:</strong>
+        Windows は <strong>Windows キー ＋ Shift ＋ S</strong>、Mac は <strong>Shift ＋ Command ＋ 4</strong> のあと
+        <strong>スペースキー</strong>を押してウィンドウをクリックします。
+        画面の一部だけを切り取ったものは受けつけません。フォルダ名とファイル名が読める状態にしてください。
+      </div>
+    </div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドC</span>
+        <h3>問いに、自分の数値を根拠にして答える</h3>
+      </div>
+      <p>次の2つの問いに答えてください。答えの中で、
+      <strong>スライドBに貼った自分の実行結果の数値を必ず引用</strong>してください。</p>
+      <ul class="point-list">
+{q_items}
+      </ul>
+      <div class="note-warn">
+        <strong>「〜が分かった」「うまくいった」だけでは点になりません。</strong>
+        「自分の実行結果では○○が△△だった。だから□□と言える」の形で書いてください。
+      </div>
+    </div>"""
+    return section("sec-slides", "3", f"課題: 解説スライドを3枚つくる", body)
+
+
+def rubric_section(week):
+    """評価の観点と、よくある不十分な例。学生に最初から見せる。"""
+    n = int(week)
+    body = f"""    <div class="card" style="border-left:4px solid #FFB800">
+      <div class="card-header">
+        <span class="tag tag-advanced">提出まとめ</span>
+        <h3>提出のしかた</h3>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">手順</p>
+        <ol>
+          <li>自分のGoogleスライドを開き、第{n}回の3枚（A・B・C）を追加する</li>
+          <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
+          <li>ManabaにPDFを提出する</li>
+          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
+        </ol>
+      </div>
+      <div class="note-warn">
+        <strong>共有URLも毎回必ず提出してください。</strong>
+        Googleスライドには変更履歴が残ります。
+        いつ・どのスライドを作ったかを確認するために使います。
+        まとめて作ると履歴に残るので、毎回の授業の中で少しずつ進めてください。
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-top:1.5rem">
+      <h4>評価の観点（毎回同じ・10点満点）</h4>
+      <table>
+        <tr><th>観点</th><th>点</th><th>見るところ</th></tr>
+        <tr><td>図を自分で作ったか</td><td>3</td><td>授業ページの図の貼りつけは0点。指定の3要素が図に入っているか</td></tr>
+        <tr><td>自分で動かした証拠があるか</td><td>2</td><td>VS Codeのウィンドウごとのスクリーンショット。フォルダ名が読めるか</td></tr>
+        <tr><td>数値を根拠にしているか</td><td>3</td><td>自分の実行結果の数値を引用しているか。数値と説明が合っているか</td></tr>
+        <tr><td>言葉が自分のものか</td><td>2</td><td>専門用語をそのまま並べていないか。前期未履修の友達に伝わるか</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>よくある不十分な例</h4>
+      <table>
+        <tr><th>不十分な例</th><th>どう直すか</th></tr>
+        <tr><td>授業ページの図をスクリーンショットして貼る</td><td>同じ内容でよいので、図形を自分で並べ直す。手描きの写真でもよい</td></tr>
+        <tr><td>ターミナルの文字だけを切り取って貼る</td><td>VS Codeのウィンドウ全体を撮る。フォルダ名とファイル名が写るようにする</td></tr>
+        <tr><td>「速いことが分かりました」で終わる</td><td>「自分の結果では6秒と0.01秒で、600倍ほど違った」と数値を書く</td></tr>
+        <tr><td>教材の文をそのまま写す</td><td>専門用語を1つ選び、それを使わずに言いかえてみる</td></tr>
+        <tr><td>3枚を最後の週にまとめて作る</td><td>変更履歴で分かります。毎回の授業中に作ってください</td></tr>
+      </table>
+    </div>"""
+    return section("sec-submit", "4", "提出と評価", body, color="#FFB800")
+
+
+def slides_for(week, data):
+    """slides_data.SLIDES から、その回の課題セクションを組み立てる。"""
+    d = data[week]
+    return slides_section(week, d["topic"], d["figure"],
+                          d["run_file"], d["run"], d["questions"])

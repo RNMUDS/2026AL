@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """第4回: 重み付きグラフとは の本文を組み立てる。"""
 import math
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 POS = {"新宿": (170, 96), "渋谷": (170, 246), "品川": (390, 246),
        "池袋": (390, 66), "上野": (560, 66), "東京": (560, 196)}
@@ -185,17 +187,12 @@ NAV = [
     "提出 #sec-submission",
     "重みとは #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の14分の差"),
-    ("#sec-examples", "tag-example", "観察記録", "例題4の通り数の増え方"),
-    ("#sec-standard", "tag-standard", "標準課題1", "重みを変えると？"),
-    ("#sec-standard", "tag-standard", "標準課題2", "自分で重み付きグラフを作る"),
-], 4)
+sub = slide_submission("04")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第3回のグラフでは、辺は「つながっている／つながっていない」のどちらかでした。
@@ -312,135 +309,24 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '全探索が使えなくなる大きさ', ex4_body)}"""
 
-std1_body = """      <p>例題2のファイル <code>AL2-04-ex2.py</code> を開き、新宿と品川を直接つなぐ区間の重みを変えます。
-      直通が急行に変わり、30分から12分に短くなったという設定です。</p>
-
-<pre><span class="code-label">Python ── 書き換える2か所</span>
-    <span class="str">"新宿"</span>: [(<span class="str">"渋谷"</span>, <span class="num">7</span>), (<span class="str">"池袋"</span>, <span class="num">9</span>), (<span class="str">"品川"</span>, <span class="num">12</span>)],   <span class="cmt"># ← 30 を 12 に</span>
-    <span class="str">"品川"</span>: [(<span class="str">"新宿"</span>, <span class="num">12</span>), (<span class="str">"渋谷"</span>, <span class="num">9</span>), (<span class="str">"東京"</span>, <span class="num">11</span>)],   <span class="cmt"># ← 30 を 12 に</span></pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、3通りの行き方それぞれの合計時間と、いちばん短い行き方を予測してNotionに書く</li>
-          <li>2か所を書き換えて保存し、実行する</li>
-          <li>幅優先探索が選んだ経路と、いちばん短い経路を記録する</li>
-          <li>書き換える前（30分）と比べて、何が変わったかを書く</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>行き方</th><th>30分のとき</th><th>予測（12分のとき）</th><th>実際</th></tr>
-        <tr><td>新宿 → 品川</td><td>30分</td><td></td><td></td></tr>
-        <tr><td>新宿 → 渋谷 → 品川</td><td>16分</td><td></td><td></td></tr>
-        <tr><td>新宿 → 池袋 → 上野 → 東京 → 品川</td><td>38分</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 重みを12分にしたとき、幅優先探索が選ぶ経路と、いちばん短い経路は一致しますか。
-      一致する場合、それは「幅優先探索が重みを考えられるようになった」ことを意味しますか。理由とともに説明してください。</p>
-"""
-
-std2_body = """      <p>身近な場面を1つ選び、自分で重み付きグラフを作ります。頂点は4個以上、辺は5本以上にしてください。</p>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>テーマを1つ決める（例: 自宅から大学までの経路、キャンパス内の建物、よく行く店の位置関係）</li>
-          <li>頂点（場所）と辺（つながり）と重み（かかる時間や距離）を紙に描く</li>
-          <li>例題1のコードをコピーして <code>AL2-04-std2.py</code> という名前で保存し、<code>railway</code> の中身を自分のグラフに書き換える</li>
-          <li>出発点と目的地を決め、行き方を3通り以上書き出して、それぞれの合計コストを <code>route_minutes</code> で計算する</li>
-          <li>いちばんコストが小さい行き方を答える</li>
-        </ol>
-      </div>
-
-      <p><strong>Notionに書くこと:</strong></p>
-      <ul class="point-list">
-        <li>選んだテーマと、頂点・辺・重みが何を表しているか</li>
-        <li>作ったグラフの図（手描きの写真でもよい）</li>
-        <li>書き換えたコードと実行結果</li>
-        <li>3通り以上の行き方とそれぞれの合計コスト、いちばん小さいもの</li>
-      </ul>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 自分が選んだテーマで、重みを「時間」ではなく「料金」に変えたとしたら、
-      いちばん良い行き方は変わりそうですか。変わる／変わらないの理由を説明してください。</p>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
-
-{standard(1, '重みを変えると、いちばん短い行き方はどうなるか', std1_body)}
-{notion('3通りの行き方についての予測と実際の表、幅優先探索が選んだ経路、いちばん短い経路、および「一致は偶然か」の説明。')}
-
-{standard(2, '自分で重み付きグラフを作る', std2_body)}
-{notion('テーマ、グラフの図、書き換えたコード、実行結果、3通り以上の行き方とコスト、いちばん小さい行き方、および重みを料金に変えた場合の考察。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第4回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 幅優先探索の経路と時間、最短の経路と時間、差、選べない理由</li>
-        <li><strong>例題4</strong>: 大きさごとの行き方の数と時間、5マス四方から6マス四方への倍率</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、一致するかどうかの考察</li>
-        <li><strong>標準課題2</strong>: 自作の重み付きグラフと計算結果、料金に変えた場合の考察</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 直通を12分にしたときの結果", """        <table>
+    ("確かめ用の数値", """        <p><strong>問い2（新宿—品川を12分にしたとき）</strong></p>
+        <table>
           <tr><th>行き方</th><th>30分のとき</th><th>12分のとき</th></tr>
-          <tr><td>新宿 → 品川</td><td>30分</td><td><strong style="color:#76B900">12分（いちばん短い）</strong></td></tr>
-          <tr><td>新宿 → 渋谷 → 品川</td><td><strong style="color:#76B900">16分（いちばん短い）</strong></td><td>16分</td></tr>
+          <tr><td>新宿 → 品川</td><td>30分</td><td><strong style="color:#76B900">12分</strong></td></tr>
+          <tr><td>新宿 → 渋谷 → 品川</td><td><strong style="color:#76B900">16分</strong></td><td>16分</td></tr>
           <tr><td>新宿 → 池袋 → 上野 → 東京 → 品川</td><td>38分</td><td>38分</td></tr>
         </table>
-        <p style="margin-top:0.8rem">幅優先探索が選ぶ経路は<strong>直通（新宿 → 品川）</strong>で、書き換える前と変わりません。
-        いちばん短い経路も<strong>直通の12分</strong>になるので、2つの答えは一致します。</p>
-        <p style="margin-top:0.6rem"><strong>一致は偶然です。</strong>
-        幅優先探索がしていることは、書き換える前とまったく同じ「路線の本数がいちばん少ない経路をさがす」ことだけです。
-        重みが30分から12分に変わったことを、幅優先探索は一切見ていません。
-        たまたま「本数がいちばん少ない経路」と「時間がいちばん短い経路」が同じになっただけです。</p>
-        <p style="margin-top:0.6rem">確かめる方法があります。直通をもう一度30分に戻すと、幅優先探索の答えは直通のまま変わりませんが、
-        いちばん短い経路は渋谷まわりに変わります。
-        <strong>重みを変えても答えが変わらないアルゴリズムは、重みを考えていない</strong>ということです。
-        重みを正しくあつかうには、第5回から学ぶダイクストラ法が必要になります。</p>"""),
-    ("標準課題2: 自作の重み付きグラフの例", """        <p>作り方の一例として、大学の最寄り駅から教室までの経路を重み付きグラフにした場合を示します。
-        自分のテーマで作れていれば、内容が違っていてかまいません。</p>
-<pre><span class="code-label">Python ── AL2-04-std2.py の例</span>
-campus = {
-    <span class="str">"駅"</span>: [(<span class="str">"正門"</span>, <span class="num">8</span>), (<span class="str">"裏門"</span>, <span class="num">12</span>)],
-    <span class="str">"正門"</span>: [(<span class="str">"駅"</span>, <span class="num">8</span>), (<span class="str">"1号館"</span>, <span class="num">3</span>), (<span class="str">"食堂"</span>, <span class="num">5</span>)],
-    <span class="str">"裏門"</span>: [(<span class="str">"駅"</span>, <span class="num">12</span>), (<span class="str">"3号館"</span>, <span class="num">2</span>)],
-    <span class="str">"1号館"</span>: [(<span class="str">"正門"</span>, <span class="num">3</span>), (<span class="str">"教室"</span>, <span class="num">4</span>)],
-    <span class="str">"食堂"</span>: [(<span class="str">"正門"</span>, <span class="num">5</span>), (<span class="str">"教室"</span>, <span class="num">6</span>)],
-    <span class="str">"3号館"</span>: [(<span class="str">"裏門"</span>, <span class="num">2</span>), (<span class="str">"教室"</span>, <span class="num">3</span>)],
-    <span class="str">"教室"</span>: [(<span class="str">"1号館"</span>, <span class="num">4</span>), (<span class="str">"食堂"</span>, <span class="num">6</span>), (<span class="str">"3号館"</span>, <span class="num">3</span>)],
-}</pre>
-        <table style="margin-top:0.8rem">
-          <tr><th>行き方</th><th>合計時間</th></tr>
-          <tr><td>駅 → 正門 → 1号館 → 教室</td><td>8 + 3 + 4 = 15分</td></tr>
-          <tr><td>駅 → 正門 → 食堂 → 教室</td><td>8 + 5 + 6 = 19分</td></tr>
-          <tr><td>駅 → 裏門 → 3号館 → 教室</td><td>12 + 2 + 3 = <strong style="color:#76B900">17分</strong></td></tr>
-        </table>
-        <p style="margin-top:0.8rem">この例では「駅 → 正門 → 1号館 → 教室」の15分がいちばん短くなります。</p>
-        <p style="margin-top:0.6rem"><strong>重みを料金に変えた場合の考え方:</strong>
-        キャンパス内の移動はどの道も無料なので、料金を重みにするとすべての辺が0になり、
-        「どの行き方も同じ」という答えになります。重みの選び方によって、問題そのものが変わってしまうということです。</p>
-        <p style="margin-top:0.6rem">路線図をテーマに選んだ場合は、時間と料金で答えが変わることがよくあります。
-        新幹線を使えば時間は短くなりますが料金は高くなるため、
-        「時間を重みにしたときの最短経路」と「料金を重みにしたときの最短経路」は別のものになります。
-        <strong>何を重みにするかを決めることは、何を大切にするかを決めること</strong>だと言えます。</p>"""),
+        <p style="margin-top:0.6rem">幅優先探索が選ぶのは、どちらの場合も<strong>直通</strong>です。
+        12分にしたときはいちばん短い行き方も直通になるので、答えが一致します。
+        ただし<strong>一致は偶然</strong>で、幅優先探索は重みを見ていません。30分に戻すと答えはずれます。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "重み付きグラフとは", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("04", SLIDES),
+    rubric_section("04"),
     ans,
 ])
 

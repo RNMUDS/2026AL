@@ -2,8 +2,8 @@
 提出 #sec-submission
 heapqとは #sec-explanation
 例題 #sec-examples
-標準課題 #sec-standard nav-assignment
-提出まとめ #sec-notion
+課題 #sec-slides nav-assignment
+提出と評価 #sec-submit
 解答 #answers-section
 -->
 
@@ -11,15 +11,15 @@ heapqとは #sec-explanation
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <h3>提出ガイド（今回の提出物: 解説スライド3枚）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の読み飛ばし</a>
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題3の速さの差</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>取り出す順番を予測</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>辺を1本足すと？</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">A</span><span class="tag tag-standard">しくみ</span>自分で作った図で説明する</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">B</span><span class="tag tag-standard">動かした</span>自分の実行画面と読み取り</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">C</span><span class="tag tag-standard">考えた</span>問いに自分の数値で答える</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+        <strong>提出方法:</strong> 自分のGoogleスライドに第6回の3枚を追加 →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る
       </div>
     </div>
   </div>
@@ -440,7 +440,7 @@ settled = <span class="fn">set</span>()
       </div>
       <p class="run-note">取り出した順番は (0分, 新宿) → (7分, 渋谷) → (9分, 池袋) → (16分, 品川) → (21分, 上野) → (27分, 東京) でした。第5回の例題1で確定した順番とまったく同じです。いちばん最後に <strong>(30分, 品川) → すでに確定済みなので読み飛ばす</strong> と表示されています。品川は最初に30分として箱に入れられ、あとから16分として入れ直されました。16分のほうが先に取り出されて確定したので、残っていた30分の組は読み飛ばされています。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、「読み飛ばす」と表示された行を書き写す。あわせて、品川が2回 queue に入れられた理由と、30分の組を読み飛ばしてよい理由を説明する。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題2の実行結果から、「読み飛ばす」と表示された行を書き写す。あわせて、品川が2回 queue に入れられた理由と、30分の組を読み飛ばしてよい理由を説明する。</span></div>
     </div>
 
     <div class="card example">
@@ -600,11 +600,11 @@ settled = <span class="fn">set</span>()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        21.8倍 / 40×40           1600         0.067秒        0.001秒        81.8倍 / 80×80           6400         1.053秒        0.004秒       300.2倍 / 120×120         14400         5.988秒        0.009秒       694.5倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
+        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        22.6倍 / 40×40           1600         0.065秒        0.001秒        82.5倍 / 80×80           6400         1.058秒        0.007秒       145.5倍 / 120×120         14400         6.050秒        0.010秒       614.1倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
       </div>
       <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の表から、4つの大きさそれぞれの「全部見る方法の時間」「heapqの方法の時間」「何倍速いか」を書き写す。あわせて、頂点の数が増えるほど差が広がる理由を説明する。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題3の表から、4つの大きさそれぞれの「全部見る方法の時間」「heapqの方法の時間」「何倍速いか」を書き写す。あわせて、頂点の数が増えるほど差が広がる理由を説明する。</span></div>
     </div>
 
     <div class="card example">
@@ -1137,122 +1137,140 @@ simple_cost = <span class="num">0</span>
   </div>
 </section>
 
-<section id="sec-standard">
+<section id="sec-slides">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">3</div>
-      <h2>標準課題</h2>
+      <h2>課題: 解説スライドを3枚つくる</h2>
     </div>
-    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    どちらも<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+    <p style="margin-bottom:1.5rem">
+      自分のGoogleスライドに、第6回ぶんの<strong>3枚</strong>を追加してください。
+      見出しは「第6回: 優先度付きキュー（heapq）」にします。
+      説明する相手は<strong>前期のアルゴリズム論及び演習Iを受けていない友達</strong>です。
+      専門用語をそのまま書いても伝わりません。
+    </p>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 1</span>
-        <h3>heapq から取り出される順番を予測する</h3>
+        <span class="tag tag-standard">スライドA</span>
+        <h3>しくみを、自分で作った図で説明する</h3>
       </div>
-      <p>プログラムを実行する<strong>前に</strong>、次のコードが何をどの順番で表示するかを予測してください。</p>
-
-<pre><span class="code-label">Python ── AL2-06-std1.py</span>
-<span class="kw">import</span> heapq
-
-box = []
-heapq.heappush(box, (<span class="num">14</span>, <span class="str">"東京"</span>))
-heapq.heappush(box, (<span class="num">5</span>, <span class="str">"渋谷"</span>))
-heapq.heappush(box, (<span class="num">23</span>, <span class="str">"上野"</span>))
-heapq.heappush(box, (<span class="num">5</span>, <span class="str">"池袋"</span>))
-heapq.heappush(box, (<span class="num">9</span>, <span class="str">"品川"</span>))
-
-<span class="fn">print</span>(<span class="str">"箱の中身:"</span>, box)
-<span class="fn">print</span>(<span class="str">"先頭:"</span>, box[<span class="num">0</span>])
-<span class="fn">print</span>()
-
-<span class="kw">while</span> <span class="fn">len</span>(box) &gt; <span class="num">0</span>:
-    <span class="fn">print</span>(heapq.heappop(box))</pre>
-
+      <p>次の3つが伝わる図を、<strong>自分で作って</strong>1枚に入れてください。</p>
       <div class="setup-step">
-        <p class="step-title">やること</p>
+        <p class="step-title">図に必ず入れる3つ</p>
         <ol>
-          <li>実行する<strong>前に</strong>、取り出される5つの組を順番どおりに予測してNotionに書く</li>
-          <li><code>AL2-06-std1.py</code> という名前で保存して実行する</li>
-          <li>実際の出力を記録し、予測と比べる</li>
+          <li>「全部見てさがす」やり方と「heapq に任せる」やり方のちがい</li>
+          <li>heapq が守っているきまり（親は必ず子より小さい）</li>
+          <li>同じ駅が2回入って、あとから出てきたほうが読み飛ばされること</li>
         </ol>
       </div>
-
-      <table>
-        <tr><th>取り出す順番</th><th>予測</th><th>実際</th></tr>
-        <tr><td>1つ目</td><td></td><td></td></tr>
-        <tr><td>2つ目</td><td></td><td></td></tr>
-        <tr><td>3つ目</td><td></td><td></td></tr>
-        <tr><td>4つ目</td><td></td><td></td></tr>
-        <tr><td>5つ目</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 時間が同じ <code>(5, "渋谷")</code> と <code>(5, "池袋")</code> は、
-      どちらが先に取り出されましたか。なぜその順番になるのかを説明してください。</p>
-
+      <div class="note-warn">
+        <strong>図の作り方:</strong> Googleスライドの「挿入 → 図形」で四角・丸・矢印を並べて作ります。
+        紙に手描きして写真を撮り、貼りつけてもかまいません。
+        <strong>授業ページの図をそのまま貼るのは不可</strong>です。自分で線を引いたものだけを認めます。
+      </div>
+      <p style="margin-top:1rem">図のほかに、<strong>1文だけ</strong>説明を書いてください。
+      「優先度付きキュー（heapq）とは、○○を○○する方法です」の形で、20〜40字におさめます。</p>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの組についての予測と実際の表、および「時間が同じときの順番」の説明。</span></div>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 2</span>
-        <h3>路線を1本足すと最短時間はどう変わるか</h3>
+        <span class="tag tag-standard">スライドB</span>
+        <h3>自分で動かした結果をのせる</h3>
       </div>
-      <p>例題2のファイル <code>AL2-06-ex2.py</code> を開き、池袋と品川を直接つなぐ新しい路線（5分）を追加します。</p>
-
-<pre><span class="code-label">Python ── 書き換える2行</span>
-    <span class="str">"池袋"</span>: [(<span class="str">"新宿"</span>, <span class="num">9</span>), (<span class="str">"上野"</span>, <span class="num">12</span>), (<span class="str">"品川"</span>, <span class="num">5</span>)],   <span class="cmt"># ← ("品川", 5) を足す</span>
-    <span class="str">"品川"</span>: [(<span class="str">"新宿"</span>, <span class="num">30</span>), (<span class="str">"渋谷"</span>, <span class="num">9</span>), (<span class="str">"東京"</span>, <span class="num">11</span>), (<span class="str">"池袋"</span>, <span class="num">5</span>)],   <span class="cmt"># ← ("池袋", 5) を足す</span></pre>
-
       <div class="setup-step">
         <p class="step-title">やること</p>
         <ol>
-          <li>実行する<strong>前に</strong>、新宿から各駅までの最短時間と、東京への道順を予測してNotionに書く</li>
-          <li>2行を書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>「読み飛ばす」と表示された行が何回出たかを数える</li>
+          <li><code>AL2-06-ex3.py</code> を自分のパソコンで実行する</li>
+          <li><strong>VS Codeのウィンドウごと</strong>スクリーンショットを撮る
+              （左のエクスプローラーに <code>AL2/No06</code> のフォルダ名とファイル名が写っている状態）</li>
+          <li>スクリーンショットをスライドに貼る</li>
+          <li>実行結果から読み取れることを、<strong>数値を挙げて</strong>2つ書く</li>
         </ol>
       </div>
-
-      <table>
-        <tr><th>駅</th><th>追加する前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>渋谷</td><td>7分</td><td></td><td></td></tr>
-        <tr><td>池袋</td><td>9分</td><td></td><td></td></tr>
-        <tr><td>品川</td><td>16分</td><td></td><td></td></tr>
-        <tr><td>上野</td><td>21分</td><td></td><td></td></tr>
-        <tr><td>東京</td><td>27分</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 新しい路線を1本足しただけで、時間が短くなった駅と変わらなかった駅があります。
-      どの駅がどう変わったかを書き、変わった理由を「新しい路線を通る経路」を示しながら説明してください。</p>
-
+      <div class="setup-step">
+        <p class="step-title">読み取ること（この2つに答える）</p>
+        <ul>
+          <li>120マス四方のとき、2つのやり方にかかった時間と、その差は何倍か</li>
+          <li>マス目が大きくなると、その差がどう変わっていくか</li>
+        </ul>
+      </div>
+      <div class="note-warn">
+        <strong>スクリーンショットの撮り方:</strong>
+        Windows は <strong>Windows キー ＋ Shift ＋ S</strong>、Mac は <strong>Shift ＋ Command ＋ 4</strong> のあと
+        <strong>スペースキー</strong>を押してウィンドウをクリックします。
+        画面の一部だけを切り取ったものは受けつけません。フォルダ名とファイル名が読める状態にしてください。
+      </div>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの駅についての予測と実際の表、東京への道順、読み飛ばしの回数、および変わった理由の説明。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドC</span>
+        <h3>問いに、自分の数値を根拠にして答える</h3>
+      </div>
+      <p>次の2つの問いに答えてください。答えの中で、
+      <strong>スライドBに貼った自分の実行結果の数値を必ず引用</strong>してください。</p>
+      <ul class="point-list">
+        <li><strong>問い1:</strong> 例題2の実行結果に「すでに確定済みなので読み飛ばす」と出るのはなぜですか。前期を受けていない友達に説明してください。</li>
+        <li><strong>問い2:</strong> <code>AL2-06-ex2.py</code> に「池袋—品川 5分」の路線を足して実行してください。5つの駅の時間と、東京への道順がどう変わったかを数値で書いてください。</li>
+      </ul>
+      <div class="note-warn">
+        <strong>「〜が分かった」「うまくいった」だけでは点になりません。</strong>
+        「自分の実行結果では○○が△△だった。だから□□と言える」の形で書いてください。
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="sec-notion">
+<section id="sec-submit">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">4</div>
-      <h2>提出まとめ</h2>
+      <h2>提出と評価</h2>
     </div>
     <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
         <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+        <h3>提出のしかた</h3>
       </div>
-      <p>第6回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 「読み飛ばす」行の書き写し、2回入れられた理由、読み飛ばしてよい理由</li>
-        <li><strong>例題3</strong>: 4つの大きさの時間と倍率、差が広がる理由</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、時間が同じときの順番の説明</li>
-        <li><strong>標準課題2</strong>: 予測と実際の表、道順、読み飛ばし回数、変わった理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      <div class="setup-step">
+        <p class="step-title">手順</p>
+        <ol>
+          <li>自分のGoogleスライドを開き、第6回の3枚（A・B・C）を追加する</li>
+          <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
+          <li>ManabaにPDFを提出する</li>
+          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
+        </ol>
       </div>
+      <div class="note-warn">
+        <strong>共有URLも毎回必ず提出してください。</strong>
+        Googleスライドには変更履歴が残ります。
+        いつ・どのスライドを作ったかを確認するために使います。
+        まとめて作ると履歴に残るので、毎回の授業の中で少しずつ進めてください。
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-top:1.5rem">
+      <h4>評価の観点（毎回同じ・10点満点）</h4>
+      <table>
+        <tr><th>観点</th><th>点</th><th>見るところ</th></tr>
+        <tr><td>図を自分で作ったか</td><td>3</td><td>授業ページの図の貼りつけは0点。指定の3要素が図に入っているか</td></tr>
+        <tr><td>自分で動かした証拠があるか</td><td>2</td><td>VS Codeのウィンドウごとのスクリーンショット。フォルダ名が読めるか</td></tr>
+        <tr><td>数値を根拠にしているか</td><td>3</td><td>自分の実行結果の数値を引用しているか。数値と説明が合っているか</td></tr>
+        <tr><td>言葉が自分のものか</td><td>2</td><td>専門用語をそのまま並べていないか。前期未履修の友達に伝わるか</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>よくある不十分な例</h4>
+      <table>
+        <tr><th>不十分な例</th><th>どう直すか</th></tr>
+        <tr><td>授業ページの図をスクリーンショットして貼る</td><td>同じ内容でよいので、図形を自分で並べ直す。手描きの写真でもよい</td></tr>
+        <tr><td>ターミナルの文字だけを切り取って貼る</td><td>VS Codeのウィンドウ全体を撮る。フォルダ名とファイル名が写るようにする</td></tr>
+        <tr><td>「速いことが分かりました」で終わる</td><td>「自分の結果では6秒と0.01秒で、600倍ほど違った」と数値を書く</td></tr>
+        <tr><td>教材の文をそのまま写す</td><td>専門用語を1つ選び、それを使わずに言いかえてみる</td></tr>
+        <tr><td>3枚を最後の週にまとめて作る</td><td>変更履歴で分かります。毎回の授業中に作ってください</td></tr>
+      </table>
     </div>
   </div>
 </section>
@@ -1267,51 +1285,19 @@ heapq.heappush(box, (<span class="num">9</span>, <span class="str">"品川"</spa
 
     <div id="answers-content">
       <div class="ans-item">
-        <h4>標準課題1: 取り出される順番</h4>
+        <h4>確かめ用の数値</h4>
+        <p><strong>問い2（池袋—品川 5分 を足したとき）</strong></p>
         <table>
-          <tr><th>取り出す順番</th><th>実際</th></tr>
-          <tr><td>1つ目</td><td>(5, '池袋')</td></tr>
-          <tr><td>2つ目</td><td>(5, '渋谷')</td></tr>
-          <tr><td>3つ目</td><td>(9, '品川')</td></tr>
-          <tr><td>4つ目</td><td>(14, '東京')</td></tr>
-          <tr><td>5つ目</td><td>(23, '上野')</td></tr>
+          <tr><th>駅</th><th>足す前</th><th>足したあと</th></tr>
+          <tr><td>渋谷</td><td>7分</td><td>7分</td></tr>
+          <tr><td>池袋</td><td>9分</td><td>9分</td></tr>
+          <tr><td>品川</td><td>16分</td><td><strong style="color:#76B900">14分</strong></td></tr>
+          <tr><td>上野</td><td>21分</td><td>21分</td></tr>
+          <tr><td>東京</td><td>27分</td><td><strong style="color:#76B900">25分</strong></td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>時間が同じときの順番:</strong>
-        <code>(5, "渋谷")</code> と <code>(5, "池袋")</code> は1番目の要素が同じ 5 なので、
-        Pythonは<strong>2番目の要素で比べます</strong>。
-        文字列どうしの比較では、文字コードの小さいほうが先になります。
-        「池」と「渋」を比べると「池」のほうが文字コードが小さいため、<code>(5, "池袋")</code> が先に取り出されます。</p>
-        <p style="margin-top:0.6rem">ダイクストラ法では、時間が同じ駅がどちらの順で確定しても、最終的な最短時間は変わりません。
-        ただし、同じ時間でたどり着ける経路が複数あるとき、<strong>表示される道順がどちらになるかは変わります</strong>。
-        第5回の例題2で東京への道順が「新宿 → 渋谷 → 品川 → 東京」になったのも、
-        同じ27分の「新宿 → 池袋 → 上野 → 東京」より先に見つかったからです。</p>
-        <p style="margin-top:0.6rem"><strong>注意:</strong> タプルの2番目に、比べられないもの（辞書など）を入れると、
-        時間が同じになったときにエラーが出ます。実際のプログラムでは、駅名のかわりに番号を入れることがよくあります。</p>
-      </div>
-      <div class="ans-item">
-        <h4>標準課題2: 池袋と品川を5分でつないだときの結果</h4>
-        <table>
-          <tr><th>駅</th><th>追加する前</th><th>追加したあと</th><th>変化</th></tr>
-          <tr><td>渋谷</td><td>7分</td><td>7分</td><td>変わらない</td></tr>
-          <tr><td>池袋</td><td>9分</td><td>9分</td><td>変わらない</td></tr>
-          <tr><td>品川</td><td>16分</td><td><strong style="color:#76B900">14分</strong></td><td>2分短くなった</td></tr>
-          <tr><td>上野</td><td>21分</td><td>21分</td><td>変わらない</td></tr>
-          <tr><td>東京</td><td>27分</td><td><strong style="color:#76B900">25分</strong></td><td>2分短くなった</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>変わった理由:</strong>
-        品川への行き方が「新宿 → 渋谷 → 品川」（7+9=16分）から
-        「<strong>新宿 → 池袋 → 品川</strong>」（9+5=14分）に変わったためです。
-        新しくできた池袋と品川のあいだの5分が、渋谷まわりより速い近道になっています。</p>
-        <p style="margin-top:0.6rem">東京へは品川を通るので、品川が2分早くなったぶん、東京も 27分 → 25分 と2分短くなります。
-        道順は「新宿 → 池袋 → 品川 → 東京」に変わります。</p>
-        <p style="margin-top:0.6rem">渋谷（7分）と池袋（9分）は新宿の直接のとなりなので、新しい路線を通る必要がありません。
-        上野へは「新宿 → 池袋 → 上野」の21分のままで、品川を通る経路（14+11+6=31分）より短いため変わりません。</p>
-        <p style="margin-top:0.6rem"><strong>読み飛ばしの回数: 2回</strong>（どちらも品川）。
-        品川は「30分」「16分」「14分」の3回 queue に入ります。
-        いちばん小さい14分が先に取り出されて確定するので、あとから出てくる16分と30分の組が読み飛ばされます。
-        東京は25分の1回しか queue に入りません。
-        上野を確定させたときに計算される 21+6=27分 は、すでに書いてある25分より大きいので、queue に入れられないためです。
-        実行結果の「すでに確定済みなので読み飛ばす」の行を数えて確かめてください。</p>
+        <p style="margin-top:0.6rem">東京への道順は「新宿 → 池袋 → 品川 → 東京」に変わります。
+        「読み飛ばす」と表示されるのは<strong>2回</strong>で、どちらも品川です。
+        品川は30分・16分・14分の3回 queue に入り、いちばん小さい14分が先に取り出されて確定するためです。</p>
       </div>
     </div>
 

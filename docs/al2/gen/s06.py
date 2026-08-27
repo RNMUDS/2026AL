@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """第6回: ダイクストラ法（2）実装入門 の本文を組み立てる。"""
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 COST_MAP = [
     [1, 1, 1, 9, 9, 9, 1, 1, 1, 1],
@@ -206,17 +208,12 @@ NAV = [
     "提出 #sec-submission",
     "heapqとは #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の読み飛ばし"),
-    ("#sec-examples", "tag-example", "観察記録", "例題3の速さの差"),
-    ("#sec-standard", "tag-standard", "標準課題1", "取り出す順番を予測"),
-    ("#sec-standard", "tag-standard", "標準課題2", "辺を1本足すと？"),
-], 4)
+sub = slide_submission("06")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第5回で書いたダイクストラ法には、遅くなる原因が1つあります。
@@ -342,152 +339,26 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '大きめの迷路を解く', ex4_body)}"""
 
-std1_body = """      <p>プログラムを実行する<strong>前に</strong>、次のコードが何をどの順番で表示するかを予測してください。</p>
-
-<pre><span class="code-label">Python ── AL2-06-std1.py</span>
-<span class="kw">import</span> heapq
-
-box = []
-heapq.heappush(box, (<span class="num">14</span>, <span class="str">"東京"</span>))
-heapq.heappush(box, (<span class="num">5</span>, <span class="str">"渋谷"</span>))
-heapq.heappush(box, (<span class="num">23</span>, <span class="str">"上野"</span>))
-heapq.heappush(box, (<span class="num">5</span>, <span class="str">"池袋"</span>))
-heapq.heappush(box, (<span class="num">9</span>, <span class="str">"品川"</span>))
-
-<span class="fn">print</span>(<span class="str">"箱の中身:"</span>, box)
-<span class="fn">print</span>(<span class="str">"先頭:"</span>, box[<span class="num">0</span>])
-<span class="fn">print</span>()
-
-<span class="kw">while</span> <span class="fn">len</span>(box) &gt; <span class="num">0</span>:
-    <span class="fn">print</span>(heapq.heappop(box))</pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、取り出される5つの組を順番どおりに予測してNotionに書く</li>
-          <li><code>AL2-06-std1.py</code> という名前で保存して実行する</li>
-          <li>実際の出力を記録し、予測と比べる</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>取り出す順番</th><th>予測</th><th>実際</th></tr>
-        <tr><td>1つ目</td><td></td><td></td></tr>
-        <tr><td>2つ目</td><td></td><td></td></tr>
-        <tr><td>3つ目</td><td></td><td></td></tr>
-        <tr><td>4つ目</td><td></td><td></td></tr>
-        <tr><td>5つ目</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 時間が同じ <code>(5, "渋谷")</code> と <code>(5, "池袋")</code> は、
-      どちらが先に取り出されましたか。なぜその順番になるのかを説明してください。</p>
-"""
-
-std2_body = """      <p>例題2のファイル <code>AL2-06-ex2.py</code> を開き、池袋と品川を直接つなぐ新しい路線（5分）を追加します。</p>
-
-<pre><span class="code-label">Python ── 書き換える2行</span>
-    <span class="str">"池袋"</span>: [(<span class="str">"新宿"</span>, <span class="num">9</span>), (<span class="str">"上野"</span>, <span class="num">12</span>), (<span class="str">"品川"</span>, <span class="num">5</span>)],   <span class="cmt"># ← ("品川", 5) を足す</span>
-    <span class="str">"品川"</span>: [(<span class="str">"新宿"</span>, <span class="num">30</span>), (<span class="str">"渋谷"</span>, <span class="num">9</span>), (<span class="str">"東京"</span>, <span class="num">11</span>), (<span class="str">"池袋"</span>, <span class="num">5</span>)],   <span class="cmt"># ← ("池袋", 5) を足す</span></pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、新宿から各駅までの最短時間と、東京への道順を予測してNotionに書く</li>
-          <li>2行を書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>「読み飛ばす」と表示された行が何回出たかを数える</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>駅</th><th>追加する前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>渋谷</td><td>7分</td><td></td><td></td></tr>
-        <tr><td>池袋</td><td>9分</td><td></td><td></td></tr>
-        <tr><td>品川</td><td>16分</td><td></td><td></td></tr>
-        <tr><td>上野</td><td>21分</td><td></td><td></td></tr>
-        <tr><td>東京</td><td>27分</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 新しい路線を1本足しただけで、時間が短くなった駅と変わらなかった駅があります。
-      どの駅がどう変わったかを書き、変わった理由を「新しい路線を通る経路」を示しながら説明してください。</p>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    どちらも<strong>実行する前に予測を書く</strong>ことが大切です。</p>
-
-{standard(1, 'heapq から取り出される順番を予測する', std1_body)}
-{notion('5つの組についての予測と実際の表、および「時間が同じときの順番」の説明。')}
-
-{standard(2, '路線を1本足すと最短時間はどう変わるか', std2_body)}
-{notion('5つの駅についての予測と実際の表、東京への道順、読み飛ばしの回数、および変わった理由の説明。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第6回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 「読み飛ばす」行の書き写し、2回入れられた理由、読み飛ばしてよい理由</li>
-        <li><strong>例題3</strong>: 4つの大きさの時間と倍率、差が広がる理由</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、時間が同じときの順番の説明</li>
-        <li><strong>標準課題2</strong>: 予測と実際の表、道順、読み飛ばし回数、変わった理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 取り出される順番", """        <table>
-          <tr><th>取り出す順番</th><th>実際</th></tr>
-          <tr><td>1つ目</td><td>(5, '池袋')</td></tr>
-          <tr><td>2つ目</td><td>(5, '渋谷')</td></tr>
-          <tr><td>3つ目</td><td>(9, '品川')</td></tr>
-          <tr><td>4つ目</td><td>(14, '東京')</td></tr>
-          <tr><td>5つ目</td><td>(23, '上野')</td></tr>
+    ("確かめ用の数値", """        <p><strong>問い2（池袋—品川 5分 を足したとき）</strong></p>
+        <table>
+          <tr><th>駅</th><th>足す前</th><th>足したあと</th></tr>
+          <tr><td>渋谷</td><td>7分</td><td>7分</td></tr>
+          <tr><td>池袋</td><td>9分</td><td>9分</td></tr>
+          <tr><td>品川</td><td>16分</td><td><strong style="color:#76B900">14分</strong></td></tr>
+          <tr><td>上野</td><td>21分</td><td>21分</td></tr>
+          <tr><td>東京</td><td>27分</td><td><strong style="color:#76B900">25分</strong></td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>時間が同じときの順番:</strong>
-        <code>(5, "渋谷")</code> と <code>(5, "池袋")</code> は1番目の要素が同じ 5 なので、
-        Pythonは<strong>2番目の要素で比べます</strong>。
-        文字列どうしの比較では、文字コードの小さいほうが先になります。
-        「池」と「渋」を比べると「池」のほうが文字コードが小さいため、<code>(5, "池袋")</code> が先に取り出されます。</p>
-        <p style="margin-top:0.6rem">ダイクストラ法では、時間が同じ駅がどちらの順で確定しても、最終的な最短時間は変わりません。
-        ただし、同じ時間でたどり着ける経路が複数あるとき、<strong>表示される道順がどちらになるかは変わります</strong>。
-        第5回の例題2で東京への道順が「新宿 → 渋谷 → 品川 → 東京」になったのも、
-        同じ27分の「新宿 → 池袋 → 上野 → 東京」より先に見つかったからです。</p>
-        <p style="margin-top:0.6rem"><strong>注意:</strong> タプルの2番目に、比べられないもの（辞書など）を入れると、
-        時間が同じになったときにエラーが出ます。実際のプログラムでは、駅名のかわりに番号を入れることがよくあります。</p>"""),
-    ("標準課題2: 池袋と品川を5分でつないだときの結果", """        <table>
-          <tr><th>駅</th><th>追加する前</th><th>追加したあと</th><th>変化</th></tr>
-          <tr><td>渋谷</td><td>7分</td><td>7分</td><td>変わらない</td></tr>
-          <tr><td>池袋</td><td>9分</td><td>9分</td><td>変わらない</td></tr>
-          <tr><td>品川</td><td>16分</td><td><strong style="color:#76B900">14分</strong></td><td>2分短くなった</td></tr>
-          <tr><td>上野</td><td>21分</td><td>21分</td><td>変わらない</td></tr>
-          <tr><td>東京</td><td>27分</td><td><strong style="color:#76B900">25分</strong></td><td>2分短くなった</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>変わった理由:</strong>
-        品川への行き方が「新宿 → 渋谷 → 品川」（7+9=16分）から
-        「<strong>新宿 → 池袋 → 品川</strong>」（9+5=14分）に変わったためです。
-        新しくできた池袋と品川のあいだの5分が、渋谷まわりより速い近道になっています。</p>
-        <p style="margin-top:0.6rem">東京へは品川を通るので、品川が2分早くなったぶん、東京も 27分 → 25分 と2分短くなります。
-        道順は「新宿 → 池袋 → 品川 → 東京」に変わります。</p>
-        <p style="margin-top:0.6rem">渋谷（7分）と池袋（9分）は新宿の直接のとなりなので、新しい路線を通る必要がありません。
-        上野へは「新宿 → 池袋 → 上野」の21分のままで、品川を通る経路（14+11+6=31分）より短いため変わりません。</p>
-        <p style="margin-top:0.6rem"><strong>読み飛ばしの回数: 2回</strong>（どちらも品川）。
-        品川は「30分」「16分」「14分」の3回 queue に入ります。
-        いちばん小さい14分が先に取り出されて確定するので、あとから出てくる16分と30分の組が読み飛ばされます。
-        東京は25分の1回しか queue に入りません。
-        上野を確定させたときに計算される 21+6=27分 は、すでに書いてある25分より大きいので、queue に入れられないためです。
-        実行結果の「すでに確定済みなので読み飛ばす」の行を数えて確かめてください。</p>"""),
+        <p style="margin-top:0.6rem">東京への道順は「新宿 → 池袋 → 品川 → 東京」に変わります。
+        「読み飛ばす」と表示されるのは<strong>2回</strong>で、どちらも品川です。
+        品川は30分・16分・14分の3回 queue に入り、いちばん小さい14分が先に取り出されて確定するためです。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "優先度付きキュー（heapq）", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("06", SLIDES),
+    rubric_section("06"),
     ans,
 ])
 

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """第2回: 幅優先探索・深さ優先探索の発展 の本文を組み立てる。"""
 from collections import deque
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 MAZE = ["S.....#", ".####.#", ".#....#", ".#.##..", ".#..#.#", ".##.#.#", "......G"]
 
@@ -202,17 +204,12 @@ NAV = [
     "提出 #sec-submission",
     "2つの探索 #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の歩数と調査数"),
-    ("#sec-examples", "tag-example", "観察記録", "例題4の広場での差"),
-    ("#sec-standard", "tag-standard", "標準課題1", "壁を1つ足すと？"),
-    ("#sec-standard", "tag-standard", "標準課題2", "使い分けの表"),
-], 4)
+sub = slide_submission("02")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       前期の最後に学んだ幅優先探索に加えて、第2回では<strong>深さ優先探索</strong>をあつかいます。
@@ -331,127 +328,24 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '壁のない広場で比べる', ex4_body)}"""
 
-std1_body = """      <p>例題2のファイル <code>AL2-02-ex2.py</code> を開き、迷路のいちばん下の行を書き換えます。</p>
-
-<pre><span class="code-label">Python ── 書き換える行</span>
-    <span class="str">"......G"</span>,      <span class="cmt"># ← "..#...G" に書き換える（下の通路に壁を1つ置く）</span></pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、幅優先探索の歩数がどうなるかを予測してNotionに書く（増える／変わらない／減る のどれか、と理由）</li>
-          <li>迷路を書き換えて保存し、実行する</li>
-          <li>幅優先探索と深さ優先探索の歩数・調べたマス数を記録する</li>
-          <li>迷路の絵をよく見て、経路がどう変わったかを書く</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>項目</th><th>書き換える前</th><th>書き換えたあと</th></tr>
-        <tr><td>幅優先探索の歩数</td><td>12歩</td><td></td></tr>
-        <tr><td>幅優先探索の調べたマス数</td><td>31マス</td><td></td></tr>
-        <tr><td>深さ優先探索の歩数</td><td>18歩</td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 予測は当たりましたか。
-      当たっても外れても、実行結果の迷路の絵を見て、通り道がどう変わったかを言葉で説明してください。</p>
-"""
-
-std2_body = """      <p>例題2・例題3・例題4の結果をもとに、2つの探索の使い分けを表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。</p>
-
-      <table>
-        <tr><th>比べる点</th><th>幅優先探索</th><th>深さ優先探索</th></tr>
-        <tr><td>メモから取り出す場所</td><td></td><td></td></tr>
-        <tr><td>見つかる道は最短か</td><td></td><td></td></tr>
-        <tr><td>調べるマスの数（多い／少ない）</td><td></td><td></td></tr>
-        <tr><td>広場（例題4・40マス四方）での歩数</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の2つの場面には、それぞれどちらの探索が向いているかを<strong>理由つきで</strong>答えてください。</p>
-      <ul class="point-list">
-        <li><strong>場面A:</strong> 配達アプリで「いちばん早く着く道順」を案内する</li>
-        <li><strong>場面B:</strong> 迷路ゲームで「そもそもゴールにたどり着けるか」だけを判定する</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
-
-{standard(1, '壁を1つ足すと歩数はどうなるか', std1_body)}
-{notion('予測（増える／変わらない／減る と理由）、書き換えたあとの歩数と調べたマス数の表、経路がどう変わったかの説明。')}
-
-{standard(2, '幅優先探索と深さ優先探索の使い分け', std2_body)}
-{notion('4行の比較表（空欄をすべて埋める）と、場面A・場面Bそれぞれに向いている探索とその理由。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第2回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 歩数と調べたマス数の表、経路の違いの説明</li>
-        <li><strong>例題4</strong>: 40マス四方での差、蛇行する理由</li>
-        <li><strong>標準課題1</strong>: 予測、書き換えたあとの結果、経路の変化</li>
-        <li><strong>標準課題2</strong>: 比較表、場面A・場面Bへの答えと理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 壁を1つ足したときの結果", """        <table>
+    ("確かめ用の数値", """        <table>
           <tr><th>項目</th><th>書き換える前</th><th>書き換えたあと</th></tr>
           <tr><td>幅優先探索の歩数</td><td>12歩</td><td><strong style="color:#76B900">12歩（変わらない）</strong></td></tr>
           <tr><td>幅優先探索の調べたマス数</td><td>31マス</td><td>26マス</td></tr>
           <tr><td>深さ優先探索の歩数</td><td>18歩</td><td>18歩</td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>歩数は変わりませんが、通り道はまったく別の道に変わります。</strong>
-        書き換える前は左の列を下りて下の行を右へ進む道でしたが、書き換えたあとは上の行を右へ進んでから右側の列を下りる道になります。</p>
-<pre><span class="code-label">Terminal ── 書き換えたあとの幅優先探索の経路</span>
-  S*****#
-  .####*#
-  .#...*#
-  .#.##*.
-  .#..#*#
-  .##.#*#
-  ..#..*G</pre>
-        <p style="margin-top:0.8rem"><strong>歩数が変わらない理由:</strong>
-        スタートは左上のマス、ゴールは右下のマスです。たてに6マス、よこに6マス離れているので、
-        まっすぐ進めるならどう回っても12歩かかります。書き換える前の道も書き換えたあとの道も、
-        「もどる動き」をまったく含まない道なので、どちらも12歩で済みます。
-        壁を1つ置いても、もう1本の12歩の道が残っていたということです。</p>
-        <p style="margin-top:0.6rem">調べたマス数が31マスから26マスに減ったのは、壁が1つ増えたことで、そもそも通れるマスが1つ減り、
-        その先にあった行き止まりのマスも調べなくてよくなったためです。</p>"""),
-    ("標準課題2: 使い分けの表と答え", """        <table>
-          <tr><th>比べる点</th><th>幅優先探索</th><th>深さ優先探索</th></tr>
-          <tr><td>メモから取り出す場所</td><td>いちばん古い行（<code>popleft()</code>）</td><td>いちばん新しい行（<code>pop()</code>）</td></tr>
-          <tr><td>見つかる道は最短か</td><td>必ず最短</td><td>最短とはかぎらない</td></tr>
-          <tr><td>調べるマスの数</td><td>多い（近い順にすべて調べる）</td><td>少ないことが多い</td></tr>
-          <tr><td>広場（40マス四方）での歩数</td><td>78歩</td><td>780歩</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>場面A（配達アプリの経路案内）: 幅優先探索</strong><br>
-        利用者がほしいのは「いちばん早く着く道順」です。深さ優先探索が返す道は最短とはかぎらず、
-        例題4では最短の10倍もの遠回りになりました。遠回りの道を案内してしまうと役に立ちません。
-        最短が必要な場面では、調べる手間が重くなっても幅優先探索を選びます。</p>
-        <p style="margin-top:0.6rem"><strong>場面B（ゴールにたどり着けるかの判定）: 深さ優先探索</strong><br>
-        知りたいのは「行けるか、行けないか」だけで、道の長さは関係ありません。
-        どちらの探索でも同じ答えが出るので、調べるマスが少なくて済む深さ優先探索のほうが軽く終わります。
-        例題4の40マス四方では、調べたマスが1600マスから859マスへ、およそ半分に減りました。</p>
-        <p style="margin-top:0.6rem"><strong>補足:</strong>
-        深さ優先探索にはもう1つ利点があります。メモに残る場所の数が少なくて済むため、
-        非常に大きい迷路でもコンピュータのメモリを使いすぎません。
-        幅優先探索は「同じ歩数のマス全部」をメモに持つので、迷路が広いほどメモが長くなります。</p>"""),
+        <p style="margin-top:0.6rem"><strong>歩数は変わりませんが、通り道は別の道に変わります。</strong>
+        書き換える前は左の列を下って下の行を右へ進む道、書き換えたあとは上の行を右へ進んで右の列を下る道です。</p>
+        <p style="margin-top:0.8rem"><strong>問い2の根拠になる数値</strong>: 40マス四方の広場で、
+        幅優先探索は78歩・1600マス調査、深さ優先探索は780歩・859マス調査。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "2つの探索の違い", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("02", SLIDES),
+    rubric_section("02"),
     ans,
 ])
 

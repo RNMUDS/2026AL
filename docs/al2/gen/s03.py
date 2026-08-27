@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """第3回: グラフとデータ構造の再確認 の本文を組み立てる。"""
 from collections import deque
-from common import (AMBER, GRAY, GREEN, answers, code, example, fig, keywords,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, answers, code, example, fig, keywords,
                     notion, reveal, run, section, setup_guide, standard,
-                    submission, write)
+                    write)
 
 STATIONS = ["新宿", "渋谷", "池袋", "東京", "品川", "上野"]
 LINES = [("新宿", "渋谷"), ("新宿", "池袋"), ("新宿", "東京"),
@@ -235,17 +237,12 @@ NAV = [
     "提出 #sec-submission",
     "グラフとは #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2のマス数の比較"),
-    ("#sec-examples", "tag-example", "観察記録", "例題4の変換結果"),
-    ("#sec-standard", "tag-standard", "標準課題1", "路線を1本足すと？"),
-    ("#sec-standard", "tag-standard", "標準課題2", "2つの表現の使い分け"),
-], 4)
+sub = slide_submission("03")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第1回・第2回であつかった迷路は、じつは<strong>グラフ</strong>という考え方の一例です。
@@ -362,124 +359,25 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '迷路をグラフに書き直して解く', ex4_body)}"""
 
-std1_body = """      <p>例題3のファイル <code>AL2-03-ex3.py</code> を開き、路線図に<strong>新宿と品川を直接つなぐ新しい路線</strong>を1本追加します。
-      隣接リストは両方の駅を書き換える必要があります。</p>
-
-<pre><span class="code-label">Python ── 書き換える2行</span>
-    <span class="str">"新宿"</span>: [<span class="str">"渋谷"</span>, <span class="str">"池袋"</span>, <span class="str">"東京"</span>, <span class="str">"品川"</span>],   <span class="cmt"># ← "品川" を足す</span>
-    <span class="str">"品川"</span>: [<span class="str">"渋谷"</span>, <span class="str">"東京"</span>, <span class="str">"新宿"</span>],           <span class="cmt"># ← "新宿" を足す</span></pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、6つの駅それぞれについて「乗る路線の数」がどうなるかを予測してNotionに書く</li>
-          <li>2行を書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>新宿から品川への行き方が、書き換える前とどう変わったかを書く</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>駅</th><th>書き換える前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>渋谷</td><td>1本</td><td></td><td></td></tr>
-        <tr><td>池袋</td><td>1本</td><td></td><td></td></tr>
-        <tr><td>東京</td><td>1本</td><td></td><td></td></tr>
-        <tr><td>品川</td><td>2本</td><td></td><td></td></tr>
-        <tr><td>上野</td><td>2本</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 隣接リストの片方（<code>"新宿"</code> の行）だけを書き換えて、
-      もう片方（<code>"品川"</code> の行）を書き換え忘れると、どんな問題が起きるかを説明してください。</p>
-"""
-
-std2_body = """      <p>例題1から例題4までの結果をもとに、隣接リストと隣接行列の使い分けを表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。</p>
-
-      <table>
-        <tr><th>比べる点</th><th>隣接リスト</th><th>隣接行列</th></tr>
-        <tr><td>書き方</td><td></td><td></td></tr>
-        <tr><td>駅が5000個のときのマス数</td><td></td><td></td></tr>
-        <tr><td>「2駅が直接つながっているか」の調べやすさ</td><td></td><td></td></tr>
-        <tr><td>「ある駅のとなりの駅をすべて並べる」調べやすさ</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の2つの場面には、それぞれどちらの表し方が向いているかを<strong>理由つきで</strong>答えてください。</p>
-      <ul class="point-list">
-        <li><strong>場面A:</strong> 日本全国の鉄道路線図（駅が約9000個、1駅あたりつながる駅は2〜4個）をあつかう</li>
-        <li><strong>場面B:</strong> 30人のクラス全員について、「誰と誰が同じ委員会か」を何度も繰り返し調べる</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
-
-{standard(1, '路線を1本足すと、乗る路線の数はどう変わるか', std1_body)}
-{notion('5つの駅についての予測と実際の表、新宿から品川への行き方の変化、および「片方だけ書き換えたときに起きる問題」の説明。')}
-
-{standard(2, '隣接リストと隣接行列の使い分け', std2_body)}
-{notion('4行の比較表（空欄をすべて埋める）と、場面A・場面Bそれぞれに向いている表し方とその理由。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第3回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 駅の数ごとのマス数の表、10倍になったときの増え方</li>
-        <li><strong>例題4</strong>: 迷路の頂点の数、(0,0) につながる頂点、書き直して便利になったこと</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、行き方の変化、片方だけ書き換えたときの問題</li>
-        <li><strong>標準課題2</strong>: 比較表、場面A・場面Bへの答えと理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 路線を1本足したときの結果", """        <table>
-          <tr><th>駅</th><th>書き換える前</th><th>書き換えたあと</th></tr>
-          <tr><td>渋谷</td><td>1本</td><td>1本（変わらない）</td></tr>
-          <tr><td>池袋</td><td>1本</td><td>1本（変わらない）</td></tr>
-          <tr><td>東京</td><td>1本</td><td>1本（変わらない）</td></tr>
-          <tr><td>品川</td><td>2本</td><td><strong style="color:#76B900">1本（1本減る）</strong></td></tr>
-          <tr><td>上野</td><td>2本</td><td>2本（変わらない）</td></tr>
+    ("確かめ用の数値", """        <table>
+          <tr><th>駅の数</th><th>隣接行列</th><th>隣接リスト</th></tr>
+          <tr><td>6</td><td>36マス</td><td>36マス</td></tr>
+          <tr><td>50</td><td>2,500マス</td><td>300マス</td></tr>
+          <tr><td>500</td><td>250,000マス</td><td>3,000マス</td></tr>
+          <tr><td>5,000</td><td>25,000,000マス</td><td>30,000マス</td></tr>
         </table>
-        <p style="margin-top:0.8rem">新宿から品川への行き方は、<strong>「新宿 → 渋谷 → 品川」から「新宿 → 品川」へ変わります。</strong>
-        新しい直通の路線ができたので、渋谷で乗りかえる必要がなくなりました。</p>
-        <p style="margin-top:0.6rem">上野が2本のまま変わらないのは、新しい路線が上野に関係していないからです。
-        上野へは「新宿 → 池袋 → 上野」または「新宿 → 東京 → 上野」の2本が必要で、近道はできていません。</p>
-        <p style="margin-top:0.6rem"><strong>片方だけ書き換えたときに起きる問題:</strong>
-        <code>"新宿"</code> の行にだけ <code>"品川"</code> を足すと、「新宿から品川へは行けるが、品川から新宿へは行けない」という、
-        <strong>一方通行の路線</strong>になってしまいます。
-        新宿を出発点にした探索では品川が1本と出ますが、品川を出発点にすると新宿は2本のままです。
-        路線のように「行き帰りの両方を通れる」つながりを表すときは、隣接リストの両方の行を必ず書き換えます。
-        なお、一方通行を<strong>わざと</strong>表したいときには、片方だけ書く形が正しい書き方になります（有向グラフと呼びます）。</p>"""),
-    ("標準課題2: 使い分けの表と答え", """        <table>
-          <tr><th>比べる点</th><th>隣接リスト</th><th>隣接行列</th></tr>
-          <tr><td>書き方</td><td>頂点ごとに、となりの頂点を並べる（辞書とリスト）</td><td>たてよこの表を作り、つながっていれば1を書く</td></tr>
-          <tr><td>駅が5000個のときのマス数</td><td>30,000マス</td><td>25,000,000マス</td></tr>
-          <tr><td>2駅が直接つながっているか</td><td>リストの中を順に探すので少し時間がかかる</td><td><strong>表を1回見るだけ</strong>で分かる</td></tr>
-          <tr><td>となりの駅をすべて並べる</td><td><strong>リストをそのまま取り出せる</strong></td><td>その行の5000マスを全部調べる必要がある</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>場面A（全国の鉄道路線図）: 隣接リスト</strong><br>
-        駅が9000個あるので、隣接行列にすると8100万マスが必要になります。
-        しかも1駅あたりつながる駅は2〜4個しかないので、表のほとんどのマスが0で埋まり、場所のむだが非常に大きくなります。
-        辺が少ないグラフでは隣接リストを選びます。</p>
-        <p style="margin-top:0.6rem"><strong>場面B（30人のクラスの委員会）: 隣接行列</strong><br>
-        30人なら表は30×30＝900マスで、まったく大きくありません。
-        「AさんとBさんは同じ委員会か」を何度も繰り返し調べるので、表を1回見るだけで答えが出る隣接行列が向いています。
-        頂点が少なく、同じ質問を何度もするときは隣接行列を選びます。</p>
-        <p style="margin-top:0.6rem"><strong>まとめ:</strong>
-        頂点が多くて辺が少ないなら隣接リスト、頂点が少ないか辺がとても多いなら隣接行列、と覚えてください。</p>"""),
+        <p style="margin-top:0.6rem">駅の数が10倍になると、隣接行列は<strong>100倍</strong>、隣接リストは<strong>10倍</strong>になります。</p>
+        <p style="margin-top:0.8rem"><strong>問い2（新宿—品川を足したとき）</strong>:
+        新宿0、渋谷1、池袋1、東京1、<strong style="color:#76B900">品川1（2から1へ）</strong>、上野2（変わらず）。
+        新宿から品川は「新宿 → 渋谷 → 品川」から「新宿 → 品川」に変わります。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "グラフとは", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("03", SLIDES),
+    rubric_section("03"),
     ans,
 ])
 

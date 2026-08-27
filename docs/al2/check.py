@@ -9,7 +9,7 @@ httpd = socketserver.TCPServer(("127.0.0.1", 0), handler)
 port = httpd.server_address[1]
 threading.Thread(target=httpd.serve_forever, daemon=True).start()
 
-pages = ["index.html"] + [f"session{i:02d}.html" for i in range(1, 16)]
+pages = ["index.html", "grading.html"] + [f"session{i:02d}.html" for i in range(1, 16)]
 problems = []
 with sync_playwright() as p:
     b = p.chromium.launch()

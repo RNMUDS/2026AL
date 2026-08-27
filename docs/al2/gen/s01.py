@@ -2,8 +2,10 @@
 """第1回: ガイダンス・前期の復習 の本文を組み立てる。"""
 import math
 from collections import deque
-from common import (answers, code, example, keywords, notion, run, section,
-                    setup_guide, standard, submission, write)
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    answers, code, example, keywords, notion, run, section,
+                    setup_guide, standard, write)
 
 GREEN, AMBER, GRAY, RED = "#76B900", "#FFB800", "#888", "#FF5252"
 
@@ -324,17 +326,12 @@ NAV = [
     "提出 #sec-submission",
     "後期の全体像 #sec-overview",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の実行結果"),
-    ("#sec-examples", "tag-example", "観察記録", "例題4の実行結果"),
-    ("#sec-standard", "tag-standard", "標準課題1", "数当ての回数を予測"),
-    ("#sec-standard", "tag-standard", "標準課題2", "最短ルートの変化を予測"),
-], 4)
+sub = slide_submission("01")
 
 overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       前期のアルゴリズム論及び演習Iでは、「たくさんのデータの中から目的の1つを<strong>探す</strong>」方法を学びました。
@@ -373,9 +370,61 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
     </div>
 
     <div class="concept-box">
-      <h4>評価方法</h4>
-      <p style="font-size:0.95rem">定期試験はありません。<strong>毎回の演習課題の提出で100%</strong>の評価となります。
-      毎回の授業の終わりに、Notionに記録した内容をPDFに書き出し、Manabaに提出してください。</p>
+      <h4>評価方法と、毎回の課題</h4>
+      <p style="font-size:0.95rem">定期試験はありません。<strong>毎回の演習課題の提出で100%</strong>の評価となります。</p>
+      <p style="font-size:0.95rem;margin-top:0.6rem">
+        課題は毎回同じ形です。<strong>Googleスライドを1本だけ作り、毎回3枚ずつ足していきます。</strong>
+        15回ぶんを足し終えると、45枚の「自分が作ったアルゴリズム解説資料」ができあがります。
+      </p>
+      <table>
+        <tr><th>枚</th><th>入れるもの</th></tr>
+        <tr><td>A</td><td>その回のしくみを説明する図（<strong>自分で作ったもの</strong>）</td></tr>
+        <tr><td>B</td><td>自分のパソコンで動かした実行画面のスクリーンショットと、読み取れること</td></tr>
+        <tr><td>C</td><td>その回の問い2つへの答え（<strong>自分の実行結果の数値を根拠にする</strong>）</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        説明する相手は<strong>前期を受けていない友達</strong>です。
+        専門用語をそのまま並べても伝わりません。自分の言葉で書いてください。
+      </p>
+    </div>
+
+    <div class="card" style="border-left:4px solid #76B900">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>Googleスライドを1本つくる（第1回だけ）</h3>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">Step 1: スライドを作る</p>
+        <ol>
+          <li>ブラウザで <strong>slides.google.com</strong> を開く（大学のGoogleアカウントでログイン）</li>
+          <li><strong>空白</strong>を選んで新しいスライドを作る</li>
+          <li>左上のファイル名を <strong>「アルゴリズム論II 解説資料 ○○（自分の名前）」</strong>に変える</li>
+          <li>1枚目を表紙にして、授業名・自分の学籍番号・名前を書く</li>
+        </ol>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">Step 2: 共有の設定をする</p>
+        <ol>
+          <li>右上の<strong>「共有」</strong>をクリック</li>
+          <li>「一般的なアクセス」を <strong>「リンクを知っている全員」</strong>に変える</li>
+          <li>権限は <strong>「閲覧者」</strong>のままでよい</li>
+          <li><strong>「リンクをコピー」</strong>を押して、URLをどこかに控えておく</li>
+        </ol>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">
+          共有していないと、提出しても中身が見られず、未提出あつかいになります。必ず設定してください。</p>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">Step 3: 毎回の出し方を覚える</p>
+        <ol>
+          <li>その回の3枚（A・B・C）をスライドに足す</li>
+          <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
+          <li>ManabaにPDFを提出し、<strong>コメント欄に共有URLを貼る</strong></li>
+        </ol>
+      </div>
+      <div class="note-warn">
+        <strong>スライドは15回ぶんずっと同じ1本を使います。</strong>毎回新しく作らないでください。
+        回ごとに「第○回: テーマ名」の見出しスライドを入れておくと、あとで見返しやすくなります。
+      </div>
     </div>
 
     <div class="note-warn">
@@ -474,117 +523,25 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '全部の順番を試して、いちばん短いものを選ぶ（後期の予告）', ex4_body)}"""
 
-std1_body = """      <p>例題1のファイル <code>AL2-01-ex1.py</code> を開き、1行目の <code>secret = 73</code> の数字を書き換えます。
-      書き換える値は <strong>7</strong>、<strong>100</strong>、<strong>1</strong> の3つです。</p>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、それぞれ何回の質問で当たるかを予測してNotionに書く</li>
-          <li><code>secret</code> の値を 7 に書き換えて保存し、実行して回数を記録する</li>
-          <li>同じように 100、1 でも実行して回数を記録する</li>
-          <li>予測と実測を並べて表にする</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>secret の値</th><th>予測した回数</th><th>実際の回数</th><th>合っていたか</th></tr>
-        <tr><td>7</td><td></td><td></td><td></td></tr>
-        <tr><td>100</td><td></td><td></td><td></td></tr>
-        <tr><td>1</td><td></td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の問いに文章で答えてください。<br>
-      <strong>問い:</strong> 秘密の数が 1 のような「はしっこの数」でも、質問の回数はあまり増えませんでした。理由を説明してください。</p>
-"""
-
-std2_body = """      <p>例題4のファイル <code>AL2-01-ex4.py</code> を開き、移動時間の表のうち1行だけを書き換えます。</p>
-
-<pre><span class="code-label">Python ── 書き換える行</span>
-    (<span class="str">"学校"</span>, <span class="str">"カフェ"</span>): <span class="num">5</span>,     <span class="cmt"># ← 5 を 20 に書き換える</span></pre>
-
-      <p>学校とカフェのあいだが工事中になり、5分から20分に伸びたという設定です。</p>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、最短の順番と合計時間がどうなるかを予測してNotionに書く</li>
-          <li>数字を 20 に書き換えて保存し、実行する</li>
-          <li>6通りの合計時間と、最短の順番・合計時間を記録する</li>
-          <li>予測と実測を比べ、合っていたかを書く</li>
-        </ol>
-      </div>
-
-      <p><strong>問い:</strong> 表の数字を1つ変えただけで、最短の順番が変わりました。
-      「いちばん良いやり方」は、条件が変わると変わってしまうということです。
-      日常生活の中で、条件が変わると最適な選び方が変わる例を1つ挙げて説明してください。</p>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    どちらも<strong>実行する前に予測を書く</strong>ことが大切です。予測が外れても評価は下がりません。</p>
-
-{standard(1, '数当てゲームの質問回数を予測する', std1_body)}
-{notion('secret を 7 / 100 / 1 に変えたときの予測回数・実際の回数・合っていたかの表、および「はしっこの数でも回数が増えない理由」の説明。')}
-
-{standard(2, '移動時間が変わると最短ルートはどうなるか', std2_body)}
-{notion('書き換えたあとの6通りの合計時間、最短の順番と合計時間、予測と合っていたか、および「条件が変わると最適な選び方が変わる日常の例」。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第1回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: データが10倍になったときの回数の増え方、10万個での回数の差</li>
-        <li><strong>例題4</strong>: 6通りの合計時間、最短の順番が2つある理由</li>
-        <li><strong>標準課題1</strong>: 予測と実測の表、はしっこの数でも回数が増えない理由</li>
-        <li><strong>標準課題2</strong>: 書き換えたあとの結果、予測との比較、日常の例</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 質問回数の答え", """        <table>
-          <tr><th>secret の値</th><th>実際の回数</th><th>質問された数の並び</th></tr>
-          <tr><td>7</td><td>6回</td><td>50 → 25 → 12 → 6 → 9 → 7</td></tr>
-          <tr><td>100</td><td>7回</td><td>50 → 75 → 88 → 94 → 97 → 99 → 100</td></tr>
-          <tr><td>1</td><td>6回</td><td>50 → 25 → 12 → 6 → 3 → 1</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>はしっこの数でも回数が増えない理由:</strong>
-        二分探索は「当たりそうな場所」をねらうのではなく、<strong>残っている範囲を必ず半分に切る</strong>方法だからです。
-        秘密の数が 1 でも 100 でも 73 でも、1回の質問で範囲は 100個 → 50個 → 25個 → 12個 と減っていきます。
-        100個を半分にし続けて1個になるまでの回数は、およそ7回です（100 → 50 → 25 → 12 → 6 → 3 → 1）。
-        秘密の数の位置に関係なく、7回前後で必ず終わります。</p>
-        <p style="margin-top:0.6rem">なお 100 のときだけ7回になるのは、範囲のまん中を計算するときに <code>//</code> で小数を切り捨てるため、
-        まん中がわずかに左寄りになり、右はしの数へたどり着くのに1回多くかかるからです。</p>"""),
-    ("標準課題2: 学校とカフェを20分にしたときの答え", """        <table>
-          <tr><th>順番</th><th>変更前</th><th>変更後</th></tr>
+    ("確かめ用の数値", """        <p><strong>問い1（学校—カフェを20分にしたとき）</strong></p>
+        <table>
+          <tr><th>順番</th><th>20分にする前</th><th>20分にしたあと</th></tr>
           <tr><td>学校 → 郵便局 → 図書館 → カフェ → 学校</td><td>26分</td><td>41分</td></tr>
           <tr><td>学校 → 郵便局 → カフェ → 図書館 → 学校</td><td>36分</td><td><strong style="color:#76B900">36分</strong></td></tr>
           <tr><td>学校 → 図書館 → 郵便局 → カフェ → 学校</td><td>32分</td><td>47分</td></tr>
-          <tr><td>学校 → 図書館 → カフェ → 郵便局 → 学校</td><td>36分</td><td><strong style="color:#76B900">36分</strong></td></tr>
-          <tr><td>学校 → カフェ → 郵便局 → 図書館 → 学校</td><td>32分</td><td>47分</td></tr>
-          <tr><td>学校 → カフェ → 図書館 → 郵便局 → 学校</td><td>26分</td><td>41分</td></tr>
         </table>
-        <p style="margin-top:0.8rem">最短は <strong>36分</strong>で、順番は「学校 → 郵便局 → カフェ → 図書館 → 学校」
-        （および逆回りの「学校 → 図書館 → カフェ → 郵便局 → 学校」）に変わります。</p>
-        <p style="margin-top:0.6rem">変更前に最短だった順番は41分に増え、1位ではなくなりました。
-        学校とカフェのあいだを2回通る順番ほど大きく損をするため、カフェを<strong>途中に入れる</strong>順番が有利になります。</p>
-        <p style="margin-top:0.6rem"><strong>日常の例:</strong>
-        「駅前のスーパーで買い物をしてから帰る」のが最短でも、スーパーが閉店時間を過ぎていれば別の店を回る順番が最適になります。
-        天気・道路工事・営業時間・電車の遅れなど、条件が変われば最適な選び方も変わります。
-        アルゴリズムは「そのときの条件のもとで最も良いもの」を求める道具だという点をおさえてください。</p>"""),
+        <p style="margin-top:0.6rem">いちばん短い順番は<strong>36分</strong>に変わります。
+        書き換える前に1位だった26分の順番は41分になり、1位ではなくなります。</p>
+        <p style="margin-top:0.8rem"><strong>問い2（二分探索の回数）</strong>: 4 → 7 → 10 → 14 → 17 回。
+        データが10倍になっても3〜4回しか増えません。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-overview", "1", "後期に学ぶこと", overview),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("01", SLIDES),
+    rubric_section("01"),
     ans,
 ])
 

@@ -33,7 +33,7 @@ section + section { border-top: 1px solid #222; }
 .tag-group     { background: #0a1a2e; color: #4FC3F7; }
 .card.standard  { border-left: 4px solid #76B900; }
 .card.advanced  { border-left: 4px solid #FFB800; }
-.notion-submit {
+.slide-hint {
   background: #141414;
   border: 1px solid #333;
   border-radius: 8px;
@@ -44,8 +44,8 @@ section + section { border-top: 1px solid #222; }
   gap: 0.5rem;
   font-size: 0.85rem;
 }
-.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
-.notion-submit strong { color: #FFB800; }
+.slide-hint::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.slide-hint strong { color: #FFB800; }
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
 th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
 td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
@@ -191,8 +191,8 @@ a.sub-item:hover { border-color: #4A7A00; }
   <a href="#sec-submission">提出</a>
   <a href="#sec-explanation">迷路とグラフ</a>
   <a href="#sec-examples">例題</a>
-  <a href="#sec-standard" class="nav-assignment">標準課題</a>
-  <a href="#sec-notion">提出まとめ</a>
+  <a href="#sec-slides" class="nav-assignment">課題</a>
+  <a href="#sec-submit">提出と評価</a>
   <a href="#answers-section">解答</a>
 </nav>
 
@@ -208,15 +208,15 @@ a.sub-item:hover { border-color: #4A7A00; }
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <h3>提出ガイド（今回の提出物: 解説スライド3枚）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題1の2つの経路</a>
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題3の実行時間</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>コストを変えると？</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>使い分けの表</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">A</span><span class="tag tag-standard">しくみ</span>自分で作った図で説明する</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">B</span><span class="tag tag-standard">動かした</span>自分の実行画面と読み取り</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">C</span><span class="tag tag-standard">考えた</span>問いに自分の数値で答える</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+        <strong>提出方法:</strong> 自分のGoogleスライドに第7回の3枚を追加 →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る
       </div>
     </div>
   </div>
@@ -818,7 +818,7 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
       </div>
       <p class="run-note">幅優先探索は<strong>8歩・16秒</strong>、ダイクストラ法は<strong>12歩・12秒</strong>という結果でした。迷路の絵を見ると、幅優先探索の経路は 9 のマス（ぬかるみ）を1つ通っていますが、ダイクストラ法の経路は 9 のマスを1つも通らず、すべて 1 のマスだけを歩いています。第4回では3通りの行き方を手で用意して比べましたが、ダイクストラ法は<strong>自動で</strong>いちばん安い経路を見つけています。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題1の実行結果から、2つの経路の歩数と合計秒数を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどこで分かれているかを言葉で説明する。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題1の実行結果から、2つの経路の歩数と合計秒数を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどこで分かれているかを言葉で説明する。</span></div>
     </div>
 
     <div class="card example">
@@ -1020,11 +1020,11 @@ line = <span class="str">&quot;&quot;</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.008秒 / 200×200        40,000          398      39,997       0.035秒 / 400×400       160,000          798     159,997       0.169秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
+        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.007秒 / 200×200        40,000          398      39,997       0.034秒 / 400×400       160,000          798     159,997       0.165秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
       </div>
       <p class="run-note">400マス四方（160,000マス）でも<strong>0.2秒ほど</strong>で解けています。マスの数が4倍になるたびに、かかる時間も4倍すこしずつ増えています。第4回の例題4で、全探索が6マス四方（36マス）に約7秒かかったことと比べてください。全探索では6マス四方が限界でしたが、ダイクストラ法なら400マス四方が一瞬で終わります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の表から、4つの大きさそれぞれの「マスの数」「最小コスト」「かかった時間」を書き写す。あわせて、マスの数が4倍になったとき、かかった時間が何倍になったかを計算して書く。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題3の表から、4つの大きさそれぞれの「マスの数」「最小コスト」「かかった時間」を書き写す。あわせて、マスの数が4倍になったとき、かかった時間が何倍になったかを計算して書く。</span></div>
     </div>
 
     <div class="card example">
@@ -1556,104 +1556,140 @@ forest = [
   </div>
 </section>
 
-<section id="sec-standard">
+<section id="sec-slides">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">3</div>
-      <h2>標準課題</h2>
+      <h2>課題: 解説スライドを3枚つくる</h2>
     </div>
-    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+    <p style="margin-bottom:1.5rem">
+      自分のGoogleスライドに、第7回ぶんの<strong>3枚</strong>を追加してください。
+      見出しは「第7回: 床コスト付き迷路とダイクストラ法」にします。
+      説明する相手は<strong>前期のアルゴリズム論及び演習Iを受けていない友達</strong>です。
+      専門用語をそのまま書いても伝わりません。
+    </p>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 1</span>
-        <h3>右の列を通りにくくすると経路はどう変わるか</h3>
+        <span class="tag tag-standard">スライドA</span>
+        <h3>しくみを、自分で作った図で説明する</h3>
       </div>
-      <p>例題1のファイル <code>AL2-07-ex1.py</code> を開き、迷路のいちばん下の行を高いコストに書き換えます。
-      下の道路が水びたしになり、通り抜けに9秒かかるようになったという設定です（ゴールのマスだけは 1 のまま）。</p>
+      <p>次の3つが伝わる図を、<strong>自分で作って</strong>1枚に入れてください。</p>
+      <div class="setup-step">
+        <p class="step-title">図に必ず入れる3つ</p>
+        <ol>
+          <li>マスのコストが「辺の重み」になること</li>
+          <li>幅優先探索とダイクストラ法の、広がり方のちがい</li>
+          <li>2つが選ぶ経路がどこでちがうか</li>
+        </ol>
+      </div>
+      <div class="note-warn">
+        <strong>図の作り方:</strong> Googleスライドの「挿入 → 図形」で四角・丸・矢印を並べて作ります。
+        紙に手描きして写真を撮り、貼りつけてもかまいません。
+        <strong>授業ページの図をそのまま貼るのは不可</strong>です。自分で線を引いたものだけを認めます。
+      </div>
+      <p style="margin-top:1rem">図のほかに、<strong>1文だけ</strong>説明を書いてください。
+      「床コスト付き迷路とダイクストラ法とは、○○を○○する方法です」の形で、20〜40字におさめます。</p>
+    </div>
 
-<pre><span class="code-label">Python ── 書き換えたあとの cost_map</span>
-cost_map = [
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],   <span class="cmt"># ← いちばん下の行の左から4つを 1 から 9 に変える</span>
-]</pre>
-
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドB</span>
+        <h3>自分で動かした結果をのせる</h3>
+      </div>
       <div class="setup-step">
         <p class="step-title">やること</p>
         <ol>
-          <li>実行する<strong>前に</strong>、幅優先探索とダイクストラ法それぞれの歩数と合計秒数を予測してNotionに書く</li>
-          <li>いちばん下の行の左から4つを 1 から 9 に書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>2つの経路の絵を見比べて、書き換える前とどう変わったかを書く</li>
+          <li><code>AL2-07-ex1.py</code> を自分のパソコンで実行する</li>
+          <li><strong>VS Codeのウィンドウごと</strong>スクリーンショットを撮る
+              （左のエクスプローラーに <code>AL2/No07</code> のフォルダ名とファイル名が写っている状態）</li>
+          <li>スクリーンショットをスライドに貼る</li>
+          <li>実行結果から読み取れることを、<strong>数値を挙げて</strong>2つ書く</li>
         </ol>
       </div>
-
-      <table>
-        <tr><th>方法</th><th>書き換える前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>幅優先探索</td><td>8歩 ／ 16秒</td><td></td><td></td></tr>
-        <tr><td>ダイクストラ法</td><td>12歩 ／ 12秒</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> ダイクストラ法の歩数は12歩から減りましたが、合計秒数は12秒から増えました。
-      「歩数が減ったのに合計秒数が増える」ということが起きる理由を説明してください。</p>
-
+      <div class="setup-step">
+        <p class="step-title">読み取ること（この2つに答える）</p>
+        <ul>
+          <li>2つの方法それぞれの歩数と合計秒数</li>
+          <li>通り道に 9 のマス（ぬかるみ）が入っているかどうか</li>
+        </ul>
+      </div>
+      <div class="note-warn">
+        <strong>スクリーンショットの撮り方:</strong>
+        Windows は <strong>Windows キー ＋ Shift ＋ S</strong>、Mac は <strong>Shift ＋ Command ＋ 4</strong> のあと
+        <strong>スペースキー</strong>を押してウィンドウをクリックします。
+        画面の一部だけを切り取ったものは受けつけません。フォルダ名とファイル名が読める状態にしてください。
+      </div>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 2つの方法についての予測と実際の表、経路がどう変わったかの説明、および「歩数と秒数のどちらが変わったか」の理由。</span></div>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 2</span>
-        <h3>幅優先探索とダイクストラ法の使い分け</h3>
+        <span class="tag tag-standard">スライドC</span>
+        <h3>問いに、自分の数値を根拠にして答える</h3>
       </div>
-      <p>例題1から例題4までの結果をもとに、幅優先探索とダイクストラ法の使い分けを表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。</p>
-
-      <table>
-        <tr><th>比べる点</th><th>幅優先探索</th><th>ダイクストラ法</th></tr>
-        <tr><td>使う入れもの</td><td></td><td></td></tr>
-        <tr><td>広がる順番</td><td></td><td></td></tr>
-        <tr><td>求まる経路</td><td></td><td></td></tr>
-        <tr><td>例題1での結果（歩数／秒数）</td><td></td><td></td></tr>
-        <tr><td>すべてのマスのコストが1のとき</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の3つの場面には、それぞれどちらが向いているかを<strong>理由つきで</strong>答えてください。</p>
+      <p>次の2つの問いに答えてください。答えの中で、
+      <strong>スライドBに貼った自分の実行結果の数値を必ず引用</strong>してください。</p>
       <ul class="point-list">
-        <li><strong>場面A:</strong> パズルゲームで「最も少ない手数で解けるか」を判定する</li>
-        <li><strong>場面B:</strong> 自転車のナビで「上り坂を避けて最も早く着く道」を案内する</li>
-        <li><strong>場面C:</strong> すべてのマスの移動時間が同じ、まっさらな地図で最短経路を求める</li>
+        <li><strong>問い1:</strong> <code>AL2-07-ex1.py</code> の迷路のいちばん下の行を <code>[9, 9, 9, 9, 1]</code> に書き換えて実行してください。2つの方法の歩数と合計秒数がどうなったかを数値で書いてください。</li>
+        <li><strong>問い2:</strong> 書き換えたあと、ダイクストラ法は「歩数が減ったのに合計秒数が増える」という結果になります。なぜそうなるのかを説明してください。</li>
       </ul>
-
+      <div class="note-warn">
+        <strong>「〜が分かった」「うまくいった」だけでは点になりません。</strong>
+        「自分の実行結果では○○が△△だった。だから□□と言える」の形で書いてください。
+      </div>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5行の比較表（空欄をすべて埋める）と、場面A・場面B・場面Cそれぞれに向いている方法とその理由。</span></div>
   </div>
 </section>
 
-<section id="sec-notion">
+<section id="sec-submit">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">4</div>
-      <h2>提出まとめ</h2>
+      <h2>提出と評価</h2>
     </div>
     <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
         <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+        <h3>提出のしかた</h3>
       </div>
-      <p>第7回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題1</strong>: 2つの経路の歩数と秒数の表、経路が分かれる場所の説明</li>
-        <li><strong>例題3</strong>: 4つの大きさの表、時間が何倍になったかの計算</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、経路の変化、歩数と秒数の理由</li>
-        <li><strong>標準課題2</strong>: 比較表、場面A・B・Cへの答えと理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      <div class="setup-step">
+        <p class="step-title">手順</p>
+        <ol>
+          <li>自分のGoogleスライドを開き、第7回の3枚（A・B・C）を追加する</li>
+          <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
+          <li>ManabaにPDFを提出する</li>
+          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
+        </ol>
       </div>
+      <div class="note-warn">
+        <strong>共有URLも毎回必ず提出してください。</strong>
+        Googleスライドには変更履歴が残ります。
+        いつ・どのスライドを作ったかを確認するために使います。
+        まとめて作ると履歴に残るので、毎回の授業の中で少しずつ進めてください。
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-top:1.5rem">
+      <h4>評価の観点（毎回同じ・10点満点）</h4>
+      <table>
+        <tr><th>観点</th><th>点</th><th>見るところ</th></tr>
+        <tr><td>図を自分で作ったか</td><td>3</td><td>授業ページの図の貼りつけは0点。指定の3要素が図に入っているか</td></tr>
+        <tr><td>自分で動かした証拠があるか</td><td>2</td><td>VS Codeのウィンドウごとのスクリーンショット。フォルダ名が読めるか</td></tr>
+        <tr><td>数値を根拠にしているか</td><td>3</td><td>自分の実行結果の数値を引用しているか。数値と説明が合っているか</td></tr>
+        <tr><td>言葉が自分のものか</td><td>2</td><td>専門用語をそのまま並べていないか。前期未履修の友達に伝わるか</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>よくある不十分な例</h4>
+      <table>
+        <tr><th>不十分な例</th><th>どう直すか</th></tr>
+        <tr><td>授業ページの図をスクリーンショットして貼る</td><td>同じ内容でよいので、図形を自分で並べ直す。手描きの写真でもよい</td></tr>
+        <tr><td>ターミナルの文字だけを切り取って貼る</td><td>VS Codeのウィンドウ全体を撮る。フォルダ名とファイル名が写るようにする</td></tr>
+        <tr><td>「速いことが分かりました」で終わる</td><td>「自分の結果では6秒と0.01秒で、600倍ほど違った」と数値を書く</td></tr>
+        <tr><td>教材の文をそのまま写す</td><td>専門用語を1つ選び、それを使わずに言いかえてみる</td></tr>
+        <tr><td>3枚を最後の週にまとめて作る</td><td>変更履歴で分かります。毎回の授業中に作ってください</td></tr>
+      </table>
     </div>
   </div>
 </section>
@@ -1666,7 +1702,7 @@ cost_map = [
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="M3LhAgoxA+oMxOlJCwd4eRB0eetQH1vXwXY2W3zUEMkEIAwWNrn5YPvCwq5fsSvTaLowbEVujY5lo4NxJqoqfZHNyxBOlZ8uc3RC6txG6FTIiRU/+LJqX8foEaLdahJGZOGutHS4hMAYAoOcfPaOF9X3PThnyzVUwV8EWLJb/92ndnpkncIE9bIXnvCrCG0GtDOfOeyPYmeJHLs1n/uyXsCdu3WbsYoi1hoIndSRg7CwdfCNMthQC/6DOii7vJ2otu4mLpL5zpxgDFjTRVnPwD+ylc2cu7xYLGrL5ATuYUsQxjlsBAQ43O59/IuH58AqLVA/iZzIikAWBZM4JrlrhZyD052chPPrfUqyd2ren9LhjM0JOLjJfETT9ZEWgHVfMQ4q4i8AVhUu7IAmdzuwjQU3Y3m9rXO1HOLr9HT50jwwXXU5p65ssmG+TVQ6bvzNe2xm7QZwsAKXJe2beIAsXshJEJu2AcMezfaqpA1qQQbzGCW3QRI6DatpgjCfObNESOfWVZIhe7BKHHlqri2xPIrCMCvCF4FHBbsAIUcLwI/oRwjeF8f5g154IhDKW44friQjERwnb5J2F95VVIQiTlzZXq1QQYSrJ/SnL1F/lb3VcsBBrWFfDxB5tSVoEHAkw7xu9J4qfxbTduRafOxSnTeqwO8LGj4C8dMeQGiukqFLrXxfepPYfnKQEcVOFrZGXRgSj7NcQw1eOAi9VrRgvz9pWZPnpuazX+vNc+wzSOdog2AXazc+HWKSoS14D3ZB1yInRFgtXd7917TN/zx+W0QJcvzZMzS1Xqzu56MCvqrnBbOKAfEFptW5mqlNv87MqZ4/noRuNw8+ridvxY5ZIPI2TXzFTuOjYDxHkSagUXme9Pk79O/+6dMT3u6wg5Y53bMi9yhIxFKxX1qsocMy9znJzwbdILizjJEeLEZbR0C0TwqYerhYJCy4R9gGAiAuk8crg2hy9q4O5FGGgEWbxxybrCzfp7sv1aHWJPcmV/EPSEjlTHeph5Cd+f2XoBwNG5t4+57k+mWVGAJV9Js9JUNlFMCMrg4PiT3WY88y6KV49Pwrp9ByzaYBY1FSM708jxebhPU2gmWpZePh/4Ib3EPT0ofczKLmhGPQi9OfjC4IFFXr4HX0PdBRbI1BVHbH4ieMLuIJLgYH14Hf5nyZAnPXqGI4ZzZokcmoJAuxbdGQOwUIO9EaJYTrt4O6i5e8fpB2wBw2U8Nr84easG8vF66SUmJTZbREwd9hG0Fm9ugQtaetrb0pNX4U2Cl3iJM1wmHfn0RGouxRtAU+k2YyqkIgUddXbR7vWTxjHGeoLUjsU9JYs3kyvmNYaFLefZVPcwvPHIFjhHTTAVgKwEBWAVIfNdJPwT39MRQkyNf0uFDANuMQDl4UDC5o6dMQLX9TAVEbgkeowHFwJfZb3MOdRu4qv0Q89Cv9F3UEVht8zjt3QHWTiH2n0xTTuKpDs/l+rK8UvPeBQMCu0JbaopIvLHqUO0xCzyA2R4Fk0zaXsUY+BVY="></div>
 
   </div>
 </section>

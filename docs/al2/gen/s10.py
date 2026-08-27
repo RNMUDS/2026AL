@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """第10回: 巡回セールスマン問題（3）動的計画法 の本文を組み立てる。"""
 import math
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 
 # ────────────────────────────────────────────────────────────
@@ -144,17 +146,12 @@ NAV = [
     "提出 #sec-submission",
     "動的計画法 #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の表と答え"),
-    ("#sec-examples", "tag-example", "観察記録", "例題4の増え方"),
-    ("#sec-standard", "tag-standard", "標準課題1", "ビット表現を予測"),
-    ("#sec-standard", "tag-standard", "標準課題2", "3手法の比較表"),
-], 4)
+sub = slide_submission("10")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第8回の全探索は必ず最適解を出しますが、12都市で終わらなくなりました。
@@ -297,146 +294,26 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, 'bitDP はどこまで解けるか', ex4_body)}"""
 
-std1_body = """      <p>プログラムを実行する<strong>前に</strong>、次の問いに答えてください。
-      都市は5個で、番号と名前は例題1と同じ（0=学校、1=郵便局、2=図書館、3=カフェ、4=公園）です。</p>
-
-      <table>
-        <tr><th>問い</th><th>答え</th></tr>
-        <tr><td>「学校とカフェを回った」を表す数は？（10進数と2進数の両方）</td><td></td></tr>
-        <tr><td>「郵便局・図書館・公園を回った」を表す数は？</td><td></td></tr>
-        <tr><td>2進数 <code>11010</code> はどの都市を回った状態か？</td><td></td></tr>
-        <tr><td><code>18 | (1 &lt;&lt; 2)</code> の結果は？（10進数と2進数）</td><td></td></tr>
-        <tr><td><code>18 &amp; (1 &lt;&lt; 4)</code> の結果は？ 公園は回った状態か？</td><td></td></tr>
-        <tr><td>都市が10個のとき、集合の種類は何通りか？</td><td></td></tr>
-      </table>
-
-      <div class="setup-step">
-        <p class="step-title">答え合わせのしかた</p>
-        <ol>
-          <li>すべての問いに答えてからNotionに書く</li>
-          <li><code>AL2-10-std1.py</code> という名前で新しいファイルを作り、次のコードを貼り付けて実行する</li>
-        </ol>
-      </div>
-
-<pre><span class="code-label">Python ── AL2-10-std1.py</span>
-city_names = [<span class="str">"学校"</span>, <span class="str">"郵便局"</span>, <span class="str">"図書館"</span>, <span class="str">"カフェ"</span>, <span class="str">"公園"</span>]
-
-
-<span class="kw">def</span> <span class="fn">show</span>(bits):
-    names = []
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
-        <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):
-            names.append(city_names[i])
-    <span class="fn">print</span>(<span class="str">f"  {bits:&gt;2} = 2進数 {format(bits, '05b')} → "</span> + <span class="str">"、"</span>.join(names))
-
-
-<span class="fn">show</span>(<span class="num">1</span> | (<span class="num">1</span> &lt;&lt; <span class="num">3</span>))
-<span class="fn">show</span>((<span class="num">1</span> &lt;&lt; <span class="num">1</span>) | (<span class="num">1</span> &lt;&lt; <span class="num">2</span>) | (<span class="num">1</span> &lt;&lt; <span class="num">4</span>))
-<span class="fn">show</span>(<span class="num">26</span>)
-<span class="fn">show</span>(<span class="num">18</span> | (<span class="num">1</span> &lt;&lt; <span class="num">2</span>))
-<span class="fn">print</span>(<span class="str">"18 &amp; (1 &lt;&lt; 4) ="</span>, <span class="num">18</span> &amp; (<span class="num">1</span> &lt;&lt; <span class="num">4</span>))
-<span class="fn">print</span>(<span class="str">"都市が10個のときの集合の種類:"</span>, <span class="num">2</span> ** <span class="num">10</span>, <span class="str">"通り"</span>)</pre>
-"""
-
-std2_body = """      <p>第8回・第9回・第10回で学んだ3つの方法を、1つの表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。</p>
-
-      <table>
-        <tr><th>比べる点</th><th>全探索（第8回）</th><th>貪欲法（第9回）</th><th>bitDP（第10回）</th></tr>
-        <tr><td>やり方をひとことで</td><td></td><td></td><td></td></tr>
-        <tr><td>必ず最適解になるか</td><td></td><td></td><td></td></tr>
-        <tr><td>8都市での答え</td><td></td><td></td><td></td></tr>
-        <tr><td>調べる量の増え方</td><td></td><td></td><td></td></tr>
-        <tr><td>解ける都市の数の目安</td><td></td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の3つの場面には、それぞれどの方法が向いているかを<strong>理由つきで</strong>答えてください。</p>
-      <ul class="point-list">
-        <li><strong>場面A:</strong> 修学旅行で6か所を回る順番を決める（必ず最短にしたい）</li>
-        <li><strong>場面B:</strong> 工場のドリルが18か所の穴をあける順番を決める（1回決めれば10年使う）</li>
-        <li><strong>場面C:</strong> 宅配便が毎日100軒を回る順番を、出発前の5秒で決める</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
-
-{standard(1, 'ビット表現を予測する', std1_body)}
-{notion('6つの問いへの予測、プログラムの実行結果、予測と合っていたか。')}
-
-{standard(2, '3つの方法を1つの表にまとめる', std2_body)}
-{notion('5行の比較表（空欄をすべて埋める）と、場面A・場面B・場面Cそれぞれに向いている方法とその理由。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第10回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 表の5行、11111 の行から34.9になるまでの説明</li>
-        <li><strong>例題4</strong>: 都市数ごとの表・時間・全探索の通り数、2都市増えたときの倍率</li>
-        <li><strong>標準課題1</strong>: 6つの問いへの予測と実行結果</li>
-        <li><strong>標準課題2</strong>: 比較表、場面A・B・Cへの答えと理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: ビット表現の答え", """        <table>
-          <tr><th>問い</th><th>答え</th></tr>
-          <tr><td>「学校とカフェを回った」を表す数</td><td><strong>9</strong>（2進数 <code>01001</code>）</td></tr>
-          <tr><td>「郵便局・図書館・公園を回った」を表す数</td><td><strong>22</strong>（2進数 <code>10110</code>）</td></tr>
-          <tr><td>2進数 <code>11010</code> はどの都市か</td><td>10進数で26。<strong>郵便局・カフェ・公園</strong></td></tr>
-          <tr><td><code>18 | (1 &lt;&lt; 2)</code></td><td><strong>22</strong>（2進数 <code>10110</code>）</td></tr>
-          <tr><td><code>18 &amp; (1 &lt;&lt; 4)</code></td><td><strong>16</strong>（0ではないので、公園は回っている）</td></tr>
-          <tr><td>都市が10個のときの集合の種類</td><td><strong>1,024通り</strong>（2の10乗）</td></tr>
+    ("確かめ用の数値", """        <p><strong>問い1の根拠になる数値</strong></p>
+        <table>
+          <tr><th>都市の数</th><th>全探索</th><th>bitDP</th></tr>
+          <tr><td>12都市</td><td>約8秒</td><td>0.01秒ほど</td></tr>
+          <tr><td>14都市</td><td>終わらない</td><td>0.04秒ほど</td></tr>
+          <tr><td>16都市</td><td>終わらない</td><td>0.2秒ほど</td></tr>
+          <tr><td>20都市</td><td>約12京通り（約800年）</td><td>6秒ほど</td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>考え方:</strong></p>
-        <ul class="point-list">
-          <li>学校は0番なので <code>1 &lt;&lt; 0 = 1</code>、カフェは3番なので <code>1 &lt;&lt; 3 = 8</code>。足すと 9 です。</li>
-          <li>郵便局(1番)=2、図書館(2番)=4、公園(4番)=16。合計 22 です。</li>
-          <li><code>11010</code> は右から2けた目・4けた目・5けた目が1なので、1番・3番・4番、つまり郵便局・カフェ・公園です。</li>
-          <li>18 は2進数で <code>10010</code>（郵便局と公園）。<code>1 &lt;&lt; 2 = 00100</code> を足すと <code>10110</code> = 22 になります。</li>
-          <li><code>18 &amp; 16</code> は、両方のけたが1である5けた目だけが残るので16です。0でないので「入っている」と分かります。</li>
-        </ul>
-        <p style="margin-top:0.6rem"><strong>注意:</strong> <code>&amp;</code> の結果は「1」ではなく <code>1 &lt;&lt; i</code> の値になります。
-        <code>if bits &amp; (1 &lt;&lt; i):</code> と書けば、0以外はすべて真として扱われるので、そのまま条件に使えます。</p>"""),
-    ("標準課題2: 3つの方法の比較表と答え", """        <table>
-          <tr><th>比べる点</th><th>全探索</th><th>貪欲法</th><th>bitDP</th></tr>
-          <tr><td>やり方</td><td>すべての順番を試す</td><td>いちばん近い都市へ進むだけ</td><td>「回った集合と現在地」ごとに最小距離を表に記録する</td></tr>
-          <tr><td>必ず最適解か</td><td>必ず最適</td><td>最適とはかぎらない</td><td>必ず最適</td></tr>
-          <tr><td>8都市での答え</td><td>46.8</td><td>53.2</td><td>46.8</td></tr>
-          <tr><td>調べる量の増え方</td><td>(n-1)! 通り（1つ増えると n-1 倍）</td><td>n×n 程度</td><td>2ⁿ×n マス（1つ増えると約2倍）</td></tr>
-          <tr><td>解ける都市の目安</td><td>12都市くらいまで</td><td>何千都市でも</td><td>20〜25都市くらいまで</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>場面A（6か所・必ず最短）: 全探索</strong><br>
-        6か所なら 5! = 120通りしかなく、一瞬で終わります。
-        bitDP でも解けますが、コードが長くなるだけで得はありません。
-        「小さい問題なら全探索がいちばん簡単で確実」という判断です。</p>
-        <p style="margin-top:0.6rem"><strong>場面B（18か所・10年使う）: bitDP</strong><br>
-        必ず最短にしたいので、貪欲法は使えません。
-        18か所の全探索は 17! = 約356兆通りあり、第8回の実測の速さでも約2年半かかります。
-        例題4のとおり bitDP なら18都市が約1.2秒で解けます。
-        1回決めれば10年使うので、数秒の計算はまったく問題になりません。</p>
-        <p style="margin-top:0.6rem"><strong>場面C（100軒・5秒で決める）: 貪欲法</strong><br>
-        100軒では bitDP の表が 2の100乗マスになり、宇宙にあるすべての原子より多くなります。
-        全探索も当然無理です。
-        5秒で答えを出す必要があるので、最短をあきらめて貪欲法で近似解を作ります。
-        第9回の例題3のように、複数の出発点で試していちばん良いものを選べば、精度も上げられます。</p>
-        <p style="margin-top:0.6rem"><strong>まとめ:</strong>
-        「都市の数」と「最適解が必要かどうか」と「使える時間」の3つで決めます。
-        1つの方法がいつでも最良ということはありません。</p>"""),
+        <p style="margin-top:0.8rem"><strong>問い2</strong>: <strong>9</strong>（2進数で <code>01001</code>）。
+        学校は0番なので <code>1 &lt;&lt; 0 = 1</code>、カフェは3番なので <code>1 &lt;&lt; 3 = 8</code>。足して9です。</p>
+        <p style="margin-top:0.6rem">ほかの確認用: 22 = <code>10110</code>（郵便局・図書館・公園）、
+        26 = <code>11010</code>（郵便局・カフェ・公園）、都市が10個なら集合は1,024通り。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "動的計画法（bitDP）", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("10", SLIDES),
+    rubric_section("10"),
     ans,
 ])
 

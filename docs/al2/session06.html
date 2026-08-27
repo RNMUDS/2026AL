@@ -33,7 +33,7 @@ section + section { border-top: 1px solid #222; }
 .tag-group     { background: #0a1a2e; color: #4FC3F7; }
 .card.standard  { border-left: 4px solid #76B900; }
 .card.advanced  { border-left: 4px solid #FFB800; }
-.notion-submit {
+.slide-hint {
   background: #141414;
   border: 1px solid #333;
   border-radius: 8px;
@@ -44,8 +44,8 @@ section + section { border-top: 1px solid #222; }
   gap: 0.5rem;
   font-size: 0.85rem;
 }
-.notion-submit::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
-.notion-submit strong { color: #FFB800; }
+.slide-hint::before { content: '\1f4dd'; font-size: 1rem; flex-shrink: 0; }
+.slide-hint strong { color: #FFB800; }
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
 th { background: #1A1A1A; font-weight: 700; text-align: left; padding: 0.6rem 0.8rem; font-size: 0.82rem; color: #76B900; letter-spacing: 0.02em; }
 td { padding: 0.55rem 0.8rem; border-top: 1px solid #222; }
@@ -191,8 +191,8 @@ a.sub-item:hover { border-color: #4A7A00; }
   <a href="#sec-submission">提出</a>
   <a href="#sec-explanation">heapqとは</a>
   <a href="#sec-examples">例題</a>
-  <a href="#sec-standard" class="nav-assignment">標準課題</a>
-  <a href="#sec-notion">提出まとめ</a>
+  <a href="#sec-slides" class="nav-assignment">課題</a>
+  <a href="#sec-submit">提出と評価</a>
   <a href="#answers-section">解答</a>
 </nav>
 
@@ -208,15 +208,15 @@ a.sub-item:hover { border-color: #4A7A00; }
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: 計4項目）</h3>
+      <h3>提出ガイド（今回の提出物: 解説スライド3枚）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題2の読み飛ばし</a>
-        <a class="sub-item" href="#sec-examples"><span class="sub-count">1</span><span class="tag tag-example">観察記録</span>例題3の速さの差</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題1</span>取り出す順番を予測</a>
-        <a class="sub-item" href="#sec-standard"><span class="sub-count">1</span><span class="tag tag-standard">標準課題2</span>辺を1本足すと？</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">A</span><span class="tag tag-standard">しくみ</span>自分で作った図で説明する</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">B</span><span class="tag tag-standard">動かした</span>自分の実行画面と読み取り</a>
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">C</span><span class="tag tag-standard">考えた</span>問いに自分の数値で答える</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のNotionノートに回答を記録 → PDFにエクスポート → ManabaにPDFを提出
+        <strong>提出方法:</strong> 自分のGoogleスライドに第6回の3枚を追加 →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る
       </div>
     </div>
   </div>
@@ -637,7 +637,7 @@ settled = <span class="fn">set</span>()
       </div>
       <p class="run-note">取り出した順番は (0分, 新宿) → (7分, 渋谷) → (9分, 池袋) → (16分, 品川) → (21分, 上野) → (27分, 東京) でした。第5回の例題1で確定した順番とまったく同じです。いちばん最後に <strong>(30分, 品川) → すでに確定済みなので読み飛ばす</strong> と表示されています。品川は最初に30分として箱に入れられ、あとから16分として入れ直されました。16分のほうが先に取り出されて確定したので、残っていた30分の組は読み飛ばされています。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題2の実行結果から、「読み飛ばす」と表示された行を書き写す。あわせて、品川が2回 queue に入れられた理由と、30分の組を読み飛ばしてよい理由を説明する。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題2の実行結果から、「読み飛ばす」と表示された行を書き写す。あわせて、品川が2回 queue に入れられた理由と、30分の組を読み飛ばしてよい理由を説明する。</span></div>
     </div>
 
     <div class="card example">
@@ -797,11 +797,11 @@ settled = <span class="fn">set</span>()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        21.8倍 / 40×40           1600         0.067秒        0.001秒        81.8倍 / 80×80           6400         1.053秒        0.004秒       300.2倍 / 120×120         14400         5.988秒        0.009秒       694.5倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
+        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        22.6倍 / 40×40           1600         0.065秒        0.001秒        82.5倍 / 80×80           6400         1.058秒        0.007秒       145.5倍 / 120×120         14400         6.050秒        0.010秒       614.1倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
       </div>
       <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
 
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 例題3の表から、4つの大きさそれぞれの「全部見る方法の時間」「heapqの方法の時間」「何倍速いか」を書き写す。あわせて、頂点の数が増えるほど差が広がる理由を説明する。</span></div>
+      <div class="slide-hint"><span><strong>スライドに使えること:</strong> 例題3の表から、4つの大きさそれぞれの「全部見る方法の時間」「heapqの方法の時間」「何倍速いか」を書き写す。あわせて、頂点の数が増えるほど差が広がる理由を説明する。</span></div>
     </div>
 
     <div class="card example">
@@ -1334,122 +1334,140 @@ simple_cost = <span class="num">0</span>
   </div>
 </section>
 
-<section id="sec-standard">
+<section id="sec-slides">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#76B900">3</div>
-      <h2>標準課題</h2>
+      <h2>課題: 解説スライドを3枚つくる</h2>
     </div>
-    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    どちらも<strong>実行する前に予測を書く</strong>ことが大切です。</p>
+    <p style="margin-bottom:1.5rem">
+      自分のGoogleスライドに、第6回ぶんの<strong>3枚</strong>を追加してください。
+      見出しは「第6回: 優先度付きキュー（heapq）」にします。
+      説明する相手は<strong>前期のアルゴリズム論及び演習Iを受けていない友達</strong>です。
+      専門用語をそのまま書いても伝わりません。
+    </p>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 1</span>
-        <h3>heapq から取り出される順番を予測する</h3>
+        <span class="tag tag-standard">スライドA</span>
+        <h3>しくみを、自分で作った図で説明する</h3>
       </div>
-      <p>プログラムを実行する<strong>前に</strong>、次のコードが何をどの順番で表示するかを予測してください。</p>
-
-<pre><span class="code-label">Python ── AL2-06-std1.py</span>
-<span class="kw">import</span> heapq
-
-box = []
-heapq.heappush(box, (<span class="num">14</span>, <span class="str">"東京"</span>))
-heapq.heappush(box, (<span class="num">5</span>, <span class="str">"渋谷"</span>))
-heapq.heappush(box, (<span class="num">23</span>, <span class="str">"上野"</span>))
-heapq.heappush(box, (<span class="num">5</span>, <span class="str">"池袋"</span>))
-heapq.heappush(box, (<span class="num">9</span>, <span class="str">"品川"</span>))
-
-<span class="fn">print</span>(<span class="str">"箱の中身:"</span>, box)
-<span class="fn">print</span>(<span class="str">"先頭:"</span>, box[<span class="num">0</span>])
-<span class="fn">print</span>()
-
-<span class="kw">while</span> <span class="fn">len</span>(box) &gt; <span class="num">0</span>:
-    <span class="fn">print</span>(heapq.heappop(box))</pre>
-
+      <p>次の3つが伝わる図を、<strong>自分で作って</strong>1枚に入れてください。</p>
       <div class="setup-step">
-        <p class="step-title">やること</p>
+        <p class="step-title">図に必ず入れる3つ</p>
         <ol>
-          <li>実行する<strong>前に</strong>、取り出される5つの組を順番どおりに予測してNotionに書く</li>
-          <li><code>AL2-06-std1.py</code> という名前で保存して実行する</li>
-          <li>実際の出力を記録し、予測と比べる</li>
+          <li>「全部見てさがす」やり方と「heapq に任せる」やり方のちがい</li>
+          <li>heapq が守っているきまり（親は必ず子より小さい）</li>
+          <li>同じ駅が2回入って、あとから出てきたほうが読み飛ばされること</li>
         </ol>
       </div>
-
-      <table>
-        <tr><th>取り出す順番</th><th>予測</th><th>実際</th></tr>
-        <tr><td>1つ目</td><td></td><td></td></tr>
-        <tr><td>2つ目</td><td></td><td></td></tr>
-        <tr><td>3つ目</td><td></td><td></td></tr>
-        <tr><td>4つ目</td><td></td><td></td></tr>
-        <tr><td>5つ目</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 時間が同じ <code>(5, "渋谷")</code> と <code>(5, "池袋")</code> は、
-      どちらが先に取り出されましたか。なぜその順番になるのかを説明してください。</p>
-
+      <div class="note-warn">
+        <strong>図の作り方:</strong> Googleスライドの「挿入 → 図形」で四角・丸・矢印を並べて作ります。
+        紙に手描きして写真を撮り、貼りつけてもかまいません。
+        <strong>授業ページの図をそのまま貼るのは不可</strong>です。自分で線を引いたものだけを認めます。
+      </div>
+      <p style="margin-top:1rem">図のほかに、<strong>1文だけ</strong>説明を書いてください。
+      「優先度付きキュー（heapq）とは、○○を○○する方法です」の形で、20〜40字におさめます。</p>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの組についての予測と実際の表、および「時間が同じときの順番」の説明。</span></div>
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">標準課題 2</span>
-        <h3>路線を1本足すと最短時間はどう変わるか</h3>
+        <span class="tag tag-standard">スライドB</span>
+        <h3>自分で動かした結果をのせる</h3>
       </div>
-      <p>例題2のファイル <code>AL2-06-ex2.py</code> を開き、池袋と品川を直接つなぐ新しい路線（5分）を追加します。</p>
-
-<pre><span class="code-label">Python ── 書き換える2行</span>
-    <span class="str">"池袋"</span>: [(<span class="str">"新宿"</span>, <span class="num">9</span>), (<span class="str">"上野"</span>, <span class="num">12</span>), (<span class="str">"品川"</span>, <span class="num">5</span>)],   <span class="cmt"># ← ("品川", 5) を足す</span>
-    <span class="str">"品川"</span>: [(<span class="str">"新宿"</span>, <span class="num">30</span>), (<span class="str">"渋谷"</span>, <span class="num">9</span>), (<span class="str">"東京"</span>, <span class="num">11</span>), (<span class="str">"池袋"</span>, <span class="num">5</span>)],   <span class="cmt"># ← ("池袋", 5) を足す</span></pre>
-
       <div class="setup-step">
         <p class="step-title">やること</p>
         <ol>
-          <li>実行する<strong>前に</strong>、新宿から各駅までの最短時間と、東京への道順を予測してNotionに書く</li>
-          <li>2行を書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>「読み飛ばす」と表示された行が何回出たかを数える</li>
+          <li><code>AL2-06-ex3.py</code> を自分のパソコンで実行する</li>
+          <li><strong>VS Codeのウィンドウごと</strong>スクリーンショットを撮る
+              （左のエクスプローラーに <code>AL2/No06</code> のフォルダ名とファイル名が写っている状態）</li>
+          <li>スクリーンショットをスライドに貼る</li>
+          <li>実行結果から読み取れることを、<strong>数値を挙げて</strong>2つ書く</li>
         </ol>
       </div>
-
-      <table>
-        <tr><th>駅</th><th>追加する前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>渋谷</td><td>7分</td><td></td><td></td></tr>
-        <tr><td>池袋</td><td>9分</td><td></td><td></td></tr>
-        <tr><td>品川</td><td>16分</td><td></td><td></td></tr>
-        <tr><td>上野</td><td>21分</td><td></td><td></td></tr>
-        <tr><td>東京</td><td>27分</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 新しい路線を1本足しただけで、時間が短くなった駅と変わらなかった駅があります。
-      どの駅がどう変わったかを書き、変わった理由を「新しい路線を通る経路」を示しながら説明してください。</p>
-
+      <div class="setup-step">
+        <p class="step-title">読み取ること（この2つに答える）</p>
+        <ul>
+          <li>120マス四方のとき、2つのやり方にかかった時間と、その差は何倍か</li>
+          <li>マス目が大きくなると、その差がどう変わっていくか</li>
+        </ul>
+      </div>
+      <div class="note-warn">
+        <strong>スクリーンショットの撮り方:</strong>
+        Windows は <strong>Windows キー ＋ Shift ＋ S</strong>、Mac は <strong>Shift ＋ Command ＋ 4</strong> のあと
+        <strong>スペースキー</strong>を押してウィンドウをクリックします。
+        画面の一部だけを切り取ったものは受けつけません。フォルダ名とファイル名が読める状態にしてください。
+      </div>
     </div>
-      <div class="notion-submit"><span><strong>Notionへの記録:</strong> 5つの駅についての予測と実際の表、東京への道順、読み飛ばしの回数、および変わった理由の説明。</span></div>
+
+    <div class="card standard">
+      <div class="card-header">
+        <span class="tag tag-standard">スライドC</span>
+        <h3>問いに、自分の数値を根拠にして答える</h3>
+      </div>
+      <p>次の2つの問いに答えてください。答えの中で、
+      <strong>スライドBに貼った自分の実行結果の数値を必ず引用</strong>してください。</p>
+      <ul class="point-list">
+        <li><strong>問い1:</strong> 例題2の実行結果に「すでに確定済みなので読み飛ばす」と出るのはなぜですか。前期を受けていない友達に説明してください。</li>
+        <li><strong>問い2:</strong> <code>AL2-06-ex2.py</code> に「池袋—品川 5分」の路線を足して実行してください。5つの駅の時間と、東京への道順がどう変わったかを数値で書いてください。</li>
+      </ul>
+      <div class="note-warn">
+        <strong>「〜が分かった」「うまくいった」だけでは点になりません。</strong>
+        「自分の実行結果では○○が△△だった。だから□□と言える」の形で書いてください。
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="sec-notion">
+<section id="sec-submit">
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">4</div>
-      <h2>提出まとめ</h2>
+      <h2>提出と評価</h2>
     </div>
     <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
         <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
+        <h3>提出のしかた</h3>
       </div>
-      <p>第6回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 「読み飛ばす」行の書き写し、2回入れられた理由、読み飛ばしてよい理由</li>
-        <li><strong>例題3</strong>: 4つの大きさの時間と倍率、差が広がる理由</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、時間が同じときの順番の説明</li>
-        <li><strong>標準課題2</strong>: 予測と実際の表、道順、読み飛ばし回数、変わった理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
+      <div class="setup-step">
+        <p class="step-title">手順</p>
+        <ol>
+          <li>自分のGoogleスライドを開き、第6回の3枚（A・B・C）を追加する</li>
+          <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
+          <li>ManabaにPDFを提出する</li>
+          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
+        </ol>
       </div>
+      <div class="note-warn">
+        <strong>共有URLも毎回必ず提出してください。</strong>
+        Googleスライドには変更履歴が残ります。
+        いつ・どのスライドを作ったかを確認するために使います。
+        まとめて作ると履歴に残るので、毎回の授業の中で少しずつ進めてください。
+      </div>
+    </div>
+
+    <div class="concept-box" style="margin-top:1.5rem">
+      <h4>評価の観点（毎回同じ・10点満点）</h4>
+      <table>
+        <tr><th>観点</th><th>点</th><th>見るところ</th></tr>
+        <tr><td>図を自分で作ったか</td><td>3</td><td>授業ページの図の貼りつけは0点。指定の3要素が図に入っているか</td></tr>
+        <tr><td>自分で動かした証拠があるか</td><td>2</td><td>VS Codeのウィンドウごとのスクリーンショット。フォルダ名が読めるか</td></tr>
+        <tr><td>数値を根拠にしているか</td><td>3</td><td>自分の実行結果の数値を引用しているか。数値と説明が合っているか</td></tr>
+        <tr><td>言葉が自分のものか</td><td>2</td><td>専門用語をそのまま並べていないか。前期未履修の友達に伝わるか</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>よくある不十分な例</h4>
+      <table>
+        <tr><th>不十分な例</th><th>どう直すか</th></tr>
+        <tr><td>授業ページの図をスクリーンショットして貼る</td><td>同じ内容でよいので、図形を自分で並べ直す。手描きの写真でもよい</td></tr>
+        <tr><td>ターミナルの文字だけを切り取って貼る</td><td>VS Codeのウィンドウ全体を撮る。フォルダ名とファイル名が写るようにする</td></tr>
+        <tr><td>「速いことが分かりました」で終わる</td><td>「自分の結果では6秒と0.01秒で、600倍ほど違った」と数値を書く</td></tr>
+        <tr><td>教材の文をそのまま写す</td><td>専門用語を1つ選び、それを使わずに言いかえてみる</td></tr>
+        <tr><td>3枚を最後の週にまとめて作る</td><td>変更履歴で分かります。毎回の授業中に作ってください</td></tr>
+      </table>
     </div>
   </div>
 </section>
@@ -1462,7 +1480,7 @@ heapq.heappush(box, (<span class="num">9</span>, <span class="str">"品川"</spa
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="O2hNDsdxDTNdc+PxZnr6mLLIW9RqL2k+OihQwu/u8Mu4mkevokg2MFkO+WQ+PGxa5cPLH6HY7IMhM4eZcudIq/JqD50PPrgKn/0pAkvct7E6JNSZ3ObisAxYk/eHPqGrnnB7Hgwr36sQBk3P8G+S1j2OLbMhyNjmUDIlZE4dXQxNhgTnedk/Vg69Ir8fH6fdWI3fZwv93trSDWWAa2r1EMd/JJMKo5aqI/AVTDxklR0ymo/Xicj/QNTxocn/zEth3iWlIgelu7XaAG/bVwsHpmPSH3jGVR+PE8KwD9lqRDBlHAokz2eMS7i5sKFwBvUjfnXIOviktdmbFe3F0U8fIJ0X8AMWSVlkObSWXNj45G5nxavLq4xyVymvrKUmwJz/WANj1lhO+1kC7yt5iMbpejRsHDZkxahfk0i8uKisbt3uMR5P5knxNNQhx9dPKzgDSMFKX0igDv8Zlxr5y1W+iYiDqSfa7gFtuB4Q7pTszcEQ81I+HbkvJf+3f/QlN7UXtDSzDGOBf4mN9gliz3IerOrTOJ0dKY6tuM3ea0kXSx2SiS9owVg3QttZrjINf10rTjvK0xQ9n87Nor/hS5tB76mnJSbNCbAhw3ledrGbcWKrxZwdFMw7Te8cKVxYgiB4NJ+zHalXk9512dviVF/u/I+p5hwRG3FqNZ3QxfO/LappXEXLDXbn+4FOaRc4YaQKJH3OJWP1BDaTa2INoQPatEWUIq6GFS2QDbQ9HTVm5g9X7/6Bv49b0CMU/6kILgLO/vrV5KgZBU9FGmNoUyM75P3OxU6IOQJfJtlV8OeEjnDqIHyJ3jWy9Ce9a+bzAzk9sNgIruVj3xaTRK4xyFKD8tII8JsKuqeUqJz+fw6rhr035ygXNKOhVTMVFMjupBbbPK9pEemuQWf5fSl0Beqkd6h9VtCCBouTdPfdHD8WGKpjrgwF5EUD5Dtsip7nvggbngB3TqUFWsk7ynfw4cLYL2sVZq0AXNQ+BrNAAltgevEAVhRdVXYA+iE4YT+NWiO5i4TMxdr+RlxNmEWYDzOW9V7k72sQAsgDqmqLvwD7STLWMmPBdqtL54qQ+9IH/pXQZNGsV4mv2olBs1Vk58ZP9v6B+X4cEn0bcP5LgTOZuMwhNU5fHCHLvj3U/eRjJ9Bq/co55QUa4U+g/th+tMrvImsP1S01t2nammWU+FP/LJPodEhu25OCsIAYIyOLmZpmnb9vms8BM02RDeQ4zHwjHtAEVDT3wJ7IULN6fIxi6gfF1PFZiWgRH5jiirRMz5hm4B6lHPZ0tf/mnD+rguKmfoZ2APLzxA0OBy75Xm6gMPv+OVoQ0dMQh2fCjgAl0yzdFx8J5N3NZVmZGS6mEsYh5NKj34kpzfsBZs+WOO9KFjsvkZRVPl1W5y92Glvppib04SfjNy0qZ04sNHtR9lJTLUzz4rIq5heWBT6uejfyrzN8od5fqJLGf6Ki2Q5bbYJXO4cAaB341p0pUwLRaSgdMpx9CLncCyRGk30K36fxpAiLhfjSbqhsSGTPBeZntwPNrM1TgEYIpqw2jqD7mYvse6r9u2MZlKI/Jzsj118u0xQDNKowNlOBx2oS3SMzpDouCrf0FgUdl7iHyMIYjq5JS4Trx6wNkrO7kScL41NIRD1lVnSzbHIxL4RRhF+IISjpak+ohC5Vzbyx9BkoqO8bP88lWDdr6SGb8cQpGjzTpKhKxc0HLvm+TIcQZF+YDbaCdlOMqbk8d7PSW4Ht/O/NTu8v3wXRrpc+O5r7pmxUQ1cTwPyfDrY+0Evvz4IZYxndvy4r+M3l8V0pKJeIgqsRuPKdhHtia89Qv+HwaexpuENWr0h6Hf+urYe88fACFGsm8FtFfDHk2DJfRQfUpLuLEKSuShth6xX6kkUfa9OQ99yGjUJyW/pLteh2NQcRAaGJ3rvW/8n9nzMLYsDraP4WOtUEDZRikksHE/Lqkw9++r/zoLMQrgQf9/ZSDmcb2gOAJFFEnhYos2L0uKljqkaGO627BG34xIDagXoeXNaSS7bqSDmRfT3fGEn+yjlqM5MW6xFeXHEepOAmpR0yOxK+2prYZkx8fQS1Zw9ygBubZ32gsESyzk03s9fGAU++tBtMZQTiYxlS56Uq+rShrpStsSqoicXr8iUrwWYhXuuFcLOVEYLiAFcDv0rkWTLL5PKh13Ts2F5D37kTfsJTueFnq4qgChdZafX/qdvq6DMFIbZv6mLZeeMR+YeY2UD9poy8ALisbDmaTkfBO4W7b/Shhr+7TLOb3/7vveRS4R431XCQn+YClwUkqr16rB/VTr+tMZAykxOemQJCyMAdVoLMVKj0CUafEkt3XM7ZY7xH6jt+iall99nPPNcl1f1cmnSolQuzfC2wmSIlxEmuGYCGSbf9+1tDZBMpvx0ElgqqMNW6imf13sR7DZOTP0nbHst6HeodgqrSx5coHpOY3rcPKYavouhMRds6ygV7ppcRthFy+4jk9OYAQNapYZRhqYbZ54+4eMvgqY934kWq5GcS2si6tylLLhgJplUsfIFx4Y78wIV27MeRqltkKeCWpQKfwIXRdGckkhdzdNeI1itpCkiZ9Wb3zzwkm86Q/Zg2LZtZVXxj+Zoz8WbxlGli6KCxqU9cd6Kqgxd0P71JzhneTBJZENYv3Ypgld3YHobC1GE+6XxOlaenQmQVx9Pdcua3CclTttAHyEwAo9vvSn3ryDpHI4j1zhTEVogLd+ZY2zmhJftEqSs6Q+n62LJ+ESfI+O9IpWvRLJ8CfWXptB4lU6W/xQEQ/DDRR+VZ/+s6qC47eU93miAjzZ9XMC8pWPZ6c7mN6C8z7rB8YKR33LkXuczNYuW1EHA/LeQfGZ6LbAi48OA3f8xyZ2WCSlR0ChT6YS2iDxsEKSf7ka8QER4pmYZK5Bj1/Eh7OnIpatc5FAiDzOVdr7QCJ0E4i8m+hn/ESyET45mKRzbVZlXGwm0AWqx/vM6/KjuRt3elf9Y4HSY2VsO1lhMMFQFTbtfr0Zgrj+nIzhv/YRoWg2nzdELGdt0Bct3nRliUW1HIwQAt8oWxz5ivl8WET6d/G3j+73zxwbMf2kmSRp+jYxyuIp9NixEivNS2OOMlxLUn83XXIuwM9dmz8H77kzWZHjB7YtecTtgbRc0mQ3A2uGfUovQjq2O/mrRt8R7OxQCSdlfjjldpMcyfBZmmwjRePOQ6aQszAEymfsHL49Zv3rt+wb0hADj2eja2B0hj1eBH74m5Re5OjSAV5wZ3oBU3mE7HIdn0T4spVS1f6PRIhVz04f/2MU42JVhx+cD9l3bQG5qGmlE/FB8e7XbfNsKSmofCbRsNlmp1rkwM95oVbFpRMZgKSNxbHgZtRVnPdMyCtksKArgNuRTqb9Ipqhpwr4sVgjim6qxNC2VLu0mW+Sd2Xla/kHDO/Uz3viO6zmUpisIrDcklk6Bh3Bhe1Sa85SisLoAVHJQmNUa+LX8ZEKScOcToBI4eFUCNovon87bmOvYjiX0270oo6bm3toT4e4trZZiFMb2HNmiL3MAurO9oposHX0fBHOXf2/VpXvufHq2eJch6WwZo5n1LvvIY4YCyPt9JzbCG+ZLh6OXaVX8ot3sLRv1HMQOL//O+bcQBGl5d+d5LkMkxMEYI1QvyH2HwQnr6ebsIaYb+LyDeOl2/zJWRDm9EepFx/VG3eaLIq016c3T8Q0cUeoXnociXzJd8BD7jRoc8lx4ANMMwp7g0jbL3eEnn0ceMNUxrUFFVBEvrCOVrwJs4eIJpshRdboFcv5VfFTbvNLO5wntHSbkmsSqIudwRDyJPFtDkZ7kRHlSouh3bMaij0JqJOHNqlaQJJdC0j73VIgMhYoFhrQvCAk1Ip73F6N6bnltC+o4bcNPSAbdTtuo4YLYIJYu1qQa6c+0CrpR1Un7RNw354jX3WT8wKMpo4oglXzxMGozwBBVRnCWTevz3PDvPQ5sWdUQpDkGmuX86N0oliDuTvhIolkSDgLcJ9k6pPGm0p14AlJ0cBtfPAb29S70gzjLOQy/E6u/iCdG9lL1lxrLwqlC6FanOgpCsoR0ymeGyqVYPRRuqulO6PwagZCDsnzJ6tkhxbxLlEsRnmS1A969lWFmsDXgHUJ7g28Da59icHmSA9EGIKq6+gX0jRaldpyCIzfzLRLWpB+UhpqcU0ATFSXFOVpn7LMokTCHxq6p0CMBIKXvl29W7RS9f5Rb7p5Zc/FW+R1Gik817T2OIDR/+vwxnNgB/KFNs2IP4Cd9KDlUM3uR2qLySgZIiCOl2lD3HQy7tgLKi7i+W+KVHKPMRN8eJZ5zjG9fvJOjmuuQLxoAU0hSvZrI3mpXDqsCdMmVItX60bWfD9f+F+AeiiabOdDguWu729/oI8irqr+Vt3XScAMwqFBJqDB5B+ExvOAWFVQmWGpvgQoZR+cTu8ekB3jXFOfIhZqTbNzekA1ydIfowPtQMgMz3J8TevwXTM2ww27SQstAeDSJPS5fnA7UTrVzAxxcM7y8TDQ/0Yyy54tHWwCQfNA/hDwcIjUoRdgVTUw+ZMvte7bSBvYkl9r7nIS5+EHNq+6qY+bbjFlnWEnVvuIwqnDJZKoAIYm4JQeP1pjcBfGOJrHHtbCW9KovCS3BJz9rm5HtBmcKCch/Mlc4OLzaRadBIqpHKBQwfJ0QajvuGEBbrFG3o8RvMI2f1kZicQ3RkMjMWVztQNFyJB7BaxJq2JNefnqrpWTcw7FIq0ewMNPzm0XyULCm30sKujb0hbui0PzkxN9JxZ198kLkWnH2TOQMihcIIBpO+leJv8XgrafjBRA/xL33NWJqZz9TtS036/dI+yhDtQgnjVb0aG7aTiI2CyvN2uJlhV2Y0kMFTp/lw4cLX+RUdy/EfMFdPxzqTtqH9ocCmIyivZRojzHDsSgtzr/y4J9Sios4iU1b1Rp7ZxS95L0jBkY/E3qZRx7jNt2O+gAI7BeelQsjqZvn7UBnj66KyZjH7Vo5+9/YVKxj9yYsYgfm+oUBtwDG4tdC7ZZfnWus/PewACfXY6Vx3V68sbg3Pu3J3KUMyACYMvxIkZSpG1JxN7RqrSdi3YAOEu4NoSGKtaOtnB5Xe+5iK5LF+F+IVUIf7R6Osb5sbXKj+nDACQ89yyoaO3oJCUEdWLX5v7AS6p7EqvQS3u1mkqq6HMd6DONqKomsjJRa7M8iOFtM556RrZQ+otKHhw62tbwuWhaMM8OZWvjOdMYSTMX8Z3JJ8hNnDu2GRuZNTQXnjRvLByeHKf1A01l3rDJQVXOmxMqEK2hZT+Rebrqs1tty6cmliEHHLl/tw6jn/l6Y62CgEAoHlJylG+5bczLqSQwbYgKcassUx5TLGy4vgB6xGMB/w0YxTKH03cuTwhuakOiRmQurH/mSjlwDZoZqqq4Jc7ycKxRhex6ZgxUZjCAufu/u7bEph1P3I2HkfLyYimxNM1xpi82c3TfO7NU43T019c9gLUrgcV3oDD1ycbeLl140k53TKO98RbeBA3LYRuyBCRmav3lUIvuhym2+FyIVPp7vqGc7wWQhRUM7ngb7N6CYZUBjzn011xXEva3M1tzkbtA5WE48H62D1C67skJQLzPeqkVD6QG731DwAZq++v7nZyrWAqqDuOmu5WGLUgflpgRkAZgeGPgGbP4tD5gRACJv9QKcECHSEOvnW70G8n/46JNTgdMG4kSGXRmSGMVbIcjYswKGtUJqSw37MlwbdSKZy5pmYLCJpPR/nge0L6m6grBaNbi8svxSBItdW+m6G+u2BICAh2zHIGMl+xyUAeoGs0Wlx3G3Ulp15AlIkxfxdIlqGxm7cxNoA5xBP2pUJTZ4th3TUEaNVJCRZyaDXZPaf32v0FkvDjCivxmxqRTAK/RM6bQ=="></div>
+    <div id="answers-encrypted" data-cipher="9LdKp5SkmeJlUdXaj69cA0+4yl0513oPhW9YbOebgo/PaGrnuskwwXQtY7894k3WLdB8fw5O8D9JxUOHvXxMZ0dWAz7PYsDyOQl7O2NfiR/yovGFtwgqkODW4857qJhXAaOyx8UbmTuPY6vtCrC0oy83kBKLyCe9XfoF2gZrLrw3IWWZKei++6mVR7O7RVZpT9FzdeL+tE/a7Ot3zCKrkNVkj5FbUimE7DQ7nbM9VxTYVjG7EXUcfy05SYJ3rxF4lsGnylI5lChjVh562sFj3Q/H3bxuoUhFx9LD3BPziAa3Sy+AYDKqy2MZQdIpdswqlf8oggXid3Vqk7IAVjmbz0RouL14MsbfVrXPLbOLNE4p9vv3EzN1G0ytp4hYIWxwyaW+lvZTMEWBgIttNnL0bewYlVDhRVQIWRQN9hO63QrIiujdutVW//aR3/0VRmZ8/VLkC5HOt3DzMaKLO4Xdsv3Ul7aJY7ciX6nc/7kXeaz9qYqeP0YXdjhiVnYA16hRo7TVvyNX5PTAKKF5xJs7+AHbXar4nKXW4YNj0xXm7vjHr4IfxsLruXCnbXfvJU0sMrF2JwgU2Y7nAPjJT/eGxM4Q8eRKGhe2WMFL5FxtEjbvULvwujsN1SBF0xMKuUERR7cwjYkLHWXJm2+npjG4xlE647ri2ad0g+YYYquA808pvtUa8jrmxCJ4s+TI3PX7GUsuFoGmPjYNfNH1nN+szidcjYpJPJ8xQwxcjiMaMfzu9bx7uQcako+GdIEU7aeYEIS/23w+x9c0ilUibXh+401OGxKmx5i3h3zLnvP3w2SYNQIvEbRFN0+L1BkKVFAnZe8sXtJLhCJRHktfi6zrUs9En2F0zo4nyH90lTSeV41gIB+2EuToNKarfXgJr+WKJTHACA9gkbD/iyzO9StuQ0aWeVR32zBYupAsH9e8lxtby6oFiAeOVTlYmgv29EsOLvKGO7MuEtVwjeZYlNKSAKTQNx8WFiXqZHPL0nES26DaaIRF49MeOLykP/HFs8RYxAp5oz4K+4fVkD7Ee0Pc7g9Cj5KUEq24piG2qr9jG0MfTxQjbUUl2cZ8Pd0/I8a9OADpQBSvIu9/z0le5/jFeKfsiDSl4Kv5Skpz2YET2q6pC4+c8cp6l/irABVR0K3L5+yAtanXVNIDezCKNt00GF6D9zjo0cqrRmymnOObWXdXseEgMFLYwDtwrFkWbMvqw8iAuQpa2egHSSB+AJUKAWPEkR5PWIbFPb3hyXjTbjld2g6awdRSnC7XqKRuS+sBxwKpZ0W1SWIaFRFFtEQ26FPZ6SsHHnrhICRBcK9HdwcxKWYGMAtuKkAPWLagfo8HvVHQSVz6Qv/sxpwyFBQfA0DjuQYKnkn8RovTpSFB6fzIJoNZ21r9HSyz4T+ygk0qzEXYuVemoDKqgm8G0YOZ0CiMEA98TmyRTQ=="></div>
 
   </div>
 </section>

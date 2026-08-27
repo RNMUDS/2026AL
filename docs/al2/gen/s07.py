@@ -2,9 +2,11 @@
 """第7回: ダイクストラ法（3）迷路への応用 の本文を組み立てる。"""
 import heapq
 from collections import deque
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 COST5 = [
     [1, 1, 1, 9, 1],
@@ -240,17 +242,12 @@ NAV = [
     "提出 #sec-submission",
     "迷路とグラフ #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題1の2つの経路"),
-    ("#sec-examples", "tag-example", "観察記録", "例題3の実行時間"),
-    ("#sec-standard", "tag-standard", "標準課題1", "コストを変えると？"),
-    ("#sec-standard", "tag-standard", "標準課題2", "使い分けの表"),
-], 4)
+sub = slide_submission("07")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第5回・第6回では、駅と路線からなるグラフでダイクストラ法を動かしました。
@@ -376,141 +373,24 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '地形を変えると経路はどう変わるか', ex4_body)}"""
 
-std1_body = """      <p>例題1のファイル <code>AL2-07-ex1.py</code> を開き、迷路のいちばん下の行を高いコストに書き換えます。
-      下の道路が水びたしになり、通り抜けに9秒かかるようになったという設定です（ゴールのマスだけは 1 のまま）。</p>
-
-<pre><span class="code-label">Python ── 書き換えたあとの cost_map</span>
-cost_map = [
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],   <span class="cmt"># ← いちばん下の行の左から4つを 1 から 9 に変える</span>
-]</pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、幅優先探索とダイクストラ法それぞれの歩数と合計秒数を予測してNotionに書く</li>
-          <li>いちばん下の行の左から4つを 1 から 9 に書き換えて保存し、実行する</li>
-          <li>実際の結果を記録し、予測と比べる</li>
-          <li>2つの経路の絵を見比べて、書き換える前とどう変わったかを書く</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>方法</th><th>書き換える前</th><th>予測</th><th>実際</th></tr>
-        <tr><td>幅優先探索</td><td>8歩 ／ 16秒</td><td></td><td></td></tr>
-        <tr><td>ダイクストラ法</td><td>12歩 ／ 12秒</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> ダイクストラ法の歩数は12歩から減りましたが、合計秒数は12秒から増えました。
-      「歩数が減ったのに合計秒数が増える」ということが起きる理由を説明してください。</p>
-"""
-
-std2_body = """      <p>例題1から例題4までの結果をもとに、幅優先探索とダイクストラ法の使い分けを表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。</p>
-
-      <table>
-        <tr><th>比べる点</th><th>幅優先探索</th><th>ダイクストラ法</th></tr>
-        <tr><td>使う入れもの</td><td></td><td></td></tr>
-        <tr><td>広がる順番</td><td></td><td></td></tr>
-        <tr><td>求まる経路</td><td></td><td></td></tr>
-        <tr><td>例題1での結果（歩数／秒数）</td><td></td><td></td></tr>
-        <tr><td>すべてのマスのコストが1のとき</td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の3つの場面には、それぞれどちらが向いているかを<strong>理由つきで</strong>答えてください。</p>
-      <ul class="point-list">
-        <li><strong>場面A:</strong> パズルゲームで「最も少ない手数で解けるか」を判定する</li>
-        <li><strong>場面B:</strong> 自転車のナビで「上り坂を避けて最も早く着く道」を案内する</li>
-        <li><strong>場面C:</strong> すべてのマスの移動時間が同じ、まっさらな地図で最短経路を求める</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。
-    標準課題1は<strong>実行する前に予測を書く</strong>ことが大切です。</p>
-
-{standard(1, '右の列を通りにくくすると経路はどう変わるか', std1_body)}
-{notion('2つの方法についての予測と実際の表、経路がどう変わったかの説明、および「歩数と秒数のどちらが変わったか」の理由。')}
-
-{standard(2, '幅優先探索とダイクストラ法の使い分け', std2_body)}
-{notion('5行の比較表（空欄をすべて埋める）と、場面A・場面B・場面Cそれぞれに向いている方法とその理由。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第7回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題1</strong>: 2つの経路の歩数と秒数の表、経路が分かれる場所の説明</li>
-        <li><strong>例題3</strong>: 4つの大きさの表、時間が何倍になったかの計算</li>
-        <li><strong>標準課題1</strong>: 予測と実際の表、経路の変化、歩数と秒数の理由</li>
-        <li><strong>標準課題2</strong>: 比較表、場面A・B・Cへの答えと理由</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: いちばん下の行を9にしたときの結果", """        <table>
+    ("確かめ用の数値", """        <p><strong>問い1（いちばん下の行を9にしたとき）</strong></p>
+        <table>
           <tr><th>方法</th><th>書き換える前</th><th>書き換えたあと</th></tr>
           <tr><td>幅優先探索</td><td>8歩 ／ 16秒</td><td>8歩 ／ <strong style="color:#FF5252">48秒</strong></td></tr>
           <tr><td>ダイクストラ法</td><td>12歩 ／ 12秒</td><td><strong style="color:#76B900">8歩 ／ 16秒</strong></td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>幅優先探索:</strong> 経路も歩数もまったく変わりません（左の列を下りて、下の行を右へ進む道）。
-        しかし通る道の上のマスが 1 から 9 に変わったため、合計秒数だけが16秒から<strong>48秒</strong>に増えています。
-        幅優先探索はコストを1つも見ていないので、下の行が通りにくくなったことに気づけません。</p>
-        <p style="margin-top:0.6rem"><strong>ダイクストラ法:</strong> 経路が<strong>まったく別の道</strong>に変わります。</p>
-<pre><span class="code-label">Terminal ── 書き換えたあとのダイクストラ法の経路</span>
-     1*   1*   1*   9*   1*
-     9    9    1    9    1*
-     1    1    1    9    1*
-     1    9    9    9    1*
-     9    9    9    9    1*</pre>
-        <p style="margin-top:0.8rem">上の行を右へ進み、9のマスを1つだけ通ってから、右の列をまっすぐ下りる道になりました。
-        合計は 1+1+9+1+1+1+1+1 = <strong>16秒</strong>です。</p>
-        <p style="margin-top:0.6rem"><strong>「歩数が減ったのに合計秒数が増える」理由:</strong>
-        ダイクストラ法が選んでいるのは、あくまで<strong>そのときの地形でいちばん安い道</strong>です。
-        書き換える前は、遠回り（12歩）をしてでも 1 のマスだけを歩くほうが安く（12秒）済みました。
-        書き換えたあとは、その遠回りの道がいちばん下の行を通っていたため、
-        同じ道を歩くと 1+1+1+1+1+1+9+9+9+1 のように高くついてしまいます。
-        そこで、9のマスを1つだけ通る短い道（8歩・16秒）に乗りかえたということです。</p>
-        <p style="margin-top:0.6rem">つまり、<strong>歩数はダイクストラ法が最小にしようとしている値ではありません</strong>。
-        結果として歩数が減ることも増えることもあります。
-        ダイクストラ法が保証するのは「合計コストが、そのときの地形で最小であること」だけです。
-        書き換えたあとの16秒は、幅優先探索の48秒より3分の1の時間であり、確かに最小になっています。</p>"""),
-    ("標準課題2: 使い分けの表と答え", """        <table>
-          <tr><th>比べる点</th><th>幅優先探索</th><th>ダイクストラ法</th></tr>
-          <tr><td>使う入れもの</td><td>キュー（<code>deque</code>）</td><td>優先度付きキュー（<code>heapq</code>）</td></tr>
-          <tr><td>広がる順番</td><td>歩数が少ないマスから</td><td>合計コストが小さいマスから</td></tr>
-          <tr><td>求まる経路</td><td>歩数がいちばん少ない経路</td><td>合計コストがいちばん小さい経路</td></tr>
-          <tr><td>例題1での結果</td><td>8歩 ／ 16秒</td><td>12歩 ／ 12秒</td></tr>
-          <tr><td>コストがすべて1のとき</td><td colspan="2" style="text-align:center">同じ答えになる</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>場面A（最も少ない手数で解けるか）: 幅優先探索</strong><br>
-        知りたいのは手数の少なさです。1手が1歩に相当し、どの手も同じ重さなので、コストを考える必要がありません。
-        幅優先探索のほうが仕組みが簡単で、優先度付きキューを使わないぶん速く動きます。</p>
-        <p style="margin-top:0.6rem"><strong>場面B（上り坂を避けて最も早く着く道）: ダイクストラ法</strong><br>
-        上り坂と平地では、同じ距離でもかかる時間が違います。
-        坂の勾配に応じたコストをマスごとに決めれば、ダイクストラ法が自動で坂を避ける経路を選びます。
-        幅優先探索では、距離が短いというだけで急な坂の道を案内してしまいます。</p>
-        <p style="margin-top:0.6rem"><strong>場面C（すべての移動時間が同じ地図）: 幅優先探索</strong><br>
-        コストがすべて同じなら、2つの方法は同じ答えを出します。
-        同じ答えが出るなら、簡単で速いほうを選びます。
-        ダイクストラ法でも正しい答えは出ますが、優先度付きキューの出し入れがむだになります。</p>
-        <p style="margin-top:0.6rem"><strong>まとめ:</strong>
-        重みに差があるかどうかで選びます。差がなければ幅優先探索、差があればダイクストラ法です。</p>"""),
+        <p style="margin-top:0.6rem">幅優先探索は経路も歩数も変わらず、合計秒数だけが3倍になります。
+        ダイクストラ法は経路そのものを変え、上の行を右へ進んでから右の列を下る道に乗りかえます。</p>
+        <p style="margin-top:0.8rem"><strong>問い2の要点</strong>: ダイクストラ法が最小にしているのは
+        <strong>合計コストであって歩数ではありません</strong>。歩数が増えることも減ることもあります。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "迷路とグラフ", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("07", SLIDES),
+    rubric_section("07"),
     ans,
 ])
 

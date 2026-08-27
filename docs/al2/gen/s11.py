@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """第11回: アルゴリズム比較・復習 の本文を組み立てる。"""
 import math
-from common import (AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 
 # ────────────────────────────────────────────────────────────
@@ -127,17 +129,12 @@ NAV = [
     "提出 #sec-submission",
     "全体の整理 #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題1の3つの経路"),
-    ("#sec-examples", "tag-example", "観察記録", "例題3の表"),
-    ("#sec-standard", "tag-standard", "標準課題1", "場面ごとに手法を選ぶ"),
-    ("#sec-standard", "tag-standard", "標準課題2", "総合比較表を作る"),
-], 4)
+sub = slide_submission("11")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第1回から第10回までで、5つのアルゴリズムを学びました。
@@ -252,139 +249,28 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '条件からアルゴリズムを選ぶ', ex4_body)}"""
 
-std1_body = """      <p>例題4のファイル <code>AL2-11-ex4.py</code> を開き、<code>cases</code> のリストに
-      <strong>自分で考えた場面を3つ足して</strong>実行します。</p>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>身のまわりから、後期に学んだアルゴリズムで解けそうな場面を3つ考える</li>
-          <li>それぞれについて、4つの条件（問題の種類・重みの有無・大きさ・最適解が必要か）を決める</li>
-          <li>実行する<strong>前に</strong>、どのアルゴリズムが選ばれるかを予測してNotionに書く</li>
-          <li><code>cases</code> のリストに3行足して保存し、実行する</li>
-          <li>予測と実際を比べる</li>
-        </ol>
-      </div>
-
-<pre><span class="code-label">Python ── 書き足す行の例</span>
-    (<span class="str">"学園祭で校内5か所のポスターを貼って戻る"</span>, <span class="str">"巡回"</span>, <span class="kw">True</span>, <span class="num">5</span>, <span class="kw">True</span>),</pre>
-
-      <table>
-        <tr><th>自分で考えた場面</th><th>問題の種類</th><th>重み</th><th>大きさ</th><th>最適解</th><th>予測</th><th>実際</th></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 3つのうち、予測と実際がずれたものはありましたか。
-      ずれた場合、<code>choose</code> 関数のどの <code>if</code> 文で判断が分かれたかを説明してください。
-      ずれなかった場合は、3つの場面のうち1つを選び、条件を1つだけ変えると答えがどう変わるかを書いてください。</p>
-"""
-
-std2_body = """      <p>後期に学んだ5つのアルゴリズムを、1つの表にまとめます。
-      表はNotionに作り、空欄をすべて埋めてください。教材を見ながらで構いません。</p>
-
-      <table>
-        <tr><th>アルゴリズム</th><th>解く問題</th><th>必ず最適か</th><th>使う入れもの</th><th>学んだ回</th></tr>
-        <tr><td>幅優先探索</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>深さ優先探索</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>ダイクストラ法</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>全探索</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>貪欲法</td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>bitDP</td><td></td><td></td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem">表を作ったうえで、次の3つの問いに答えてください。</p>
-      <ul class="point-list">
-        <li><strong>問い1:</strong> 幅優先探索とダイクストラ法は、どんなときに同じ答えを出しますか。理由も書いてください。</li>
-        <li><strong>問い2:</strong> 全探索と bitDP は、どちらも必ず最適解を出します。それでも bitDP を学ぶ意味は何ですか。例題3の数値を根拠に説明してください。</li>
-        <li><strong>問い3:</strong> 後期に学んだ6つのうち、自分がいちばん「おもしろい」と感じたものを1つ選び、理由を3行以上で書いてください。</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
-
-{standard(1, '自分で場面を考えてアルゴリズムを選ぶ', std1_body)}
-{notion('3つの場面と条件、予測と実際の表、および予測がずれた理由（またはずれなかった場合の考察）。')}
-
-{standard(2, '後期の総合比較表を作る', std2_body)}
-{notion('6行の比較表（空欄をすべて埋める）と、問い1・問い2・問い3への解答。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第11回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題1</strong>: 3つの方法の本数・時間・経路の表、答えが違う理由</li>
-        <li><strong>例題3</strong>: 都市数ごとの3つの答えと時間、12都市での倍率、答えが同じ理由</li>
-        <li><strong>標準課題1</strong>: 3つの場面と条件、予測と実際、ずれた理由</li>
-        <li><strong>標準課題2</strong>: 6行の比較表、問い1〜問い3への解答</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-      <div class="note-warn" style="margin-top:1rem">
-        <strong>次回の予告:</strong> 第12回では、前期に作った数当てゲームとパズルを、
-        後期に学んだ考え方で作り直します。第13回・第14回では、自分でテーマを決めた作品を作ります。
-        「どんなものを作りたいか」を少し考えておいてください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 場面を考えてアルゴリズムを選ぶ", """        <p>正解が1つに決まる課題ではありません。次は考え方の例です。</p>
+    ("確かめ用の数値", """        <p><strong>問い1</strong>: <strong>すべての辺の重みが同じとき</strong>に一致します。
+        重みがすべて1なら、合計コストはそのまま辺の数と同じ値になるためです。
+        幅優先探索は、ダイクストラ法の特別な場合だと言えます。</p>
+        <p style="margin-top:0.8rem"><strong>例題3の数値（スライドBで使うもの）</strong></p>
         <table>
-          <tr><th>場面</th><th>種類</th><th>重み</th><th>大きさ</th><th>最適解</th><th>選ばれる方法</th></tr>
-          <tr><td>学園祭で校内5か所にポスターを貼って戻る</td><td>巡回</td><td>あり</td><td>5</td><td>必要</td><td>全探索</td></tr>
-          <tr><td>キャンパス内で教室Aから教室Bへ最短で行く</td><td>経路</td><td>あり</td><td>60</td><td>必要</td><td>ダイクストラ法</td></tr>
-          <tr><td>SNSで自分と有名人が何人でつながるか調べる</td><td>経路</td><td>なし</td><td>1,000,000</td><td>必要</td><td>幅優先探索</td></tr>
+          <tr><th>都市数</th><th>全探索</th><th>貪欲法</th><th>bitDP</th></tr>
+          <tr><td>10都市</td><td>59.5</td><td>60.2</td><td>59.5</td></tr>
+          <tr><td>12都市</td><td>73.1（約8秒）</td><td>80.5（ほぼ0秒）</td><td>73.1（0.01秒ほど）</td></tr>
+          <tr><td>14都市</td><td>終わらない</td><td>83.3</td><td>75.9</td></tr>
+          <tr><td>16都市</td><td>終わらない</td><td>87.1</td><td>79.7</td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>条件を1つ変えると答えが変わる例:</strong></p>
-        <ul class="point-list">
-          <li>「校内5か所」を「校内25か所」に変えると、全探索から<strong>貪欲法</strong>に変わります。25都市では bitDP でも表が大きすぎるためです。</li>
-          <li>「教室Aから教室Bへ」で重みを「なし」に変えると、ダイクストラ法から<strong>幅優先探索</strong>に変わります。どの通路も同じ時間なら、通路の本数を最小にすれば足りるからです。</li>
-          <li>「SNSで何人でつながるか」で「最適解が必要か」を「いいえ」に変えると、<strong>深さ優先探索</strong>に変わります。ただし返ってくる人数は最小ではなくなるので、この場面では答えとして使えません。条件を安易に緩めてはいけないという例です。</li>
-        </ul>
-        <p style="margin-top:0.6rem"><strong>注意:</strong> <code>choose</code> 関数は「経路」の問題で大きさを見ていません。
-        幅優先探索もダイクストラ法も、頂点が数十万あってもあつかえるためです。
-        一方「巡回」の問題では、大きさが判断を大きく左右します。
-        同じ「最適解がほしい」でも、都市の数によって答えが変わるという点が、後期でいちばん大事な学びです。</p>"""),
-    ("標準課題2: 総合比較表と3つの問い", """        <table>
-          <tr><th>アルゴリズム</th><th>解く問題</th><th>必ず最適か</th><th>使う入れもの</th><th>学んだ回</th></tr>
-          <tr><td>幅優先探索</td><td>2地点間で辺の数が最小の経路</td><td>必ず最適</td><td>キュー（deque）</td><td>第1〜3回</td></tr>
-          <tr><td>深さ優先探索</td><td>2地点がつながっているかの判定</td><td>経路は最短でない</td><td>スタック（list）</td><td>第2回</td></tr>
-          <tr><td>ダイクストラ法</td><td>2地点間でコスト合計が最小の経路</td><td>必ず最適（重みが0以上）</td><td>優先度付きキュー（heapq）</td><td>第5〜7回</td></tr>
-          <tr><td>全探索</td><td>全部回って戻る最短ルート</td><td>必ず最適</td><td>なし（permutations）</td><td>第8回</td></tr>
-          <tr><td>貪欲法</td><td>全部回って戻るそこそこ短いルート</td><td>最適とはかぎらない</td><td>なし</td><td>第9回</td></tr>
-          <tr><td>bitDP</td><td>全部回って戻る最短ルート</td><td>必ず最適</td><td>2次元リストの表</td><td>第10回</td></tr>
-        </table>
-        <p style="margin-top:0.8rem"><strong>問い1:</strong>
-        <strong>すべての辺の重みが同じとき</strong>、2つは同じ答えを出します。
-        重みがすべて1なら、コストの合計はそのまま辺の数と同じ値になるからです。
-        第7回で確かめたとおり、幅優先探索は<strong>ダイクストラ法の特別な場合</strong>だと言えます。
-        同じ答えが出るなら、優先度付きキューを使わない幅優先探索のほうが簡単で速いので、そちらを選びます。</p>
-        <p style="margin-top:0.8rem"><strong>問い2:</strong>
-        <strong>解ける大きさがまったく違うから</strong>です。
-        例題3では、12都市で全探索に約8秒かかったのに対し、bitDP は0.01秒ほどで、数百倍の差がつきました。
-        さらに14都市・16都市では全探索が終わらず、bitDP だけが答えを出せています。
-        第10回の例題4では bitDP が20都市を5.9秒で解きましたが、
-        同じ20都市を全探索で解くには約12京通りを試すことになり、一生かかっても終わりません。
-        「同じ答えを、はるかに大きい問題で出せる」ことが bitDP を学ぶ意味です。</p>
-        <p style="margin-top:0.8rem"><strong>問い3:</strong>
-        自由に書いてよい問いです。次のような書き方が考えられます。</p>
-        <p style="margin-top:0.4rem">「いちばんおもしろいと思ったのは bitDP です。
-        全探索が『順番』を全部試すのに対し、bitDP は『順番』ではなく『どこを回ったかという集合』だけを覚えます。
-        順番という情報を捨てることで、調べる量が (n-1)! から 2ⁿ×n に減るという点が意外でした。
-        情報を減らしたほうが速くなるという考え方は、ほかの問題にも使えそうだと感じました。」</p>"""),
+        <p style="margin-top:0.6rem">12都市で貪欲法は 80.5 ÷ 73.1 ＝ 約10%長くなっています。</p>
+        <p style="margin-top:0.8rem"><strong>問い2</strong>は答えが1つに決まりません。
+        3つの問い（問題の種類／重みに差があるか／最適解が必要か）に沿って書けているかを見ます。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "後期の全体像", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("11", SLIDES),
+    rubric_section("11"),
     ans,
 ])
 

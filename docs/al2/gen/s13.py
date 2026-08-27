@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """第13回: 実践的課題（1）設計と実装 の本文を組み立てる。"""
-from common import (AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 
 # ────────────────────────────────────────────────────────────
@@ -91,17 +93,12 @@ NAV = [
     "提出 #sec-submission",
     "進め方 #sec-explanation",
     "テンプレート #sec-examples",
-    "課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "実行確認", "テンプレート3つを動かす"),
-    ("#sec-standard", "tag-standard", "課題1", "設計シートを書く"),
-    ("#sec-standard", "tag-standard", "課題2", "動く最小版を作る"),
-    ("#sec-standard", "tag-standard", "課題2", "実行結果を記録する"),
-], 4)
+sub = slide_submission("13")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第13回と第14回は、<strong>自分でテーマを決めた作品づくり</strong>に取り組みます。
@@ -227,158 +224,26 @@ examples = f"""    <p style="margin-bottom:1.5rem">3つのテンプレートと�
 
 {example(4, '作品に使える部品集', ex4_body)}"""
 
-std1_body = """      <p>作りたい作品の<strong>設計シート</strong>をNotionに書きます。
-      次の7項目をすべて埋めてください。書けない項目があれば、テーマを見直す合図です。</p>
-
-      <table>
-        <tr><th>項目</th><th>書くこと</th></tr>
-        <tr><td>作品の名前</td><td>短くて分かりやすい名前</td></tr>
-        <tr><td>どんな作品か</td><td>2〜3行で説明する</td></tr>
-        <tr><td>入力</td><td>プログラムが受け取るもの（何を、どんな形で）</td></tr>
-        <tr><td>出力</td><td>プログラムが表示するもの</td></tr>
-        <tr><td>使うアルゴリズム</td><td>後期に学んだものから1つ以上</td></tr>
-        <tr><td>なぜそれを使うか</td><td>ほかの方法ではだめな理由を書く</td></tr>
-        <tr><td>作れたら足したいこと</td><td>2つ以上（最小版には入れない）</td></tr>
-      </table>
-
-      <div class="note-warn">
-        <strong>いちばん大切な項目:</strong> 「なぜそのアルゴリズムを使うか」です。
-        「重みに差があるからダイクストラ法」「順番を決める問題で都市が少ないから全探索」のように、
-        <strong>第11回の3つの問い</strong>（どんな問題か／重みに差があるか／最適解が必要か）に沿って書いてください。
-      </div>
-
-      <p style="margin-top:1rem"><strong>テーマが決まらない場合:</strong>
-      3つのテンプレートのどれかを選び、「ステージを自分で作る」「配達先を自分の町にする」など、
-      中身を自分のものに置きかえるだけでもかまいません。
-      その場合も、7項目すべてを自分の言葉で書いてください。</p>
-"""
-
-std2_body = """      <p>設計シートをもとに、<strong>動く最小版</strong>を作ります。
-      第13回の時間内に完成しなくてもかまいません。<strong>動くところまで</strong>を提出してください。</p>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>テンプレートを1つ選んでコピーし、<code>AL2-13-work.py</code> という名前で保存する</li>
-          <li>設計シートの「入力」と「出力」にあたる部分を、自分の作品に書き換える</li>
-          <li>1か所書き換えるたびに<strong>実行して確かめる</strong>（まとめて書き換えない）</li>
-          <li>動いたら、実行結果をコピーしてNotionに貼る</li>
-          <li>まだできていないことを「残っていること」として書き出す</li>
-        </ol>
-      </div>
-
-      <div class="note-warn">
-        <strong>行きづまったときのコツ:</strong>
-        <ul style="padding-left:1.2rem;margin-top:0.5rem;font-size:0.92rem;line-height:1.9">
-          <li>エラーが出たら、<strong>いちばん下の行</strong>を読む。何行目で何が起きたかが書いてある</li>
-          <li><code>print()</code> を途中に入れて、変数の中身を見る</li>
-          <li>大きく書き換えず、動いていたところまで戻して、少しずつやり直す</li>
-          <li>テンプレートのどの部分が何をしているか分からなくなったら、その行を消して実行してみる</li>
-        </ul>
-      </div>
-
-      <p style="margin-top:1rem"><strong>Notionに書くこと:</strong></p>
-      <ul class="point-list">
-        <li>書き換えたコード（全部）</li>
-        <li>実行結果（コピーして貼る）</li>
-        <li>いま動いていること（3つ以上）</li>
-        <li>まだ動いていないこと・残っていること（2つ以上）</li>
-        <li>つまずいた点と、どう解決したか（解決していなければ、それも書く）</li>
-      </ul>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">課題1と課題2に取り組み、解答をNotionに記録してください。
-    第14回で仕上げるので、第13回では<strong>完成させなくてかまいません</strong>。</p>
-
-{standard(1, '設計シートを書く', std1_body)}
-{notion('7項目すべてを埋めた設計シート。とくに「なぜそのアルゴリズムを使うか」は3行以上で書く。')}
-
-{standard(2, '動く最小版を作る', std2_body)}
-{notion('書き換えたコード、実行結果、動いていること3つ以上、残っていること2つ以上、つまずいた点とその対応。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第13回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>テンプレートの実行確認</strong>: 3つのテンプレートを動かした結果（画面のコピーでよい）</li>
-        <li><strong>課題1</strong>: 設計シート（7項目）</li>
-        <li><strong>課題2</strong>: 書き換えたコードと実行結果</li>
-        <li><strong>課題2</strong>: 動いていること・残っていること・つまずいた点</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-      <div class="note-warn" style="margin-top:1rem">
-        <strong>第14回の準備:</strong> 作りかけの <code>AL2-13-work.py</code> は消さずに残してください。
-        第14回では、そのファイルをテストして仕上げ、レポートにまとめます。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("課題1: 設計シートの記入例", """        <p>正解が1つに決まる課題ではありません。次は、テンプレートAをもとにした記入例です。</p>
+    ("つまずいたときの調べ方", """        <p>作品は人によって違うので、数値の正解はありません。
+        よくあるつまずきと、その調べ方を挙げます。</p>
         <table>
-          <tr><th>項目</th><th>記入例</th></tr>
-          <tr><td>作品の名前</td><td>沼をよけろ！コスト迷路</td></tr>
-          <tr><td>どんな作品か</td><td>マスごとに通る時間が違う迷路で、プレイヤーが道を選ぶ。選んだ道の合計時間と、コンピュータが求めた最短時間を比べて100点満点で採点する。ステージは3つ。</td></tr>
-          <tr><td>入力</td><td>プレイヤーが選んだ道を、D（下）R（右）U（上）L（左）の文字列で受け取る。例: <code>"DDRRDR"</code></td></tr>
-          <tr><td>出力</td><td>プレイヤーの合計秒数、最短の合計秒数、スコア（100点満点）、2つの道を書き込んだ迷路の絵</td></tr>
-          <tr><td>使うアルゴリズム</td><td>ダイクストラ法</td></tr>
-          <tr><td>なぜそれを使うか</td><td>マスごとに通り抜ける時間が1秒・5秒・9秒と違うので、重み付きグラフの最短経路問題になる。幅優先探索は歩数しか見ないため、沼を通る道を最短だと判断してしまう。重みが0以上なので、ダイクストラ法が使える。都市を回る問題ではないので、全探索や貪欲法は当てはまらない。</td></tr>
-          <tr><td>作れたら足したいこと</td><td>①ステージを3つに増やす　②制限時間を付ける　③スコアをファイルに保存してランキングを出す</td></tr>
+          <tr><th>症状</th><th>まず見るところ</th></tr>
+          <tr><td><code>IndexError: list index out of range</code></td><td>迷路の行の長さがそろっているか。すべての行を同じマス数にする</td></tr>
+          <tr><td><code>KeyError</code></td><td>辞書にない名前を使っていないか。両方向とも書いたか（「新宿」側だけ書いていないか）</td></tr>
+          <tr><td><code>TypeError</code></td><td>文字列と数を足していないか。<code>input()</code> の結果は文字列なので <code>int()</code> が要る</td></tr>
+          <tr><td>答えがおかしい</td><td>途中に <code>print()</code> を入れて変数の中身を見る（第14回の例題2のやり方）</td></tr>
+          <tr><td>ゴールに着かない</td><td>幅優先探索で全マスに届くか先に確かめる。壁で分断されていないか</td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>よくないシートの例と直し方:</strong></p>
-        <ul class="point-list">
-          <li><span style="color:#FF5252">「ダイクストラ法を使うから」</span>だけでは理由になりません。<strong>ほかの方法ではだめな理由</strong>を書いてください。</li>
-          <li><span style="color:#FF5252">「入力: いろいろ」</span>のような書き方では、何を作ればよいか決まりません。<strong>形（文字列か、数か、リストか）</strong>まで書いてください。</li>
-          <li><span style="color:#FF5252">「作れたら足したいこと」が空</span>の場合、最小版と完成版の区別ができていません。最小版を小さくするために、あとで足すものを先に分けておきます。</li>
-        </ul>"""),
-    ("課題2: 進め方のヒント", """        <p>コードそのものは人によって違うので、ここでは進め方の例を示します。</p>
-        <p style="margin-top:0.6rem"><strong>テンプレートAを自分の作品にする手順の例:</strong></p>
-        <ol style="padding-left:1.5rem;font-size:0.95rem;line-height:2;color:#ccc">
-          <li><code>AL2-13-ex1.py</code> をコピーして <code>AL2-13-work.py</code> という名前で保存し、まず<strong>そのまま実行</strong>する（動くことを確かめる）</li>
-          <li><code>cost_map</code> を自分のステージに書き換えて実行する（迷路の絵が変わることを確かめる）</li>
-          <li><code>player_moves</code> を書き換えて実行する（スコアが変わることを確かめる）</li>
-          <li>「ステージを選べるようにする」など、足したいことを<strong>1つだけ</strong>足して実行する</li>
-          <li>動いたら、また1つ足す</li>
-        </ol>
-        <p style="margin-top:0.8rem"><strong>「ステージを3つにする」を足す例:</strong></p>
-<pre><span class="code-label">Python ── 書き足す部分</span>
-<span class="cmt"># ステージを3つ用意する（リストのリストのリストになる）</span>
-stages = [
-    [[<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>], [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>], [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>]],
-    [[<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>], [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>], [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>]],
-    [[<span class="num">1</span>, <span class="num">5</span>, <span class="num">5</span>], [<span class="num">5</span>, <span class="num">1</span>, <span class="num">5</span>], [<span class="num">5</span>, <span class="num">5</span>, <span class="num">1</span>]],
-]
-
-stage_number = <span class="num">1</span>              <span class="cmt"># 1、2、3 のどれか</span>
-cost_map = stages[stage_number - <span class="num">1</span>]</pre>
-        <p style="margin-top:0.8rem"><strong>「動いていること」の書き方の例:</strong></p>
-        <ul class="point-list">
-          <li>自分で作った8×8のステージが表示される</li>
-          <li>プレイヤーの道の合計秒数が正しく計算される</li>
-          <li>最短の道がダイクストラ法で求まり、スコアが表示される</li>
-        </ul>
-        <p style="margin-top:0.6rem"><strong>「残っていること」の書き方の例:</strong></p>
-        <ul class="point-list">
-          <li>ステージがまだ1つしかない（3つにしたい）</li>
-          <li>道が迷路の外に出たときのメッセージが不親切</li>
-        </ul>
-        <p style="margin-top:0.6rem"><strong>つまずいた点の書き方の例:</strong>
-        「<code>IndexError: list index out of range</code> が出た。
-        <code>cost_map</code> の行の長さがそろっていなかったことが原因だった。
-        すべての行を8マスにそろえたら直った。」</p>
-        <p style="margin-top:0.6rem">エラーの内容と原因と対応を書いておくと、第14回のレポートにそのまま使えます。</p>"""),
+        <p style="margin-top:0.8rem">エラーが出たら、<strong>いちばん下の行</strong>から読んでください。
+        その1つ上に、何行目で起きたかが書いてあります。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "作品づくりの進め方", explanation),
     section("sec-examples", "2", "テンプレートと部品", examples),
-    section("sec-standard", "3", "課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("13", SLIDES),
+    rubric_section("13"),
     ans,
 ])
 

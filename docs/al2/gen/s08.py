@@ -2,9 +2,11 @@
 """第8回: 巡回セールスマン問題（1）概要 の本文を組み立てる。"""
 import math
 from itertools import permutations
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 CITIES = [("学校", 2, 2), ("郵便局", 10, 3), ("図書館", 14, 9),
           ("カフェ", 6, 12), ("公園", 3, 8), ("駅", 17, 4),
@@ -210,17 +212,12 @@ NAV = [
     "提出 #sec-submission",
     "巡回セールスマン問題 #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の24通り"),
-    ("#sec-examples", "tag-example", "観察記録", "例題3の時間の増え方"),
-    ("#sec-standard", "tag-standard", "標準課題1", "4都市を手で解く"),
-    ("#sec-standard", "tag-standard", "標準課題2", "都市を増やすと？"),
-], 4)
+sub = slide_submission("08")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第5回から第7回まででは、<strong>2地点のあいだ</strong>の最短経路を求めました。
@@ -366,101 +363,10 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '最短ルートの中身を区間ごとに見る', ex4_body)}"""
 
-std1_body = """      <p>次の4つの都市について、<strong>プログラムを使わずに紙と鉛筆で</strong>すべてのルートの長さを計算し、
-      いちばん短いルートを求めてください。</p>
-
-      <table>
-        <tr><th>番号</th><th>都市</th><th>x</th><th>y</th></tr>
-        <tr><td>0</td><td>学校（出発点）</td><td>0</td><td>0</td></tr>
-        <tr><td>1</td><td>郵便局</td><td>4</td><td>0</td></tr>
-        <tr><td>2</td><td>図書館</td><td>4</td><td>3</td></tr>
-        <tr><td>3</td><td>カフェ</td><td>0</td><td>3</td></tr>
-      </table>
-
-      <p>4つの都市は長方形の4すみに並んでいます。距離は次のとおりです。</p>
-      <table>
-        <tr><th>区間</th><th>距離</th><th>区間</th><th>距離</th></tr>
-        <tr><td>0 ─ 1</td><td>4</td><td>1 ─ 2</td><td>3</td></tr>
-        <tr><td>0 ─ 2</td><td>5</td><td>1 ─ 3</td><td>5</td></tr>
-        <tr><td>0 ─ 3</td><td>3</td><td>2 ─ 3</td><td>4</td></tr>
-      </table>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>0番から出発して1・2・3を回り、0番へ戻るルートは全部で何通りかを書く</li>
-          <li>すべてのルートの合計距離を手で計算して表にする</li>
-          <li>いちばん短いルートと、その合計距離を答える</li>
-          <li>例題2のコードの <code>cities</code> を上の4都市に書き換え、<code>permutations([1, 2, 3])</code> に直して実行し、答え合わせをする</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>ルート</th><th>合計距離（手で計算）</th></tr>
-        <tr><td>0 → 1 → 2 → 3 → 0</td><td></td></tr>
-        <tr><td>0 → 1 → 3 → 2 → 0</td><td></td></tr>
-        <tr><td>0 → 2 → 1 → 3 → 0</td><td></td></tr>
-        <tr><td>0 → 2 → 3 → 1 → 0</td><td></td></tr>
-        <tr><td>0 → 3 → 1 → 2 → 0</td><td></td></tr>
-        <tr><td>0 → 3 → 2 → 1 → 0</td><td></td></tr>
-      </table>
-"""
-
-std2_body = """      <p>例題3のプログラムを使わずに、<strong>計算だけで</strong>次の問いに答えてください。</p>
-
-      <div class="setup-step">
-        <p class="step-title">問い1</p>
-        <p style="font-size:0.95rem;color:#ccc">都市が12個のとき、試す順番は 39,916,800 通りでした。
-        都市が13個になると何通りになりますか。計算式も書いてください。</p>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">問い2</p>
-        <p style="font-size:0.95rem;color:#ccc">12都市の全探索に8.7秒かかったとします。
-        13都市では何秒くらいかかると予想できますか。14都市ではどうですか。理由も書いてください。</p>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">問い3</p>
-        <p style="font-size:0.95rem;color:#ccc">実際に <code>AL2-08-ex3.py</code> の <code>for count in [5, 8, 10, 11, 12]:</code> を
-        <code>for count in [5, 8, 10, 11, 12, 13]:</code> に書き換えて実行し、13都市にかかった実際の時間を記録してください。
-        （<code>all_cities</code> に都市を1つ足す必要があります。好きな名前と位置で足してください。）
-        予想と実際を比べ、合っていたかを書いてください。</p>
-      </div>
-
-      <p style="margin-top:1rem"><strong>問い4:</strong> 宅配便の配送センターが1日に回る配達先は、20軒を超えることもあります。
-      全探索が使えないとき、どうすればよいと思いますか。自分の考えを書いてください（正解はありません）。</p>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
-
-{standard(1, '4都市の巡回セールスマン問題を手で解く', std1_body)}
-{notion('6通りのルートの合計距離の表、いちばん短いルートと合計距離、プログラムでの答え合わせの結果。')}
-
-{standard(2, '都市が増えたときの時間を予想する', std2_body)}
-{notion('問い1の計算式と答え、問い2の予想と理由、問い3の実測値と予想との比較、問い4の自分の考え。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第8回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 最短と最長のルートと距離、同じ形のルートが2つずつある理由</li>
-        <li><strong>例題3</strong>: 都市の数ごとの順番の数と時間、1都市増えたときの倍率</li>
-        <li><strong>標準課題1</strong>: 6通りの合計距離の表、最短ルート、答え合わせ</li>
-        <li><strong>標準課題2</strong>: 問い1〜問い4への解答</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
 ans = answers([
-    ("標準課題1: 4都市の答え", """        <p>ルートは <strong>3! = 3 × 2 × 1 = 6通り</strong>あります。</p>
+    ("確かめ用の数値", """        <p><strong>問い1（長方形の4すみ・手計算）</strong></p>
         <table>
-          <tr><th>ルート</th><th>計算</th><th>合計距離</th></tr>
+          <tr><th>ルート</th><th>計算</th><th>合計</th></tr>
           <tr><td>0 → 1 → 2 → 3 → 0</td><td>4 + 3 + 4 + 3</td><td><strong style="color:#76B900">14</strong></td></tr>
           <tr><td>0 → 1 → 3 → 2 → 0</td><td>4 + 5 + 4 + 5</td><td>18</td></tr>
           <tr><td>0 → 2 → 1 → 3 → 0</td><td>5 + 3 + 5 + 3</td><td>16</td></tr>
@@ -468,49 +374,17 @@ ans = answers([
           <tr><td>0 → 3 → 1 → 2 → 0</td><td>3 + 5 + 3 + 5</td><td>16</td></tr>
           <tr><td>0 → 3 → 2 → 1 → 0</td><td>3 + 4 + 3 + 4</td><td><strong style="color:#76B900">14</strong></td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>いちばん短いルート: 14</strong>（「0 → 1 → 2 → 3 → 0」と、その逆回りの「0 → 3 → 2 → 1 → 0」）。</p>
-        <p style="margin-top:0.6rem">長方形の4すみを、外側の辺に沿って一周する形が最短になります。
-        合計は長方形のまわりの長さ（4 + 3 + 4 + 3 = 14）と同じです。</p>
-        <p style="margin-top:0.6rem">18になる2つのルートは、長方形の対角線を2回わたる形です。
-        対角線は5で辺より長いので、対角線を使うほど合計が増えます。
-        16になる2つは、対角線を2回使いながらも短い辺を通っており、その中間になっています。</p>
-        <p style="margin-top:0.6rem"><strong>ルートが交差しないほうが短い</strong>という性質は、巡回セールスマン問題で一般に成り立ちます。
-        地図の上でルートが交差していたら、その部分を入れかえると必ず短くなります。</p>"""),
-    ("標準課題2: 都市が増えたときの時間", """        <p><strong>問い1:</strong> 13都市の順番の数は <code>12! = 479,001,600 通り</code>です。</p>
-        <p style="margin-top:0.4rem">計算式: 12都市のときが <code>11! = 39,916,800</code> なので、
-        13都市は <code>12! = 11! × 12 = 39,916,800 × 12 = 479,001,600</code> となります。
-        都市が1つ増えると、順番の数は<strong>(都市の数 − 1) 倍</strong>になります。</p>
-        <p style="margin-top:0.8rem"><strong>問い2:</strong></p>
-        <ul class="point-list">
-          <li>13都市: 8.7秒 × 12 = <strong>約104秒（1分44秒）</strong></li>
-          <li>14都市: 104秒 × 13 = <strong>約1,352秒（22分32秒）</strong></li>
-        </ul>
-        <p style="margin-top:0.4rem">理由: 1つのルートを調べるのにかかる時間はほぼ同じなので、
-        かかる時間は「調べるルートの数」に比例します。
-        ルートの数が12倍になれば、時間も12倍になります。</p>
-        <p style="margin-top:0.8rem"><strong>問い3:</strong> 実際に測ると、13都市はおよそ100〜130秒でした（パソコンにより異なります）。
-        予想の104秒とほぼ一致します。
-        1つのルートあたりの処理が都市の数だけ長くなるぶん、予想より少しだけ長くかかる傾向があります。</p>
-        <p style="margin-top:0.8rem"><strong>問い4（考え方の例）:</strong>
-        正解のない問いなので、次のような答えが考えられます。</p>
-        <ul class="point-list">
-          <li><strong>そこそこ良い答えで手を打つ:</strong> 必ずしも最短でなくてよいなら、
-          「近い都市から順に回る」ような簡単なやり方で、まあまあ短いルートを一瞬で作れます（第9回であつかう貪欲法）。</li>
-          <li><strong>都市をグループに分ける:</strong> 20軒を「北エリア10軒」「南エリア10軒」に分けて別々に解けば、
-          それぞれ10都市の問題になり、全探索でも終わります。</li>
-          <li><strong>問題の形を変える:</strong> 実際の宅配便では時間指定があるため、
-          回る順番がある程度決まっています。自由に選べる部分だけを最適化すれば済みます。</li>
-        </ul>
-        <p style="margin-top:0.6rem">第9回では「そこそこ良い答えを一瞬で出す」貪欲法を、
-        第10回では「都市が少なければ必ず最適解を出す」動的計画法を学びます。</p>"""),
+        <p style="margin-top:0.6rem">最短は14で、長方形の外周を一周する形です。
+        ルートが交差しているものほど長くなります。</p>
+        <p style="margin-top:0.8rem"><strong>問い2の根拠</strong>: 20軒なら 19! ＝ 約12京通り。
+        12都市の約4000万通りに約9秒かかったので、同じ速さでも<strong>約800年</strong>かかります。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "巡回セールスマン問題とは", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("08", SLIDES),
+    rubric_section("08"),
     ans,
 ])
 

@@ -2,9 +2,11 @@
 """第9回: 巡回セールスマン問題（2）貪欲法による近似 の本文を組み立てる。"""
 import math
 from itertools import permutations
-from common import (AMBER, GRAY, GREEN, RED, answers, code, example, fig,
+from slides_data import SLIDES
+from common import (slide_submission, slides_for, rubric_section,
+                    AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
-                    standard, submission, write)
+                    standard, write)
 
 CITIES = [("学校", 2, 2), ("郵便局", 10, 3), ("図書館", 14, 9),
           ("カフェ", 6, 12), ("公園", 3, 8), ("駅", 17, 4),
@@ -192,17 +194,12 @@ NAV = [
     "提出 #sec-submission",
     "貪欲法とは #sec-explanation",
     "例題 #sec-examples",
-    "標準課題 #sec-standard nav-assignment",
-    "提出まとめ #sec-notion",
+    "課題 #sec-slides nav-assignment",
+    "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
 
-sub = submission([
-    ("#sec-examples", "tag-example", "観察記録", "例題2の差と速さ"),
-    ("#sec-examples", "tag-example", "観察記録", "例題4の失敗のしかた"),
-    ("#sec-standard", "tag-standard", "標準課題1", "出発点を変えると？"),
-    ("#sec-standard", "tag-standard", "標準課題2", "貪欲法の弱点を説明"),
-], 4)
+sub = slide_submission("09")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第8回で確かめたとおり、巡回セールスマン問題は都市が増えると全探索が使えなくなります。
@@ -340,175 +337,28 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '貪欲法が大きく損をする配置', ex4_body)}"""
 
-std1_body = """      <p>例題4のファイル <code>AL2-09-ex4.py</code> を開き、<strong>出発点を変えて</strong>貪欲法を動かします。
-      いちばん下の行を次のように書き換えると、営業所以外からも出発できます。</p>
-
-<pre><span class="code-label">Python ── 書き足す行（ファイルの末尾に追加）</span>
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">"出発点を変えたときの貪欲法の答え"</span>)
-<span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
-    route, total, steps = <span class="fn">greedy</span>(start)
-    <span class="fn">print</span>(<span class="str">" "</span>, houses[start][<span class="num">0</span>], <span class="str">"から出発:"</span>, <span class="fn">round</span>(total, <span class="num">1</span>))</pre>
-
-      <div class="setup-step">
-        <p class="step-title">やること</p>
-        <ol>
-          <li>実行する<strong>前に</strong>、6つの出発点それぞれで貪欲法の答えがどうなるかを予測してNotionに書く（数値でなく「32.7に近い／46.6に近い」でよい）</li>
-          <li>上の3行を <code>AL2-09-ex4.py</code> の末尾に書き足して保存し、実行する</li>
-          <li>6つの結果を表にまとめる</li>
-          <li>いちばん良かった出発点といちばん悪かった出発点を答える</li>
-        </ol>
-      </div>
-
-      <table>
-        <tr><th>出発点</th><th>予測</th><th>実際の合計距離</th><th>最短(32.7)との差</th></tr>
-        <tr><td>営業所</td><td></td><td>46.6</td><td>13.9</td></tr>
-        <tr><td>A宅</td><td></td><td></td><td></td></tr>
-        <tr><td>遠方のD宅</td><td></td><td></td><td></td></tr>
-        <tr><td>B宅</td><td></td><td></td><td></td></tr>
-        <tr><td>E宅</td><td></td><td></td><td></td></tr>
-        <tr><td>C宅</td><td></td><td></td><td></td></tr>
-      </table>
-
-      <p style="margin-top:1rem"><strong>問い:</strong> 遠方のD宅から出発したときの結果は、ほかの出発点と比べてどうでしたか。
-      なぜそうなるのかを、貪欲法の進み方と結びつけて説明してください。</p>
-"""
-
-std2_body = """      <p>例題1から例題4までの結果をもとに、貪欲法についての説明をまとめます。
-      Notionに次の4つの見出しを作り、それぞれ3行以上で書いてください。</p>
-
-      <div class="setup-step">
-        <p class="step-title">見出し1: 貪欲法の手順</p>
-        <p style="font-size:0.95rem;color:#ccc">巡回セールスマン問題に貪欲法を使うとき、何をくり返すのかを、
-        プログラムを見ていない人にも分かるように説明してください。</p>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">見出し2: 貪欲法の長所</p>
-        <p style="font-size:0.95rem;color:#ccc">例題2で測った時間と、第8回で測った全探索の時間を根拠として挙げてください。</p>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">見出し3: 貪欲法の短所</p>
-        <p style="font-size:0.95rem;color:#ccc">例題4の結果を根拠として、
-        「局所最適」という言葉を使って説明してください。</p>
-      </div>
-
-      <div class="setup-step">
-        <p class="step-title">見出し4: 貪欲法を使ってよい場面・使ってはいけない場面</p>
-        <p style="font-size:0.95rem;color:#ccc">次の3つの場面それぞれについて、
-        貪欲法で足りるか、最適解が必要かを理由つきで答えてください。</p>
-        <ul style="padding-left:1.5rem;font-size:0.92rem;line-height:1.9;color:#ccc">
-          <li>場面A: 宅配便のドライバーが、その日の30軒の配達順をスマートフォンで決める</li>
-          <li>場面B: 工場のドリルが、毎日同じ200か所の穴をあけ続ける（1回決めれば10年使う）</li>
-          <li>場面C: 修学旅行の班別行動で、5か所を回る順番を決める</li>
-        </ul>
-      </div>
-"""
-
-standard_sec = f"""    <p style="margin-bottom:1.5rem">標準課題1と標準課題2に取り組み、解答をNotionに記録してください。</p>
-
-{standard(1, '出発点を変えると貪欲法の答えはどう変わるか', std1_body)}
-{notion('6つの出発点についての予測と実際の表、いちばん良かった出発点と悪かった出発点、および「遠方のD宅から出発したとき」の考察。')}
-
-{standard(2, '貪欲法について説明する', std2_body)}
-{notion('見出し1〜見出し4のそれぞれについて、3行以上の説明。見出し4は場面A・B・Cすべてに答える。')}"""
-
-notion_sec = """    <div class="card" style="border-left:4px solid #FFB800">
-      <div class="card-header">
-        <span class="tag tag-advanced">提出まとめ</span>
-        <h3>Notionに記録して、PDFでManabaに提出する</h3>
-      </div>
-      <p>第9回の提出物は次の4項目です。Notionに見出しを付けて順番に記録してください。</p>
-      <ul class="point-list">
-        <li><strong>例題2</strong>: 距離・時間・順番の数の表、入れかわっている都市</li>
-        <li><strong>例題4</strong>: 貪欲法の進み方6行、遠方のD宅が最後に残る理由</li>
-        <li><strong>標準課題1</strong>: 6つの出発点の予測と実際、遠方のD宅から出発した場合の考察</li>
-        <li><strong>標準課題2</strong>: 見出し1〜4の説明</li>
-      </ul>
-      <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:0.3rem;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.8rem;color:#93D500">
-        <strong>Notionに書いただけでは提出になりません。</strong>必ずPDFに書き出し、Manabaに提出してください。
-      </div>
-    </div>"""
-
-_g = {}
-for _s in range(len(HOUSES)):
-    _r, _t = greedy(HOUSES, _s)
-    _g[HOUSES[_s][0]] = round(_t, 1)
-_opt_h = round(optimal(HOUSES)[1], 1)
-_rows = "\n".join(
-    f'          <tr><td>{name}</td><td>{v}</td><td>{round(v-_opt_h,1)}</td></tr>'
-    for name, v in _g.items())
-
 ans = answers([
-    ("標準課題1: 出発点を変えたときの結果", f"""        <table>
-          <tr><th>出発点</th><th>合計距離</th><th>最短({_opt_h})との差</th></tr>
-{_rows}
+    ("確かめ用の数値", """        <p><strong>問い2（出発点を変えたとき）</strong></p>
+        <table>
+          <tr><th>出発点</th><th>合計距離</th><th>最短(32.7)との差</th></tr>
+          <tr><td>営業所</td><td>46.6</td><td>13.9</td></tr>
+          <tr><td>A宅</td><td>33.9</td><td>1.2</td></tr>
+          <tr><td>遠方のD宅</td><td><strong style="color:#76B900">32.7</strong></td><td>0.0</td></tr>
+          <tr><td>B宅</td><td><strong style="color:#76B900">32.7</strong></td><td>0.0</td></tr>
+          <tr><td>E宅</td><td>41.4</td><td>8.7</td></tr>
+          <tr><td>C宅</td><td>39.4</td><td>6.7</td></tr>
         </table>
-        <p style="margin-top:0.8rem"><strong>いちばん良かった出発点:</strong> 遠方のD宅 と B宅（どちらも {min(_g.values())} で、全探索の最短と一致）<br>
-        <strong>いちばん悪かった出発点:</strong> {max(_g, key=_g.get)}（{max(_g.values())}）</p>
-        <p style="margin-top:0.6rem"><strong>遠方のD宅から出発したときの考察:</strong>
-        遠方のD宅から出発すると、答えは {min(_g.values())} となり、全探索で求めた最短と完全に一致しました。
-        営業所から出発した46.6と比べて、13.9も短くなっています。</p>
-        <p style="margin-top:0.6rem">理由は、貪欲法が損をするパターンが起きないからです。
-        貪欲法が損をするのは<strong>遠い場所を最後まで残してしまい、そこへ行って戻る往復で大きく損をする</strong>ときです。
-        営業所から出発した場合、D宅は最後まで残され、E宅→D宅（14.9）とD宅→営業所（12.5）の2回で27.4もかかりました。
-        D宅そのものを出発点にすると、D宅への長い移動は<strong>帰りの1回だけ</strong>になり、往復にならずに済みます。</p>
-        <p style="margin-top:0.6rem">B宅から出発したときも同じ32.7になっています。
-        B宅はD宅にいちばん近い家なので、貪欲法が早い段階でD宅へ向かう形になり、やはり取り残しが起きません。</p>
-        <p style="margin-top:0.6rem">貪欲法の弱点は「遠い場所を後回しにしてしまうこと」です。
-        遠い場所そのものを出発点にすると、その弱点が出にくくなります。
-        ただし、どの出発点が良いかは<strong>実際に試してみないと分かりません</strong>。
-        だからこそ、例題3のように「すべての出発点で試して、いちばん良い答えを採用する」やり方が有効になります。</p>"""),
-    ("標準課題2: 貪欲法についての説明", """        <p><strong>見出し1: 貪欲法の手順</strong></p>
-        <p style="margin-top:0.4rem">出発する場所を1つ決めます。そこから、まだ行っていない場所のうち
-        <strong>いま自分がいる場所からいちばん近い場所</strong>を選んで移動します。
-        移動したら、そこを新しい「いまいる場所」として、同じことをくり返します。
-        行っていない場所がなくなったら、最後に出発点へ戻ります。
-        先のことは一切考えず、そのときいちばん近い場所を選び続けるだけです。</p>
-
-        <p style="margin-top:0.8rem"><strong>見出し2: 貪欲法の長所</strong></p>
-        <p style="margin-top:0.4rem">とにかく速いことです。
-        例題2の8都市では、全探索が5,040通りを調べて0.00089秒かかったのに対し、
-        貪欲法は0.000006秒で、およそ<strong>150倍</strong>速く終わりました。
-        差は都市が増えるほど広がります。第8回で確かめたように、全探索は12都市で8.7秒、
-        15都市では約5時間かかりますが、貪欲法は1000都市でも一瞬で終わります。
-        調べる手数が (n-1)! 通りから n×n 程度に減るためです。</p>
-
-        <p style="margin-top:0.8rem"><strong>見出し3: 貪欲法の短所</strong></p>
-        <p style="margin-top:0.4rem">最短ルートを見つけるとはかぎらないことです。
-        例題4では、貪欲法の答えが46.6で、本当の最短32.7より<strong>42.5%も長く</strong>なりました。
-        原因は、貪欲法が1歩先しか見ていないことです。
-        近い家から順に回った結果、遠方のD宅だけが最後に取り残され、
-        そこへ行って戻るだけで27.4もかかってしまいました。
-        「その時点ではいちばん近い家を選んだ」という判断は部分的には正しいのに、
-        全体では損をしています。この状態を<strong>局所最適</strong>と呼びます。</p>
-
-        <p style="margin-top:0.8rem"><strong>見出し4: 使ってよい場面・使ってはいけない場面</strong></p>
-        <ul class="point-list">
-          <li><strong>場面A（30軒の配達順をその場で決める）: 貪欲法で足りる。</strong>
-          30軒の全探索は 29! 通りで、まったく終わりません。
-          出発前の数秒で答えを出す必要があるので、多少長くても速く出せることが優先されます。
-          例題3のように複数の出発点で試して、いちばん良いものを選べばさらに良くなります。</li>
-          <li><strong>場面B（200か所を10年使い続ける）: 最適解を求めるべき。</strong>
-          1回決めれば長く使うので、計算に何時間かけても割に合います。
-          10%短くなれば、10年ぶんの電気代と作業時間がそれだけ減ります。
-          200都市では全探索は使えないので、第10回で学ぶ動的計画法や、
-          専用の最適化ソフトを使うことになります。</li>
-          <li><strong>場面C（5か所を回る順番）: どちらでもよい。</strong>
-          5か所なら全探索は24通りしかなく、手で計算しても終わります。
-          必ず最短が求まるので、全探索を選ぶほうが確実です。</li>
-        </ul>
-        <p style="margin-top:0.6rem"><strong>まとめ:</strong>
-        「どれくらいの時間で答えがほしいか」と「最短でなくても許されるか」の2つで決めます。</p>"""),
+        <p style="margin-top:0.6rem">遠方のD宅そのものを出発点にすると、D宅への長い移動が
+        <strong>帰りの1回だけ</strong>になり、往復にならずに済みます。だから最短と一致します。</p>
+        <p style="margin-top:0.8rem"><strong>問い1の根拠</strong>: 営業所から出発すると、
+        E宅 → 遠方のD宅（14.9）と 遠方のD宅 → 営業所（12.5）の2回だけで27.4を使っています。</p>"""),
 ])
-
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "貪欲法とは", explanation),
     section("sec-examples", "2", "例題", examples),
-    section("sec-standard", "3", "標準課題", standard_sec),
-    section("sec-notion", "4", "提出まとめ", notion_sec, color="#FFB800"),
+    slides_for("09", SLIDES),
+    rubric_section("09"),
     ans,
 ])
 

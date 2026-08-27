@@ -102,7 +102,7 @@ body = f"""
       </div>
       <div class="mini-card">
         <h5>評価方法</h5>
-        <p>定期試験なし。毎回の演習課題の提出で100%。Notionに記録し、PDFに書き出してManabaに提出する。</p>
+        <p>定期試験なし。毎回の課題の提出で100%。Googleスライドを1本作り、毎回3枚ずつ足していく。PDFと共有URLをManabaに提出する。</p>
       </div>
     </div>
 
@@ -119,8 +119,8 @@ body = f"""
         <tr><td>1</td><td>ページの上にある<strong>提出ガイド</strong>で、今回の提出物を確かめる</td></tr>
         <tr><td>2</td><td><strong>説明</strong>を読み、図とアニメーションで仕組みをつかむ</td></tr>
         <tr><td>3</td><td><strong>例題</strong>のコードをコピーして自分のパソコンで実行し、実行結果と見比べる</td></tr>
-        <tr><td>4</td><td><strong>標準課題</strong>に取り組み、答えをNotionに記録する</td></tr>
-        <tr><td>5</td><td>NotionをPDFに書き出して<strong>Manabaに提出</strong>する</td></tr>
+        <tr><td>4</td><td><strong>解説スライド3枚</strong>を自分のGoogleスライドに足す</td></tr>
+        <tr><td>5</td><td>PDFに書き出して<strong>Manabaに提出</strong>し、共有URLも貼る</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         解答例は各ページのいちばん下にあります。<strong>次回の授業が始まる時刻に自動で公開</strong>されます。
@@ -178,6 +178,11 @@ body = f"""
         <text x="618" y="124" text-anchor="middle" fill="#888" font-size="10">自分のテーマで作る</text>
         <text x="350" y="180" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">前期は「探す」。後期は「たくさんある選び方の中から、いちばん良い選び方を見つける」</text>
       </svg>
+    </div>
+
+    <div class="recap">
+      評価の観点は各回のページに載せてあります。採点の手順をまとめたページも用意しました →
+      <a href="grading.html" style="color:#93D500">採点ガイド</a>
     </div>
 
     <div class="note-warn">

@@ -2,7 +2,7 @@
 from playwright.sync_api import sync_playwright
 
 BASE = "https://rnmuds.github.io/2026AL/al2/"
-pages = ["index.html"] + [f"session{i:02d}.html" for i in range(1, 16)]
+pages = ["index.html", "grading.html"] + [f"session{i:02d}.html" for i in range(1, 16)]
 
 with sync_playwright() as p:
     b = p.chromium.launch()
