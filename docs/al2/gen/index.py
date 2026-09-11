@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-"""学生に配布する目次ページ（docs/al2/index.html）を組み立てる。"""
+"""授業のトップページ（docs/al2/index.html）を組み立てる。
+出席コードは暗号化して埋め込み、授業時間だけ表示する（attend-gate.js）。"""
+import json
 import pathlib
+import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent.parent
@@ -8,6 +11,15 @@ sys.path.insert(0, str(HERE))
 from build import SESSIONS, ORDER   # noqa: E402
 
 GREEN, AMBER, GRAY = "#76B900", "#FFB800", "#888888"
+
+# 出席用の認証コード（回ごと）。ページには暗号化して埋め込む
+ATTEND_CODES = {
+    "01": "5059", "02": "8128", "03": "4982", "04": "6507", "05": "8827",
+    "06": "1799", "07": "8024", "08": "0472", "09": "3227", "10": "4742",
+    "11": "2281", "12": "2301", "13": "1434", "14": "0869", "15": "8539",
+}
+ATTEND_WINDOW = "14:30-16:30"          # 表示する時間帯（JST）。4限 = 14:40〜16:10
+ATTEND_KEY = "attend-al2-2026"         # attend-gate.js に埋め込んである鍵と同じ
 
 TOPICS = {
     "01": ("復習", "二分探索・幅優先探索・全探索"),
@@ -26,7 +38,6 @@ TOPICS = {
     "14": ("制作", "テスト・デバッグ・レポート"),
     "15": ("まとめ", "焼きなまし法・遺伝的アルゴリズム"),
 }
-
 PHASE_COLOR = {"復習": "#888888", "グラフ": GREEN, "最短経路": GREEN,
                "巡回": AMBER, "整理": "#4FC3F7", "応用": AMBER,
                "制作": "#4FC3F7", "まとめ": GREEN}
@@ -36,6 +47,12 @@ def jp_date(text):
     y, m, d = text.split("-")
     return f"{int(m)}月{int(d)}日"
 
+
+# 出席コードを暗号化する
+payload = json.dumps([{"n": int(n), "date": SESSIONS[n][2], "code": ATTEND_CODES[n]} for n in ORDER],
+                     ensure_ascii=False)
+cipher = subprocess.run(["node", str(HERE / "encrypt-blob.js"), ATTEND_KEY],
+                        input=payload, capture_output=True, text=True, check=True).stdout.strip()
 
 cards = []
 for num in ORDER:
@@ -67,16 +84,47 @@ extra_css = """
 .week-card p { font-size: 0.86rem; color: #999; line-height: 1.7; }
 .week-keywords { margin-top: 0.5rem; font-size: 0.78rem; color: #666; }
 .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.goal-list { list-style: none; padding: 0; counter-reset: goal; }
+.goal-list li { position: relative; padding-left: 2.2rem; margin-bottom: 0.55rem; font-size: 0.95rem; counter-increment: goal; }
+.goal-list li::before { content: counter(goal); position: absolute; left: 0; top: 0.1rem; width: 1.5rem; height: 1.5rem;
+  border-radius: 6px; background: #1a2e0a; color: #93D500; font-weight: 700; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center; }
+.fact-table td:first-child { color: #76B900; font-weight: 700; white-space: nowrap; }
+
+/* 出席コード */
+.attend-box { background: linear-gradient(135deg, #1A1A1A, #1a2e0a); border: 2px solid #76B900;
+  border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin: 1.5rem 0; text-align: center; }
+.attend-box h3 { font-size: 1.05rem; font-weight: 700; color: #76B900; margin-bottom: 0.8rem; }
+.attend-live .attend-label { font-size: 0.95rem; color: #ccc; margin-bottom: 0.4rem; }
+.attend-live .attend-code { font-family: 'JetBrains Mono', monospace; font-size: clamp(2.6rem, 8vw, 4.5rem);
+  font-weight: 700; letter-spacing: 0.25em; color: #fff; line-height: 1.2; }
+.attend-live .attend-note { font-size: 0.85rem; color: #999; margin-top: 0.6rem; }
+.attend-wait { font-size: 0.95rem; color: #ccc; padding: 0.6rem 0; }
+.attend-staff { margin-top: 1rem; font-size: 0.8rem; color: #666; }
+.attend-staff summary { cursor: pointer; }
+.attend-code-small { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #93D500; letter-spacing: 0.1em; }
+#attend-box table { margin: 0.5rem auto 0; max-width: 360px; }
 """
 
 body = f"""
 <header class="hero">
   <div class="container">
-    <div class="hero-badge">2026年度後期 ─ 水曜4限</div>
+    <div class="hero-badge">2026年度後期 ─ 水曜4限 ─ H013情報処理教室</div>
     <h1>アルゴリズム論及び演習II</h1>
     <p>最短経路と最適化のアルゴリズムを、コードを動かしながら学ぶ全15回。担当: 中村 亮太</p>
   </div>
 </header>
+
+<section id="sec-attend" style="padding-top:1.5rem;padding-bottom:0">
+  <div class="container">
+    <div class="attend-box">
+      <h3>出席コード</h3>
+      <div id="attend-box" data-cipher="{cipher}" data-window="{ATTEND_WINDOW}">
+        <div class="attend-wait">読み込み中…</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="sec-about">
   <div class="container">
@@ -86,25 +134,46 @@ body = f"""
     </div>
 
     <p class="lead">
-      前期のアルゴリズム論及び演習Iでは「たくさんのデータから目的の1つを探す」方法を学びました。
-      後期は一歩進んで、<strong>やり方が何通りもあるとき、いちばん良いやり方を見つける</strong>方法を学びます。
-      カーナビの経路案内、宅配便の配送計画、工場の作業順番は、すべて同じ形の問題として解けます。
+      前期のアルゴリズム論及び演習Iで学んだ探索を土台に、
+      <strong>最短経路問題</strong>や<strong>巡回セールスマン問題</strong>といった最適化アルゴリズムを学びます。
+      ダイクストラ法・貪欲法・動的計画法を自分で動かし、迷路やゲームを題材に
+      「設計 → 実装 → テスト → 修正」の流れを体験します。
+      問題を筋道立てて分解する力は、IT分野に限らず、企画・マーケティング・経理・データ分析でも使えます。
     </p>
+
+    <div class="concept-box">
+      <h4>到達目標</h4>
+      <ol class="goal-list">
+        <li>プログラムの基本構文とデータ構造を理解し、簡単なプログラムを自力で組み立てられる</li>
+        <li>重み付きグラフ・ダイクストラ法・巡回セールスマン問題を理解し、実装できる</li>
+        <li>計算量を意識してアルゴリズムを選び、効率のよいコードを書く基礎を身につける</li>
+        <li>ゲームやパズルの課題を通して、アルゴリズムの面白さと開発の楽しさを体感する</li>
+        <li>問題を分解して手順を整理する「論理的思考力」と、コードを書き上げる「実装力」を高める</li>
+      </ol>
+    </div>
 
     <div class="info-grid">
       <div class="mini-card">
-        <h5>身につくこと</h5>
-        <p>地図や迷路をグラフに書き直し、ダイクストラ法・貪欲法・動的計画法で最適な答えを求められるようになる。</p>
+        <h5>評価方法</h5>
+        <p>定期試験なし。<strong>毎回の課題提出で100%</strong>。Googleスライドを1本作り、毎回3枚ずつ足していく。PDFと共有URLをManabaに提出する。</p>
       </div>
       <div class="mini-card">
         <h5>使うもの</h5>
-        <p>Visual Studio Code と Python。前期に用意した環境をそのまま使う。デスクトップに AL2 フォルダを作って進める。</p>
+        <p>Visual Studio Code と Python（前期と同じ環境）。出席は respon、提出と質問は manaba。</p>
       </div>
       <div class="mini-card">
-        <h5>評価方法</h5>
-        <p>定期試験なし。毎回の課題の提出で100%。Googleスライドを1本作り、毎回3枚ずつ足していく。PDFと共有URLをManabaに提出する。</p>
+        <h5>授業時間外の学習（毎週4時間）</h5>
+        <p>授業前にその回のキーワードを予習し、授業後に例題を自分の手でもう一度動かす。課題は計画的に進める。</p>
       </div>
     </div>
+
+    <table class="fact-table">
+      <tr><td>科目</td><td>アルゴリズム論及び演習II（C13114430 / C13134160）　社会情報学科 専門教育科目　3年　2単位</td></tr>
+      <tr><td>日時・場所</td><td>後期 水曜4限（14:40〜16:10）　H013情報処理教室（千代田）</td></tr>
+      <tr><td>進め方</td><td>ディスカッション・グループワーク・プレゼンテーションを取り入れた双方向の授業</td></tr>
+      <tr><td>質問</td><td>manaba で受け付ける。授業中に手を挙げてもよい</td></tr>
+      <tr><td>教科書</td><td>指定しない。授業ページ（このサイト）を資料として使う</td></tr>
+    </table>
 
     <div class="recap">
       前期（アルゴリズム論及び演習I）の資料は
@@ -116,8 +185,8 @@ body = f"""
       <h4>毎回の進め方</h4>
       <table>
         <tr><th>順番</th><th>すること</th></tr>
-        <tr><td>1</td><td>ページの上にある<strong>提出ガイド</strong>で、今回の提出物を確かめる</td></tr>
-        <tr><td>2</td><td><strong>説明</strong>を読み、図とアニメーションで仕組みをつかむ</td></tr>
+        <tr><td>1</td><td>このページの<strong>出席コード</strong>を respon に入力する</td></tr>
+        <tr><td>2</td><td>その回のページを開き、<strong>説明</strong>を読んで図とアニメーションで仕組みをつかむ</td></tr>
         <tr><td>3</td><td><strong>例題</strong>のコードをコピーして自分のパソコンで実行し、実行結果と見比べる</td></tr>
         <tr><td>4</td><td><strong>解説スライド3枚</strong>を自分のGoogleスライドに足す</td></tr>
         <tr><td>5</td><td>PDFに書き出して<strong>Manabaに提出</strong>し、共有URLも貼る</td></tr>
@@ -194,8 +263,16 @@ body = f"""
 """
 
 head = (HERE / "tpl" / "head.html").read_text(encoding="utf-8")
-head = head.replace("{{TITLE}}", "全15回の目次")
+head = head.replace("{{TITLE}}", "アルゴリズム論及び演習II")
 head = head.replace("</style>", extra_css + "</style>")
+
+nav = ('<nav class="section-nav">'
+       '<a href="#sec-attend">出席コード</a>'
+       '<a href="#sec-about">授業について</a>'
+       '<a href="#sec-weeks">全15回</a>'
+       '<a href="#sec-flow">後期の流れ</a>'
+       '<a href="grading.html">採点ガイド</a>'
+       '</nav>')
 
 tail = """<footer>
   <div class="container">
@@ -203,10 +280,12 @@ tail = """<footer>
   </div>
 </footer>
 
+<script src="attend-gate.js"></script>
+
 </body>
 </html>
 """
 
 out = HERE / "index.html"
-out.write_text(head + "\n<body>\n" + body + "\n" + tail, encoding="utf-8")
+out.write_text(head + "\n<body>\n" + nav + body + "\n" + tail, encoding="utf-8")
 print(f"wrote index.html ({out.stat().st_size:,} bytes)")
