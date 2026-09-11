@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""授業のトップページ（docs/al2/index.html）を組み立てる。
-出席コードは暗号化して埋め込み、授業時間だけ表示する（attend-gate.js）。"""
-import json
+"""授業のトップページ（docs/al2/index.html）を組み立てる。"""
 import pathlib
-import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent.parent
@@ -12,14 +9,12 @@ from build import SESSIONS, ORDER   # noqa: E402
 
 GREEN, AMBER, GRAY = "#76B900", "#FFB800", "#888888"
 
-# 出席用の認証コード（回ごと）。ページには暗号化して埋め込む
+# 出席用の認証コード（回ごと）。履修者に公開してよいので、そのまま一覧にする
 ATTEND_CODES = {
     "01": "5059", "02": "8128", "03": "4982", "04": "6507", "05": "8827",
     "06": "1799", "07": "8024", "08": "0472", "09": "3227", "10": "4742",
     "11": "2281", "12": "2301", "13": "1434", "14": "0869", "15": "8539",
 }
-ATTEND_WINDOW = "14:30-16:30"          # 表示する時間帯（JST）。4限 = 14:40〜16:10
-ATTEND_KEY = "attend-al2-2026"         # attend-gate.js に埋め込んである鍵と同じ
 
 TOPICS = {
     "01": ("復習", "二分探索・幅優先探索・全探索"),
@@ -48,11 +43,11 @@ def jp_date(text):
     return f"{int(m)}月{int(d)}日"
 
 
-# 出席コードを暗号化する
-payload = json.dumps([{"n": int(n), "date": SESSIONS[n][2], "code": ATTEND_CODES[n]} for n in ORDER],
-                     ensure_ascii=False)
-cipher = subprocess.run(["node", str(HERE / "encrypt-blob.js"), ATTEND_KEY],
-                        input=payload, capture_output=True, text=True, check=True).stdout.strip()
+# 出席コードの一覧
+attend_rows = "\n".join(
+    f'        <tr><td>第{int(n)}回</td><td>{jp_date(SESSIONS[n][2])}（水）</td>'
+    f'<td class="attend-code">{ATTEND_CODES[n]}</td><td>{SESSIONS[n][0]}</td></tr>'
+    for n in ORDER)
 
 cards = []
 for num in ORDER:
@@ -93,17 +88,13 @@ extra_css = """
 
 /* 出席コード */
 .attend-box { background: linear-gradient(135deg, #1A1A1A, #1a2e0a); border: 2px solid #76B900;
-  border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin: 1.5rem 0; text-align: center; }
-.attend-box h3 { font-size: 1.05rem; font-weight: 700; color: #76B900; margin-bottom: 0.8rem; }
-.attend-live .attend-label { font-size: 0.95rem; color: #ccc; margin-bottom: 0.4rem; }
-.attend-live .attend-code { font-family: 'JetBrains Mono', monospace; font-size: clamp(2.6rem, 8vw, 4.5rem);
-  font-weight: 700; letter-spacing: 0.25em; color: #fff; line-height: 1.2; }
-.attend-live .attend-note { font-size: 0.85rem; color: #999; margin-top: 0.6rem; }
-.attend-wait { font-size: 0.95rem; color: #ccc; padding: 0.6rem 0; }
-.attend-staff { margin-top: 1rem; font-size: 0.8rem; color: #666; }
-.attend-staff summary { cursor: pointer; }
-.attend-code-small { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #93D500; letter-spacing: 0.1em; }
-#attend-box table { margin: 0.5rem auto 0; max-width: 360px; }
+  border-radius: 16px; padding: clamp(1.2rem, 3vw, 2rem); margin: 1.5rem 0; }
+.attend-box h3 { font-size: 1.05rem; font-weight: 700; color: #76B900; margin-bottom: 0.6rem; }
+.attend-box p { font-size: 0.92rem; color: #bbb; margin-bottom: 0.8rem; }
+.attend-box table { margin: 0; }
+.attend-box td:first-child { white-space: nowrap; font-weight: 700; }
+.attend-code { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 700;
+  letter-spacing: 0.15em; color: #fff; }
 """
 
 body = f"""
@@ -118,10 +109,12 @@ body = f"""
 <section id="sec-attend" style="padding-top:1.5rem;padding-bottom:0">
   <div class="container">
     <div class="attend-box">
-      <h3>出席コード</h3>
-      <div id="attend-box" data-cipher="{cipher}" data-window="{ATTEND_WINDOW}">
-        <div class="attend-wait">読み込み中…</div>
-      </div>
+      <h3>出席コード（respon に入力）</h3>
+      <p>授業の始めに、その回のコードを respon に入力してください。</p>
+      <table>
+        <tr><th>回</th><th>日付</th><th>認証コード</th><th>内容</th></tr>
+{attend_rows}
+      </table>
     </div>
   </div>
 </section>
@@ -279,8 +272,6 @@ tail = """<footer>
     アルゴリズム論及び演習II ── 2026年度後期 ／ 担当: 中村 亮太
   </div>
 </footer>
-
-<script src="attend-gate.js"></script>
 
 </body>
 </html>
