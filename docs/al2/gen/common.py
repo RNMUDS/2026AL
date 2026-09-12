@@ -219,32 +219,25 @@ def rules_box():
 
 
 def slide_submission(week):
-    """ページ上部の提出ガイド。標準課題（スライド1枚）と、その単元の発展課題。"""
+    """ページ上部の提出ガイド。標準課題（70点）と発展課題（30点）。"""
     from slides_data import ADVANCED, advanced_of
     n = int(week)
-    adv = advanced_of(week)
-    items = ['        <a class="sub-item" href="#sec-slides"><span class="sub-count">標準</span>'
-             '<span class="tag tag-standard">スライド1枚</span>自分の数値で動かして、図形で描く</a>']
-    if adv:
-        d = ADVANCED[adv]
-        items.append(f'        <a class="sub-item" href="#sec-advanced"><span class="sub-count">発展</span>'
-                     f'<span class="tag tag-advanced">作品{adv}</span>{d["title"]}'
-                     f'（任意・第{int(d["due"])}回まで）</a>')
-    else:
-        items.append('        <a class="sub-item" href="#sec-advanced"><span class="sub-count">発展</span>'
-                     '<span class="tag tag-advanced">作品づくり</span>全体の説明（第2回から始まります）</a>')
+    d = ADVANCED[advanced_of(week)]
+    goal = d["milestones"][week]["goal"]
+    label = d["title"] if d["algo"] == "─" else f'作品{advanced_of(week)} {d["title"]}'
     return f"""
 <!-- ============ SUBMISSION GUIDE ============ -->
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: スライド1枚）</h3>
+      <h3>提出ガイド（今回の提出物）</h3>
       <div class="submission-items">
-{chr(10).join(items)}
+        <a class="sub-item" href="#sec-slides"><span class="sub-count">70点</span><span class="tag tag-standard">標準課題</span>スライド1枚: 自分の数値で動かして、図形で描く</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>{label} ─ 今回の到達点: {goal}</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のGoogleスライドに第{n}回の1枚を追加 →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る。
+        <strong>提出方法:</strong> 自分のGoogleスライドに第{n}回のスライドを追加（標準課題1枚。発展課題をやった人はもう1枚） →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -340,83 +333,99 @@ def streamlit_card():
     </div>"""
 
 
-def advanced_section(week):
-    """発展課題（任意・加点）のセクション。第1回は全体の説明、それ以外はその単元の作品。"""
-    from slides_data import ADVANCED, advanced_of
-    adv = advanced_of(week)
-    overview_rows = "\n".join(
-        f'        <tr><td>作品{k}</td><td>{d["title"]}</td><td>{d["algo"]}</td>'
-        f'<td>第{int(d["weeks"][0])}〜{int(d["weeks"][-1])}回</td>'
-        f'<td>第{int(d["due"])}回（{jp_date(SESSIONS[d["due"]][2])}）</td></tr>'
-        for k, d in ADVANCED.items())
-    overview = f"""    <p style="margin-bottom:1.5rem">
-      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで70点に届きます。
-      90点以上（S評価）をねらう人は、発展課題に取り組んでください。
-      単元ごとに1作品、全部で4作品あります。
-    </p>
-    <div class="concept-box">
-      <h4>4つの作品</h4>
-      <table>
-        <tr><th>作品</th><th>作るもの</th><th>使うアルゴリズム</th><th>取り組む回</th><th>締切</th></tr>
-{overview_rows}
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">締切は、その回の授業が始まる時刻です。</p>
-    </div>
-
-    <div class="concept-box">
-      <h4>ChatGPT などの AI を使ってかまいません</h4>
-      <p style="font-size:0.95rem">
-        発展課題では AI を使ってよいことにします。ただし、次の5つの要件を<strong>全部</strong>満たしたものだけを作品として受けつけます。
-        AI に1回頼んだだけでは5つはそろいません。動かして・直して・聞き直す、をくり返してください。
-      </p>
-      <table>
+def requirements_table():
+    return """      <table>
         <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
         <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
         <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
         <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
         <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
         <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
-      </table>
+      </table>"""
+
+
+def milestone_card(week, num, d):
+    """今回の到達点（30点）のカード。"""
+    m = d["milestones"][week]
+    must = "\n".join(f"          <li>{t}</li>" for t in m["must"])
+    return f"""    <div class="card advanced">
+      <div class="card-header">
+        <span class="tag tag-advanced">今回の到達点（30点）</span>
+        <h3>{m["goal"]}</h3>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">満たすこと（3つとも必要）</p>
+        <ol>
+{must}
+        </ol>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">発展課題のスライド1枚に貼るもの</p>
+        <p style="font-size:0.95rem">{m["evidence"]}。文章は1〜2行まで。
+        見出しは「第{int(week)}回 発展: {d["title"]}」にする。</p>
+      </div>
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>30点になる条件</h4>
+        <p style="font-size:0.95rem;margin:0">3つをすべて満たし、<code>app.py</code> とスライドが締切までに提出されている。
+        1つでも欠けていれば0点（部分点はありません）。</p>
+      </div>
     </div>"""
 
-    if adv is None:
-        body = overview + f"""
+
+def advanced_section(week):
+    """発展課題（30点）のセクション。第1回は Streamlit の準備、それ以外はその単元の作品の今回の到達点。"""
+    from slides_data import ADVANCED, advanced_of
+    num = advanced_of(week)
+    d = ADVANCED[num]
+    intro = """    <p style="margin-bottom:1.5rem">
+      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで各回70点に届きます。
+      90点以上（S評価）をねらう人は、毎回の到達点を積み上げてください。
+      発展課題では <strong>ChatGPT などの AI を使ってかまいません</strong>。
+      ただし、到達点は「動かして・直して・聞き直す」をくり返さないと満たせないように作ってあります。
+    </p>"""
+
+    if d["algo"] == "─":
+        # 第1回: Streamlit の準備
+        rows = "\n".join(
+            f'        <tr><td>作品{k}</td><td>{v["title"]}</td><td>{v["algo"]}</td>'
+            f'<td>第{int(v["weeks"][0])}〜{int(v["weeks"][-1])}回</td></tr>'
+            for k, v in ADVANCED.items() if v["algo"] != "─")
+        body = intro + f"""
 
     <div class="concept-box">
-      <h4>提出するもの（作品ごと）</h4>
+      <h4>発展課題の全体像: 4つの作品を、毎回の到達点に分けて作る</h4>
       <table>
-        <tr><th>もの</th><th>中身</th></tr>
-        <tr><td><code>app.py</code></td><td>Streamlit で動くプログラム。ManabaにPDFといっしょに添付する</td></tr>
-        <tr><td>スライド1枚</td><td>①アプリの画面のスクリーンショット ②<strong>アルゴリズムがアプリのどこで働くか</strong>を図形で描いた図 ③例題と同じ答えになった証拠（2つの数値を並べる）</td></tr>
+        <tr><th>作品</th><th>作るもの</th><th>使うアルゴリズム</th><th>取り組む回</th></tr>
+{rows}
       </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        スライドの約束は標準課題と同じです（図形で描く・自分の数値を入れる・文章は1〜2行）。</p>
-    </div>"""
-        return section("sec-advanced", "4", "発展課題（任意・加点）: 学んだアルゴリズムでアプリをつくる",
-                       body, color="#FFB800")
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        各回のページに<strong>「今回の到達点」</strong>が書いてあります。
+        1つの作品を3〜5回に分けて育て、毎回その回の到達点を満たせば30点です。
+        完成した作品は、次の5つの要件をすべて満たすものになります。
+      </p>
+{requirements_table()}
+    </div>
 
-    d = ADVANCED[adv]
+{milestone_card(week, num, d)}
+
+{streamlit_card()}"""
+        return section("sec-advanced", "4", "発展課題（30点・任意）: Streamlit の準備", body, color="#FFB800")
+
     screen = "\n".join(f"          <li>{t}</li>" for t in d["screen"])
-    due = f'第{int(d["due"])}回（{jp_date(SESSIONS[d["due"]][2])}）の授業が始まる時刻'
     first = week == d["weeks"][0]
-    body = f"""    <p style="margin-bottom:1.5rem">
-      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで70点に届きます。
-      90点以上（S評価）をねらう人は取り組んでください。
-      いまの単元の作品は<strong>作品{adv}「{d["title"]}」</strong>、締切は{due}です。
-    </p>
+    body = intro + f"""
 
-    <div class="card advanced">
+    <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
-        <span class="tag tag-advanced">作品{adv}</span>
-        <h3>{d["title"]}</h3>
+        <span class="tag tag-advanced">作品{num}</span>
+        <h3>{d["title"]}（第{int(d["weeks"][0])}〜{int(d["weeks"][-1])}回で育てる）</h3>
       </div>
       <table>
         <tr><th>使うアルゴリズム</th><td>{d["algo"]}</td></tr>
         <tr><th>自分のデータ</th><td>{d["data"]}</td></tr>
-        <tr><th>締切</th><td>{due}</td></tr>
       </table>
       <div class="setup-step" style="margin-top:1rem">
-        <p class="step-title">画面でできること（この3つを入れる）</p>
+        <p class="step-title">完成したときに画面でできること</p>
         <ol>
 {screen}
         </ol>
@@ -427,21 +436,7 @@ def advanced_section(week):
       </div>
     </div>
 
-    <div class="concept-box">
-      <h4>ChatGPT などの AI を使ってかまいません</h4>
-      <p style="font-size:0.95rem">
-        ただし、次の5つの要件を<strong>全部</strong>満たしたものだけを作品として受けつけます。
-        AI に1回頼んだだけでは5つはそろいません。動かして・直して・聞き直す、をくり返してください。
-      </p>
-      <table>
-        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
-        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
-        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
-        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
-        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
-        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
-      </table>
-    </div>
+{milestone_card(week, num, d)}
 
     <div class="concept-box">
       <h4>AI への頼み方（往復のしかた）</h4>
@@ -449,29 +444,22 @@ def advanced_section(week):
         <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
         <tr><td>1</td><td>「Streamlit で{d["title"].replace("アプリ", "")}を表示するだけの最小のアプリ」を頼む</td><td><code>streamlit run app.py</code> で画面が出るか</td></tr>
         <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
-        <tr><td>3</td><td>{d["algo"].split("（")[0]}を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか（要件5）</td></tr>
+        <tr><td>3</td><td>{d["algo"].split("（")[0]}を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか</td></tr>
         <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
-        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか（要件4）</td></tr>
+        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか</td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        最後に、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます（スライドに必要）。</p>
+        今回の到達点は、この表のどこまで進めば満たせるかを見て決めてあります。
+        最後の回では、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます。</p>
     </div>
 
-{streamlit_card() if first else ""}
-
     <div class="concept-box">
-      <h4>提出するもの</h4>
-      <table>
-        <tr><th>もの</th><th>中身</th></tr>
-        <tr><td><code>app.py</code></td><td>Streamlit で動くプログラム。ManabaにPDFといっしょに添付する</td></tr>
-        <tr><td>スライド1枚</td><td>①アプリの画面のスクリーンショット ②<strong>アルゴリズムがアプリのどこで働くか</strong>を図形で描いた図 ③例題と同じ答えになった証拠（2つの数値を並べる）</td></tr>
-      </table>
+      <h4>完成の条件（5つの要件）</h4>
+{requirements_table()}
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        スライドの約束は標準課題と同じです（図形で描く・自分の数値を入れる・文章は1〜2行）。
-        {"" if first else "Streamlit の入れ方と最小のアプリは、作品" + adv + "の最初の回（第" + str(int(d["weeks"][0])) + "回）のページにあります。"}</p>
+        Streamlit の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
     </div>"""
-    return section("sec-advanced", "4", f"発展課題（任意・加点）: 作品{adv}「{d['title']}」",
-                   body, color="#FFB800")
+    return section("sec-advanced", "4", f"発展課題（30点・任意）: 作品{num}「{d['title']}」", body, color="#FFB800")
 
 
 def rubric_section(week):
@@ -492,9 +480,9 @@ def rubric_section(week):
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（作品ができた回）</p>
+        <p class="step-title">発展課題（やった回）</p>
         <ol>
-          <li>作品のスライド1枚を、その回の標準課題の次に追加する</li>
+          <li>発展課題のスライド1枚を、その回の標準課題の次に追加する（PDFは1つにまとまる）</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
       </div>
@@ -505,22 +493,19 @@ def rubric_section(week):
     </div>
 
     <div class="concept-box" style="margin-top:1.5rem">
-      <h4>配点（15回共通）</h4>
+      <h4>配点（毎回100点。成績は15回の平均）</h4>
       <table>
         <tr><th>課題</th><th>点</th><th>条件</th></tr>
-        <tr><td rowspan="3">標準課題（毎回）</td><td>○ 5点</td><td>締切までに提出し、「○になる条件」を満たしている</td></tr>
-        <tr><td>△ 2点</td><td>締切までに提出したが、条件を満たしていない（数値が合わない・画像の貼り付け・自分の数値がない）。締切後の提出も△まで</td></tr>
+        <tr><td rowspan="3">標準課題</td><td>○ 70点</td><td>締切までに提出し、「○になる条件」を満たしている</td></tr>
+        <tr><td>△ 30点</td><td>締切までに提出したが、条件を満たしていない（数値が合わない・画像の貼り付け・自分の数値がない）。締切後の提出も△まで</td></tr>
         <tr><td>0点</td><td>未提出、または次回の授業日以降の提出</td></tr>
-        <tr><td>発展課題（作品ごと）</td><td>10点</td><td>5つの要件をすべて満たす（1つ2点）。締切後は受けつけない</td></tr>
+        <tr><td rowspan="2">発展課題</td><td>30点</td><td>「今回の到達点」の3つをすべて満たし、<code>app.py</code> とスライドが締切までに提出されている</td></tr>
+        <tr><td>0点</td><td>1つでも欠けている。部分点はありません</td></tr>
       </table>
-      <p style="font-size:0.95rem;margin-top:0.8rem">
-        標準課題は15回で最大 <strong>70点</strong>（5点×15回＝75点を70点で打ち切り。1回ぶんの余裕があります）。
-        発展課題は4作品で最大40点。合計は<strong>100点で打ち切り</strong>です。
-      </p>
       <table style="margin-top:0.8rem">
         <tr><th>ねらう評価</th><th>必要なこと</th></tr>
         <tr><td>70点以上</td><td>標準課題を毎回○にする。これだけで届く</td></tr>
-        <tr><td>90点以上（S評価）</td><td>標準課題を毎回○にしたうえで、発展課題を<strong>2作品以上</strong>仕上げる</td></tr>
+        <tr><td>90点以上（S評価）</td><td>標準課題を毎回○にしたうえで、発展課題の到達点を<strong>15回中10回以上</strong>満たす</td></tr>
       </table>
     </div>
 

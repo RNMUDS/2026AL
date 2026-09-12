@@ -378,13 +378,14 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         1枚の中身は「自分で決めた数値で例題を動かし、その動きを図形で描いたもの」です。
       </p>
       <table>
-        <tr><th>課題</th><th>やること</th><th>点</th></tr>
-        <tr><td><strong>標準課題</strong>（毎回・必須）</td><td>自分の数値で例題を動かし、その動きを<strong>図形で描いた</strong>スライド1枚</td><td>○5点／△2点。15回で最大70点</td></tr>
-        <tr><td><strong>発展課題</strong>（単元ごと・任意）</td><td>学んだアルゴリズムを使った<strong>画面のあるアプリ</strong>（4作品）。AI を使ってよい</td><td>1作品10点。合計100点で打ち切り</td></tr>
+        <tr><th>課題</th><th>やること</th><th>点（毎回）</th></tr>
+        <tr><td><strong>標準課題</strong>（必須）</td><td>自分の数値で例題を動かし、その動きを<strong>図形で描いた</strong>スライド1枚</td><td>○ 70点／△ 30点</td></tr>
+        <tr><td><strong>発展課題</strong>（任意）</td><td>学んだアルゴリズムを使った<strong>画面のあるアプリ</strong>を、毎回の到達点に分けて育てる（4作品）。AI を使ってよい</td><td>到達点を満たせば 30点。部分点なし</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
-        標準課題を毎回○にすれば<strong>70点</strong>に届きます。
-        <strong>90点以上（S評価）</strong>には、発展課題を2作品以上仕上げることが必要です。
+        毎回100点満点で、成績は<strong>15回の平均</strong>です。
+        標準課題を毎回○にすれば<strong>70点</strong>。
+        <strong>90点以上（S評価）</strong>には、発展課題の到達点を15回中10回以上満たすことが必要です。
       </p>
       <div class="note-warn" style="margin-top:0.8rem">
         <strong>毎回同じ4つの約束</strong>
