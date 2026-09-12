@@ -2,7 +2,7 @@
 """第11回: アルゴリズム比較・復習 の本文を組み立てる。"""
 import math
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -129,7 +129,8 @@ NAV = [
     "提出 #sec-submission",
     "全体の整理 #sec-explanation",
     "例題 #sec-examples",
-    "課題 #sec-slides nav-assignment",
+    "標準課題 #sec-slides nav-assignment",
+    "発展課題 #sec-advanced",
     "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
@@ -253,7 +254,7 @@ ans = answers([
     ("確かめ用の数値", """        <p><strong>問い1</strong>: <strong>すべての辺の重みが同じとき</strong>に一致します。
         重みがすべて1なら、合計コストはそのまま辺の数と同じ値になるためです。
         幅優先探索は、ダイクストラ法の特別な場合だと言えます。</p>
-        <p style="margin-top:0.8rem"><strong>例題3の数値（スライドBで使うもの）</strong></p>
+        <p style="margin-top:0.8rem"><strong>例題3の数値（図に書き込むもの）</strong></p>
         <table>
           <tr><th>都市数</th><th>全探索</th><th>貪欲法</th><th>bitDP</th></tr>
           <tr><td>10都市</td><td>59.5</td><td>60.2</td><td>59.5</td></tr>
@@ -270,6 +271,7 @@ body = "\n".join([
     section("sec-explanation", "1", "後期の全体像", explanation),
     section("sec-examples", "2", "例題", examples),
     slides_for("11", SLIDES),
+    advanced_section("11"),
     rubric_section("11"),
     ans,
 ])

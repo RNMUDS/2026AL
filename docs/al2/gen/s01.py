@@ -3,7 +3,7 @@
 import math
 from collections import deque
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section,
                     answers, code, example, keywords, notion, run, section,
                     setup_guide, standard, write)
 
@@ -326,7 +326,8 @@ NAV = [
     "提出 #sec-submission",
     "後期の全体像 #sec-overview",
     "例題 #sec-examples",
-    "課題 #sec-slides nav-assignment",
+    "標準課題 #sec-slides nav-assignment",
+    "発展課題 #sec-advanced",
     "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
@@ -371,21 +372,29 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 
     <div class="concept-box">
       <h4>評価方法と、毎回の課題</h4>
-      <p style="font-size:0.95rem">定期試験はありません。<strong>毎回の演習課題の提出で100%</strong>の評価となります。</p>
+      <p style="font-size:0.95rem">定期試験はありません。<strong>毎回の課題の提出で100%</strong>の評価となります。</p>
       <p style="font-size:0.95rem;margin-top:0.6rem">
-        課題は毎回同じ形です。<strong>Googleスライドを1本だけ作り、毎回3枚ずつ足していきます。</strong>
-        15回ぶんを足し終えると、45枚の「自分が作ったアルゴリズム解説資料」ができあがります。
+        課題は毎回同じ形です。<strong>Googleスライドを1本だけ作り、毎回1枚ずつ足していきます。</strong>
+        1枚の中身は「自分で決めた数値で例題を動かし、その動きを図形で描いたもの」です。
       </p>
       <table>
-        <tr><th>枚</th><th>入れるもの</th></tr>
-        <tr><td>A</td><td>その回のしくみを説明する図（<strong>自分で作ったもの</strong>）</td></tr>
-        <tr><td>B</td><td>自分のパソコンで動かした実行画面のスクリーンショットと、読み取れること</td></tr>
-        <tr><td>C</td><td>その回の問い2つへの答え（<strong>自分の実行結果の数値を根拠にする</strong>）</td></tr>
+        <tr><th>課題</th><th>やること</th><th>点</th></tr>
+        <tr><td><strong>標準課題</strong>（毎回・必須）</td><td>自分の数値で例題を動かし、その動きを<strong>図形で描いた</strong>スライド1枚</td><td>○5点／△2点。15回で最大70点</td></tr>
+        <tr><td><strong>発展課題</strong>（単元ごと・任意）</td><td>学んだアルゴリズムを使った<strong>画面のあるアプリ</strong>（4作品）。AI を使ってよい</td><td>1作品10点。合計100点で打ち切り</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
-        説明する相手は<strong>前期を受けていない友達</strong>です。
-        専門用語をそのまま並べても伝わりません。自分の言葉で書いてください。
+        標準課題を毎回○にすれば<strong>70点</strong>に届きます。
+        <strong>90点以上（S評価）</strong>には、発展課題を2作品以上仕上げることが必要です。
       </p>
+      <div class="note-warn" style="margin-top:0.8rem">
+        <strong>毎回同じ4つの約束</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li>自分で決めた数値で例題を動かし、その動きを図形で描く</li>
+          <li>画像の貼り付けは不可（図形・矢印・テキストボックスで描く）</li>
+          <li>図の中に自分の数値を入れる</li>
+          <li>文章は1〜2行まで</li>
+        </ol>
+      </div>
     </div>
 
     <div class="card" style="border-left:4px solid #76B900">
@@ -416,7 +425,7 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       <div class="setup-step">
         <p class="step-title">Step 3: 毎回の出し方を覚える</p>
         <ol>
-          <li>その回の3枚（A・B・C）をスライドに足す</li>
+          <li>その回の1枚をスライドに足す</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出し、<strong>コメント欄に共有URLを貼る</strong></li>
         </ol>
@@ -541,6 +550,7 @@ body = "\n".join([
     section("sec-overview", "1", "後期に学ぶこと", overview),
     section("sec-examples", "2", "例題", examples),
     slides_for("01", SLIDES),
+    advanced_section("01"),
     rubric_section("01"),
     ans,
 ])

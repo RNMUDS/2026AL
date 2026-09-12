@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第14回: 実践的課題（2）仕上げとレポート作成 の本文を組み立てる。"""
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -71,13 +71,13 @@ def fig_debug():
 def fig_report():
     rows = [("1. 作品の名前と概要", "何を作ったかを3行で", "沼をよけろ！コスト迷路。プレイヤーが道を選び…"),
             ("2. 使ったアルゴリズム", "名前と、なぜ選んだか", "ダイクストラ法。マスごとに時間が違うため…"),
-            ("3. 動かし方", "実行手順と入力の例", "python AL2-14-work.py を実行し、道を入力…"),
+            ("3. 動かし方", "実行手順と入力の例", "streamlit run app.py を実行し、道を入力…"),
             ("4. 実行結果", "画面のコピーと、読み取れること", "図1のとおり、プレイヤー42秒・最短18秒…"),
             ("5. 調べたこと", "表と図で数値を示す", "表1のとおり、ステージを大きくすると…"),
             ("6. 苦労した点", "つまずきと、どう解決したか", "IndexError が出た。行の長さがそろって…"),
             ("7. これからやりたいこと", "足せなかった機能", "ステージを3つに増やしたい…")]
     s = [f'        <text x="350" y="26" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
-         'レポートの7つの見出し</text>']
+         '作品を人に説明するときの7つの見出し（発展課題の作品スライドの材料）</text>']
     for i, (title, what, sample) in enumerate(rows):
         y = 48 + i * 44
         s.append(f'        <rect x="24" y="{y}" width="652" height="38" rx="8" fill="{"#141414" if i%2==0 else "#101010"}" stroke="#282828"/>')
@@ -94,7 +94,8 @@ NAV = [
     "提出 #sec-submission",
     "テストと仕上げ #sec-explanation",
     "例題 #sec-examples",
-    "課題 #sec-slides nav-assignment",
+    "標準課題 #sec-slides nav-assignment",
+    "発展課題 #sec-advanced",
     "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
@@ -102,9 +103,10 @@ NAV = [
 sub = slide_submission("14")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
-      第14回では、第13回で作りはじめた作品を<strong>仕上げて</strong>、レポートにまとめます。
-      仕上げるとは「機能を足す」ことだけではありません。
+      第14回は、プログラムを<strong>テストで確かめる</strong>回です。
+      プログラムは、正しい入力で動くだけでは完成ではありません。
       <strong>変な入力を与えても止まらないようにする</strong>ことが、いちばん大切な仕上げです。
+      発展課題に取り組んでいる人は、作品4を仕上げる回でもあります（発展課題の要件4「変な入力で落ちない」はここで学ぶ内容です）。
     </p>
 
     <div class="analogy">
@@ -129,7 +131,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         <tr><td>形が違う入力（数字のはずが文字）</td><td>受けつけず、理由を伝える</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
-        第14回のレポートには、<strong>この表の4行それぞれについて、実際に試した結果</strong>を書いてもらいます。
+        標準課題では、<strong>この表の4行それぞれについて自分で入力を決め、実際に試した結果</strong>を図にします。
       </p>
     </div>
 
@@ -184,7 +186,7 @@ ex2_body = f"""      <p>バグをしこんだ貪欲法の関数を、<code>print
      'どの都市と比べても「0.0より小さい」ことがなく、<code>nearest</code> が一度も更新されません。'
      '修正版では初期値を <code>None</code> にして、最初の1件で必ず更新されるようにしています。')}"""
 
-ex3_body = f"""      <p>レポートに実行時間を書くときの、正しい測り方を学びます。
+ex3_body = f"""      <p>実行時間を人に見せるときの、正しい測り方を学びます。
       1回だけ測ると、たまたま遅かった値をつかむことがあります。</p>
 
 {code('AL2-14-ex3.py')}
@@ -192,10 +194,10 @@ ex3_body = f"""      <p>レポートに実行時間を書くときの、正し�
 {run('a14_ex3_result.png', '同じ処理を5回測ったところ、いちばん速い回といちばん遅い回で差が出ました。'
      '差はわずかですが、<strong>毎回同じ値にはならない</strong>ことが確かめられます。'
      'パソコンは同時にほかの仕事もしているため、実行時間は必ずばらつきます。'
-     'レポートには「5回測った平均」のように<strong>測り方も書く</strong>ことが大切です。'
+     'スライドに時間を書くときは「5回測った平均」のように<strong>測り方も書く</strong>ことが大切です。'
      '「0.07秒でした」とだけ書かれていると、読んだ人は本当かどうか確かめられません。')}"""
 
-ex4_body = f"""      <p>レポートに載せる「表」と「グラフ」を、文字だけで作ります。
+ex4_body = f"""      <p>結果を見せるための「表」と「グラフ」を、文字だけで作ります。
       グラフを描くための特別な道具は必要ありません。</p>
 
 {code('AL2-14-ex4.py')}
@@ -205,10 +207,10 @@ ex4_body = f"""      <p>レポートに載せる「表」と「グラフ」を�
      '図1のように棒の長さで表すと、5都市だけが飛び抜けていることが一目で分かります。'
      '図2では最適解と貪欲法を並べていますが、棒の長さがほとんど同じで差が読み取りにくくなっています。'
      '<strong>同じデータでも、何を棒の長さにするかで伝わり方が変わる</strong>ということです。'
-     'レポートでは「差」を図にするほうが、言いたいことが伝わります。')}"""
+     'スライドの図でも「差」を描くほうが、言いたいことが伝わります。')}"""
 
 examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    自分の作品を仕上げるときに、そのまま使えるやり方です。</p>
+    標準課題のテスト、発展課題の作品の仕上げに、そのまま使えるやり方です。</p>
 
 {setup_guide('14', ['AL2-14-ex1.py', 'AL2-14-ex2.py', 'AL2-14-ex3.py', 'AL2-14-ex4.py'])}
 
@@ -217,7 +219,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
     ('境界値', 'きょうかいち / boundary value', '0、1、いちばん大きい値など「ぎりぎりの値」。バグの多くは境界値で見つかる。'),
     ('デバッグ', 'debug', 'バグ（誤り）をさがして直すこと。<code>print</code> を入れて変数の中身を見る方法がいちばん手軽。'),
     ('例外', 'れいがい / exception', 'プログラムが続けられなくなったときに出るエラー。<code>IndexError</code> や <code>KeyError</code> など種類がある。'),
-    ('再現性', 'さいげんせい / reproducibility', '同じ手順で誰がやっても同じ結果になること。レポートには測り方や環境も書く。'),
+    ('再現性', 'さいげんせい / reproducibility', '同じ手順で誰がやっても同じ結果になること。時間を書くときは測り方も書く。'),
 ])}
 
 {example(1, '境界値テストでバグを見つける', ex1_body)}
@@ -226,10 +228,10 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(3, '実行時間の正しい測り方', ex3_body)}
 
-{example(4, 'レポート用の表とグラフを作る', ex4_body)}"""
+{example(4, '結果を見せる表とグラフを作る', ex4_body)}"""
 
 ans = answers([
-    ("テストの答え合わせ", """        <p>作品は人によって違うので、数値の正解はありません。
+    ("テストの答え合わせ", """        <p>自分で決めた入力なので、数値の正解は1つではありません。
         4種類のテストで「何が起きれば正しいか」を挙げます。</p>
         <table>
           <tr><th>試す入力</th><th>正しい動き</th><th>直っていない例</th></tr>
@@ -247,6 +249,7 @@ body = "\n".join([
     section("sec-explanation", "1", "テストと仕上げ", explanation),
     section("sec-examples", "2", "例題", examples),
     slides_for("14", SLIDES),
+    advanced_section("14"),
     rubric_section("14"),
     ans,
 ])

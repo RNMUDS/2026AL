@@ -2,7 +2,7 @@
 """第15回: まとめ の本文を組み立てる。"""
 import math
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -144,7 +144,8 @@ NAV = [
     "提出 #sec-submission",
     "後期の総括 #sec-explanation",
     "例題 #sec-examples",
-    "課題 #sec-slides nav-assignment",
+    "標準課題 #sec-slides nav-assignment",
+    "発展課題 #sec-advanced",
     "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
@@ -318,6 +319,7 @@ body = "\n".join([
     section("sec-explanation", "1", "後期の総括と発展手法", explanation),
     section("sec-examples", "2", "例題", examples),
     slides_for("15", SLIDES),
+    advanced_section("15"),
     rubric_section("15"),
     ans,
 ])

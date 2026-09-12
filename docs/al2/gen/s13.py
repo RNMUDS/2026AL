@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第13回: 実践的課題（1）設計と実装 の本文を組み立てる。"""
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -89,11 +89,88 @@ def fig_sheet():
 
 
 # ────────────────────────────────────────────────────────────
+# 図4: フローチャートの書き方（テンプレートAの流れ）
+# ────────────────────────────────────────────────────────────
+def fig_flowchart():
+    """処理は四角、判断はひし形、開始と終了は角丸。テンプレートAの流れを順に出す。"""
+    dur = 12
+    n = 8
+    s = [f'        <text x="350" y="24" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
+         'フローチャートの書き方（テンプレートA「コスト付き迷路ゲーム」の流れ）</text>']
+    # 左: 記号の説明
+    legend = [("角丸", "開始・終了", "rect_r"), ("四角", "処理（計算・表示）", "rect"),
+              ("ひし形", "判断（はい／いいえ）", "diamond"), ("矢印", "次に進む向き", "arrow")]
+    for i, (name, mean, kind) in enumerate(legend):
+        y = 60 + i * 52
+        if kind == "rect_r":
+            s.append(f'        <rect x="30" y="{y}" width="70" height="30" rx="15" fill="#141414" stroke="{GREEN}" stroke-width="1.5"/>')
+        elif kind == "rect":
+            s.append(f'        <rect x="30" y="{y}" width="70" height="30" fill="#141414" stroke="#888" stroke-width="1.5"/>')
+        elif kind == "diamond":
+            s.append(f'        <polygon points="65,{y-4} 100,{y+15} 65,{y+34} 30,{y+15}" fill="#141414" stroke="{AMBER}" stroke-width="1.5"/>')
+        else:
+            s.append(f'        <line x1="30" y1="{y+15}" x2="92" y2="{y+15}" stroke="#888" stroke-width="2"/>'
+                     f'<polygon points="100,{y+15} 90,{y+10} 90,{y+20}" fill="#888"/>')
+        s.append(f'        <text x="112" y="{y+13}" fill="#E0E0E0" font-size="11" font-weight="700">{name}</text>')
+        s.append(f'        <text x="112" y="{y+27}" fill="{GRAY}" font-size="10">{mean}</text>')
+    s.append(f'        <line x1="250" y1="48" x2="250" y2="{60+4*52+80}" stroke="#333" stroke-width="1"/>')
+
+    # 右: テンプレートAの流れ
+    cx = 470
+    boxes = [
+        ("start", 52, "開始"),
+        ("proc", 96, "迷路とプレイヤーの道を読む"),
+        ("proc", 140, "道を座標の列に直す"),
+        ("judge", 196, "道はゴールに着く？"),
+        ("proc", 258, "ダイクストラ法で最短の秒数を求める"),
+        ("proc", 302, "プレイヤーの秒数と比べてスコアを出す"),
+        ("proc", 346, "2つの道とスコアを表示する"),
+        ("end", 390, "終了"),
+    ]
+    for i, (kind, y, label) in enumerate(boxes):
+        g = [f'        <g opacity="0">{reveal(i, n, dur)}']
+        if kind in ("start", "end"):
+            g.append(f'          <rect x="{cx-50}" y="{y}" width="100" height="30" rx="15" fill="#141414" stroke="{GREEN}" stroke-width="1.5"/>')
+        elif kind == "proc":
+            stroke = AMBER if "ダイクストラ" in label else "#888"
+            g.append(f'          <rect x="{cx-120}" y="{y}" width="240" height="30" fill="#141414" stroke="{stroke}" stroke-width="{2 if stroke==AMBER else 1.5}"/>')
+        else:
+            g.append(f'          <polygon points="{cx},{y-10} {cx+120},{y+15} {cx},{y+40} {cx-120},{y+15}" fill="#141414" stroke="{AMBER}" stroke-width="1.5"/>')
+        fill = AMBER if ("ダイクストラ" in label or kind == "judge") else "#E0E0E0"
+        g.append(f'          <text x="{cx}" y="{y+19}" text-anchor="middle" fill="{fill}" font-size="11" font-weight="700">{label}</text>')
+        if i < n - 1 and kind != "judge":
+            ny = boxes[i+1][1]
+            top = ny - 10 if boxes[i+1][0] == "judge" else ny
+            g.append(f'          <line x1="{cx}" y1="{y+30}" x2="{cx}" y2="{top-2}" stroke="#888" stroke-width="2"/>'
+                     f'<polygon points="{cx},{top} {cx-5},{top-8} {cx+5},{top-8}" fill="#888"/>')
+        if kind == "judge":
+            # はい: 下へ
+            g.append(f'          <line x1="{cx}" y1="{y+40}" x2="{cx}" y2="{boxes[i+1][1]-2}" stroke="#888" stroke-width="2"/>'
+                     f'<polygon points="{cx},{boxes[i+1][1]} {cx-5},{boxes[i+1][1]-8} {cx+5},{boxes[i+1][1]-8}" fill="#888"/>')
+            g.append(f'          <text x="{cx+8}" y="{y+52}" fill="{GREEN}" font-size="10">はい</text>')
+            # いいえ: 右へ出て「着かない」表示 → 終了へ
+            g.append(f'          <line x1="{cx+120}" y1="{y+15}" x2="{cx+170}" y2="{y+15}" stroke="#888" stroke-width="2"/>')
+            g.append(f'          <text x="{cx+128}" y="{y+8}" fill="{RED}" font-size="10">いいえ</text>')
+            g.append(f'          <rect x="{cx+170}" y="{y}" width="60" height="30" fill="#141414" stroke="#888" stroke-width="1.5"/>')
+            g.append(f'          <text x="{cx+200}" y="{y+13}" text-anchor="middle" fill="#E0E0E0" font-size="9">「着かない」</text>')
+            g.append(f'          <text x="{cx+200}" y="{y+25}" text-anchor="middle" fill="#E0E0E0" font-size="9">と表示する</text>')
+            ey = boxes[-1][1] + 15
+            g.append(f'          <path d="M {cx+200} {y+30} L {cx+200} {ey} L {cx+52} {ey}" fill="none" stroke="#888" stroke-width="2"/>'
+                     f'<polygon points="{cx+50},{ey} {cx+58},{ey-5} {cx+58},{ey+5}" fill="#888"/>')
+        g.append('        </g>')
+        s.extend(g)
+    s.append(f'        <text x="350" y="446" text-anchor="middle" fill="{AMBER}" font-size="12" font-weight="700">'
+             'アルゴリズムが働く箱（オレンジ）に印を付ける。ひし形は「はい」「いいえ」で行き先が分かれる</text>')
+    return fig(700, 462, "\n".join(s))
+
+
+# ────────────────────────────────────────────────────────────
 NAV = [
     "提出 #sec-submission",
-    "進め方 #sec-explanation",
+    "フローチャート #sec-explanation",
     "テンプレート #sec-examples",
-    "課題 #sec-slides nav-assignment",
+    "標準課題 #sec-slides nav-assignment",
+    "発展課題 #sec-advanced",
     "提出と評価 #sec-submit",
     "解答 #answers-section",
 ]
@@ -101,16 +178,54 @@ NAV = [
 sub = slide_submission("13")
 
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
-      第13回と第14回は、<strong>自分でテーマを決めた作品づくり</strong>に取り組みます。
-      第13回で設計と実装、第14回でテストと仕上げ、そしてレポート作成を行います。
-      後期に学んだアルゴリズムを、少なくとも<strong>1つ</strong>は使ってください。
+      第13回と第14回は、後期に作ってきたプログラムを<strong>「設計図」で読み、「テスト」で確かめる</strong>回です。
+      第13回はフローチャート、第14回はテストを扱います。
+      発展課題に取り組んでいる人は、作品4（自由テーマ）の設計と実装を進める回でもあります。
     </p>
 
     <div class="analogy">
-      料理と同じで、いきなり完成品を作ろうとするとうまくいきません。
-      まず「何を作るか」を決め、次に「とりあえず食べられる状態」まで作り、
-      味見をして足りないものを足していきます。
-      プログラムも同じで、<strong>まず動く最小版を作る</strong>ことがいちばん大切です。
+      料理のレシピは「材料を切る → 炒める → 味を見る → 足りなければ塩を足す」のように、
+      順番と分かれ道で書かれています。
+      プログラムも同じで、<strong>処理の順番と、条件によって分かれる場所</strong>を絵にしたものがフローチャートです。
+      コードを1行ずつ読むより、全体の流れがひと目で分かります。
+    </div>
+
+{fig_flowchart()}
+
+    <div class="concept-box">
+      <h4>フローチャートを描く手順</h4>
+      <table>
+        <tr><th>順番</th><th>やること</th><th>コードのどこを見るか</th></tr>
+        <tr><td>1</td><td>「開始」と「終了」の角丸を、上と下に置く</td><td>─</td></tr>
+        <tr><td>2</td><td>上から順に、処理の四角を置いて矢印でつなぐ</td><td>関数の呼び出しと <code>print</code>。1つの四角に1つの仕事</td></tr>
+        <tr><td>3</td><td><code>if</code> のところにひし形を置き、「はい」「いいえ」の矢印を分ける</td><td><code>if</code> / <code>else</code></td></tr>
+        <tr><td>4</td><td><code>for</code> や <code>while</code> は、下から上へ戻る矢印にする</td><td>くり返しの終わりから始めへ</td></tr>
+        <tr><td>5</td><td>アルゴリズム（探索・最短経路・全探索）が働く四角に色を付ける</td><td>第2〜12回で学んだ関数</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        細かい行（変数を1つ用意する、など）は四角にしません。
+        <strong>「何をしているか」を人に説明するときに言う単位</strong>で四角を作ります。
+        テンプレートAなら、上の図のように8個ほどで足ります。
+      </p>
+    </div>
+
+{fig_templates()}
+
+    <div class="concept-box">
+      <h4>標準課題では、3つのテンプレートのどれか1つを使う</h4>
+      <p style="font-size:0.95rem">
+        3つとも、後期に学んだアルゴリズムを1つのプログラムにまとめたものです。
+        自分の迷路や配達先に書き換えて動かし、その流れをフローチャートにします。
+        テンプレートAがいちばん短く、Cがいちばん長いです。
+      </p>
+    </div>
+
+    <div class="concept-box" style="border-color:#FFB800">
+      <h4>発展課題（作品4・自由テーマ）に取り組む人へ</h4>
+      <p style="font-size:0.95rem">
+        自由テーマの作品は、いきなり完成品を作ろうとするとうまくいきません。
+        次の4ステップでまわします。第13回で①と②、第14回で③と④です。
+      </p>
     </div>
 
 {fig_cycle()}
@@ -130,11 +245,9 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         最小版が動いてから足していけば、途中で止まっても「動くもの」が手元に残ります。
-        逆に全部いっぺんに作ろうとすると、最後まで1度も動かないまま時間切れになりがちです。
+        AI に頼むときも、<strong>最初は最小版だけを頼み、動いてから1つずつ足す</strong>のがいちばん確実です。
       </p>
     </div>
-
-{fig_templates()}
 
     <div class="concept-box">
       <h4>テーマの決め方</h4>
@@ -148,6 +261,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       </ol>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         大きな作品である必要はありません。<strong>小さくても、動いて、アルゴリズムが役に立っていること</strong>が大切です。
+        3つのテンプレートのどれかを Streamlit の画面に載せ替えるだけでも、作品4になります。
       </p>
     </div>
 
@@ -205,7 +319,8 @@ ex4_body = f"""      <p>作品に組み込むための小さな道具を4つ集�
      '文字だけでも、見せ方をくふうすれば作品らしくなります。')}"""
 
 examples = f"""    <p style="margin-bottom:1.5rem">3つのテンプレートと部品集を実行してください。
-    どれか1つを選んで書き換えると、自分の作品の出発点になります。</p>
+    標準課題では、どれか1つを自分の数値に書き換えて動かし、その流れをフローチャートにします。
+    発展課題の自由テーマの出発点にも使えます。</p>
 
 {setup_guide('13', ['AL2-13-ex1.py', 'AL2-13-ex2.py', 'AL2-13-ex3.py', 'AL2-13-ex4.py'])}
 
@@ -225,8 +340,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">3つのテンプレートと�
 {example(4, '作品に使える部品集', ex4_body)}"""
 
 ans = answers([
-    ("つまずいたときの調べ方", """        <p>作品は人によって違うので、数値の正解はありません。
-        よくあるつまずきと、その調べ方を挙げます。</p>
+    ("つまずいたときの調べ方", """        <p>テンプレートを自分の数値に書き換えたときに、よくあるつまずきと、その調べ方を挙げます。</p>
         <table>
           <tr><th>症状</th><th>まず見るところ</th></tr>
           <tr><td><code>IndexError: list index out of range</code></td><td>迷路の行の長さがそろっているか。すべての行を同じマス数にする</td></tr>
@@ -240,9 +354,10 @@ ans = answers([
 ])
 body = "\n".join([
     sub,
-    section("sec-explanation", "1", "作品づくりの進め方", explanation),
+    section("sec-explanation", "1", "プログラムをフローチャートで読む", explanation),
     section("sec-examples", "2", "テンプレートと部品", examples),
     slides_for("13", SLIDES),
+    advanced_section("13"),
     rubric_section("13"),
     ans,
 ])

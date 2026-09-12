@@ -5,6 +5,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HERE))
 from pyhl import highlight   # noqa: E402
+from build import SESSIONS   # noqa: E402
 
 
 def code(filename, label=None):
@@ -48,7 +49,7 @@ def standard(n, title, body):
 
 
 def notion(text):
-    return f'      <div class="slide-hint"><span><strong>スライドに使えること:</strong> {text}</span></div>'
+    return f'      <div class="slide-hint"><span><strong>図のヒント:</strong> {text}</span></div>'
 
 
 def section(sid, num, title, body, color="#76B900"):
@@ -193,121 +194,288 @@ def svg_text(x, y, text, fill="#E0E0E0", size=12, anchor="middle", weight=None, 
 
 
 # ── Googleスライド課題のための共通部品 ──────────────────
+def jp_date(text):
+    """'2026-10-21' → '10月21日'"""
+    _y, m, d = text.split("-")
+    return f"{int(m)}月{int(d)}日"
+
+
+RULES = [
+    "自分で決めた数値で例題を動かし、その動きを図形で描く",
+    "画像の貼り付けは不可（図形・矢印・テキストボックスで描く。クリックすると1つずつ選べる状態）",
+    "図の中に自分の数値を入れる",
+    "文章は1〜2行まで",
+]
+
+
+def rules_box():
+    items = "\n".join(f"          <li>{t}</li>" for t in RULES)
+    return f"""      <div class="note-warn">
+        <strong>毎回同じ4つの約束</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+{items}
+        </ol>
+      </div>"""
+
+
 def slide_submission(week):
-    """毎回の提出ガイド。提出物はスライド3枚とその提出だけ。"""
+    """ページ上部の提出ガイド。標準課題（スライド1枚）と、その単元の発展課題。"""
+    from slides_data import ADVANCED, advanced_of
     n = int(week)
+    adv = advanced_of(week)
+    items = ['        <a class="sub-item" href="#sec-slides"><span class="sub-count">標準</span>'
+             '<span class="tag tag-standard">スライド1枚</span>自分の数値で動かして、図形で描く</a>']
+    if adv:
+        d = ADVANCED[adv]
+        items.append(f'        <a class="sub-item" href="#sec-advanced"><span class="sub-count">発展</span>'
+                     f'<span class="tag tag-advanced">作品{adv}</span>{d["title"]}'
+                     f'（任意・第{int(d["due"])}回まで）</a>')
+    else:
+        items.append('        <a class="sub-item" href="#sec-advanced"><span class="sub-count">発展</span>'
+                     '<span class="tag tag-advanced">作品づくり</span>全体の説明（第2回から始まります）</a>')
     return f"""
 <!-- ============ SUBMISSION GUIDE ============ -->
 <section id="sec-submission" style="padding-top:2rem;padding-bottom:0">
   <div class="container">
     <div class="submission-box">
-      <h3>提出ガイド（今回の提出物: 解説スライド3枚）</h3>
+      <h3>提出ガイド（今回の提出物: スライド1枚）</h3>
       <div class="submission-items">
-        <a class="sub-item" href="#sec-slides"><span class="sub-count">A</span><span class="tag tag-standard">しくみ</span>自分で作った図で説明する</a>
-        <a class="sub-item" href="#sec-slides"><span class="sub-count">B</span><span class="tag tag-standard">動かした</span>自分の実行画面と読み取り</a>
-        <a class="sub-item" href="#sec-slides"><span class="sub-count">C</span><span class="tag tag-standard">考えた</span>問いに自分の数値で答える</a>
+{chr(10).join(items)}
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 自分のGoogleスライドに第{n}回の3枚を追加 →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る
+        <strong>提出方法:</strong> 自分のGoogleスライドに第{n}回の1枚を追加 →
+        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る。
+        締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
   </div>
 </section>"""
 
 
-def slides_section(week, topic, figure_points, run_file, run_points, questions):
-    """「解説スライドを3枚つくる」課題のセクションを組み立てる。
-
-    week          : "05" のような回番号
-    topic         : スライドの見出しにするテーマ名
-    figure_points : スライドAの図に必ず入れる要素（3つ）
-    run_file      : スライドBで動かすファイル名
-    run_points    : スライドBで読み取ること（2つ）
-    questions     : スライドCの問い（2つ）
-    """
+def slides_section(week, d):
+    """標準課題「スライド1枚（図）をつくる」のセクション。"""
     n = int(week)
-    fig_items = "\n".join(f"          <li>{t}</li>" for t in figure_points)
-    run_items = "\n".join(f"          <li>{t}</li>" for t in run_points)
-    q_items = "\n".join(f"        <li><strong>問い{i+1}:</strong> {t}</li>"
-                        for i, t in enumerate(questions))
+    el_items = "\n".join(f"          <li>{t}</li>" for t in d["elements"])
     body = f"""    <p style="margin-bottom:1.5rem">
-      自分のGoogleスライドに、第{n}回ぶんの<strong>3枚</strong>を追加してください。
-      見出しは「第{n}回: {topic}」にします。
-      説明する相手は<strong>前期のアルゴリズム論及び演習Iを受けていない友達</strong>です。
-      専門用語をそのまま書いても伝わりません。
+      自分のGoogleスライドに、第{n}回ぶんの<strong>1枚</strong>を追加してください。
+      見出しは「第{n}回: {d["topic"]}」にします。
     </p>
 
-    <div class="card standard">
-      <div class="card-header">
-        <span class="tag tag-standard">スライドA</span>
-        <h3>しくみを、自分で作った図で説明する</h3>
-      </div>
-      <p>次の3つが伝わる図を、<strong>自分で作って</strong>1枚に入れてください。</p>
-      <div class="setup-step">
-        <p class="step-title">図に必ず入れる3つ</p>
-        <ol>
-{fig_items}
-        </ol>
-      </div>
-      <div class="note-warn">
-        <strong>図の作り方:</strong> Googleスライドの「挿入 → 図形」で四角・丸・矢印を並べて作ります。
-        紙に手描きして写真を撮り、貼りつけてもかまいません。
-        <strong>授業ページの図をそのまま貼るのは不可</strong>です。自分で線を引いたものだけを認めます。
-      </div>
-      <p style="margin-top:1rem">図のほかに、<strong>1文だけ</strong>説明を書いてください。
-      「{topic}とは、○○を○○する方法です」の形で、20〜40字におさめます。</p>
-    </div>
+{rules_box()}
 
     <div class="card standard">
       <div class="card-header">
-        <span class="tag tag-standard">スライドB</span>
-        <h3>自分で動かした結果をのせる</h3>
+        <span class="tag tag-standard">標準課題</span>
+        <h3>{d["topic"]}を図形で描く</h3>
       </div>
       <div class="setup-step">
-        <p class="step-title">やること</p>
+        <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
+        <p style="font-size:0.95rem"><code>{d["run_file"]}</code> を開き、{d["own"]}
+        保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
+        <p style="font-size:0.95rem">{d["draw"]}</p>
+        <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
-          <li><code>{run_file}</code> を自分のパソコンで実行する</li>
-          <li><strong>VS Codeのウィンドウごと</strong>スクリーンショットを撮る
-              （左のエクスプローラーに <code>AL2/No{week}</code> のフォルダ名とファイル名が写っている状態）</li>
-          <li>スクリーンショットをスライドに貼る</li>
-          <li>実行結果から読み取れることを、<strong>数値を挙げて</strong>2つ書く</li>
+{el_items}
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">読み取ること（この2つに答える）</p>
-        <ul>
-{run_items}
-        </ul>
+        <p class="step-title">3. 文章を1〜2行だけ書く</p>
+        <p style="font-size:0.95rem">図から分かることを、自分の数値を使って1〜2行で書く。
+        「自分の数値では○○が△△になった」の形。</p>
       </div>
-      <div class="note-warn">
-        <strong>スクリーンショットの撮り方:</strong>
-        Windows は <strong>Windows キー ＋ Shift ＋ S</strong>、Mac は <strong>Shift ＋ Command ＋ 4</strong> のあと
-        <strong>スペースキー</strong>を押してウィンドウをクリックします。
-        画面の一部だけを切り取ったものは受けつけません。フォルダ名とファイル名が読める状態にしてください。
+      <div class="concept-box" style="margin-top:1rem">
+        <h4>○（満点）になる条件</h4>
+        <p style="font-size:0.95rem;margin:0">{d["check"]}</p>
       </div>
     </div>
 
-    <div class="card standard">
+    <div class="concept-box">
+      <h4>Googleスライドでの図の描き方</h4>
+      <table>
+        <tr><th>描きたいもの</th><th>やり方</th></tr>
+        <tr><td>マス目・箱・丸</td><td><strong>挿入 → 図形 → 図形</strong> から四角や丸を置く。Ctrl+D（Mac は Command+D）で複製すると速い</td></tr>
+        <tr><td>矢印・線</td><td><strong>挿入 → 線 → 矢印</strong>。図形の端にくっつけると、動かしてもついてくる</td></tr>
+        <tr><td>数値・文字</td><td><strong>挿入 → テキストボックス</strong>。図形をダブルクリックして中に直接書いてもよい</td></tr>
+        <tr><td>色分け</td><td>図形を選んで、ツールバーの<strong>塗りつぶしの色</strong>・<strong>枠線の色</strong></td></tr>
+        <tr><td>木（枝分かれ）</td><td>上に1つ箱を置き、下の段に箱を並べて矢印でつなぐ。段ごとに横にそろえる</td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        授業ページの図のスクリーンショット、AIが作った画像、手描きの写真は<strong>すべて不可</strong>です。
+        図形で描いたものだけを受けつけます。
+      </p>
+    </div>"""
+    return section("sec-slides", "3", "標準課題: スライド1枚（図）をつくる", body)
+
+
+def slides_for(week, data):
+    """slides_data.SLIDES から、その回の標準課題セクションを組み立てる。"""
+    return slides_section(week, data[week])
+
+
+def streamlit_card():
+    """Streamlit の準備。発展課題のセクションに毎回入れる。"""
+    return f"""    <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
-        <span class="tag tag-standard">スライドC</span>
-        <h3>問いに、自分の数値を根拠にして答える</h3>
+        <span class="tag tag-advanced">準備</span>
+        <h3>Streamlit で画面のあるアプリを動かす</h3>
       </div>
-      <p>次の2つの問いに答えてください。答えの中で、
-      <strong>スライドBに貼った自分の実行結果の数値を必ず引用</strong>してください。</p>
-      <ul class="point-list">
-{q_items}
-      </ul>
-      <div class="note-warn">
-        <strong>「〜が分かった」「うまくいった」だけでは点になりません。</strong>
-        「自分の実行結果では○○が△△だった。だから□□と言える」の形で書いてください。
+      <p style="font-size:0.95rem">Streamlit（ストリームリット）は、Python のプログラムをそのままブラウザの画面にする道具です。
+      HTML や JavaScript を書かずに、ボタン・入力欄・図が作れます。</p>
+      <div class="setup-step">
+        <p class="step-title">1. 1回だけ入れる</p>
+        <p style="font-size:0.95rem">VS Code のターミナルで次を実行する（数分かかる）。</p>
+{plain("Windows:  py -m pip install streamlit" + chr(10) + "Mac:      python3 -m pip install streamlit", "ターミナル")}
+      </div>
+      <div class="setup-step">
+        <p class="step-title">2. いちばん小さいアプリを動かしてみる</p>
+        <p style="font-size:0.95rem"><code>AL2/work</code> フォルダを作り、<code>app.py</code> という名前で保存する。</p>
+{code("AL2-app-min.py", "Python ── app.py（Streamlit）")}
+        <p style="font-size:0.95rem">ターミナルで <code>AL2/work</code> に移動してから、次を実行する。ブラウザが自動で開く。</p>
+{plain("streamlit run app.py", "ターミナル")}
+        <p style="font-size:0.9rem;color:#888">止めるときはターミナルで Ctrl+C。コードを直して保存すると、ブラウザの右上に「Rerun」が出るので押す。</p>
       </div>
     </div>"""
-    return section("sec-slides", "3", f"課題: 解説スライドを3枚つくる", body)
+
+
+def advanced_section(week):
+    """発展課題（任意・加点）のセクション。第1回は全体の説明、それ以外はその単元の作品。"""
+    from slides_data import ADVANCED, advanced_of
+    adv = advanced_of(week)
+    overview_rows = "\n".join(
+        f'        <tr><td>作品{k}</td><td>{d["title"]}</td><td>{d["algo"]}</td>'
+        f'<td>第{int(d["weeks"][0])}〜{int(d["weeks"][-1])}回</td>'
+        f'<td>第{int(d["due"])}回（{jp_date(SESSIONS[d["due"]][2])}）</td></tr>'
+        for k, d in ADVANCED.items())
+    overview = f"""    <p style="margin-bottom:1.5rem">
+      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで70点に届きます。
+      90点以上（S評価）をねらう人は、発展課題に取り組んでください。
+      単元ごとに1作品、全部で4作品あります。
+    </p>
+    <div class="concept-box">
+      <h4>4つの作品</h4>
+      <table>
+        <tr><th>作品</th><th>作るもの</th><th>使うアルゴリズム</th><th>取り組む回</th><th>締切</th></tr>
+{overview_rows}
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">締切は、その回の授業が始まる時刻です。</p>
+    </div>
+
+    <div class="concept-box">
+      <h4>ChatGPT などの AI を使ってかまいません</h4>
+      <p style="font-size:0.95rem">
+        発展課題では AI を使ってよいことにします。ただし、次の5つの要件を<strong>全部</strong>満たしたものだけを作品として受けつけます。
+        AI に1回頼んだだけでは5つはそろいません。動かして・直して・聞き直す、をくり返してください。
+      </p>
+      <table>
+        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
+        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
+        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
+        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
+        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
+        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
+      </table>
+    </div>"""
+
+    if adv is None:
+        body = overview + f"""
+
+    <div class="concept-box">
+      <h4>提出するもの（作品ごと）</h4>
+      <table>
+        <tr><th>もの</th><th>中身</th></tr>
+        <tr><td><code>app.py</code></td><td>Streamlit で動くプログラム。ManabaにPDFといっしょに添付する</td></tr>
+        <tr><td>スライド1枚</td><td>①アプリの画面のスクリーンショット ②<strong>アルゴリズムがアプリのどこで働くか</strong>を図形で描いた図 ③例題と同じ答えになった証拠（2つの数値を並べる）</td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        スライドの約束は標準課題と同じです（図形で描く・自分の数値を入れる・文章は1〜2行）。</p>
+    </div>"""
+        return section("sec-advanced", "4", "発展課題（任意・加点）: 学んだアルゴリズムでアプリをつくる",
+                       body, color="#FFB800")
+
+    d = ADVANCED[adv]
+    screen = "\n".join(f"          <li>{t}</li>" for t in d["screen"])
+    due = f'第{int(d["due"])}回（{jp_date(SESSIONS[d["due"]][2])}）の授業が始まる時刻'
+    first = week == d["weeks"][0]
+    body = f"""    <p style="margin-bottom:1.5rem">
+      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで70点に届きます。
+      90点以上（S評価）をねらう人は取り組んでください。
+      いまの単元の作品は<strong>作品{adv}「{d["title"]}」</strong>、締切は{due}です。
+    </p>
+
+    <div class="card advanced">
+      <div class="card-header">
+        <span class="tag tag-advanced">作品{adv}</span>
+        <h3>{d["title"]}</h3>
+      </div>
+      <table>
+        <tr><th>使うアルゴリズム</th><td>{d["algo"]}</td></tr>
+        <tr><th>自分のデータ</th><td>{d["data"]}</td></tr>
+        <tr><th>締切</th><td>{due}</td></tr>
+      </table>
+      <div class="setup-step" style="margin-top:1rem">
+        <p class="step-title">画面でできること（この3つを入れる）</p>
+        <ol>
+{screen}
+        </ol>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">例題との答え合わせ</p>
+        <p style="font-size:0.95rem">{d["match"]}。一致した2つの数値をスライドに並べて書く。</p>
+      </div>
+    </div>
+
+    <div class="concept-box">
+      <h4>ChatGPT などの AI を使ってかまいません</h4>
+      <p style="font-size:0.95rem">
+        ただし、次の5つの要件を<strong>全部</strong>満たしたものだけを作品として受けつけます。
+        AI に1回頼んだだけでは5つはそろいません。動かして・直して・聞き直す、をくり返してください。
+      </p>
+      <table>
+        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
+        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
+        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
+        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
+        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
+        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
+      </table>
+    </div>
+
+    <div class="concept-box">
+      <h4>AI への頼み方（往復のしかた）</h4>
+      <table>
+        <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
+        <tr><td>1</td><td>「Streamlit で{d["title"].replace("アプリ", "")}を表示するだけの最小のアプリ」を頼む</td><td><code>streamlit run app.py</code> で画面が出るか</td></tr>
+        <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
+        <tr><td>3</td><td>{d["algo"].split("（")[0]}を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか（要件5）</td></tr>
+        <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
+        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか（要件4）</td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        最後に、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます（スライドに必要）。</p>
+    </div>
+
+{streamlit_card() if first else ""}
+
+    <div class="concept-box">
+      <h4>提出するもの</h4>
+      <table>
+        <tr><th>もの</th><th>中身</th></tr>
+        <tr><td><code>app.py</code></td><td>Streamlit で動くプログラム。ManabaにPDFといっしょに添付する</td></tr>
+        <tr><td>スライド1枚</td><td>①アプリの画面のスクリーンショット ②<strong>アルゴリズムがアプリのどこで働くか</strong>を図形で描いた図 ③例題と同じ答えになった証拠（2つの数値を並べる）</td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        スライドの約束は標準課題と同じです（図形で描く・自分の数値を入れる・文章は1〜2行）。
+        {"" if first else "Streamlit の入れ方と最小のアプリは、作品" + adv + "の最初の回（第" + str(int(d["weeks"][0])) + "回）のページにあります。"}</p>
+    </div>"""
+    return section("sec-advanced", "4", f"発展課題（任意・加点）: 作品{adv}「{d['title']}」",
+                   body, color="#FFB800")
 
 
 def rubric_section(week):
-    """評価の観点と、よくある不十分な例。学生に最初から見せる。"""
+    """提出のしかたと配点。学生に最初から見せる。"""
     n = int(week)
     body = f"""    <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
@@ -315,49 +483,56 @@ def rubric_section(week):
         <h3>提出のしかた</h3>
       </div>
       <div class="setup-step">
-        <p class="step-title">手順</p>
+        <p class="step-title">標準課題（毎回）</p>
         <ol>
-          <li>自分のGoogleスライドを開き、第{n}回の3枚（A・B・C）を追加する</li>
+          <li>自分のGoogleスライドを開き、第{n}回の1枚を追加する</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
           <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
+      <div class="setup-step">
+        <p class="step-title">発展課題（作品ができた回）</p>
+        <ol>
+          <li>作品のスライド1枚を、その回の標準課題の次に追加する</li>
+          <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
+        </ol>
+      </div>
       <div class="note-warn">
         <strong>共有URLも毎回必ず提出してください。</strong>
-        Googleスライドには変更履歴が残ります。
-        いつ・どのスライドを作ったかを確認するために使います。
-        まとめて作ると履歴に残るので、毎回の授業の中で少しずつ進めてください。
+        Googleスライドには変更履歴が残ります。いつ・どのスライドを作ったかを確認するために使います。
       </div>
     </div>
 
     <div class="concept-box" style="margin-top:1.5rem">
-      <h4>評価の観点（毎回同じ・10点満点）</h4>
+      <h4>配点（15回共通）</h4>
       <table>
-        <tr><th>観点</th><th>点</th><th>見るところ</th></tr>
-        <tr><td>図を自分で作ったか</td><td>3</td><td>授業ページの図の貼りつけは0点。指定の3要素が図に入っているか</td></tr>
-        <tr><td>自分で動かした証拠があるか</td><td>2</td><td>VS Codeのウィンドウごとのスクリーンショット。フォルダ名が読めるか</td></tr>
-        <tr><td>数値を根拠にしているか</td><td>3</td><td>自分の実行結果の数値を引用しているか。数値と説明が合っているか</td></tr>
-        <tr><td>言葉が自分のものか</td><td>2</td><td>専門用語をそのまま並べていないか。前期未履修の友達に伝わるか</td></tr>
+        <tr><th>課題</th><th>点</th><th>条件</th></tr>
+        <tr><td rowspan="3">標準課題（毎回）</td><td>○ 5点</td><td>締切までに提出し、「○になる条件」を満たしている</td></tr>
+        <tr><td>△ 2点</td><td>締切までに提出したが、条件を満たしていない（数値が合わない・画像の貼り付け・自分の数値がない）。締切後の提出も△まで</td></tr>
+        <tr><td>0点</td><td>未提出、または次回の授業日以降の提出</td></tr>
+        <tr><td>発展課題（作品ごと）</td><td>10点</td><td>5つの要件をすべて満たす（1つ2点）。締切後は受けつけない</td></tr>
+      </table>
+      <p style="font-size:0.95rem;margin-top:0.8rem">
+        標準課題は15回で最大 <strong>70点</strong>（5点×15回＝75点を70点で打ち切り。1回ぶんの余裕があります）。
+        発展課題は4作品で最大40点。合計は<strong>100点で打ち切り</strong>です。
+      </p>
+      <table style="margin-top:0.8rem">
+        <tr><th>ねらう評価</th><th>必要なこと</th></tr>
+        <tr><td>70点以上</td><td>標準課題を毎回○にする。これだけで届く</td></tr>
+        <tr><td>90点以上（S評価）</td><td>標準課題を毎回○にしたうえで、発展課題を<strong>2作品以上</strong>仕上げる</td></tr>
       </table>
     </div>
 
     <div class="concept-box">
-      <h4>よくある不十分な例</h4>
+      <h4>△になる例</h4>
       <table>
-        <tr><th>不十分な例</th><th>どう直すか</th></tr>
-        <tr><td>授業ページの図をスクリーンショットして貼る</td><td>同じ内容でよいので、図形を自分で並べ直す。手描きの写真でもよい</td></tr>
-        <tr><td>ターミナルの文字だけを切り取って貼る</td><td>VS Codeのウィンドウ全体を撮る。フォルダ名とファイル名が写るようにする</td></tr>
-        <tr><td>「速いことが分かりました」で終わる</td><td>「自分の結果では6秒と0.01秒で、600倍ほど違った」と数値を書く</td></tr>
-        <tr><td>教材の文をそのまま写す</td><td>専門用語を1つ選び、それを使わずに言いかえてみる</td></tr>
-        <tr><td>3枚を最後の週にまとめて作る</td><td>変更履歴で分かります。毎回の授業中に作ってください</td></tr>
+        <tr><th>△になる例</th><th>どう直すか</th></tr>
+        <tr><td>授業ページの図やAIの画像を貼る</td><td>同じ内容でよいので、図形を自分で並べて描く</td></tr>
+        <tr><td>例題の数値のまま描いている</td><td>自分の数値に書き換えて実行し直し、図の数値も差し替える</td></tr>
+        <tr><td>図の数値と実行結果が合っていない</td><td>実行結果を横に置いて、1つずつ見比べる</td></tr>
+        <tr><td>文章が3行以上ある</td><td>図で伝え、文章は「自分の数値では○○が△△になった」の1〜2行にする</td></tr>
+        <tr><td>何回ぶんかを最後にまとめて作る</td><td>変更履歴で分かります。締切後の提出は△までです</td></tr>
       </table>
     </div>"""
-    return section("sec-submit", "4", "提出と評価", body, color="#FFB800")
-
-
-def slides_for(week, data):
-    """slides_data.SLIDES から、その回の課題セクションを組み立てる。"""
-    d = data[week]
-    return slides_section(week, d["topic"], d["figure"],
-                          d["run_file"], d["run"], d["questions"])
+    return section("sec-submit", "5", "提出と評価", body, color="#FFB800")
