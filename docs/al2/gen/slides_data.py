@@ -9,7 +9,7 @@
   elements  : 図に必ず入れる3つ
   check     : ○（満点）になる条件。採点者はここだけを見る
 
-発展課題（ADVANCED）: 単元ごとに1作品、全部で4作品（＋第1回は Streamlit の準備）。
+発展課題（ADVANCED）: 単元ごとに1作品、全部で4作品（＋第1回は Gradio の準備）。
   毎回、その週の到達点（milestones）を満たせば30点。
   weeks      : 取り組む回
   title      : 作品名
@@ -221,20 +221,20 @@ SLIDES = {
 ADVANCED = {
 "0": dict(
     weeks=["01"],
-    title="Streamlit の準備",
+    title="Gradio の準備",
     algo="─",
     data="─",
     screen=[],
     match="",
     milestones={
         "01": dict(
-            goal="Streamlit を入れて、いちばん小さいアプリを自分のパソコンで動かす",
+            goal="Gradio を入れて、いちばん小さいアプリを自分のパソコンで動かす",
             must=[
-                "<code>streamlit run app.py</code> でブラウザに画面が出ている",
-                "タイトルに<strong>自分の名前</strong>が入っている（<code>st.title</code> を書き換える）",
-                "スライダーを動かすと、表示される数が変わる",
+                "VS Code の ▷ で実行すると、ブラウザに画面が出る",
+                "タイトルに<strong>自分の名前</strong>が入っている（<code>title=</code> を書き換える）",
+                "スライダーを動かして Submit を押すと、結果の文の数が変わる",
             ],
-            evidence="ブラウザの画面と、VS Code のターミナル（<code>streamlit run app.py</code> の行が見える）の2つのスクリーンショット",
+            evidence="ブラウザの画面と、VS Code のターミナル（<code>Running on local URL</code> の行が見える）の2つのスクリーンショット",
         ),
     },
 ),

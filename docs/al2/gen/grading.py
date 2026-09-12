@@ -77,7 +77,7 @@ body = """
     <table>
       <tr><th>#</th><th>要件</th><th>確かめ方（1〜2分）</th></tr>
       <tr><td>1</td><td><strong>自分のデータが入っている</strong></td><td>作品スライドのスクリーンショットに、例題と違う駅名・迷路・座標が出ているか</td></tr>
-      <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>スクリーンショットにボタン・入力欄・スライダーが写っているか。疑わしければ <code>streamlit run app.py</code> で開く</td></tr>
+      <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>スクリーンショットにボタン・入力欄・スライダーが写っているか。疑わしければ <code>python app.py</code> で開く</td></tr>
       <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路の線・色付きのマスなどが画面に描かれているか。文字だけなら0</td></tr>
       <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td><code>app.py</code> を開き、空・範囲外を扱う <code>if</code> があるか。疑わしければ動かして空欄で実行する</td></tr>
       <tr><td>5</td><td><strong>例題と同じ答えになる</strong></td><td>作品スライドに「アプリの答え」と「例題の答え」が並んで書かれ、一致しているか</td></tr>
@@ -88,7 +88,7 @@ body = """
       <ul class="point-list">
         <li>その回の到達点に書かれた<strong>証拠</strong>（画面のスクリーンショット、一致した数値、設計シートなど。各回のページの「発展課題のスライド1枚に貼るもの」）</li>
         <li>単元の最後の回は、<strong>アルゴリズムがアプリのどこで働くか</strong>を図形で描いた図。画像の貼り付けなら0点</li>
-        <li><code>app.py</code> が添付されている。疑わしければ <code>streamlit run app.py</code> で開く（1〜2分）</li>
+        <li><code>app.py</code> が添付されている。疑わしければ <code>python app.py</code> で開く（1〜2分）</li>
       </ul>
     </div>
 

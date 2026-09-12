@@ -212,7 +212,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <h3>提出ガイド（今回の提出物）</h3>
       <div class="submission-items">
         <a class="sub-item" href="#sec-slides"><span class="sub-count">70点</span><span class="tag tag-standard">標準課題</span>スライド1枚: 自分の数値で動かして、図形で描く</a>
-        <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>Streamlit の準備 ─ 今回の到達点: Streamlit を入れて、いちばん小さいアプリを自分のパソコンで動かす</a>
+        <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>Gradio の準備 ─ 今回の到達点: Gradio を入れて、いちばん小さいアプリを自分のパソコンで動かす</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
         <strong>提出方法:</strong> 自分のGoogleスライドに第1回のスライドを追加（標準課題1枚。発展課題をやった人はもう1枚） →
@@ -1265,7 +1265,7 @@ best_time = <span class="kw">None</span>
   <div class="container">
     <div class="section-header">
       <div class="section-num" style="background:#FFB800">4</div>
-      <h2>発展課題（30点・任意）: Streamlit の準備</h2>
+      <h2>発展課題（30点・任意）: Gradio の準備</h2>
     </div>
     <p style="margin-bottom:1.5rem">
       発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで各回70点に届きます。
@@ -1301,20 +1301,20 @@ best_time = <span class="kw">None</span>
     <div class="card advanced">
       <div class="card-header">
         <span class="tag tag-advanced">今回の到達点（30点）</span>
-        <h3>Streamlit を入れて、いちばん小さいアプリを自分のパソコンで動かす</h3>
+        <h3>Gradio を入れて、いちばん小さいアプリを自分のパソコンで動かす</h3>
       </div>
       <div class="setup-step">
         <p class="step-title">満たすこと（3つとも必要）</p>
         <ol>
-          <li><code>streamlit run app.py</code> でブラウザに画面が出ている</li>
-          <li>タイトルに<strong>自分の名前</strong>が入っている（<code>st.title</code> を書き換える）</li>
-          <li>スライダーを動かすと、表示される数が変わる</li>
+          <li>VS Code の ▷ で実行すると、ブラウザに画面が出る</li>
+          <li>タイトルに<strong>自分の名前</strong>が入っている（<code>title=</code> を書き換える）</li>
+          <li>スライダーを動かして Submit を押すと、結果の文の数が変わる</li>
         </ol>
       </div>
       <div class="setup-step">
         <p class="step-title">発展課題のスライド1枚に貼るもの</p>
-        <p style="font-size:0.95rem">ブラウザの画面と、VS Code のターミナル（<code>streamlit run app.py</code> の行が見える）の2つのスクリーンショット。文章は1〜2行まで。
-        見出しは「第1回 発展: Streamlit の準備」にする。</p>
+        <p style="font-size:0.95rem">ブラウザの画面と、VS Code のターミナル（<code>Running on local URL</code> の行が見える）の2つのスクリーンショット。文章は1〜2行まで。
+        見出しは「第1回 発展: Gradio の準備」にする。</p>
       </div>
       <div class="concept-box" style="margin-top:1rem">
         <h4>30点になる条件</h4>
@@ -1326,36 +1326,48 @@ best_time = <span class="kw">None</span>
     <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
         <span class="tag tag-advanced">準備</span>
-        <h3>Streamlit で画面のあるアプリを動かす</h3>
+        <h3>Gradio で画面のあるアプリを動かす</h3>
       </div>
-      <p style="font-size:0.95rem">Streamlit（ストリームリット）は、Python のプログラムをそのままブラウザの画面にする道具です。
-      HTML や JavaScript を書かずに、ボタン・入力欄・図が作れます。</p>
+      <p style="font-size:0.95rem">Gradio（グラディオ）は、Python の関数に「入力欄・ボタン・図」の画面を付けてくれる道具です。
+      HTML や JavaScript を書かずに、ブラウザで動くアプリになります。
+      授業で作った関数を残したまま、その外側に画面を付けられるのが利点です。</p>
       <div class="setup-step">
         <p class="step-title">1. 1回だけ入れる</p>
-        <p style="font-size:0.95rem">VS Code のターミナルで次を実行する（数分かかる）。</p>
+        <p style="font-size:0.95rem">VS Code のターミナル（メニューの「ターミナル → 新しいターミナル」）で次を実行する。数分かかる。</p>
 <pre><span class="code-label">ターミナル</span>
-Windows:  py -m pip install streamlit
-Mac:      python3 -m pip install streamlit</pre>
+Windows:  py -m pip install gradio
+Mac:      python3 -m pip install gradio</pre>
       </div>
       <div class="setup-step">
         <p class="step-title">2. いちばん小さいアプリを動かしてみる</p>
         <p style="font-size:0.95rem"><code>AL2/work</code> フォルダを作り、<code>app.py</code> という名前で保存する。</p>
-<pre><span class="code-label">Python ── app.py（Streamlit）</span>
-<span class="cmt"># いちばん小さい Streamlit アプリ</span>
-<span class="cmt"># ターミナルで  streamlit run app.py  と打つと、ブラウザに画面が出る</span>
-<span class="kw">import</span> streamlit <span class="kw">as</span> st
+<pre><span class="code-label">Python ── app.py（Gradio）</span>
+<span class="cmt"># いちばん小さい Gradio アプリ</span>
+<span class="cmt"># VS Code の ▷ で実行すると、ブラウザに画面が開く</span>
+<span class="kw">import</span> gradio <span class="kw">as</span> gr
 
-st.title(<span class="str">&quot;迷路アプリ&quot;</span>)
 
-size = st.slider(<span class="str">&quot;迷路の大きさ&quot;</span>, <span class="num">3</span>, <span class="num">10</span>, <span class="num">5</span>)       <span class="cmt"># スライダーで数を選べる</span>
-st.write(<span class="str">f&quot;{size} × {size} の迷路を作ります&quot;</span>)
+<span class="kw">def</span> <span class="fn">make_message</span>(name, size):
+    <span class="str">&quot;&quot;&quot;入力欄とスライダーの値を受け取り、画面に出す文を返す&quot;&quot;&quot;</span>
+    <span class="kw">return</span> <span class="str">f&quot;{name} さんの {size} × {size} の迷路を作ります&quot;</span>
 
-<span class="kw">if</span> st.button(<span class="str">&quot;解く&quot;</span>):                            <span class="cmt"># ボタンを押したときだけ動く</span>
-    st.success(<span class="str">&quot;ここに結果を表示する&quot;</span>)</pre>
-        <p style="font-size:0.95rem">ターミナルで <code>AL2/work</code> に移動してから、次を実行する。ブラウザが自動で開く。</p>
-<pre><span class="code-label">ターミナル</span>
-streamlit run app.py</pre>
-        <p style="font-size:0.9rem;color:#888">止めるときはターミナルで Ctrl+C。コードを直して保存すると、ブラウザの右上に「Rerun」が出るので押す。</p>
+
+app = gr.Interface(
+    fn=make_message,                                   <span class="cmt"># ボタンを押すと呼ばれる関数</span>
+    inputs=[
+        gr.Textbox(label=<span class="str">&quot;名前&quot;</span>, value=<span class="str">&quot;自分の名前&quot;</span>),
+        gr.Slider(<span class="num">3</span>, <span class="num">10</span>, value=<span class="num">5</span>, step=<span class="num">1</span>, label=<span class="str">&quot;迷路の大きさ&quot;</span>),
+    ],
+    outputs=gr.Textbox(label=<span class="str">&quot;結果&quot;</span>),
+    title=<span class="str">&quot;迷路アプリ&quot;</span>,
+)
+
+app.launch(inbrowser=<span class="kw">True</span>)                             <span class="cmt"># ブラウザを自動で開く</span></pre>
+        <p style="font-size:0.95rem">例題と同じように、VS Code の右上の <strong>▷</strong> を押す。
+        ターミナルに <code>Running on local URL: http://127.0.0.1:7860</code> と出て、ブラウザが自動で開く。
+        名前を書き換え、スライダーを動かして「Submit」を押すと、結果の文が変わる。</p>
+        <p style="font-size:0.9rem;color:#888">止めるときはターミナルで Ctrl+C。コードを直したら、止めてからもう一度 ▷ を押す。
+        ブラウザが開かないときは、ターミナルに出た URL をブラウザに貼る。</p>
       </div>
     </div>
   </div>
@@ -1433,7 +1445,7 @@ streamlit run app.py</pre>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="UZO9viLbYW1bquY9MC7uGM0UYmSF9hLGaYqi2tYDGV8F4PVQ56CpF/Njtl5F4FQPWxllC/ILlBCAs3vICQ2gke46fWeLjT3cG0oeqr1PaJAUQmp1eo69ux76r1T4gCHZ/FCk+9WV+7mRphl9RELmBfLOjG6UpeNWGDDWfR9gJotebFIW2pwP/PGb3Y64cbuVlNOaYHnQnA3hvr96/Clint+T01r56faXIpf4hDZlTFKPBP+yPTcPN8Qjt0uenAMkjkI6/ZSKA2Azd6UGisTfnTD1TZoK5Ry1XMrfRJ8iSaNEgE0YlkxQFk4IRXxbywdaEstBjQqc7w7FMOEjJ3U0yVkuGF+oT/cQtWOQpLgh2V85+magNQrlbKIFv3mdeP8hYAocPoTDZdww2IoacD1gYEnVFfEcafeOKZQco1t2q2g3lPDmIMYVY7UTG9s+j/ByC7YeHrt553lFo7W7w12K7IyFaXNxV2sZzyNXI7TOy+DnIDA7Z8KvEraEUr/aDAqAUlNg7RZTknixvQP4vRNSY3ZDaT5n8FxNzmpOuBeFK3amFC0ZrcAgz7KuAIu+sux+kwIKXAlwIwz22B2EW5Y6Zs4REqmoWTVy/Lb1dUK76aIb+ZkHabQ50jcwMvlL83OMJ0Pl0OLLJK0dgiwtoWNj9ma4KbCizpYXHnSqe0doMHooPkqhVfhkASVwFnkbQ7NeeaQwCdzE16D07eIGESNwn6nEmspb9x0TduSIdp7J1J81LBv4aZASpCXRd4laJZervum2oz7hpNoITQgTF1ScWjfCKlqKDH5OiI9fzbtmMQXgd4KJypxkmopC6DZOdNUZrLFeVBr5e738FOFxi0EXd0UPCFGOtyqX+0XP9F/3DjBQPXQ6J1tAJC9te90ItBozu1IVerdBbWVsJ2zB1ZxupwhWQqS7UnS3BmqCjGn7C5tVrftX5hpZ3yBgrVlofR9SUFP/6JC1N/ebvqToTHSRScISuWEhXjXHTZL0Og412lyuMDLXpjc4ccG/5aV6HrK+83TH/BRwUxxUEmqkB7qByTpfIEU26SjCWaKS1bFxYfsFWY2QJUGtf3sBcqxoypzSEoQgQoFUg7tUinJkq35R2YWKwBvnzKAnEnC1/u1p+5v4H/anl8R2Ooq03kEqKJFnQ6URQ0WebzPODiDNNortCeN6TTGix+lq4LgtQHfHrhGzj9lRMaf7zqmRfAm+v/jtSgnYRCToYX95o8FhSvFfdsY8xKjgELopwdo8j4/qpK1McqVjAwfRPi7X+eYsYBFtSzFpo8FHSezLyC9QzlPd81XgTOECOCXTvN4IlMVkChxZSrqF6EAkahCFXZacA1aIIhiQapBhKgEg06ogbQsy67r0r34KmDTY4KFtLQzXoqqGtHpZhgiYWTByqBX2d7HaHZFCBN5RGaAbyDumkeeIEJBT27+pEZdXJ93cKxiBIU1uDAk2ZmhdXReNO4yuX8wcQ0AOknvBIUeI93e94ls6J+RZoM+P5+VcmawKN5xqga9C4g=="></div>
+    <div id="answers-encrypted" data-cipher="Z2dMf1VkwvJ2o7OCCnO6m/lco360uQSL0oPEA3x82XVimpIc1RgVdAi+glNJl/0iMM0ztwf0Sbnj2SsFfyAtrZkxKn2HDuqLg8v+7qr2E7ae538eZBEg8p9nVhXpF48myPQaWCmVhijDw4+kb7IGhkcpqqkMuUm7Cesw5oI5qO3d90OYvMuutYgQZ6dPKOu5scvaggRHYlul/hihfuhNYSfKcvu/kgxqe53kXqPoM02nSYSMpRRTLcd3me2ZGWhKrRm1DE71VSbw4BeW6Z2VnB0vT7bw6Jm1kp+1WONh9g1meOSi8NStj6d3kJdVIBEl+EYfJjA54pGn6za9qzxlKh8BaL/Xu701MY/rWU/qWFO30c4Xkn8GY3gSnaVRUnHKge6JNsxAux9W24suNfVeFQn59QQ67LjnnT0AcBbToooOdlIf6S00wNTj5EWHTcPaa2sC6xKZblcWGMoBC9D4vZOnMp27nheL+lPtqgX2hRJzs+Q9vhqGag9J7DPFMtz8uyd8DbuSYMjSXZ741FqaPD7LLvaFMqX5jMI52jthhgTcg1f4IWH0j43zQgmVFDJowS6pTt5sU/OHKcZA26h/Gm/4GN/U0TwrMyMkqCKHgZ32jbwOI7wZm/uP7zwlcyRFPFv9FRp5uvcaR8OZ0VxvOgdyYHPCfKH5TBblcr5j8PWjUk/daAQfOQrmfvAAsGyM3tyqCOVG7yhAHl4Co00LybRBmX5GOLTTS4M4E25bY/JsihCkJmW7OwGOId72nt8quJNSzSDLMcbaw5jBqI5ndtLLEWnKQQv2/TedgZu7F5rdJCycdQdDZ03vS0YaBmp+5sjgdjMnDnZQ0Bl1xw0eT+JCvA8Fs/cXBzHXPVRvPHgQnQvlucVAICMPbTuXiNOm1OG0YZ7NGAGejJMQ2Ixyv5udVjbANURncDPJP9xaO5EXM70uEevUYqdIDXbHgrVzZIHDrnEEyNnV2HayiFEMAvFSPeZayPpcSUMA7j4YYFPuTKl1SE72qKqb3XJkXHuW0CxMy7VnfBF9ryxn6g5AT2Lwi4lNatuWkrEVeVHRYSMDfinOB92GFnK9FpFXCZK+diB5ja4awRuPrh/7eNghqzBhhYmGNvzskTxVv6pE+yegjHUWW9e3czDz+c5uRJr2EjV/ghNEGOOZ1gqf+A+PnbafAAE9bFVuEBggdx3YMZnyX4HWaanDc4sqD+o47gFwUz83u4W0voczXs3ty/3nfzIsxg+WwdTAWiWXvsLtyOahRt2CzKhhx3zrXel0h3HewdmEfKI/sm9hCtoPRdEmB6uM6fMPNJg8v4LD0ceFCVzLNGabNMxCJtaD2r5y2Pn7LuLARo6wfhHgw5DmJdl/Jrh/B6QpLhD0MZFxnJhU+HKNck2zhwSQ0QeUFAA+016tRFx1qKl2QwJW3c91I15EU6i04NAX04+CILySaaE2qOpIL1M/+a56HcNR4vzeRo4ueM3ZpV04r9CpEl546OepfwxFURCHXJZOT2RFrFt3vOZALg=="></div>
 
   </div>
 </section>

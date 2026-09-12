@@ -261,7 +261,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       </ol>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         大きな作品である必要はありません。<strong>小さくても、動いて、アルゴリズムが役に立っていること</strong>が大切です。
-        3つのテンプレートのどれかを Streamlit の画面に載せ替えるだけでも、作品4になります。
+        3つのテンプレートのどれかを Gradio の画面に載せ替えるだけでも、作品4になります。
       </p>
     </div>
 

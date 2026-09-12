@@ -308,27 +308,30 @@ def slides_for(week, data):
     return slides_section(week, data[week])
 
 
-def streamlit_card():
-    """Streamlit の準備。発展課題のセクションに毎回入れる。"""
+def gradio_card():
+    """Gradio の準備。第1回の発展課題に入れる。"""
     return f"""    <div class="card" style="border-left:4px solid #FFB800">
       <div class="card-header">
         <span class="tag tag-advanced">準備</span>
-        <h3>Streamlit で画面のあるアプリを動かす</h3>
+        <h3>Gradio で画面のあるアプリを動かす</h3>
       </div>
-      <p style="font-size:0.95rem">Streamlit（ストリームリット）は、Python のプログラムをそのままブラウザの画面にする道具です。
-      HTML や JavaScript を書かずに、ボタン・入力欄・図が作れます。</p>
+      <p style="font-size:0.95rem">Gradio（グラディオ）は、Python の関数に「入力欄・ボタン・図」の画面を付けてくれる道具です。
+      HTML や JavaScript を書かずに、ブラウザで動くアプリになります。
+      授業で作った関数を残したまま、その外側に画面を付けられるのが利点です。</p>
       <div class="setup-step">
         <p class="step-title">1. 1回だけ入れる</p>
-        <p style="font-size:0.95rem">VS Code のターミナルで次を実行する（数分かかる）。</p>
-{plain("Windows:  py -m pip install streamlit" + chr(10) + "Mac:      python3 -m pip install streamlit", "ターミナル")}
+        <p style="font-size:0.95rem">VS Code のターミナル（メニューの「ターミナル → 新しいターミナル」）で次を実行する。数分かかる。</p>
+{plain("Windows:  py -m pip install gradio" + chr(10) + "Mac:      python3 -m pip install gradio", "ターミナル")}
       </div>
       <div class="setup-step">
         <p class="step-title">2. いちばん小さいアプリを動かしてみる</p>
         <p style="font-size:0.95rem"><code>AL2/work</code> フォルダを作り、<code>app.py</code> という名前で保存する。</p>
-{code("AL2-app-min.py", "Python ── app.py（Streamlit）")}
-        <p style="font-size:0.95rem">ターミナルで <code>AL2/work</code> に移動してから、次を実行する。ブラウザが自動で開く。</p>
-{plain("streamlit run app.py", "ターミナル")}
-        <p style="font-size:0.9rem;color:#888">止めるときはターミナルで Ctrl+C。コードを直して保存すると、ブラウザの右上に「Rerun」が出るので押す。</p>
+{code("AL2-app-min.py", "Python ── app.py（Gradio）")}
+        <p style="font-size:0.95rem">例題と同じように、VS Code の右上の <strong>▷</strong> を押す。
+        ターミナルに <code>Running on local URL: http://127.0.0.1:7860</code> と出て、ブラウザが自動で開く。
+        名前を書き換え、スライダーを動かして「Submit」を押すと、結果の文が変わる。</p>
+        <p style="font-size:0.9rem;color:#888">止めるときはターミナルで Ctrl+C。コードを直したら、止めてからもう一度 ▷ を押す。
+        ブラウザが開かないときは、ターミナルに出た URL をブラウザに貼る。</p>
       </div>
     </div>"""
 
@@ -373,7 +376,7 @@ def milestone_card(week, num, d):
 
 
 def advanced_section(week):
-    """発展課題（30点）のセクション。第1回は Streamlit の準備、それ以外はその単元の作品の今回の到達点。"""
+    """発展課題（30点）のセクション。第1回は Gradio の準備、それ以外はその単元の作品の今回の到達点。"""
     from slides_data import ADVANCED, advanced_of
     num = advanced_of(week)
     d = ADVANCED[num]
@@ -385,7 +388,7 @@ def advanced_section(week):
     </p>"""
 
     if d["algo"] == "─":
-        # 第1回: Streamlit の準備
+        # 第1回: Gradio の準備
         rows = "\n".join(
             f'        <tr><td>作品{k}</td><td>{v["title"]}</td><td>{v["algo"]}</td>'
             f'<td>第{int(v["weeks"][0])}〜{int(v["weeks"][-1])}回</td></tr>'
@@ -408,8 +411,8 @@ def advanced_section(week):
 
 {milestone_card(week, num, d)}
 
-{streamlit_card()}"""
-        return section("sec-advanced", "4", "発展課題（30点・任意）: Streamlit の準備", body, color="#FFB800")
+{gradio_card()}"""
+        return section("sec-advanced", "4", "発展課題（30点・任意）: Gradio の準備", body, color="#FFB800")
 
     screen = "\n".join(f"          <li>{t}</li>" for t in d["screen"])
     first = week == d["weeks"][0]
@@ -442,7 +445,7 @@ def advanced_section(week):
       <h4>AI への頼み方（往復のしかた）</h4>
       <table>
         <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
-        <tr><td>1</td><td>「Streamlit で{d["title"].replace("アプリ", "")}を表示するだけの最小のアプリ」を頼む</td><td><code>streamlit run app.py</code> で画面が出るか</td></tr>
+        <tr><td>1</td><td>「Gradio で{d["title"].replace("アプリ", "")}を表示するだけの最小のアプリ。最後は app.launch(inbrowser=True)」を頼む</td><td>VS Code の ▷ で画面が出るか</td></tr>
         <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
         <tr><td>3</td><td>{d["algo"].split("（")[0]}を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか</td></tr>
         <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
@@ -457,7 +460,7 @@ def advanced_section(week):
       <h4>完成の条件（5つの要件）</h4>
 {requirements_table()}
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        Streamlit の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
+        Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
     </div>"""
     return section("sec-advanced", "4", f"発展課題（30点・任意）: 作品{num}「{d['title']}」", body, color="#FFB800")
 
