@@ -315,9 +315,8 @@ def gradio_card():
         <span class="tag tag-advanced">準備</span>
         <h3>Gradio で画面のあるアプリを動かす</h3>
       </div>
-      <p style="font-size:0.95rem">Gradio（グラディオ）は、Python の関数に「入力欄・ボタン・図」の画面を付けてくれる道具です。
-      HTML や JavaScript を書かずに、ブラウザで動くアプリになります。
-      授業で作った関数を残したまま、その外側に画面を付けられるのが利点です。</p>
+      <p style="font-size:0.95rem">Gradio（グラディオ）は、Python の関数に「入力欄・ボタン・図」の画面を付ける道具です。
+      授業で作った関数を残したまま、外側に画面を付けられます。</p>
       <div class="setup-step">
         <p class="step-title">1. 1回だけ入れる</p>
         <p style="font-size:0.95rem">VS Code のターミナル（メニューの「ターミナル → 新しいターミナル」）で次を実行する。数分かかる。</p>
@@ -334,17 +333,6 @@ def gradio_card():
         ブラウザが開かないときは、ターミナルに出た URL をブラウザに貼る。</p>
       </div>
     </div>"""
-
-
-def requirements_table():
-    return """      <table>
-        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
-        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
-        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
-        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
-        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
-        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
-      </table>"""
 
 
 def milestone_card(week, num, d):
@@ -381,14 +369,12 @@ def advanced_section(week):
     num = advanced_of(week)
     d = ADVANCED[num]
     intro = """    <p style="margin-bottom:1.5rem">
-      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで各回70点に届きます。
-      90点以上（S評価）をねらう人は、毎回の到達点を積み上げてください。
-      発展課題では <strong>ChatGPT などの AI を使ってかまいません</strong>。
-      ただし、到達点は「動かして・直して・聞き直す」をくり返さないと満たせないように作ってあります。
+      発展課題は<strong>やらなくてもよい</strong>課題です（標準課題だけで各回70点）。
+      ChatGPT などの AI を使ってかまいません。作り方の細かい説明はしません。
+      到達点を満たすものを、自分で調べて作ってください。
     </p>"""
 
     if d["algo"] == "─":
-        # 第1回: Gradio の準備
         rows = "\n".join(
             f'        <tr><td>作品{k}</td><td>{v["title"]}</td><td>{v["algo"]}</td>'
             f'<td>第{int(v["weeks"][0])}〜{int(v["weeks"][-1])}回</td></tr>'
@@ -396,17 +382,14 @@ def advanced_section(week):
         body = intro + f"""
 
     <div class="concept-box">
-      <h4>発展課題の全体像: 4つの作品を、毎回の到達点に分けて作る</h4>
+      <h4>4つの作品を、毎回の到達点に分けて育てる</h4>
       <table>
         <tr><th>作品</th><th>作るもの</th><th>使うアルゴリズム</th><th>取り組む回</th></tr>
 {rows}
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
-        各回のページに<strong>「今回の到達点」</strong>が書いてあります。
-        1つの作品を3〜5回に分けて育て、毎回その回の到達点を満たせば30点です。
-        完成した作品は、次の5つの要件をすべて満たすものになります。
+        各回のページに「今回の到達点」が書いてあります。その回の到達点を満たせば30点です。
       </p>
-{requirements_table()}
     </div>
 
 {milestone_card(week, num, d)}
@@ -415,7 +398,6 @@ def advanced_section(week):
         return section("sec-advanced", "4", "発展課題（30点・任意）: Gradio の準備", body, color="#FFB800")
 
     screen = "\n".join(f"          <li>{t}</li>" for t in d["screen"])
-    first = week == d["weeks"][0]
     body = intro + f"""
 
     <div class="card" style="border-left:4px solid #FFB800">
@@ -426,6 +408,7 @@ def advanced_section(week):
       <table>
         <tr><th>使うアルゴリズム</th><td>{d["algo"]}</td></tr>
         <tr><th>自分のデータ</th><td>{d["data"]}</td></tr>
+        <tr><th>答え合わせ</th><td>{d["match"]}</td></tr>
       </table>
       <div class="setup-step" style="margin-top:1rem">
         <p class="step-title">完成したときに画面でできること</p>
@@ -433,35 +416,12 @@ def advanced_section(week):
 {screen}
         </ol>
       </div>
-      <div class="setup-step">
-        <p class="step-title">例題との答え合わせ</p>
-        <p style="font-size:0.95rem">{d["match"]}。一致した2つの数値をスライドに並べて書く。</p>
-      </div>
     </div>
 
 {milestone_card(week, num, d)}
 
-    <div class="concept-box">
-      <h4>AI への頼み方（往復のしかた）</h4>
-      <table>
-        <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
-        <tr><td>1</td><td>「Gradio で{d["title"].replace("アプリ", "")}を表示するだけの最小のアプリ。最後は app.launch(inbrowser=True)」を頼む</td><td>VS Code の ▷ で画面が出るか</td></tr>
-        <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
-        <tr><td>3</td><td>{d["algo"].split("（")[0]}を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか</td></tr>
-        <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
-        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        今回の到達点は、この表のどこまで進めば満たせるかを見て決めてあります。
-        最後の回では、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます。</p>
-    </div>
-
-    <div class="concept-box">
-      <h4>完成の条件（5つの要件）</h4>
-{requirements_table()}
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
-    </div>"""
+    <p style="font-size:0.9rem;color:#888">
+      Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>"""
     return section("sec-advanced", "4", f"発展課題（30点・任意）: 作品{num}「{d['title']}」", body, color="#FFB800")
 
 
