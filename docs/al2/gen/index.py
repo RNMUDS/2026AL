@@ -109,8 +109,8 @@ body = f"""
 <section id="sec-attend" style="padding-top:1.5rem;padding-bottom:0">
   <div class="container">
     <div class="attend-box">
-      <h3>出席コード（respon に入力）</h3>
-      <p>授業の始めに、その回のコードを respon に入力してください。</p>
+      <h3>出席コード</h3>
+      <p>授業の始めに、その回のコードを入力してください。</p>
       <table>
         <tr><th>回</th><th>日付</th><th>認証コード</th><th>内容</th></tr>
 {attend_rows}
@@ -152,7 +152,7 @@ body = f"""
       </div>
       <div class="mini-card">
         <h5>使うもの</h5>
-        <p>Visual Studio Code と Python（前期と同じ環境）。出席は respon、提出と質問は manaba。</p>
+        <p>Visual Studio Code と Python（前期と同じ環境）。提出と質問は manaba。</p>
       </div>
       <div class="mini-card">
         <h5>授業時間外の学習（毎週4時間）</h5>
