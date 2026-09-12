@@ -703,7 +703,7 @@ ratio = greedy_length / best_length
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000784秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 149 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000786秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 157 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
 
@@ -1132,10 +1132,9 @@ best_route, best_length = <span class="fn">brute_force</span>()
       <h2>発展課題（30点・任意）: 作品3「配達ルートアプリ」</h2>
     </div>
     <p style="margin-bottom:1.5rem">
-      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで各回70点に届きます。
-      90点以上（S評価）をねらう人は、毎回の到達点を積み上げてください。
-      発展課題では <strong>ChatGPT などの AI を使ってかまいません</strong>。
-      ただし、到達点は「動かして・直して・聞き直す」をくり返さないと満たせないように作ってあります。
+      発展課題は<strong>やらなくてもよい</strong>課題です（標準課題だけで各回70点）。
+      ChatGPT などの AI を使ってかまいません。作り方の細かい説明はしません。
+      到達点を満たすものを、自分で調べて作ってください。
     </p>
 
     <div class="card" style="border-left:4px solid #FFB800">
@@ -1146,6 +1145,7 @@ best_route, best_length = <span class="fn">brute_force</span>()
       <table>
         <tr><th>使うアルゴリズム</th><td>貪欲法と動的計画法（第9〜10回）</td></tr>
         <tr><th>自分のデータ</th><td>自分で決めた配達先の座標（8〜12か所）</td></tr>
+        <tr><th>答え合わせ</th><td><code>AL2-10-ex2.py</code> に同じ配達先を入れて実行し、bitDP の合計距離が一致することを確かめる</td></tr>
       </table>
       <div class="setup-step" style="margin-top:1rem">
         <p class="step-title">完成したときに画面でできること</p>
@@ -1154,10 +1154,6 @@ best_route, best_length = <span class="fn">brute_force</span>()
           <li>貪欲法のルートと bitDP のルートを、地図に2色で描く</li>
           <li>2つの合計距離と計算時間を並べて表示する</li>
         </ol>
-      </div>
-      <div class="setup-step">
-        <p class="step-title">例題との答え合わせ</p>
-        <p style="font-size:0.95rem"><code>AL2-10-ex2.py</code> に同じ配達先を入れて実行し、bitDP の合計距離が一致することを確かめる。一致した2つの数値をスライドに並べて書く。</p>
       </div>
     </div>
 
@@ -1186,34 +1182,8 @@ best_route, best_length = <span class="fn">brute_force</span>()
       </div>
     </div>
 
-    <div class="concept-box">
-      <h4>AI への頼み方（往復のしかた）</h4>
-      <table>
-        <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
-        <tr><td>1</td><td>「Gradio で配達ルートを表示するだけの最小のアプリ。最後は app.launch(inbrowser=True)」を頼む</td><td>VS Code の ▷ で画面が出るか</td></tr>
-        <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
-        <tr><td>3</td><td>貪欲法と動的計画法を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか</td></tr>
-        <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
-        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        今回の到達点は、この表のどこまで進めば満たせるかを見て決めてあります。
-        最後の回では、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます。</p>
-    </div>
-
-    <div class="concept-box">
-      <h4>完成の条件（5つの要件）</h4>
-      <table>
-        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
-        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
-        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
-        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
-        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
-        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
-    </div>
+    <p style="font-size:0.9rem;color:#888">
+      Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
   </div>
 </section>
 
@@ -1289,7 +1259,7 @@ best_route, best_length = <span class="fn">brute_force</span>()
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="/FP+GP747+l6/fbeQ9Xj3ofV3xd2GjCqNN+/PrxHyBSHrA1eEGtokyVKf1uk8mWQTAdDZZGODE5TpfgNnONlrjevtQGORfIsuDSKFnRURdh+p5Hm13SA90BCd3ZnaYEKeL9ioATdZ/+i2XdF0SkWoxKRfxNeaeSXvtVeb/8Kc66t3ntqlk8q5S4BG6o3/yXlM9edbhLPT2Io92pyIIfaonOznHToZn/0jiTVf4qjWv83/4EPzKUWkmMzhdaDyACFekZpHWQx6wfwQDwRysJB6ngyz45scH2oB5vVnyHIIgTxGKVftqCUdzQx3FHUCSmGESq4uq3dzwbgLr11XitMwCLPNkN2RiLB0zzOdOrzL5xDLuJhJfyTgSOtlv1xOAairaYGJSIh+GxjZBvtoWmcRZhMO/UXxEeLEt8INE2EWIGP47AnnN61C4Ht8xG3Nn+IOCzprbwABDH6U6MLuaqYw2YVPAmKxSrb5X8pUU7ILkjHNFIeyqzcbIX06/nGWeAijTqSKHPYyXEioZSwqAE+IG0neA66dytDaewrSjqdvRUgNGbtVw8k0yEI3E6cQ0eMqI9q7jbqZK2W8ndXV4eyGhf3uGqLe8gY+LC0ar/AxQ5VfygJ8cXKzukyfg31U3UJTkLfycfjekMIX3AIS8gk0y4O/J/4ceeDNkJD0F+eQ5Ccm7UqoH769d/cOK9VDWoRMVBR0EJ4hmO9/N2Z/DbGbBCZQsW0jAkwAa8MhU+GRnlEofxBXymghkJ9IB3NcK49T0gROgiUTAgYjAtNUt7wBEgArIJUI17G9lmHQSM57BJA2dzZ1+2V71XHbzL1zfEyXoc74ERCw0Zs3XMjEtlnWSHcHXzdgSGg5cQ9Gjlxb5SP9UEubUoIjmbN0sl4b1/TCG3duSZ5rmlP6Di70tnV8kZjFGPGLcy2boHHmgULlaRvOoPJjwhQ+C0vXeaF0/hxrRU53drDXVHjN0YN52GckV/2G3+3S9UDg2ZzLKBUDsDfoOiZSyyztxWyTU43+lKQkfR88mV3N6GXKNyeqSn9j5P2wS1ntY4Ilu9AyW04EDmZBlJAvjcLEKkHOLv6z3BG6w8SlUqy2QZn/UyYI/au8TRq2hnuruvLDYprfQWHcGDQjxPQ7FbXex56qiZeOJQOrMH80AxERkIL1mE+T8nuEisBocWJQQbaPX0RImepQczBgNF2TQcxebzEnvs5jVMBBIOOmPoTYOXp47v+G+WNO3o1JBaO0CC28nkHq568vaUVQd13OiRamnkdEC2NKUidsrecZDdEQLtbDObngDW96WWadJvnH5ev7Q7M8c43F4pRtJpFBaupicByhm9fvBWbn2AVYK20Z5qySl8pIuTExJhgmO10k5hRZMaQlW8i5ie6jGcIb6bDD2P/w2xxQYcT5PiKX2AiLrMCGtlRH9yjMUoiLWZ8VwHG6fDRxB+6E6VhlKkyoaLEAJkVTSUIiwevUOc/AIvc0uwTGqMn5IHUxnoEVxctrR0Z5X7cjti5NiG5QfoGeiYYn/ABAREK3xCZBuY7eAJAARSs5kiCgJIkt+NMxKyF24bvICmkeA1nsGwPLyCN7/PYwyyRbQZGO6ESAlXpIlQ3FTTWFx51I0EWjG5ASbVZiBLz+Y+tKEx3fS6BX82ioqk="></div>
+    <div id="answers-encrypted" data-cipher="R6KY85JjRIaIkEx6JD0og3FWz/LLaIDcb8n6b+oQXLX4dULBFz506fyUgcX2OINyhaOFU3en1dpS+wymVQi6vISmWs2E4VswvvrRVkGeYFFUmNh1McLY/gqutLz9E7zbsGC0XmDGkAdDk7rhnotqYm0fjnHt03dxTbWfXHW1kgbsQ3rl9lD67I+Xvr9BtOOAKuBQJV5ZHsMYm2PQ675obza6ZHuhArrZ90p/asqMWt+RagW43nektuMJZ94vrN+cLELNI8/GBod0kR65wIZrditIoLvgiiMsUBAQDyA8ituxrjQpX4nWSqCs72xgUxW55ucThjjA84pFbX4TVQlGxd9xZIqjj00cCbHTVPngbwvEGAf9M5W4qd8VJeA1oFGuxwPoH4r/kdrAWCn6JGcXFxuEVAhj1WMX+kHJONhDFDLWVhfv1l6C4ThvYZckTfR49O9ZWQDHRuuB5mpFq9GXGTUFZqKOPSJF5CjMv8PpVp5omzZhDQVIGbCVggkgT1lqSS4T/HptLJAxtkep6qFPFuFpWSqSiZKcIqYBCag7kYRy2uPH2ktVHpVS02Lf37A+MjNR7YG+lDeuQmHD9nvkPzVUiMeUW9iypqZaR2VTvRNB3ccXqxlhP8/vEDOI8Mo97xTYfxypOlbv5HrmgDAMbcNn0yG9H24RscZ4r/PDIiWVDy9SLCT1DpEhr67rg4td+wv/gnWP4221yuqAQpoSMgzHag+Bg44WCkbEGx/zB/XasFfEOMrVqMlPyWEoA0GD9m+sFBQUZs3elm5GV1c0EclLvZqb7xxTNdFhSAduXGEakjJRZOReVmHG5UywcYQWjdVJgcvoeT5CpKs8aPLO0dFfkeu45Zu1cnXBQ2mEVtxqo6Zfr78A0MOmGzns5tNBnZ5+gGe+oS0Z+wN6oYfbHIMquw9bBIRPHTlItfH7LEcASCO+GY+QbLLseFWgVe5Q5oNJtC6GkSEmCLm8u0762YMK3bVSUXSMBJEFtMDM7IdY0b+avylky14rEa4IdEdRcgk2KV4ZSfvPOYytxdy2dn93kiwkNPKTzc54O9KJrLrr3S/qoQOdOr7K+j8L5OqtDogkC4RxzV9+zvlDPhZoK73VBauOAtC6fcLWhky9z9p5NuJrBlk/VABHLE+f6jEeTbv0AEPd5KeDd9ti1p6nSMTvw5OMITImqDEygigeK1+5e0sdyQyN3fsG2vokqLvFJXwqmPD1mZfz/hARI6pkiO6kDnLHJ037NAuLk7DE3OWxcMiP9JgcDWsfucqb/bhf6Cx9OtiawXj67W0dBTmyDxLHgCgferwY5s0vqxn4M5QlgCbHJ8efcZyVt9E2MeaIGboPcqfrPm6IQ7estqJxDcGmBPioKuP4/QxDN9ZA/Gz9qTb32Q5KqtouwmGcVTG20aLm4LA76e+aA8DQXURDgtoJrOFWeTIxwk+VouyGSHN147ByFUY8BO41CH1uX0e8kmcoN57mceHkzqEPTX1imvT/1FcC9USf4rj4NmiMqQ3cUMW2B8NHFuTQSZOTxviWxCOy4MoMVC5Cc3qzfPsujWoC67O71Cwf/BeeNolzds1AJ7QXHsg+kKL07arEc9oEZAkoHy7z+uoknXGyhL1ofXcTs9VMp6PV9ErphTUQXpXBwCZ16HA="></div>
 
   </div>
 </section>

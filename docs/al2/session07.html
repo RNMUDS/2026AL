@@ -1021,7 +1021,7 @@ line = <span class="str">&quot;&quot;</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.008秒 / 200×200        40,000          398      39,997       0.037秒 / 400×400       160,000          798     159,997       0.169秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
+        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.007秒 / 200×200        40,000          398      39,997       0.034秒 / 400×400       160,000          798     159,997       0.164秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
       </div>
       <p class="run-note">400マス四方（160,000マス）でも<strong>0.2秒ほど</strong>で解けています。マスの数が4倍になるたびに、かかる時間も4倍すこしずつ増えています。第4回の例題4で、全探索が6マス四方（36マス）に約7秒かかったことと比べてください。全探索では6マス四方が限界でしたが、ダイクストラ法なら400マス四方が一瞬で終わります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
 
@@ -1634,10 +1634,9 @@ forest = [
       <h2>発展課題（30点・任意）: 作品2「路線図の最短経路アプリ」</h2>
     </div>
     <p style="margin-bottom:1.5rem">
-      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで各回70点に届きます。
-      90点以上（S評価）をねらう人は、毎回の到達点を積み上げてください。
-      発展課題では <strong>ChatGPT などの AI を使ってかまいません</strong>。
-      ただし、到達点は「動かして・直して・聞き直す」をくり返さないと満たせないように作ってあります。
+      発展課題は<strong>やらなくてもよい</strong>課題です（標準課題だけで各回70点）。
+      ChatGPT などの AI を使ってかまいません。作り方の細かい説明はしません。
+      到達点を満たすものを、自分で調べて作ってください。
     </p>
 
     <div class="card" style="border-left:4px solid #FFB800">
@@ -1648,6 +1647,7 @@ forest = [
       <table>
         <tr><th>使うアルゴリズム</th><td>ダイクストラ法（第5〜6回）</td></tr>
         <tr><th>自分のデータ</th><td>自分がよく使う駅と、駅の間の所要時間</td></tr>
+        <tr><th>答え合わせ</th><td><code>AL2-05-ex1.py</code> に同じ路線図を入れて実行し、合計時間が一致することを確かめる</td></tr>
       </table>
       <div class="setup-step" style="margin-top:1rem">
         <p class="step-title">完成したときに画面でできること</p>
@@ -1656,10 +1656,6 @@ forest = [
           <li>最短の行き方（通る駅の順）と合計時間を表示する</li>
           <li>路線図を図で描き、選んだ行き方に色を付ける</li>
         </ol>
-      </div>
-      <div class="setup-step">
-        <p class="step-title">例題との答え合わせ</p>
-        <p style="font-size:0.95rem"><code>AL2-05-ex1.py</code> に同じ路線図を入れて実行し、合計時間が一致することを確かめる。一致した2つの数値をスライドに並べて書く。</p>
       </div>
     </div>
 
@@ -1688,34 +1684,8 @@ forest = [
       </div>
     </div>
 
-    <div class="concept-box">
-      <h4>AI への頼み方（往復のしかた）</h4>
-      <table>
-        <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
-        <tr><td>1</td><td>「Gradio で路線図の最短経路を表示するだけの最小のアプリ。最後は app.launch(inbrowser=True)」を頼む</td><td>VS Code の ▷ で画面が出るか</td></tr>
-        <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
-        <tr><td>3</td><td>ダイクストラ法を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか</td></tr>
-        <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
-        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        今回の到達点は、この表のどこまで進めば満たせるかを見て決めてあります。
-        最後の回では、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます。</p>
-    </div>
-
-    <div class="concept-box">
-      <h4>完成の条件（5つの要件）</h4>
-      <table>
-        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
-        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
-        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
-        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
-        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
-        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
-    </div>
+    <p style="font-size:0.9rem;color:#888">
+      Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
   </div>
 </section>
 
@@ -1791,7 +1761,7 @@ forest = [
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="Dwxn/rsa0dodNy5P+fv4btSKUZbzy/S6TL1w8DYFJGetGtKI7b52drLKeTy7oktOk4Ogp83A46ZNR7BstNv8okboTPVeTwqlhFhIz9fGFhFMf+72IQxci8GYvwCnT/tvhxWN7SdDjV5+j9ICJGLbyPrS4n1G6sdTnalNl62UseKv81JEZ2VSRF9yjUWfFtEWnNSghvHbDFsKu+4/dknwl4GVSe23zUGt8RoVcEgiz778i1RsnpAYJvzP9GfUhytbR6ZBlhtwyUocnxe70F0oKBToDqL0uTWtuwjPzfXAZtyoxR9Z0Xa95/84ZJFREFp3EmIuQDYJYMCp69r+WBqXGzqSnBmTgQTBqMxKzmnv0h6Y3Ajxgobg2gcKzZHLbGUuQqn0n7jZTnsH4Prt1doThLLzzVL0m9hL9fxA4kFgjxImfwCE6kDGq0qAS9Q3TfroRhkIFMvLQi15QnOD/V8PH3ZxIAYXkS4hk6Ct1+HLujt3gu8hm3IgmOY84RsLb47lrPVkJQoMu5O1kR4UsATk75fn96jltokOpbsuF870aEx1RFjxgA7qYCzlpuRrXM2v+V6s7lSR7d5Q1RsVCWaP5+RSoh9O2TadHbO/Exn6EEUxfNNuoj47B7CkNVsTJV+tD1Eo1u5azdt6qT7OPxrE5I5nfHbpIA98HcM8QzRm6a3f215ycoexuzV0OtN2BCn4GgADGk2jiXjH+3q+tjra8Jxt1/fV6ESgIdVTj1G0bkJO0NdCfEyf/hXqCGF/++/YewtBhSclMb2NuoMpH8ilUFic9FZLHgbqtDZVEmtE2n2YYsfIaOyXZkYC93/qkKVqGwk2sW9qnM6hXUgYMdDMFEbQ9uly8ZX6/9HJjA2IbQ3OLaf6NPSQUC1USxAesRvniYMuH3pSbddIT6UJpvKfF+igk+rFgCx+7chy3YR3HpYtpjrLuVAMFMJZCWGqVoOj4jGzH4dV5rF61lILvKKoVZBfqHBzdWL4Wb2vrQ4dM0NOEv5EcHJ55rTKJQCbAGbPtL89LKA38kB87Kr7hrPRm5XXIHtQ9ntIMSLVRKw9X5EZ4oEkmcIaCQt7NEvV2bfArlOf+sUJv0GGAc3dyrrudM/dkL5NS2m+NAL1cVADcvThRrQR3RiwVzcaSGI0RZQheeujPdlUmIDQgtMnY9G0dZicEcrexKJKJd4LWxef1O7dzmwa0wszg3At7Elb/jwI3XqgHVikJLMhVQIzkGmC3ox2xym8mj01xwCW5jp6TMpX8XqKQm90s3BW7Y303cJvwVoGcPfhI7GyoB0pMtl39hOkjhW3kQBe+6IkmQyMZrafsq6cCb+JSAi5KHUkiR1WuiJIbccEJDydliI4CFcyBj7AY/mjYdOKnDakyw/5cghDZbd3ea93j2nszNNdY+RhoJbchPf9zAC90yiWTBv1mZXcTlmsolotOm8Xn57qSa4ddw1bAPNGIq7AZ99ifk+ksHbEPVuVkh6KLiB9Sd1dibkx8YvjjIkT1mFesCp6emlB7eQ="></div>
+    <div id="answers-encrypted" data-cipher="9b0hSpH7jfK87FRjvOoDzoyILSsghZDXOSayIAdiN/FNl+YpP0dXhzGOfFAM9QLzZnVAEbUbQH9JldyQAsXRV2kiH5HDmXMtILDOXubYx1H31/J1RSAScpsrsQPnAfh808LbMtpMCASIXt9uvo1zakOvkRqge7cH+4yhllD4uZUB8j/L4i+1eLBcqllunFyKUj9MVuB9Q5rFzb3nliLlhyOMazoznmZ0OlQZSn6cvm/jmPohzw08lpaVxbSnsNTpsTCt0et9hahlpmhTvutca/P9cpe19t2OQ38vST5p7k49oaLqryVHNbOkO5i9zfwKo/i2LSefB5rnn+NVukXgaB2rLFJG2YUL+wu+FcRX7M4DGBAFFbZkGlXgjddwe+/66QQGa3tfvo5ejGdn7Zeoh+U8OD1F5Ovlu3qmzb/T6DNFXkql4krEp/M67RfCGkqDZA6vT4pxOPExEjQxbQS17DOdK7Aah32G3SdETyxQwErbd4MGLt0hVpzBgEjjY1LLWdXyePwdrqm6xs4rCDqdetSvnsGvUlnQfSPx/gHBt74DsiEqe6nB6G6L3uczUqCPAMUVxYShS99aVo+V+/P2fRYyr8AmsQmOcpfKV7XnyLNB8w9nZM1YDA6PG+i1n8FXFxFPmOd9hzjjIQ+LH0c6DSbMGWHQrM4eIXgFTiMX04r8h/SANU0YUxz8CyGMamYmdzVTZs3r7ncz6M5FWxkDeJPs+bsnXAFcebqz4ZRVnN7lls9UyOL8GXzIVAsQK9xb2dH7GcPqOIfIA5Juzs7ivxexrh/j3vOAy8auj3+6olBKMGg31QSg0uq/jGxJv2U5t84WnrxG+bhgtLglKszD1ge1Uu+lQ7bmEToiAoLnNW6obABhP/n3i5LOs504sM7oVr0SK0qBLvmK71q2Gc5M291EerNuk9mh4lxSE2C1yRrVjY/7ZRJapH2xn2An91t7LCmMJ5ELnCrngA+XJN7WOtNyICP56bE5mJCClBMZABgT4sCc0dsTNkrsc/C5xYJ1t2DpPpcn55pVZgLWS0/XvtFCx9/4aOUWxBwyAT12yQ2WubvUK5oeImIS3zTrEvSqB/QIdxDIZ0hb5K8HDRBw+aWwRe4xE6WThNiTlI4cqwfzcL/EVbwPy7/WOXuxDI0tUZC7Y1UmEjlTDKJHVyOQdgZgf1vXIf/1MGb0Fsgkddcg2Yc4JbNqUv0pQ3SosAJm4dWYQbak8o3dBaKspm8ULMbZDX+SONstgHR8nyklKaGc0a/sPu1cHGFqDpEESCDuLHjfifyOSBnCNPMUwRUaYOHjE8dMMvWFpEZt70VJveYLgZZjXisBFIyLYPXv0xmS8MGFc/m/2XEmyDMW4aUmD2SbBH6rXAAIC8i4kRRdjVhdxlTdq8HHrfqJnHDSafiMIvV9EI2xtHHTrDU0lPoO5VYsam/ZMz9zarPW1b8wuWdPsDfu2hjSh6iQXqh43jhwLm2XO19NQm9v/eumiIgQeQD8Sn3HTtRHPVrY0D1RFyS6oE8="></div>
 
   </div>
 </section>

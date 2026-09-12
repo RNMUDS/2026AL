@@ -798,7 +798,7 @@ settled = <span class="fn">set</span>()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        20.8倍 / 40×40           1600         0.065秒        0.001秒        81.7倍 / 80×80           6400         1.032秒        0.004秒       289.7倍 / 120×120         14400         5.652秒        0.009秒       644.2倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
+        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        23.3倍 / 40×40           1600         0.066秒        0.001秒        85.5倍 / 80×80           6400         1.043秒        0.004秒       291.7倍 / 120×120         14400         5.620秒        0.009秒       621.2倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
       </div>
       <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
 
@@ -1412,10 +1412,9 @@ simple_cost = <span class="num">0</span>
       <h2>発展課題（30点・任意）: 作品2「路線図の最短経路アプリ」</h2>
     </div>
     <p style="margin-bottom:1.5rem">
-      発展課題は<strong>やらなくてもよい</strong>課題です。標準課題だけで各回70点に届きます。
-      90点以上（S評価）をねらう人は、毎回の到達点を積み上げてください。
-      発展課題では <strong>ChatGPT などの AI を使ってかまいません</strong>。
-      ただし、到達点は「動かして・直して・聞き直す」をくり返さないと満たせないように作ってあります。
+      発展課題は<strong>やらなくてもよい</strong>課題です（標準課題だけで各回70点）。
+      ChatGPT などの AI を使ってかまいません。作り方の細かい説明はしません。
+      到達点を満たすものを、自分で調べて作ってください。
     </p>
 
     <div class="card" style="border-left:4px solid #FFB800">
@@ -1426,6 +1425,7 @@ simple_cost = <span class="num">0</span>
       <table>
         <tr><th>使うアルゴリズム</th><td>ダイクストラ法（第5〜6回）</td></tr>
         <tr><th>自分のデータ</th><td>自分がよく使う駅と、駅の間の所要時間</td></tr>
+        <tr><th>答え合わせ</th><td><code>AL2-05-ex1.py</code> に同じ路線図を入れて実行し、合計時間が一致することを確かめる</td></tr>
       </table>
       <div class="setup-step" style="margin-top:1rem">
         <p class="step-title">完成したときに画面でできること</p>
@@ -1434,10 +1434,6 @@ simple_cost = <span class="num">0</span>
           <li>最短の行き方（通る駅の順）と合計時間を表示する</li>
           <li>路線図を図で描き、選んだ行き方に色を付ける</li>
         </ol>
-      </div>
-      <div class="setup-step">
-        <p class="step-title">例題との答え合わせ</p>
-        <p style="font-size:0.95rem"><code>AL2-05-ex1.py</code> に同じ路線図を入れて実行し、合計時間が一致することを確かめる。一致した2つの数値をスライドに並べて書く。</p>
       </div>
     </div>
 
@@ -1466,34 +1462,8 @@ simple_cost = <span class="num">0</span>
       </div>
     </div>
 
-    <div class="concept-box">
-      <h4>AI への頼み方（往復のしかた）</h4>
-      <table>
-        <tr><th>順番</th><th>頼むこと</th><th>自分で確かめること</th></tr>
-        <tr><td>1</td><td>「Gradio で路線図の最短経路を表示するだけの最小のアプリ。最後は app.launch(inbrowser=True)」を頼む</td><td>VS Code の ▷ で画面が出るか</td></tr>
-        <tr><td>2</td><td>自分のデータに差し替えてもらう（データはこちらから貼る）</td><td>画面に自分の駅名・迷路・座標が出ているか</td></tr>
-        <tr><td>3</td><td>ダイクストラ法を入れて、結果を図で描いてもらう</td><td>例題に同じデータを入れた答えと一致するか</td></tr>
-        <tr><td>4</td><td>エラーが出たら、<strong>赤い文字を全部</strong>貼って聞く</td><td>直ったあと、前にできていたことが壊れていないか</td></tr>
-        <tr><td>5</td><td>空・範囲の外・行き止まりを入れたときの動きを直してもらう</td><td>3つとも、エラー画面でなく説明の文が出るか</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        今回の到達点は、この表のどこまで進めば満たせるかを見て決めてあります。
-        最後の回では、コードの中で<strong>アルゴリズムが働いている部分</strong>を自分で探し、それがアプリのどこで使われているかを図形で描きます。</p>
-    </div>
-
-    <div class="concept-box">
-      <h4>完成の条件（5つの要件）</h4>
-      <table>
-        <tr><th>#</th><th>要件</th><th>確かめ方</th></tr>
-        <tr><td>1</td><td><strong>自分のデータ</strong>が入っている</td><td>画面に、自分で決めた駅名・迷路・座標が出ている</td></tr>
-        <tr><td>2</td><td><strong>画面で入力を変えられる</strong></td><td>ボタン・入力欄・スライダーのどれかがあり、変えると結果が変わる</td></tr>
-        <tr><td>3</td><td><strong>結果が図で表示される</strong></td><td>経路が線で描かれる、訪問順に色が付く、など。文字だけは不可</td></tr>
-        <tr><td>4</td><td><strong>変な入力で落ちない</strong></td><td>空・範囲の外・行き止まりを入れても、エラー画面ではなく説明の文が出る</td></tr>
-        <tr><td>5</td><td><strong>授業の例題と同じ答えになる</strong></td><td>標準課題で使った自分の数値を入れると、例題の出力と一致する</td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
-    </div>
+    <p style="font-size:0.9rem;color:#888">
+      Gradio の入れ方と最小のアプリは<a href="session01.html#sec-advanced" style="color:#FFB800">第1回のページ</a>にあります。</p>
   </div>
 </section>
 
@@ -1569,7 +1539,7 @@ simple_cost = <span class="num">0</span>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="Oqd0OSO0NGdkXhQhPRnLZNb7WkdSATCvZZe7OO4I6KYvuKSHun6B/EP/mjmBokPu22HCKRht4FfveCbam1w8sk7y5Pi5a/NPpPpp78ecljYhBrNJUSC2DjsVR9aiaE0vcCs7uQuh/nkG3cWGFXcsvJmRnYliYbYFwLTCASZ8OxXtWwRKZy2m8FsRrAtm9yZ3WXaq08Atu5OwN0KZ/ESO4wsk/ZY5WCHiTZ1LgY+CiPRUYmSPm3leZe30F6LJjZbyuwGftbah5WBELrVGUbE5FmsPfCw72lmkj7SJ+5DM/l8IlLvlk5w90lQuvTm7FhrtXVQcsaT7InvAcohmq/MyryLJOuHLmSE8IpD+kTE93etbORUrnCu0Q2MCuPWsyVt86RU9y22efvmmQI6gE9y6u4+GFXNPz9mBLcHf5rv1M3mjYUZsgI+R62MaMMsYsrFB5Ha7vyTd8vfxUy8USNd1jXqQO2mqJor1LdDq5BF0zO53ieDmXIOIXwzHy/+FNiGemBNVrgh5+cEUBfrep2x/zFQMDuqY/UYzFbk+76guaX595RYxrsepgfTqnUjxReKmqd0rw4hMjdXazdhQfrZCR75lA2Y3IKBdFDlseQltYJyCIgA/Lsj9kV8IerEQciHqB/4UM/tzVe7IrsHFPaHtl+eZlanwMRnAJcjp4B+TRAiWCXB3wFx0zlzi/LsU9QBrYgPluMs+vcdjnwNqRog/KVpqB0KydW8cm4igOvAbnbFCPNjTaeEKUTP7nuOvTKN29B2a/SCLltnN1ahIBoxQGwKxE3x96bhgPSogpq7nzpwGFKyhzCPAtFw4t2IO/1OTFVq2stdOnQ7dLwWlSbInLDBjN7yy135K9BqnkdD/dQof6kC64ekcORgGUvzM6EfcH6prNcVQCrwaP8LT55bePuoGqOFzqwNh6X9nWbWFIHg7O4r3lKnsYDIQ4bkvSfckOhIo8OJxf0qlnILxFfe21kRgIf6pTHos9r28iEbP3LIeWuB4ADVfzHV+MyvkDsdD3+ylqSWKbLpn0ly53sr6Q9JgEpnVnYOZTCsdbzpuJhBoGZFH9ef38s/2hRecMZIP9pGPOFs1eQZ0RWEKCSoq0mrOpDpT0M8yfnPt4Pu+yNoSBBcndX+we+qMarrcjyZWcTLar212ksIoQ/XDbgx7HUNjgc7oVtU3GiHQJKuzwO12T6T0vl4S+N+Svpe2LaCK29aFzeKrswnhHW6s4Vl3NR5zHQOAKw/lhQlGeVT5MD6gk7bkuFxeDcmAUoI0v/651Hgn+xCS5arktKHtof8YhleKApMzDNJH1m5SdkePri9zjyOb+JcHd0AgjX5+leT+e7HU/4eSpViOk8+VufGYxCrebLC7nenESunWGJgzv9X3IdMgkg7j3piZ3O6jeVmdiB6sJVAHC90FwCyHWT6njrhbXSsguqVv2Q=="></div>
+    <div id="answers-encrypted" data-cipher="My9uMkWOnyA0P0LqXgge7CnovYlc//T2hRqxHuJyhMXny74+BZZFlZr33JVMC+MkjeLczGwqjhxPEqewuCn1PEGaU262d+7ncunDoaz2WefY++83zUhQ/5d618tFsmVFK4h/6WTKT2Kf2dqFNickiL8803uKgH1Rl3ZOyxwancZqS1CDW0UsjcOJckWhQHCEBmPrNtudW17ljA1WDlh3B1OTySKDVLBuxwwiZTfA3glMN9XQ3AaofADBCtaj4eAl+JgKgZ+w/pgeRhDyeIEjhFIxw+P9FoadiUitGuvbyop5S0lzh9X9mUfomduANPd8VvTrgiTQifDgGwS58sJcGfqpjTpoD8NPXou0ChMJ9D8TqVJ8xHUktU12dJmPoqzyGeoWtXDt0hUXhVbttdL4JW8+vVKVHPduA//u9DYSn4c/3FSuwC7s3JjSYTXodMoXAqGGeSzuo+/OpgEs/uh4Q8NNatnLKGuLjcAd6cjlmYwdLVeSRa7WtkdJRWKt28sHWiCM2MyvRAZV1VRtFCQcglff7P5AGUfRCIbWbarfjo18QfoqGq3i2A1sNn4ceYo2aYdQjLZUw/3WxlYlG8fyFluVLPz5b5gFbJezkwo/mIZxF9Gy/ywZTRJ1WPZoPUdp2nyByi+4yUrRoh70G5Jj31M5sRFgM9Tpm6qUFGSjS+uBD0gEVrDMN97MPNhnvi8cIkIdG9YnR06Mqg5zCkp1AJk2beeEQjAV4YE8sjMlA6FYwFZwMptvJ/1pJN+7qMVcZ+SAuDEbdm7YOo9wH2TZWjG826eRytEXuXn850hxfRUrf2VHwbzg9aUGan29q98dIO3hMguvxTLd4YGT+1zAWOlC8sm1l6tybc0bNdBw/ArNcaD+DYZNkW6trI4qZ/HZAC99zQxv2WnUAFo1IEFNcdpcSYQjLCGzCszeVhY2nWOUjKJawgzUZbNUJ2XUIGnU9ueMGaQXOheo0AcBcnILDEXgahpW0hrZ5B0DGVADGNtc8iHAggi25rUtXnDi+irMDrsXqC/DT9LBzIu6cNETIvAy5CE2D3adJinGM4YZxKFy1oHK3g9ghj50WV6ubHhxMoF8xGYKI9StW0FKICO5vupWRc5Zl9VBuzKNJaGV224mOuj3AB5kPOjChs6AgFt8F3pqlOR4I4WgPQj8kIe8ZWRwCV750Af8jL936RY2Cogbkb78kf/SI2DU/XpQFXD7pelqgvSpzwQpYt7wU3gwVKUiTXWgP2mwUb6ArWm8DwMCukw1jQiDdxDjggUqKaSoQV3MMLTRNnR949Xmr9WBZf71Jr7JnoDsZwvjXEbpubR+xrN9x0HmpAhDtaGZSw2jbgRzjOB2HhrArLkdLUMNLXrg/vJiBT7LsZwSX0PB3w6zU4yFjLPGuBbM2FgKP8GiFVzqPDhdc1OSLb9uur5bB7coU3bWtXVmUQ=="></div>
 
   </div>
 </section>
