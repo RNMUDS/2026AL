@@ -357,15 +357,20 @@ tests = [
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-14-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a14_ex1-ref_result.png" alt="AL2-14-ex1-ref.py の実行結果。バグのある関数に、6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / 最後にいるマス: (2, 2)   迷路の中か: True /  / 入力: 空の道（&quot;&quot;） / 最後にいるマス: (0, 0)   迷路の中か: True /  / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / 最後にいるマス: (6, 0)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / 入力: ゴールに着かない道（&quot;DR&quot;） / 最後にいるマス: (1, 1)   迷路の中か: True /  / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / 最後にいるマス: (2, 1)   迷路の中か: True /  / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / 最後にいるマス: (2, 3)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / ========================================================== / 修正版に、同じ6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / → OK: 4歩 ／ 12秒 / 入力: 空の道（&quot;&quot;） / → 受けつけない: ゴールに着いていません / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / → 受けつけない: 迷路の外に出てしまいました / 入力: ゴールに着かない道（&quot;DR&quot;） / → 受けつけない: ゴールに着いていません / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / → 受けつけない: 「X」は使えない文字です（D/U/R/L だけ使えます） / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / → OK: 6歩 ／ 22秒 / ========================================================== /  / 修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。 / 「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。" width="477" height="868" loading="lazy">
+      </div>
+      <p class="run-note">バグのある関数では、「迷路の外に出る道」と「行ったり戻ったりする道」が<strong>迷路の外のマスを指したまま</strong>返ってきています。このあと <code>cost_map[r][c]</code> を計算するとエラーで止まります。また「使えない文字が入った道」では、<code>X</code> が無視されて別の場所に着いてしまいました。修正版は、6種類すべてに対してエラーで止まらず、受けつけない場合は<strong>理由を文章で返して</strong>います。「行ったり戻ったりする道」は、ルールの上では正しい道なので受けつけている点にも注目してください。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-14-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-14-ex1.py</span>
 <span class="cmt"># 境界値テスト: わざと「特別な入力」を与えて、プログラムが正しく動くか確かめる</span>
 <span class="cmt"># テンプレートAの「プレイヤーの道」を受け取る部分をテストする。</span>
 
 cost_map = [
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
     [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>],
     [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
 ]
 
 rows = <span class="fn">len</span>(cost_map)
@@ -411,12 +416,12 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
 
 
 tests = [
-    (<span class="str">&quot;ふつうの道&quot;</span>, <span class="str">&quot;DDRR&quot;</span>),
+    (<span class="str">&quot;ふつうの道&quot;</span>, <span class="str">&quot;DRDR&quot;</span>),
     (<span class="str">&quot;空の道&quot;</span>, <span class="str">&quot;&quot;</span>),
-    (<span class="str">&quot;迷路の外に出る道&quot;</span>, <span class="str">&quot;DDDDDD&quot;</span>),
-    (<span class="str">&quot;ゴールに着かない道&quot;</span>, <span class="str">&quot;DR&quot;</span>),
-    (<span class="str">&quot;使えない文字が入った道&quot;</span>, <span class="str">&quot;DDXR&quot;</span>),
-    (<span class="str">&quot;行ったり戻ったりする道&quot;</span>, <span class="str">&quot;DRLDRR&quot;</span>),
+    (<span class="str">&quot;迷路の外に出る道&quot;</span>, <span class="str">&quot;RRRRR&quot;</span>),
+    (<span class="str">&quot;ゴールに着かない道&quot;</span>, <span class="str">&quot;RD&quot;</span>),
+    (<span class="str">&quot;使えない文字が入った道&quot;</span>, <span class="str">&quot;DRQR&quot;</span>),
+    (<span class="str">&quot;行ったり戻ったりする道&quot;</span>, <span class="str">&quot;DDRURD&quot;</span>),
 ]
 
 <span class="fn">print</span>(<span class="str">&quot;バグのある関数に、6種類の入力を与えてみる&quot;</span>)
@@ -461,12 +466,11 @@ tests = [
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a14_ex1_result.png" alt="AL2-14-ex1.py の実行結果。バグのある関数に、6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / 最後にいるマス: (2, 2)   迷路の中か: True /  / 入力: 空の道（&quot;&quot;） / 最後にいるマス: (0, 0)   迷路の中か: True /  / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / 最後にいるマス: (6, 0)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / 入力: ゴールに着かない道（&quot;DR&quot;） / 最後にいるマス: (1, 1)   迷路の中か: True /  / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / 最後にいるマス: (2, 1)   迷路の中か: True /  / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / 最後にいるマス: (2, 3)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / ========================================================== / 修正版に、同じ6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DDRR&quot;） / → OK: 4歩 ／ 12秒 / 入力: 空の道（&quot;&quot;） / → 受けつけない: ゴールに着いていません / 入力: 迷路の外に出る道（&quot;DDDDDD&quot;） / → 受けつけない: 迷路の外に出てしまいました / 入力: ゴールに着かない道（&quot;DR&quot;） / → 受けつけない: ゴールに着いていません / 入力: 使えない文字が入った道（&quot;DDXR&quot;） / → 受けつけない: 「X」は使えない文字です（D/U/R/L だけ使えます） / 入力: 行ったり戻ったりする道（&quot;DRLDRR&quot;） / → OK: 6歩 ／ 22秒 / ========================================================== /  / 修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。 / 「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。" width="477" height="868" loading="lazy">
+        <img src="images/a14_ex1_result.png" alt="AL2-14-ex1.py の実行結果。バグのある関数に、6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DRDR&quot;） / 最後にいるマス: (2, 2)   迷路の中か: True /  / 入力: 空の道（&quot;&quot;） / 最後にいるマス: (0, 0)   迷路の中か: True /  / 入力: 迷路の外に出る道（&quot;RRRRR&quot;） / 最後にいるマス: (0, 5)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / 入力: ゴールに着かない道（&quot;RD&quot;） / 最後にいるマス: (1, 1)   迷路の中か: True /  / 入力: 使えない文字が入った道（&quot;DRQR&quot;） / 最後にいるマス: (1, 2)   迷路の中か: True /  / 入力: 行ったり戻ったりする道（&quot;DDRURD&quot;） / 最後にいるマス: (3, 2)   迷路の中か: False / → 迷路の外を指している。このあと cost_map[r][c] でエラーになる /  / ========================================================== / 修正版に、同じ6種類の入力を与えてみる / ========================================================== / 入力: ふつうの道（&quot;DRDR&quot;） / → OK: 4歩 ／ 4秒 / 入力: 空の道（&quot;&quot;） / → 受けつけない: ゴールに着いていません / 入力: 迷路の外に出る道（&quot;RRRRR&quot;） / → 受けつけない: 迷路の外に出てしまいました / 入力: ゴールに着かない道（&quot;RD&quot;） / → 受けつけない: ゴールに着いていません / 入力: 使えない文字が入った道（&quot;DRQR&quot;） / → 受けつけない: 「Q」は使えない文字です（D/U/R/L だけ使えます） / 入力: 行ったり戻ったりする道（&quot;DDRURD&quot;） / → OK: 6歩 ／ 18秒 / ========================================================== /  / 修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。 / 「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。" width="477" height="868" loading="lazy">
       </div>
-      <p class="run-note">バグのある関数では、「迷路の外に出る道」と「行ったり戻ったりする道」が<strong>迷路の外のマスを指したまま</strong>返ってきています。このあと <code>cost_map[r][c]</code> を計算するとエラーで止まります。また「使えない文字が入った道」では、<code>X</code> が無視されて別の場所に着いてしまいました。修正版は、6種類すべてに対してエラーで止まらず、受けつけない場合は<strong>理由を文章で返して</strong>います。「行ったり戻ったりする道」は、ルールの上では正しい道なので受けつけている点にも注目してください。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題1の実行結果から、6種類の入力それぞれについて「バグのある関数の結果」と「修正版の結果」を表にまとめる。あわせて、修正版が「行ったり戻ったりする道」を受けつけている理由を説明する。</span></div>
     </div>
@@ -581,7 +585,12 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;print を入れると、どの行で判断がおかしくなったかが目で見える。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;バグが直ったら、入れた print は消す。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-14-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a14_ex2-ref_result.png" alt="AL2-14-ex2-ref.py の実行結果。距離の表 / 0       1       2       3 / 0        0.0    3.16    4.12    6.32 / 1       3.16     0.0    3.61    3.16 / 2       4.12    3.61     0.0    5.39 / 3       6.32    3.16    5.39     0.0 /  / ============================================================== / バグのある関数の結果 / ============================================================== / 訪問した順番: [0, 0, 0, 0] / 同じ場所が2回入っていないか: True /  / ============================================================== / print を入れて、中で何が起きているかを見る / ============================================================== / [ここまで] visited=[0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / ============================================================== / 修正版の結果 / ============================================================== / 訪問した順番: [0, 1, 3, 2] / ルート: 営業所 → A宅 → C宅 → B宅 → 営業所 /  / print を入れると、どの行で判断がおかしくなったかが目で見える。 / バグが直ったら、入れた print は消す。" width="494" height="948" loading="lazy">
+      </div>
+      <p class="run-note">バグのある関数は <code>[0, 0, 0, 0]</code> という結果を返し、同じ場所を4回訪れています。<code>print</code> を入れた結果を見ると、原因がはっきり分かります。<code>nearest</code> の初期値が <code>0</code> になっており、<code>distance[0][0]</code> は<strong>0.0</strong>なので、どの都市と比べても「0.0より小さい」ことがなく、<code>nearest</code> が一度も更新されません。修正版では初期値を <code>None</code> にして、最初の1件で必ず更新されるようにしています。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-14-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-14-ex2.py</span>
 <span class="cmt"># print デバッグ: プログラムの途中に print を入れて、変数の中身を目で見る</span>
 <span class="cmt"># ここでは「貪欲法で配達ルートを作る関数」にバグを1つしこんである。</span>
@@ -589,9 +598,9 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
 
 places = [
     (<span class="str">&quot;営業所&quot;</span>, <span class="num">0</span>, <span class="num">0</span>),
-    (<span class="str">&quot;A宅&quot;</span>, <span class="num">3</span>, <span class="num">1</span>),
-    (<span class="str">&quot;B宅&quot;</span>, <span class="num">1</span>, <span class="num">4</span>),
-    (<span class="str">&quot;C宅&quot;</span>, <span class="num">6</span>, <span class="num">2</span>),
+    (<span class="str">&quot;A宅&quot;</span>, <span class="num">2</span>, <span class="num">5</span>),
+    (<span class="str">&quot;B宅&quot;</span>, <span class="num">5</span>, <span class="num">2</span>),
+    (<span class="str">&quot;C宅&quot;</span>, <span class="num">4</span>, <span class="num">6</span>),
 ]
 
 n = <span class="fn">len</span>(places)
@@ -700,12 +709,11 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a14_ex2_result.png" alt="AL2-14-ex2.py の実行結果。距離の表 / 0       1       2       3 / 0        0.0    3.16    4.12    6.32 / 1       3.16     0.0    3.61    3.16 / 2       4.12    3.61     0.0    5.39 / 3       6.32    3.16    5.39     0.0 /  / ============================================================== / バグのある関数の結果 / ============================================================== / 訪問した順番: [0, 0, 0, 0] / 同じ場所が2回入っていないか: True /  / ============================================================== / print を入れて、中で何が起きているかを見る / ============================================================== / [ここまで] visited=[0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=3.16  vs  distance[0][0]=0.0 / j=2: distance[0][2]=4.12  vs  distance[0][0]=0.0 / j=3: distance[0][3]=6.32  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / ============================================================== / 修正版の結果 / ============================================================== / 訪問した順番: [0, 1, 3, 2] / ルート: 営業所 → A宅 → C宅 → B宅 → 営業所 /  / print を入れると、どの行で判断がおかしくなったかが目で見える。 / バグが直ったら、入れた print は消す。" width="494" height="948" loading="lazy">
+        <img src="images/a14_ex2_result.png" alt="AL2-14-ex2.py の実行結果。距離の表 / 0       1       2       3 / 0        0.0    5.39    5.39    7.21 / 1       5.39     0.0    4.24    2.24 / 2       5.39    4.24     0.0    4.12 / 3       7.21    2.24    4.12     0.0 /  / ============================================================== / バグのある関数の結果 / ============================================================== / 訪問した順番: [0, 0, 0, 0] / 同じ場所が2回入っていないか: True /  / ============================================================== / print を入れて、中で何が起きているかを見る / ============================================================== / [ここまで] visited=[0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=5.39  vs  distance[0][0]=0.0 / j=2: distance[0][2]=5.39  vs  distance[0][0]=0.0 / j=3: distance[0][3]=7.21  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=5.39  vs  distance[0][0]=0.0 / j=2: distance[0][2]=5.39  vs  distance[0][0]=0.0 / j=3: distance[0][3]=7.21  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / [ここまで] visited=[0, 0, 0]  here=0  nearest の初期値=0 / j=0 はすでに訪問済み → とばす / j=1: distance[0][1]=5.39  vs  distance[0][0]=0.0 / j=2: distance[0][2]=5.39  vs  distance[0][0]=0.0 / j=3: distance[0][3]=7.21  vs  distance[0][0]=0.0 / [結果] nearest=0 を訪問する /  / ============================================================== / 修正版の結果 / ============================================================== / 訪問した順番: [0, 1, 3, 2] / ルート: 営業所 → A宅 → C宅 → B宅 → 営業所 /  / print を入れると、どの行で判断がおかしくなったかが目で見える。 / バグが直ったら、入れた print は消す。" width="494" height="948" loading="lazy">
       </div>
-      <p class="run-note">バグのある関数は <code>[0, 0, 0, 0]</code> という結果を返し、同じ場所を4回訪れています。<code>print</code> を入れた結果を見ると、原因がはっきり分かります。<code>nearest</code> の初期値が <code>0</code> になっており、<code>distance[0][0]</code> は<strong>0.0</strong>なので、どの都市と比べても「0.0より小さい」ことがなく、<code>nearest</code> が一度も更新されません。修正版では初期値を <code>None</code> にして、最初の1件で必ず更新されるようにしています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
   </div>
 </section>

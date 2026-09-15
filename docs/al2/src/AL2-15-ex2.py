@@ -8,7 +8,7 @@ random.seed(2026)
 
 cities = []
 for i in range(20):
-    cities.append(((i * 7) % 23, (i * 11) % 19))
+    cities.append(((i * 5) % 21, (i * 13) % 17))
 
 n = len(cities)
 INF = float("inf")

@@ -4,7 +4,7 @@ import math
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     answers, code, example, keywords, notion, run, section,
                     setup_guide, standard, write)
 
@@ -433,13 +433,9 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>前期に学んだ二分探索を、数当てゲームの形で思い出します。
       1から100までの中に「秘密の数」が1つあり、コンピュータが<strong>中央を聞く</strong>作戦で当てにいきます。</p>
 
-{code_pair('AL2-01-ex1.py')}
-
-{fig_binary_steps()}
-
-{run('a01_ex1_result.png', '質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。'
+{example_pair('AL2-01-ex1.py', '質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。'
      '1から100までの100個の中から、たった<strong>6回</strong>の質問で73を当てられました。'
-     '「中央を聞いて、外れた半分を捨てる」という作戦が二分探索です。')}"""
+     '「中央を聞いて、外れた半分を捨てる」という作戦が二分探索です。', fig_binary_steps())}"""
 
 ex2_body = f"""      <p>後期のテーマである最適化を、いちばん小さな形で体験します。
       学校を出発して3か所を回り、学校へ戻ります。回る順番は全部で6通りあり、順番によって合計時間が変わります。
@@ -450,14 +446,10 @@ ex2_body = f"""      <p>後期のテーマである最適化を、いちばん�
       どの家から回るかで、かかる時間が変わります。時間を最も短くする回り方を見つける問題が、第8回から学ぶ巡回セールスマン問題です。
     </div>
 
-{code_pair('AL2-01-ex2.py')}
-
-{fig_all_routes()}
-
-{run('a01_ex2_result.png', '6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。'
+{example_pair('AL2-01-ex2.py', '6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。'
      '「学校 → 郵便局 → 図書館 → カフェ → 学校」と「学校 → カフェ → 図書館 → 郵便局 → 学校」の2つが同じ26分になっています。'
      '2つは進む向きが逆なだけで、通る道は同じだからです。'
-     'すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。')}
+     'すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。', fig_all_routes())}
 
     <div class="note-warn">
       <strong>後期につながる注意点:</strong> 回る場所が3か所なら6通りですが、場所が増えると候補の数は急激に増えます。

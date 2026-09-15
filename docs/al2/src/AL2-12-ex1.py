@@ -54,7 +54,7 @@ low_a = 1
 high_a = 100
 low_b = 1
 high_b = 100
-secret = 73
+secret = 58
 
 for step in range(1, 8):
     # 作戦A: step 番目の数を聞く

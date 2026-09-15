@@ -499,7 +499,12 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 <span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路（* が通り道）&quot;</span>)
 <span class="kw">for</span> line <span class="kw">in</span> picture:
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-02-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a02_ex1-ref_result.png" alt="AL2-02-ex1-ref.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="448" loading="lazy">
+      </div>
+      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-02-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex1.py</span>
 <span class="cmt"># 深さ優先探索で迷路を解く</span>
 <span class="cmt"># 幅優先探索との違いは「メモのどこを読むか」だけ。</span>
@@ -508,13 +513,13 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 
 <span class="cmt"># S = スタート、G = ゴール、# = 壁、. = 通路</span>
 maze = [
-    <span class="str">&quot;S.....#&quot;</span>,
-    <span class="str">&quot;.####.#&quot;</span>,
-    <span class="str">&quot;.#....#&quot;</span>,
-    <span class="str">&quot;.#.##..&quot;</span>,
-    <span class="str">&quot;.#..#.#&quot;</span>,
-    <span class="str">&quot;.##.#.#&quot;</span>,
-    <span class="str">&quot;......G&quot;</span>,
+    <span class="str">&quot;S..#...&quot;</span>,
+    <span class="str">&quot;.#.#.#.&quot;</span>,
+    <span class="str">&quot;.#...#.&quot;</span>,
+    <span class="str">&quot;.####..&quot;</span>,
+    <span class="str">&quot;...#.#.&quot;</span>,
+    <span class="str">&quot;.#.#.#.&quot;</span>,
+    <span class="str">&quot;.#....G&quot;</span>,
 ]
 
 rows = <span class="fn">len</span>(maze)
@@ -587,12 +592,11 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="448" loading="lazy">
+        <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S..#... / .#.#.#. / .#...#. / .####.. / ...#.#. / .#.#.#. / .#....G /  / 深さ優先探索が見つけた経路の歩数: 16 歩 / 調べたマスの数: 18 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S**#*** / .#*#*#* / .#***#* / .####.* / ...#.#* / .#.#.#* / .#....G" width="380" height="448" loading="lazy">
       </div>
-      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -692,114 +696,11 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 <span class="fn">print</span>()
 <span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路（12歩・最短）&quot;</span>)
 <span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路（18歩・最短ではない）&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-02-ex2.py</code> の名前で保存して実行する</p>
-<pre data-blanks="3"><span class="code-label">Python ── AL2-02-ex2.py</span>
-<span class="cmt"># 幅優先探索と深さ優先探索を、同じ迷路で走らせて比べる</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-maze = [
-    <span class="str">&quot;S.....#&quot;</span>,
-    <span class="str">&quot;.####.#&quot;</span>,
-    <span class="str">&quot;.#....#&quot;</span>,
-    <span class="str">&quot;.#.##..&quot;</span>,
-    <span class="str">&quot;.#..#.#&quot;</span>,
-    <span class="str">&quot;.##.#.#&quot;</span>,
-    <span class="str">&quot;......G&quot;</span>,
-]
-
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
-
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
-            start = (r, c)
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
-            goal = (r, c)
-
-
-<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
-    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではない場所を返す&quot;&quot;&quot;</span>
-    result = []
-    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-        nr = r + dr
-        nc = c + dc
-        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
-            <span class="kw">continue</span>
-        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
-            <span class="kw">continue</span>
-        result.append((nr, nc))
-    <span class="kw">return</span> result
-
-
-<span class="kw">def</span> <span class="fn">search</span>(mode):
-    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
-    memo = <span class="fn">deque</span>([start])           <span class="cmt"># これから調べる場所のメモ</span>
-    came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>                     <span class="cmt"># 何マス調べたか</span>
-
-    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
-        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
-            current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        <span class="kw">else</span>:
-            current = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        checked = checked + <span class="num">1</span>
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
-            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
-                <span class="kw">continue</span>
-            came_from[next_cell] = current
-            memo.append(next_cell)
-
-    path = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        path.append(node)
-        node = came_from[node]
-    path.reverse()
-    <span class="kw">return</span> path, checked
-
-
-bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
-dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-
-
-<span class="kw">def</span> <span class="fn">draw</span>(path, title):
-    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
-    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-            picture[r][c] = <span class="str">&quot;*&quot;</span>
-    <span class="fn">print</span>(title)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
-    <span class="fn">print</span>()
-
-
-<span class="fn">print</span>()
-<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路（12歩・最短）&quot;</span>)
-<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路（18歩・最短ではない）&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>幅優先探索: メモのいちばん古い行を読む</td><td style="white-space:nowrap">A. <code>memo[-1]</code><br>B. <code>memo.popleft()</code><br>C. <code>memo.pop()</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>深さ優先探索: メモのいちばん新しい行を読む</td><td style="white-space:nowrap">A. <code>memo.popleft()</code><br>B. <code>memo.pop()</code><br>C. <code>memo[0]</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>すでに来たことがある場所は飛ばす</td><td style="white-space:nowrap">A. <code>next_cell in came_from</code><br>B. <code>next_cell in memo</code><br>C. <code>next_cell == goal</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a02_ex2-ref_result.png" alt="AL2-02-ex2-ref.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G /  / 深さ優先探索の経路（18歩・最短ではない） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="528" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じ迷路を調べる順番の比較（数字は何番目に調べたか）</text>
@@ -1145,12 +1046,118 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         <text x="350" y="266" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">幅優先探索は近い順にじわじわ広がる。深さ優先探索は一方向へどんどん進む</text>
         </svg>
       </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-02-ex2.py</code> の名前で保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-02-ex2.py</span>
+<span class="cmt"># 幅優先探索と深さ優先探索を、同じ迷路で走らせて比べる</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
 
+maze = [
+    <span class="str">&quot;S..#...&quot;</span>,
+    <span class="str">&quot;.#.#.#.&quot;</span>,
+    <span class="str">&quot;.#...#.&quot;</span>,
+    <span class="str">&quot;.####..&quot;</span>,
+    <span class="str">&quot;...#.#.&quot;</span>,
+    <span class="str">&quot;.#.#.#.&quot;</span>,
+    <span class="str">&quot;.#....G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            start = (r, c)
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
+            goal = (r, c)
+
+
+<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
+    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではない場所を返す&quot;&quot;&quot;</span>
+    result = []
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>
+        result.append((nr, nc))
+    <span class="kw">return</span> result
+
+
+<span class="kw">def</span> <span class="fn">search</span>(mode):
+    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
+    memo = <span class="fn">deque</span>([start])           <span class="cmt"># これから調べる場所のメモ</span>
+    came_from = {start: <span class="kw">None</span>}
+    checked = <span class="num">0</span>                     <span class="cmt"># 何マス調べたか</span>
+
+    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
+        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
+            current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+        <span class="kw">else</span>:
+            current = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+        checked = checked + <span class="num">1</span>
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
+                <span class="kw">continue</span>
+            came_from[next_cell] = current
+            memo.append(next_cell)
+
+    path = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        path.append(node)
+        node = came_from[node]
+    path.reverse()
+    <span class="kw">return</span> path, checked
+
+
+bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
+dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+
+
+<span class="kw">def</span> <span class="fn">draw</span>(path, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
+    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+            picture[r][c] = <span class="str">&quot;*&quot;</span>
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> line <span class="kw">in</span> picture:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="fn">print</span>()
+
+
+<span class="fn">print</span>()
+<span class="fn">draw</span>(bfs_path, <span class="str">f&quot;幅優先探索の経路（{len(bfs_path) - 1}歩・最短）&quot;</span>)
+<span class="fn">draw</span>(dfs_path, <span class="str">f&quot;深さ優先探索の経路（{len(dfs_path) - 1}歩・最短ではない）&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>幅優先探索: メモのいちばん古い行を読む</td><td style="white-space:nowrap">A. <code>memo[-1]</code><br>B. <code>memo.popleft()</code><br>C. <code>memo.pop()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>深さ優先探索: メモのいちばん新しい行を読む</td><td style="white-space:nowrap">A. <code>memo.popleft()</code><br>B. <code>memo.pop()</code><br>C. <code>memo[0]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>すでに来たことがある場所は飛ばす</td><td style="white-space:nowrap">A. <code>next_cell in came_from</code><br>B. <code>next_cell in memo</code><br>C. <code>next_cell == goal</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G /  / 深さ優先探索の経路（18歩・最短ではない） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="528" loading="lazy">
+        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         28マス / 深さ優先探索       16歩         18マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S..#... / *#.#.#. / *#...#. / *####.. / ***#.#. / .#*#.#. / .#****G /  / 深さ優先探索の経路（16歩・最短ではない） / S**#*** / .#*#*#* / .#***#* / .####.* / ...#.#* / .#.#.#* / .#....G" width="380" height="528" loading="lazy">
       </div>
-      <p class="run-note">幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、幅優先探索と深さ優先探索の「歩数」と「調べたマス数」を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどう違うかを言葉で説明する。</span></div>
     </div>
@@ -1354,7 +1361,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

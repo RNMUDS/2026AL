@@ -479,7 +479,12 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
     <span class="kw">else</span>:
         <span class="fn">print</span>(<span class="str">&quot;  評価: 沼をよけると、ぐっと短くなる&quot;</span>)
     <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-13-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a13_ex1-ref_result.png" alt="AL2-13-ex1-ref.py の実行結果。============================================== / コスト迷路ゲーム  ステージ1 / ============================================== / 1 = 舗装路(1秒)  5 = 砂地(5秒)  9 = 沼(9秒) / 左上(S)から右下(G)まで、できるだけ短い時間で行こう /  / プレイヤーの道: 14歩 ／ 42秒 / 1*  1   5   9   9   1   1   1 / 9*  1   5   1   1   1   9   1 / 1*  1*  1*  1   9   1   9   1 / 1   9   9*  5   9   1   1   1 / 1   1   5*  5*  1*  1   9   5 / 9   1   1   9   1*  9   9   1 / 1   1   9   9   1*  1*  1*  1 / 5   1   1   1   1   9   5*  1* /  / 最短の道: 18歩 ／ 18秒 / 1*  1*  5   9   9   1   1   1 / 9   1*  5   1*  1*  1*  9   1 / 1   1*  1*  1*  9   1*  9   1 / 1   9   9   5   9   1*  1   1 / 1   1   5   5   1*  1*  9   5 / 9   1   1   9   1*  9   9   1 / 1   1   9   9   1*  1*  1*  1* / 5   1   1   1   1   9   5   1* /  / ---------------------------------------------- / プレイヤー: 42秒 / 最短:       18秒 / スコア: 42点（最短と同じなら100点） / 評価: 沼をよけると、ぐっと短くなる / ----------------------------------------------" width="380" height="688" loading="lazy">
+      </div>
+      <p class="run-note">プレイヤーの道は14歩で<strong>42秒</strong>、最短の道は18歩で<strong>18秒</strong>でした。プレイヤーは歩数こそ少ないものの、9（沼）のマスを何度も通っているため時間がかかっています。最短の道は4歩よけいに歩くかわりに、沼を1つも通っていません。スコアは <code>最短 ÷ プレイヤー × 100</code> で計算しており、42点となりました。<code>player_moves</code> を書き換えて、100点を取れる道をさがしてみてください。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-13-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-13-ex1.py</span>
 <span class="cmt"># 作品テンプレートA: コスト付き迷路ゲーム</span>
 <span class="cmt"># プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付ける。</span>
@@ -487,18 +492,18 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
 
 <span class="cmt"># ここを書き換えれば、自分のステージが作れる</span>
 cost_map = [
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>],
-    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
-    [<span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">9</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
 ]
 
 <span class="cmt"># プレイヤーが選んだ道（&quot;D&quot; = 下へ、&quot;R&quot; = 右へ、&quot;U&quot; = 上へ、&quot;L&quot; = 左へ）</span>
-player_moves = <span class="str">&quot;DDRRDDRRDDRRDR&quot;</span>
+player_moves = <span class="str">&quot;RRDDRRDDRRDDDR&quot;</span>
 
 rows = <span class="fn">len</span>(cost_map)
 cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
@@ -627,12 +632,11 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex1_result.png" alt="AL2-13-ex1.py の実行結果。============================================== / コスト迷路ゲーム  ステージ1 / ============================================== / 1 = 舗装路(1秒)  5 = 砂地(5秒)  9 = 沼(9秒) / 左上(S)から右下(G)まで、できるだけ短い時間で行こう /  / プレイヤーの道: 14歩 ／ 42秒 / 1*  1   5   9   9   1   1   1 / 9*  1   5   1   1   1   9   1 / 1*  1*  1*  1   9   1   9   1 / 1   9   9*  5   9   1   1   1 / 1   1   5*  5*  1*  1   9   5 / 9   1   1   9   1*  9   9   1 / 1   1   9   9   1*  1*  1*  1 / 5   1   1   1   1   9   5*  1* /  / 最短の道: 18歩 ／ 18秒 / 1*  1*  5   9   9   1   1   1 / 9   1*  5   1*  1*  1*  9   1 / 1   1*  1*  1*  9   1*  9   1 / 1   9   9   5   9   1*  1   1 / 1   1   5   5   1*  1*  9   5 / 9   1   1   9   1*  9   9   1 / 1   1   9   9   1*  1*  1*  1* / 5   1   1   1   1   9   5   1* /  / ---------------------------------------------- / プレイヤー: 42秒 / 最短:       18秒 / スコア: 42点（最短と同じなら100点） / 評価: 沼をよけると、ぐっと短くなる / ----------------------------------------------" width="380" height="688" loading="lazy">
+        <img src="images/a13_ex1_result.png" alt="AL2-13-ex1.py の実行結果。============================================== / コスト迷路ゲーム  ステージ1 / ============================================== / 1 = 舗装路(1秒)  5 = 砂地(5秒)  9 = 沼(9秒) / 左上(S)から右下(G)まで、できるだけ短い時間で行こう /  / プレイヤーの道: 14歩 ／ 22秒 / 1*  5*  1*  1   9   1   1   1 / 1   9   1*  9   9   1   9   1 / 1   1   1*  5*  1*  1   9   1 / 9   9   1   9   1*  9   9   1 / 1   1   1   9   1*  1*  1*  5 / 1   9   5   9   9   9   1*  1 / 1   1   1   1   1   5   1*  9 / 9   9   9   5   1   1   1*  1* /  / 最短の道: 14歩 ／ 18秒 / 1*  5   1   1   9   1   1   1 / 1*  9   1   9   9   1   9   1 / 1*  1*  1*  5*  1*  1   9   1 / 9   9   1   9   1*  9   9   1 / 1   1   1   9   1*  1*  1*  5 / 1   9   5   9   9   9   1*  1 / 1   1   1   1   1   5   1*  9 / 9   9   9   5   1   1   1*  1* /  / ---------------------------------------------- / プレイヤー: 22秒 / 最短:       18秒 / スコア: 81点（最短と同じなら100点） / 評価: あと少し。もっと短い道がある / ----------------------------------------------" width="380" height="688" loading="lazy">
       </div>
-      <p class="run-note">プレイヤーの道は14歩で<strong>42秒</strong>、最短の道は18歩で<strong>18秒</strong>でした。プレイヤーは歩数こそ少ないものの、9（沼）のマスを何度も通っているため時間がかかっています。最短の道は4歩よけいに歩くかわりに、沼を1つも通っていません。スコアは <code>最短 ÷ プレイヤー × 100</code> で計算しており、42点となりました。<code>player_moves</code> を書き換えて、100点を取れる道をさがしてみてください。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -771,7 +775,12 @@ best_value = <span class="fn">route_length</span>(best_order)
 <span class="fn">print</span>(<span class="str">f&quot;  むだになった距離: {round(greedy_value - best_value, 1)}&quot;</span>
       <span class="str">f&quot;（{round((greedy_value / best_value - 1) * 100, 1)}% 長い）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">54</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-13-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a13_ex2-ref_result.png" alt="AL2-13-ex2-ref.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000118秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-13-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-13-ex2.py</span>
 <span class="cmt"># 作品テンプレートB: 配達ルート最適化アプリ</span>
 <span class="cmt"># 配達先を並べると、貪欲法と全探索でルートを作り、比べて表示する。</span>
@@ -781,13 +790,13 @@ best_value = <span class="fn">route_length</span>(best_order)
 
 <span class="cmt"># ここを書き換えれば、自分の配達先が作れる（8件までなら全探索が使える）</span>
 places = [
-    (<span class="str">&quot;営業所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
-    (<span class="str">&quot;田中宅&quot;</span>, <span class="num">12</span>, <span class="num">3</span>),
-    (<span class="str">&quot;鈴木宅&quot;</span>, <span class="num">2</span>, <span class="num">11</span>),
-    (<span class="str">&quot;佐藤宅&quot;</span>, <span class="num">15</span>, <span class="num">12</span>),
-    (<span class="str">&quot;高橋宅&quot;</span>, <span class="num">8</span>, <span class="num">14</span>),
-    (<span class="str">&quot;伊藤宅&quot;</span>, <span class="num">19</span>, <span class="num">1</span>),
-    (<span class="str">&quot;渡辺宅&quot;</span>, <span class="num">1</span>, <span class="num">2</span>),
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">6</span>, <span class="num">6</span>),
+    (<span class="str">&quot;山本宅&quot;</span>, <span class="num">18</span>, <span class="num">1</span>),
+    (<span class="str">&quot;中村宅&quot;</span>, <span class="num">7</span>, <span class="num">3</span>),
+    (<span class="str">&quot;小林宅&quot;</span>, <span class="num">1</span>, <span class="num">10</span>),
+    (<span class="str">&quot;加藤宅&quot;</span>, <span class="num">6</span>, <span class="num">11</span>),
+    (<span class="str">&quot;吉田宅&quot;</span>, <span class="num">2</span>, <span class="num">13</span>),
+    (<span class="str">&quot;山田宅&quot;</span>, <span class="num">12</span>, <span class="num">7</span>),
 ]
 
 n = <span class="fn">len</span>(places)
@@ -920,12 +929,11 @@ best_value = <span class="fn">route_length</span>(best_order)
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000111秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
+        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 6, y= 6) / 山本宅        (x=18, y= 1) / 中村宅        (x= 7, y= 3) / 小林宅        (x= 1, y=10) / 加藤宅        (x= 6, y=11) / 吉田宅        (x= 2, y=13) / 山田宅        (x=12, y= 7) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . 1 . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . 2 . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . E . . . . . . . . . . . . . / . . . . . . . . . . . . 6 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . 3 . . . . . . . . . . . . . . . . . . / . . . . . . 4 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 5 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000004秒で作成） / 営業所 → 中村宅 → 山田宅 → 加藤宅 → 吉田宅 → 小林宅 → 山本宅 → 営業所 / 合計距離: 56.6 /  / 全探索のルート（0.000112秒で作成） / 営業所 → 中村宅 → 山本宅 → 山田宅 → 加藤宅 → 吉田宅 → 小林宅 → 営業所 / 合計距離: 44.1 /  / ------------------------------------------------------ / 貪欲法: 56.6 / 最　適: 44.1 / むだになった距離: 12.6（28.5% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
       </div>
-      <p class="run-note">貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
   </div>
 </section>

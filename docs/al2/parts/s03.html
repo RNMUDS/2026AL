@@ -371,7 +371,12 @@ edge_count = edge_count // <span class="num">2</span>
     <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっている&quot;</span>)
 <span class="kw">else</span>:
     <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-03-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex1-ref_result.png" alt="AL2-03-ex1-ref.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 新宿: 渋谷、池袋、東京 / 渋谷: 新宿、品川 / 池袋: 新宿、上野 / 東京: 新宿、品川、上野 / 品川: 渋谷、東京 / 上野: 池袋、東京 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 新宿のとなりの駅: [&#x27;渋谷&#x27;, &#x27;池袋&#x27;, &#x27;東京&#x27;] / 品川のとなりの駅: [&#x27;渋谷&#x27;, &#x27;東京&#x27;] /  / 新宿と品川は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
+      </div>
+      <p class="run-note">6つの駅それぞれについて、となりの駅が一覧で表示されました。<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。辺（路線）の数を数えるときに <code>// 2</code> で半分にしているのは、1本の路線が「新宿の側」と「渋谷の側」の両方から数えられてしまうためです。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-03-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex1.py</span>
 <span class="cmt"># グラフを「隣接リスト」で表す</span>
 <span class="cmt"># 隣接リスト = それぞれの頂点について「となりにある頂点」を並べた表</span>
@@ -379,12 +384,12 @@ edge_count = edge_count // <span class="num">2</span>
 <span class="cmt"># 6つの駅と、駅どうしをつなぐ路線をグラフにする</span>
 <span class="cmt"># 頂点 = 駅、辺 = 路線</span>
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;渋谷&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
-    <span class="str">&quot;池袋&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;東京&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;品川&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;上野&quot;</span>: [<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+    <span class="str">&quot;横浜&quot;</span>: [<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;大森&quot;</span>],
+    <span class="str">&quot;川崎&quot;</span>: [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;蒲田&quot;</span>, <span class="str">&quot;鶴見&quot;</span>],
+    <span class="str">&quot;鶴見&quot;</span>: [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;目黒&quot;</span>, <span class="str">&quot;川崎&quot;</span>],
+    <span class="str">&quot;大森&quot;</span>: [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;蒲田&quot;</span>],
+    <span class="str">&quot;蒲田&quot;</span>: [<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;大森&quot;</span>],
+    <span class="str">&quot;目黒&quot;</span>: [<span class="str">&quot;鶴見&quot;</span>],
 }
 
 <span class="fn">print</span>(<span class="str">&quot;隣接リストで表した路線図&quot;</span>)
@@ -407,15 +412,15 @@ edge_count = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
 <span class="fn">print</span>()
 
 <span class="cmt"># となりの駅をすぐに取り出せることが、隣接リストの長所</span>
-<span class="fn">print</span>(<span class="str">&quot;新宿のとなりの駅:&quot;</span>, railway[<span class="str">&quot;新宿&quot;</span>])
-<span class="fn">print</span>(<span class="str">&quot;品川のとなりの駅:&quot;</span>, railway[<span class="str">&quot;品川&quot;</span>])
+<span class="fn">print</span>(<span class="str">&quot;横浜のとなりの駅:&quot;</span>, railway[<span class="str">&quot;横浜&quot;</span>])
+<span class="fn">print</span>(<span class="str">&quot;蒲田のとなりの駅:&quot;</span>, railway[<span class="str">&quot;蒲田&quot;</span>])
 <span class="fn">print</span>()
 
-<span class="cmt"># 「新宿と品川は直接つながっているか」を調べる</span>
-<span class="kw">if</span> <span class="str">&quot;品川&quot;</span> <span class="kw">in</span> railway[<span class="str">&quot;新宿&quot;</span>]:
-    <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっている&quot;</span>)
+<span class="cmt"># 「横浜と蒲田は直接つながっているか」を調べる</span>
+<span class="kw">if</span> <span class="str">&quot;蒲田&quot;</span> <span class="kw">in</span> railway[<span class="str">&quot;横浜&quot;</span>]:
+    <span class="fn">print</span>(<span class="str">&quot;横浜と蒲田は直接つながっている&quot;</span>)
 <span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
+    <span class="fn">print</span>(<span class="str">&quot;横浜と蒲田は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
       <div class="concept-box" style="margin-top:0.8rem">
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
@@ -427,12 +432,11 @@ edge_count = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a03_ex1_result.png" alt="AL2-03-ex1.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 新宿: 渋谷、池袋、東京 / 渋谷: 新宿、品川 / 池袋: 新宿、上野 / 東京: 新宿、品川、上野 / 品川: 渋谷、東京 / 上野: 池袋、東京 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 新宿のとなりの駅: [&#x27;渋谷&#x27;, &#x27;池袋&#x27;, &#x27;東京&#x27;] / 品川のとなりの駅: [&#x27;渋谷&#x27;, &#x27;東京&#x27;] /  / 新宿と品川は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
+        <img src="images/a03_ex1_result.png" alt="AL2-03-ex1.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 横浜: 川崎、鶴見、大森 / 川崎: 横浜、蒲田、鶴見 / 鶴見: 横浜、目黒、川崎 / 大森: 横浜、蒲田 / 蒲田: 川崎、大森 / 目黒: 鶴見 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 横浜のとなりの駅: [&#x27;川崎&#x27;, &#x27;鶴見&#x27;, &#x27;大森&#x27;] / 蒲田のとなりの駅: [&#x27;川崎&#x27;, &#x27;大森&#x27;] /  / 横浜と蒲田は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
       </div>
-      <p class="run-note">6つの駅それぞれについて、となりの駅が一覧で表示されました。<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。辺（路線）の数を数えるときに <code>// 2</code> で半分にしているのは、1本の路線が「新宿の側」と「渋谷の側」の両方から数えられてしまうためです。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -507,91 +511,11 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
 <span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
     <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-03-ex2.py</code> の名前で保存して実行する</p>
-<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex2.py</span>
-<span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
-<span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
-
-stations = [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>]
-
-<span class="cmt"># 路線（辺）の一覧</span>
-lines = [
-    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>),
-    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>),
-    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;東京&quot;</span>),
-    (<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>),
-    (<span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>),
-    (<span class="str">&quot;東京&quot;</span>, <span class="str">&quot;上野&quot;</span>),
-    (<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>),
-]
-
-n = <span class="fn">len</span>(stations)
-
-<span class="cmt"># 全部のマスを0にした表を作る</span>
-matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n)]
-
-<span class="cmt"># 路線があるマスだけ1にする（行き帰りの両方を1にする）</span>
-<span class="kw">for</span> a, b <span class="kw">in</span> lines:
-    <span class="cmt"># index() は「リストの中で何番目にあるか」を返す。stations.index(&quot;渋谷&quot;) なら 1</span>
-    i = stations.index(a)
-    j = stations.index(b)
-    matrix[i][j] = <span class="num">1</span>
-    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-
-<span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
-<span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    <span class="fn">print</span>(<span class="str">f&quot;  {i} = {stations[i]}&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;隣接行列（1 = つながっている、0 = つながっていない）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
-<span class="fn">print</span>(<span class="str">&quot;          &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    row = <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{matrix[i][j]:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n))
-    <span class="fn">print</span>(<span class="str">f&quot;  {i} {stations[i]}  &quot;</span> + row)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># 隣接行列は「つながっているか」を1回で調べられる</span>
-a = <span class="str">&quot;新宿&quot;</span>
-b = <span class="str">&quot;品川&quot;</span>
-i = stations.index(a)
-j = stations.index(b)
-<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
-
-a = <span class="str">&quot;新宿&quot;</span>
-b = <span class="str">&quot;東京&quot;</span>
-i = stations.index(a)
-j = stations.index(b)
-<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
-<span class="fn">print</span>()
-
-<span class="cmt"># 使うマスの数を比べる</span>
-matrix_cells = n * n
-list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-<span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;駅の数を増やしたときの比較（1駅あたり3路線とした場合）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)
-<span class="fn">print</span>(<span class="str">&quot;    駅の数   隣接行列のマス数   隣接リストのマス数&quot;</span>)
-<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
-    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>路線は両方向に通れるので、行と列を入れかえた場所にも1を書く</td><td style="white-space:nowrap">A. <code>matrix[i][j] = 1</code><br>B. <code>matrix[j][i] = 1</code><br>C. <code>matrix[j][i] = 0</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>隣接リストのマスの数。1本の路線は両方の駅に書かれる</td><td style="white-space:nowrap">A. <code>n * n</code><br>B. <code>len(lines)</code><br>C. <code>len(lines) * 2</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex2-ref_result.png" alt="AL2-03-ex2-ref.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
+      </div>
+      <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">駅の数が増えたとき、表に必要なマスの数はどうなるか</text>
@@ -627,12 +551,95 @@ list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
         <text x="350" y="328" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">駅が5000個になると、隣接行列は隣接リストの約800倍のマスが必要になる</text>
         </svg>
       </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-03-ex2.py</code> の名前で保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex2.py</span>
+<span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
+<span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
 
+stations = [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;大森&quot;</span>, <span class="str">&quot;蒲田&quot;</span>, <span class="str">&quot;目黒&quot;</span>]
+
+<span class="cmt"># 路線（辺）の一覧</span>
+lines = [
+    (<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;川崎&quot;</span>),
+    (<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;鶴見&quot;</span>),
+    (<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;大森&quot;</span>),
+    (<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;蒲田&quot;</span>),
+    (<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;鶴見&quot;</span>),
+    (<span class="str">&quot;大森&quot;</span>, <span class="str">&quot;蒲田&quot;</span>),
+    (<span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;目黒&quot;</span>),
+]
+
+n = <span class="fn">len</span>(stations)
+
+<span class="cmt"># 全部のマスを0にした表を作る</span>
+matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n)]
+
+<span class="cmt"># 路線があるマスだけ1にする（行き帰りの両方を1にする）</span>
+<span class="kw">for</span> a, b <span class="kw">in</span> lines:
+    <span class="cmt"># index() は「リストの中で何番目にあるか」を返す。stations.index(&quot;川崎&quot;) なら 1</span>
+    i = stations.index(a)
+    j = stations.index(b)
+    matrix[i][j] = <span class="num">1</span>
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+
+<span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
+<span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} = {stations[i]}&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;隣接行列（1 = つながっている、0 = つながっていない）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>(<span class="str">&quot;          &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{matrix[i][j]:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n))
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} {stations[i]}  &quot;</span> + row)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 隣接行列は「つながっているか」を1回で調べられる</span>
+a = <span class="str">&quot;横浜&quot;</span>
+b = <span class="str">&quot;蒲田&quot;</span>
+i = stations.index(a)
+j = stations.index(b)
+<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
+
+a = <span class="str">&quot;横浜&quot;</span>
+b = <span class="str">&quot;大森&quot;</span>
+i = stations.index(a)
+j = stations.index(b)
+<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
+<span class="fn">print</span>()
+
+<span class="cmt"># 使うマスの数を比べる</span>
+matrix_cells = n * n
+list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+<span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;駅の数を増やしたときの比較（1駅あたり3路線とした場合）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)
+<span class="fn">print</span>(<span class="str">&quot;    駅の数   隣接行列のマス数   隣接リストのマス数&quot;</span>)
+<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
+    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>路線は両方向に通れるので、行と列を入れかえた場所にも1を書く</td><td style="white-space:nowrap">A. <code>matrix[i][j] = 1</code><br>B. <code>matrix[j][i] = 1</code><br>C. <code>matrix[j][i] = 0</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>隣接リストのマスの数。1本の路線は両方の駅に書かれる</td><td style="white-space:nowrap">A. <code>n * n</code><br>B. <code>len(lines)</code><br>C. <code>len(lines) * 2</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
+        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 横浜 / 1 = 川崎 / 2 = 鶴見 / 3 = 大森 / 4 = 蒲田 / 5 = 目黒 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 横浜     0   1   1   1   0   0 / 1 川崎     1   0   1   0   1   0 / 2 鶴見     1   1   0   0   0   1 / 3 大森     1   0   0   0   1   0 / 4 蒲田     0   1   0   1   0   0 / 5 目黒     0   0   1   0   0   0 / ---------------------------------------- /  / 横浜 と 蒲田 はつながっているか → matrix[0][4] = 0 / 横浜 と 大森 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
       </div>
-      <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
     </div>

@@ -62,19 +62,26 @@ def strip_comments(src):
     return text.strip("\n")
 
 
-def code_pair(filename):
-    """例題を「参考」（コメントなしの完成コード）と「実践」（穴埋め・丁寧なコメント）の2つで載せる。"""
+def example_pair(filename, note, extra=""):
+    """例題を「参考」と「実践」の2つで載せる。
+    参考: src/XX-ref.py（コメントなしの完成コード。データは本文の説明と同じ）と、その実行結果
+    実践: src/XX.py（データを変えた別問題。要の行が穴、丁寧なコメント付き）と、埋めたときの実行結果"""
     import re
     n = re.search(r"ex(\d)", filename).group(1)
-    src = (HERE / "src" / filename).read_text(encoding="utf-8").rstrip("\n")
-    ref = highlight(strip_comments(src))
     ref_name = filename.replace(".py", "-ref.py")
+    ref_src = (HERE / "src" / ref_name).read_text(encoding="utf-8").rstrip("\n")
+    stem = re.sub(r"^AL2-(\d+)-", r"a\1_", filename).replace(".py", "")
+    ref_img = stem.replace("_ex", "_ex").rsplit("_", 1)[0] + "_" + stem.rsplit("_", 1)[1] + "-ref_result.png"
+    prac_img = stem + "_result.png"
     ref_pre = (f'<p class="run-label">例題{n}（参考）── 完成したコード。コメントなしで全体の流れをつかむ。'
                f'保存するなら <code>{ref_name}</code> の名前で</p>\n'
-               f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{ref}</pre>')
-    prac = code(filename)
-    return (ref_pre + f'\n<p class="run-label" style="margin-top:1.4rem">例題{n}（実践）── 要の行が ____ になっている。'
-            f'コメントを読みながら埋めて、<code>{filename}</code> の名前で保存して実行する</p>\n' + prac)
+               f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{highlight(ref_src)}</pre>\n'
+               + run(ref_img, note))
+    prac = (f'<p class="run-label" style="margin-top:1.8rem">例題{n}（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。'
+            f'要の行が ____ になっているので、コメントを読みながら埋めて、<code>{filename}</code> の名前で保存して実行する</p>\n'
+            + code(filename) + "\n"
+            + run(prac_img, "埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。"))
+    return ref_pre + "\n" + (extra + "\n" if extra else "") + prac
 
 
 def _choices(filename, i, b):

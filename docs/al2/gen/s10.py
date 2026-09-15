@@ -3,7 +3,7 @@
 import math
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -226,9 +226,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>bitDP を書く前に、ビットで集合を表す練習をします。
       <code>&lt;&lt;</code>、<code>|</code>、<code>&amp;</code> の3つの記号だけ覚えれば足ります。</p>
 
-{code_pair('AL2-10-ex1.py')}
-
-{run('a10_ex1_result.png', '数 <strong>5</strong> は2進数で <code>00101</code> となり、'
+{example_pair('AL2-10-ex1.py', '数 <strong>5</strong> は2進数で <code>00101</code> となり、'
      '右から1けた目（0番の学校）と3けた目（2番の図書館）が 1 なので、「学校と図書館を回った」という意味になります。'
      '<code>1 &lt;&lt; 3</code> は <code>01000</code> で、3番のカフェだけを表します。'
      '<code>|</code> を使うと集合に都市を1つ足せ、<code>&amp;</code> を使うと入っているかどうかを調べられます。'
@@ -238,9 +236,7 @@ ex2_body = f"""      <p>bitDP で巡回セールスマン問題を解きます�
       <code>best[visited][here]</code> という表を作り、
       「<code>visited</code> の都市を回り終えて、いま <code>here</code> にいる」ときの最小距離を記録していきます。</p>
 
-{code_pair('AL2-10-ex2.py')}
-
-{run('a10_ex2_result.png', '表の一部が表示されました。<code>00001</code> の行は「学校だけ回った」状態で、'
+{example_pair('AL2-10-ex2.py', '表の一部が表示されました。<code>00001</code> の行は「学校だけ回った」状態で、'
      'いま学校（here=0）にいるときだけ 0.0 が入り、ほかは「-」です。'
      '<code>11111</code> の行は全部の都市を回り終えた状態で、5つの都市それぞれにいる場合の最小距離が入っています。'
      'いちばん小さいのは郵便局（here=1）の26.8で、そこから学校へ戻る8.1を足して<strong>34.9</strong>が答えになります。'

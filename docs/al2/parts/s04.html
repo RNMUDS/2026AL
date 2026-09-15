@@ -380,19 +380,24 @@ routes = [
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;直通（乗りかえ0回）がいちばん時間がかかっている&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-04-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a04_ex1-ref_result.png" alt="AL2-04-ex1-ref.py の実行結果。重み付きグラフ（数字は乗車時間・分） / ---------------------------------------------- / 新宿: 渋谷(7分)、池袋(9分)、品川(30分) / 渋谷: 新宿(7分)、品川(9分) / 池袋: 新宿(9分)、上野(12分) / 上野: 池袋(12分)、東京(6分) / 東京: 上野(6分)、品川(11分) / 品川: 新宿(30分)、渋谷(9分)、東京(11分) / ---------------------------------------------- /  / 新宿から品川までの行き方を比べる / ---------------------------------------------- / 新宿 → 品川 / 乗りかえの回数: 0回 ／ 合計時間: 30分 / 新宿 → 渋谷 → 品川 / 乗りかえの回数: 1回 ／ 合計時間: 16分 / 新宿 → 池袋 → 上野 → 東京 → 品川 / 乗りかえの回数: 3回 ／ 合計時間: 38分 / ---------------------------------------------- /  / 直通（乗りかえ0回）がいちばん時間がかかっている" width="380" height="468" loading="lazy">
+      </div>
+      <p class="run-note">新宿から品川へは3通りの行き方があり、乗りかえ0回の直通が<strong>30分</strong>、渋谷で1回乗りかえる行き方が<strong>16分</strong>、大回りの行き方が<strong>38分</strong>でした。乗りかえが少ない順に並べると 30分 → 16分 → 38分 で、乗りかえの回数と所要時間はまったく対応していません。<code>route_minutes</code> 関数は、隣り合う2駅の重みを順に足していくことで合計時間を求めています。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-04-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex1.py</span>
 <span class="cmt"># 重み付きグラフを隣接リストで表す</span>
 <span class="cmt"># 重み = 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
 
 <span class="cmt"># となりの駅を (駅名, かかる時間) の形で並べる</span>
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;横浜&quot;</span>: [(<span class="str">&quot;川崎&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;鶴見&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">28</span>)],
+    <span class="str">&quot;川崎&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;鶴見&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;目黒&quot;</span>, <span class="num">8</span>)],
+    <span class="str">&quot;目黒&quot;</span>: [(<span class="str">&quot;鶴見&quot;</span>, <span class="num">8</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">14</span>)],
+    <span class="str">&quot;大森&quot;</span>: [(<span class="str">&quot;目黒&quot;</span>, <span class="num">14</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">5</span>)],
+    <span class="str">&quot;蒲田&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">28</span>), (<span class="str">&quot;川崎&quot;</span>, <span class="num">11</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">5</span>)],
 }
 
 <span class="fn">print</span>(<span class="str">&quot;重み付きグラフ（数字は乗車時間・分）&quot;</span>)
@@ -423,14 +428,14 @@ railway = {
     <span class="kw">return</span> total
 
 
-<span class="cmt"># 新宿から品川まで、3通りの行き方を比べる</span>
+<span class="cmt"># 横浜から蒲田まで、3通りの行き方を比べる</span>
 routes = [
-    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
-    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>],
-    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;蒲田&quot;</span>],
+    [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;蒲田&quot;</span>],
+    [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;目黒&quot;</span>, <span class="str">&quot;大森&quot;</span>, <span class="str">&quot;蒲田&quot;</span>],
 ]
 
-<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方を比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;横浜から蒲田までの行き方を比べる&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 <span class="kw">for</span> route <span class="kw">in</span> routes:
     minutes = <span class="fn">route_minutes</span>(route)
@@ -450,12 +455,11 @@ routes = [
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a04_ex1_result.png" alt="AL2-04-ex1.py の実行結果。重み付きグラフ（数字は乗車時間・分） / ---------------------------------------------- / 新宿: 渋谷(7分)、池袋(9分)、品川(30分) / 渋谷: 新宿(7分)、品川(9分) / 池袋: 新宿(9分)、上野(12分) / 上野: 池袋(12分)、東京(6分) / 東京: 上野(6分)、品川(11分) / 品川: 新宿(30分)、渋谷(9分)、東京(11分) / ---------------------------------------------- /  / 新宿から品川までの行き方を比べる / ---------------------------------------------- / 新宿 → 品川 / 乗りかえの回数: 0回 ／ 合計時間: 30分 / 新宿 → 渋谷 → 品川 / 乗りかえの回数: 1回 ／ 合計時間: 16分 / 新宿 → 池袋 → 上野 → 東京 → 品川 / 乗りかえの回数: 3回 ／ 合計時間: 38分 / ---------------------------------------------- /  / 直通（乗りかえ0回）がいちばん時間がかかっている" width="380" height="468" loading="lazy">
+        <img src="images/a04_ex1_result.png" alt="AL2-04-ex1.py の実行結果。重み付きグラフ（数字は乗車時間・分） / ---------------------------------------------- / 横浜: 川崎(9分)、鶴見(6分)、蒲田(28分) / 川崎: 横浜(9分)、蒲田(11分) / 鶴見: 横浜(6分)、目黒(8分) / 目黒: 鶴見(8分)、大森(14分) / 大森: 目黒(14分)、蒲田(5分) / 蒲田: 横浜(28分)、川崎(11分)、大森(5分) / ---------------------------------------------- /  / 横浜から蒲田までの行き方を比べる / ---------------------------------------------- / 横浜 → 蒲田 / 乗りかえの回数: 0回 ／ 合計時間: 28分 / 横浜 → 川崎 → 蒲田 / 乗りかえの回数: 1回 ／ 合計時間: 20分 / 横浜 → 鶴見 → 目黒 → 大森 → 蒲田 / 乗りかえの回数: 3回 ／ 合計時間: 33分 / ---------------------------------------------- /  / 直通（乗りかえ0回）がいちばん時間がかかっている" width="380" height="468" loading="lazy">
       </div>
-      <p class="run-note">新宿から品川へは3通りの行き方があり、乗りかえ0回の直通が<strong>30分</strong>、渋谷で1回乗りかえる行き方が<strong>16分</strong>、大回りの行き方が<strong>38分</strong>でした。乗りかえが少ない順に並べると 30分 → 16分 → 38分 で、乗りかえの回数と所要時間はまったく対応していません。<code>route_minutes</code> 関数は、隣り合う2駅の重みを順に足していくことで合計時間を求めています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -546,22 +550,27 @@ best_route = every_route[<span class="num">0</span>]
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_minutes</span>(bfs_route) - <span class="fn">route_minutes</span>(best_route), <span class="str">&quot;分&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-04-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a04_ex2-ref_result.png" alt="AL2-04-ex2-ref.py の実行結果。新宿から品川までの行き方をすべて書き出す / ---------------------------------------------------- / 新宿 → 渋谷 → 品川: 路線2本 ／ 16分 / 新宿 → 池袋 → 上野 → 東京 → 品川: 路線4本 ／ 38分 / 新宿 → 品川: 路線1本 ／ 30分 / ---------------------------------------------------- / 行き方の数: 3 通り /  / 方法1: 幅優先探索が選んだ道 / 新宿 → 品川: 路線1本 ／ 30分 /  / 方法2: 合計時間がいちばん短い道 / 新宿 → 渋谷 → 品川: 路線2本 ／ 16分 /  / 差: 14 分 /  / 幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。" width="465" height="388" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索が選んだのは<strong>直通の30分</strong>の経路でした。一方、合計時間がいちばん短いのは<strong>渋谷で乗りかえる16分</strong>の経路で、その差は14分もあります。幅優先探索は「路線の本数」を最小にするアルゴリズムなので、本数が1本の直通を選びます。重みの合計を最小にしたい場合、幅優先探索は使えません。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-04-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex2.py</span>
 <span class="cmt"># 幅優先探索は「重みの合計」を最小にできないことを確かめる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;横浜&quot;</span>: [(<span class="str">&quot;川崎&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;鶴見&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">28</span>)],
+    <span class="str">&quot;川崎&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;鶴見&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;目黒&quot;</span>, <span class="num">8</span>)],
+    <span class="str">&quot;目黒&quot;</span>: [(<span class="str">&quot;鶴見&quot;</span>, <span class="num">8</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">14</span>)],
+    <span class="str">&quot;大森&quot;</span>: [(<span class="str">&quot;目黒&quot;</span>, <span class="num">14</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">5</span>)],
+    <span class="str">&quot;蒲田&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">28</span>), (<span class="str">&quot;川崎&quot;</span>, <span class="num">11</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">5</span>)],
 }
 
-start = <span class="str">&quot;新宿&quot;</span>
-goal = <span class="str">&quot;品川&quot;</span>
+start = <span class="str">&quot;横浜&quot;</span>
+goal = <span class="str">&quot;蒲田&quot;</span>
 
 
 <span class="kw">def</span> <span class="fn">route_minutes</span>(route):
@@ -612,7 +621,7 @@ bfs_route.reverse()
 
 every_route = <span class="fn">all_routes</span>(start, goal, [start])
 
-<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方をすべて書き出す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;横浜から蒲田までの行き方をすべて書き出す&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
 <span class="kw">for</span> route <span class="kw">in</span> every_route:
     <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: 路線{len(route)-1}本 ／ {route_minutes(route)}分&quot;</span>)
@@ -645,12 +654,11 @@ best_route = every_route[<span class="num">0</span>]
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a04_ex2_result.png" alt="AL2-04-ex2.py の実行結果。新宿から品川までの行き方をすべて書き出す / ---------------------------------------------------- / 新宿 → 渋谷 → 品川: 路線2本 ／ 16分 / 新宿 → 池袋 → 上野 → 東京 → 品川: 路線4本 ／ 38分 / 新宿 → 品川: 路線1本 ／ 30分 / ---------------------------------------------------- / 行き方の数: 3 通り /  / 方法1: 幅優先探索が選んだ道 / 新宿 → 品川: 路線1本 ／ 30分 /  / 方法2: 合計時間がいちばん短い道 / 新宿 → 渋谷 → 品川: 路線2本 ／ 16分 /  / 差: 14 分 /  / 幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。" width="465" height="388" loading="lazy">
+        <img src="images/a04_ex2_result.png" alt="AL2-04-ex2.py の実行結果。横浜から蒲田までの行き方をすべて書き出す / ---------------------------------------------------- / 横浜 → 川崎 → 蒲田: 路線2本 ／ 20分 / 横浜 → 鶴見 → 目黒 → 大森 → 蒲田: 路線4本 ／ 33分 / 横浜 → 蒲田: 路線1本 ／ 28分 / ---------------------------------------------------- / 行き方の数: 3 通り /  / 方法1: 幅優先探索が選んだ道 / 横浜 → 蒲田: 路線1本 ／ 28分 /  / 方法2: 合計時間がいちばん短い道 / 横浜 → 川崎 → 蒲田: 路線2本 ／ 20分 /  / 差: 8 分 /  / 幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。" width="465" height="388" loading="lazy">
       </div>
-      <p class="run-note">幅優先探索が選んだのは<strong>直通の30分</strong>の経路でした。一方、合計時間がいちばん短いのは<strong>渋谷で乗りかえる16分</strong>の経路で、その差は14分もあります。幅優先探索は「路線の本数」を最小にするアルゴリズムなので、本数が1本の直通を選びます。重みの合計を最小にしたい場合、幅優先探索は使えません。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、幅優先探索が選んだ経路と合計時間、いちばん短い経路と合計時間、その差を書く。あわせて、幅優先探索が16分の経路を選べない理由を、幅優先探索の進め方と結びつけて説明する。</span></div>
     </div>

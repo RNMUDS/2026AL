@@ -516,18 +516,23 @@ height = <span class="num">15</span>
         line = line + mark
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * (width * <span class="num">2</span> + <span class="num">4</span>))</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-08-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex1-ref_result.png" alt="AL2-08-ex1-ref.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=2, y=2) / 郵便局: (x=10, y=3) / 図書館: (x=14, y=9) / カフェ: (x=6, y=12) / 公園: (x=3, y=8) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    8.1   13.9   10.8    6.1 / 1       8.1    0.0    7.2    9.8    8.6 / 2      13.9    7.2    0.0    8.5   11.0 / 3      10.8    9.8    8.5    0.0    5.0 / 4       6.1    8.6   11.0    5.0    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 8.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 0 . . . . . . . . . . . . . . . . . / . . . . . . . . . . 1 . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . 4 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 2 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 3 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
+      </div>
+      <p class="run-note">5つの都市について、5行5列の距離の表ができました。ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。また、0行1列と1行0列がどちらも 8.1 のように、表は<strong>左上から右下の線を軸にして対称</strong>になっています。行きと帰りで同じ距離だからです。いちばん下の地図では、5つの都市の位置関係が確かめられます。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-08-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex1.py</span>
 <span class="cmt"># 巡回セールスマン問題の準備: 都市の位置から距離の表を作る</span>
 <span class="kw">import</span> math
 
 <span class="cmt"># 都市の名前と位置（x, y）</span>
 cities = [
-    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
-    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
-    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
-    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">4</span>, <span class="num">3</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">15</span>, <span class="num">8</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">8</span>, <span class="num">13</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">2</span>, <span class="num">10</span>),
 ]
 
 n = <span class="fn">len</span>(cities)
@@ -596,12 +601,11 @@ height = <span class="num">15</span>
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a08_ex1_result.png" alt="AL2-08-ex1.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=2, y=2) / 郵便局: (x=10, y=3) / 図書館: (x=14, y=9) / カフェ: (x=6, y=12) / 公園: (x=3, y=8) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    8.1   13.9   10.8    6.1 / 1       8.1    0.0    7.2    9.8    8.6 / 2      13.9    7.2    0.0    8.5   11.0 / 3      10.8    9.8    8.5    0.0    5.0 / 4       6.1    8.6   11.0    5.0    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 8.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 0 . . . . . . . . . . . . . . . . . / . . . . . . . . . . 1 . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . 4 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 2 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 3 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
+        <img src="images/a08_ex1_result.png" alt="AL2-08-ex1.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=4, y=3) / 郵便局: (x=11, y=2) / 図書館: (x=15, y=8) / カフェ: (x=8, y=13) / 公園: (x=2, y=10) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    7.1   12.1   10.8    7.3 / 1       7.1    0.0    7.2   11.4   12.0 / 2      12.1    7.2    0.0    8.6   13.2 / 3      10.8   11.4    8.6    0.0    6.7 / 4       7.3   12.0   13.2    6.7    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 7.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . 1 . . . . . . . . / . . . . 0 . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 2 . . . . / . . . . . . . . . . . . . . . . . . . . / . . 4 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 3 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
       </div>
-      <p class="run-note">5つの都市について、5行5列の距離の表ができました。ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。また、0行1列と1行0列がどちらも 8.1 のように、表は<strong>左上から右下の線を軸にして対称</strong>になっています。行きと帰りで同じ距離だからです。いちばん下の地図では、5つの都市の位置関係が確かめられます。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -691,97 +695,11 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
 <span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-08-ex2.py</code> の名前で保存して実行する</p>
-<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex2.py</span>
-<span class="cmt"># 巡回セールスマン問題を全探索で解く</span>
-<span class="cmt"># 学校（0番）を出発し、ほかの4つの都市をすべて1回ずつ回って、学校へ戻る。</span>
-<span class="cmt"># 回る順番をすべて書き出し、いちばん短いものをさがす。</span>
-<span class="kw">import</span> math
-<span class="kw">from</span> itertools <span class="kw">import</span> permutations
-
-cities = [
-    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
-    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
-    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
-    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
-]
-
-n = <span class="fn">len</span>(cities)
-
-distance = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    row = []
-    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
-        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
-        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
-    distance.append(row)
-
-
-<span class="kw">def</span> <span class="fn">tour_length</span>(order):
-    <span class="str">&quot;&quot;&quot;0番を出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
-    total = <span class="num">0.0</span>
-    here = <span class="num">0</span>
-    <span class="kw">for</span> city <span class="kw">in</span> order:
-        total = total + distance[here][city]
-        here = city
-    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    <span class="kw">return</span> <span class="fn">round</span>(total, <span class="num">1</span>)
-
-
-<span class="kw">def</span> <span class="fn">tour_name</span>(order):
-    <span class="str">&quot;&quot;&quot;ルートを「学校 → 郵便局 → …」という文字列にして返す&quot;&quot;&quot;</span>
-    names = [cities[<span class="num">0</span>][<span class="num">0</span>]]
-    <span class="kw">for</span> city <span class="kw">in</span> order:
-        names.append(cities[city][<span class="num">0</span>])
-    names.append(cities[<span class="num">0</span>][<span class="num">0</span>])
-    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
-
-
-<span class="cmt"># permutations は「並べ方をすべて作る」道具</span>
-<span class="cmt"># 1, 2, 3, 4 の並べ方は 4×3×2×1 = 24通り</span>
-all_orders = <span class="fn">list</span>(<span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
-
-<span class="fn">print</span>(<span class="str">&quot;学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-
-best_order = <span class="kw">None</span>
-best_length = <span class="kw">None</span>
-
-<span class="kw">for</span> order <span class="kw">in</span> all_orders:
-    length = <span class="fn">tour_length</span>(order)
-    mark = <span class="str">&quot;&quot;</span>
-    <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> length &lt; best_length:
-        best_length = length
-        best_order = order
-        mark = <span class="str">&quot;  ← いまのところ最短&quot;</span>
-    <span class="fn">print</span>(<span class="str">f&quot;  {order}  {length:&gt;6}&quot;</span> + mark)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_orders), <span class="str">&quot;通り&quot;</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;いちばん短いルート&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(best_order))
-<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
-<span class="fn">print</span>()
-
-<span class="cmt"># 逆回りは同じ長さになることを確かめる</span>
-reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(best_order))
-<span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
-<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1〜4番の都市の並べ方をすべて作る（学校は0番で固定）</td><td style="white-space:nowrap">A. <code>permutations([1, 2, 3, 4])</code><br>B. <code>permutations([0, 1, 2, 3, 4])</code><br>C. <code>[1, 2, 3, 4]</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の都市から学校（0番）へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>0</code><br>C. <code>distance[here][1]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex2-ref_result.png" alt="AL2-08-ex2-ref.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    34.9  ← いまのところ最短 / (1, 2, 4, 3)    42.1 / (1, 3, 2, 4)    43.5 / (1, 3, 4, 2)    47.8 / (1, 4, 2, 3)    47.0 / (1, 4, 3, 2)    44.1 / (2, 1, 3, 4)    42.0 / (2, 1, 4, 3)    45.5 / (2, 3, 1, 4)    46.9 / (2, 3, 4, 1)    44.1 / (2, 4, 1, 3)    54.1 / (2, 4, 3, 1)    47.8 / (3, 1, 2, 4)    44.9 / (3, 1, 4, 2)    54.1 / (3, 2, 1, 4)    41.2 / (3, 2, 4, 1)    47.0 / (3, 4, 1, 2)    45.5 / (3, 4, 2, 1)    42.1 / (4, 1, 2, 3)    41.2 / (4, 1, 3, 2)    46.9 / (4, 2, 1, 3)    44.9 / (4, 2, 3, 1)    43.5 / (4, 3, 1, 2)    42.0 / (4, 3, 2, 1)    34.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9" width="494" height="768" loading="lazy">
+      </div>
+      <p class="run-note">24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。ルートは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」です。いちばん下に表示した逆回りのルートも、同じ34.9になっています。同じ道を反対向きに走るだけなので、距離が変わらないためです。24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 434" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索: 24通りの順番を1つずつ試して、いちばん短いものを選ぶ</text>
@@ -897,12 +815,101 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
         <text x="350" y="418" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">全探索は必ず正しい答えを出すが、都市が増えると終わらなくなる</text>
         </svg>
       </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-08-ex2.py</code> の名前で保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex2.py</span>
+<span class="cmt"># 巡回セールスマン問題を全探索で解く</span>
+<span class="cmt"># 学校（0番）を出発し、ほかの4つの都市をすべて1回ずつ回って、学校へ戻る。</span>
+<span class="cmt"># 回る順番をすべて書き出し、いちばん短いものをさがす。</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
 
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">4</span>, <span class="num">3</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">15</span>, <span class="num">8</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">8</span>, <span class="num">13</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">2</span>, <span class="num">10</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番を出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+    <span class="kw">return</span> <span class="fn">round</span>(total, <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">tour_name</span>(order):
+    <span class="str">&quot;&quot;&quot;ルートを「学校 → 郵便局 → …」という文字列にして返す&quot;&quot;&quot;</span>
+    names = [cities[<span class="num">0</span>][<span class="num">0</span>]]
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        names.append(cities[city][<span class="num">0</span>])
+    names.append(cities[<span class="num">0</span>][<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
+
+
+<span class="cmt"># permutations は「並べ方をすべて作る」道具</span>
+<span class="cmt"># 1, 2, 3, 4 の並べ方は 4×3×2×1 = 24通り</span>
+all_orders = <span class="fn">list</span>(<span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
+
+<span class="fn">print</span>(<span class="str">&quot;学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+
+best_order = <span class="kw">None</span>
+best_length = <span class="kw">None</span>
+
+<span class="kw">for</span> order <span class="kw">in</span> all_orders:
+    length = <span class="fn">tour_length</span>(order)
+    mark = <span class="str">&quot;&quot;</span>
+    <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> length &lt; best_length:
+        best_length = length
+        best_order = order
+        mark = <span class="str">&quot;  ← いまのところ最短&quot;</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  {order}  {length:&gt;6}&quot;</span> + mark)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_orders), <span class="str">&quot;通り&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;いちばん短いルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(best_order))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
+<span class="fn">print</span>()
+
+<span class="cmt"># 逆回りは同じ長さになることを確かめる</span>
+reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(best_order))
+<span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1〜4番の都市の並べ方をすべて作る（学校は0番で固定）</td><td style="white-space:nowrap">A. <code>permutations([1, 2, 3, 4])</code><br>B. <code>permutations([0, 1, 2, 3, 4])</code><br>C. <code>[1, 2, 3, 4]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の都市から学校（0番）へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>0</code><br>C. <code>distance[here][1]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a08_ex2_result.png" alt="AL2-08-ex2.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    34.9  ← いまのところ最短 / (1, 2, 4, 3)    42.1 / (1, 3, 2, 4)    43.5 / (1, 3, 4, 2)    47.8 / (1, 4, 2, 3)    47.0 / (1, 4, 3, 2)    44.1 / (2, 1, 3, 4)    42.0 / (2, 1, 4, 3)    45.5 / (2, 3, 1, 4)    46.9 / (2, 3, 4, 1)    44.1 / (2, 4, 1, 3)    54.1 / (2, 4, 3, 1)    47.8 / (3, 1, 2, 4)    44.9 / (3, 1, 4, 2)    54.1 / (3, 2, 1, 4)    41.2 / (3, 2, 4, 1)    47.0 / (3, 4, 1, 2)    45.5 / (3, 4, 2, 1)    42.1 / (4, 1, 2, 3)    41.2 / (4, 1, 3, 2)    46.9 / (4, 2, 1, 3)    44.9 / (4, 2, 3, 1)    43.5 / (4, 3, 1, 2)    42.0 / (4, 3, 2, 1)    34.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9" width="494" height="768" loading="lazy">
+        <img src="images/a08_ex2_result.png" alt="AL2-08-ex2.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    36.9  ← いまのところ最短 / (1, 2, 4, 3)    45.0 / (1, 3, 2, 4)    47.6 / (1, 3, 4, 2)    50.5 / (1, 4, 2, 3)    51.7 / (1, 4, 3, 2)    46.5 / (2, 1, 3, 4)    44.7 / (2, 1, 4, 3)    48.8 / (2, 3, 1, 4)    51.4 / (2, 3, 4, 1)    46.5 / (2, 4, 1, 3)    59.5 / (2, 4, 3, 1)    50.5 / (3, 1, 2, 4)    49.9 / (3, 1, 4, 2)    59.5 / (3, 2, 1, 4)    45.9 / (3, 2, 4, 1)    51.7 / (3, 4, 1, 2)    48.8 / (3, 4, 2, 1)    45.0 / (4, 1, 2, 3)    45.9 / (4, 1, 3, 2)    51.4 / (4, 2, 1, 3)    49.9 / (4, 2, 3, 1)    47.6 / (4, 3, 1, 2)    44.7 / (4, 3, 2, 1)    36.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 36.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 36.9" width="494" height="768" loading="lazy">
       </div>
-      <p class="run-note">24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。ルートは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」です。いちばん下に表示した逆回りのルートも、同じ34.9になっています。同じ道を反対向きに走るだけなので、距離が変わらないためです。24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、最短ルートと合計距離、いちばん長かったルートと合計距離を書く。あわせて、24通りの中に「同じ形のルート」が2つずつある理由を説明する。</span></div>
     </div>
@@ -1150,7 +1157,7 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

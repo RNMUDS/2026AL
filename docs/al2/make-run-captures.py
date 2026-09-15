@@ -88,7 +88,7 @@ def main(src_path):
         fname = label.split("── ")[-1].strip()
         if not fname.endswith(".py"):
             continue
-        if "std" in fname or "-ref" in fname:   # 予測課題・参考コードは画像を作らない
+        if "std" in fname:            # 予測課題なので答えの画像は作らない
             print(f"skip {fname} (prediction task)")
             continue
         code = html.unescape(re.sub("<.*?>", "",

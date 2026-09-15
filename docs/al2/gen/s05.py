@@ -2,7 +2,7 @@
 """第5回: ダイクストラ法（1）考え方 の本文を組み立てる。"""
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -283,9 +283,7 @@ ex1_body = f"""      <p>ダイクストラ法を、手順が目に見える形�
       1つの手順が終わるたびに、距離表の中身をそのまま表示します。
       表の中で <code>*</code> が付いている駅は「もう変わらない」と決まった駅です。</p>
 
-{code_pair('AL2-05-ex1.py')}
-
-{run('a05_ex1_result.png', '手順1で新宿を確定させると、渋谷7分・池袋9分・品川30分が書き込まれます。'
+{example_pair('AL2-05-ex1.py', '手順1で新宿を確定させると、渋谷7分・池袋9分・品川30分が書き込まれます。'
      '手順2で渋谷を確定させたとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。'
      '直通の30分より、渋谷で乗りかえる16分のほうが早いことが見つかったためです。'
      '手順3以降、品川の16分はもう書き直されず、手順4で確定しています。'
@@ -297,9 +295,7 @@ ex1_body = f"""      <p>ダイクストラ法を、手順が目に見える形�
 ex2_body = f"""      <p>ダイクストラ法は最短時間を求めますが、そのままでは「どの道を通ったか」が分かりません。
       距離を書き直すときに、<strong>どの駅から来たか</strong>も一緒に記録しておけば、あとで道順を組み立てられます。</p>
 
-{code_pair('AL2-05-ex2.py')}
-
-{run('a05_ex2_result.png', '各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。'
+{example_pair('AL2-05-ex2.py', '各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。'
      '東京へは「新宿 → 渋谷 → 品川 → 東京」で27分が最短です。'
      '<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。'
      '東京から逆にたどると 東京 → 品川 → 渋谷 → 新宿 となり、順番をひっくり返せば道順になります。'

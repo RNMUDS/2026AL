@@ -10,7 +10,7 @@ def make_cities(count):
     """計算で位置を決めるので、何度実行しても同じ配置になる"""
     cities = []
     for i in range(count):
-        cities.append(((i * 7) % 23, (i * 11) % 19))
+        cities.append(((i * 5) % 21, (i * 13) % 17))
     return cities
 
 

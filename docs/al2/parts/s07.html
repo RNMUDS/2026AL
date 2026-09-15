@@ -619,7 +619,12 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
 <span class="fn">print</span>(<span class="str">f&quot;ダイクストラ法  {len(dij_route)-1:&gt;3}歩  {route_cost(dij_route):&gt;3}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索は歩数を、ダイクストラ法は合計コストを、それぞれ最小にしている&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-07-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a07_ex1-ref_result.png" alt="AL2-07-ex1-ref.py の実行結果。床コスト付き迷路（数字はそのマスを通るのにかかる秒数） / ------------------------------ / 1    1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / 幅優先探索の経路: 8歩 ／ 合計 16秒 / 1*   1    1    9    1 / 9*   9    1    9    1 / 1*   1    1    9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / ダイクストラ法の経路: 12歩 ／ 合計 12秒 / 1*   1*   1*   9    1 / 9    9    1*   9    1 / 1*   1*   1*   9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / -------------------------------------------- / 幅優先探索        8歩   16秒 / ダイクストラ法   12歩   12秒 / -------------------------------------------- / 幅優先探索は歩数を、ダイクストラ法は合計コストを、それぞれ最小にしている" width="477" height="608" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索は<strong>8歩・16秒</strong>、ダイクストラ法は<strong>12歩・12秒</strong>という結果でした。迷路の絵を見ると、幅優先探索の経路は 9 のマス（ぬかるみ）を1つ通っていますが、ダイクストラ法の経路は 9 のマスを1つも通らず、すべて 1 のマスだけを歩いています。第4回では3通りの行き方を手で用意して比べましたが、ダイクストラ法は<strong>自動で</strong>いちばん安い経路を見つけています。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-07-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-07-ex1.py</span>
 <span class="cmt"># 床コスト付き迷路を、幅優先探索とダイクストラ法の両方で解いて比べる</span>
 <span class="kw">import</span> heapq
@@ -627,10 +632,10 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
 
 <span class="cmt"># 床コスト付きの迷路（1 = 舗装路1秒、9 = ぬかるみ9秒）</span>
 cost_map = [
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
     [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
     [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
 ]
 
@@ -753,12 +758,11 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex1_result.png" alt="AL2-07-ex1.py の実行結果。床コスト付き迷路（数字はそのマスを通るのにかかる秒数） / ------------------------------ / 1    1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / 幅優先探索の経路: 8歩 ／ 合計 16秒 / 1*   1    1    9    1 / 9*   9    1    9    1 / 1*   1    1    9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / ダイクストラ法の経路: 12歩 ／ 合計 12秒 / 1*   1*   1*   9    1 / 9    9    1*   9    1 / 1*   1*   1*   9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / -------------------------------------------- / 幅優先探索        8歩   16秒 / ダイクストラ法   12歩   12秒 / -------------------------------------------- / 幅優先探索は歩数を、ダイクストラ法は合計コストを、それぞれ最小にしている" width="477" height="608" loading="lazy">
+        <img src="images/a07_ex1_result.png" alt="AL2-07-ex1.py の実行結果。床コスト付き迷路（数字はそのマスを通るのにかかる秒数） / ------------------------------ / 1    9    1    1    1 / 1    9    1    9    1 / 1    1    1    9    1 / 9    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / 幅優先探索の経路: 8歩 ／ 合計 16秒 / 1*   9    1    1    1 / 1*   9    1    9    1 / 1*   1    1    9    1 / 9*   9    9    9    1 / 1*   1*   1*   1*   1* /  / ダイクストラ法の経路: 12歩 ／ 合計 12秒 / 1*   9    1*   1*   1* / 1*   9    1*   9    1* / 1*   1*   1*   9    1* / 9    9    9    9    1* / 1    1    1    1    1* /  / -------------------------------------------- / 幅優先探索        8歩   16秒 / ダイクストラ法   12歩   12秒 / -------------------------------------------- / 幅優先探索は歩数を、ダイクストラ法は合計コストを、それぞれ最小にしている" width="477" height="608" loading="lazy">
       </div>
-      <p class="run-note">幅優先探索は<strong>8歩・16秒</strong>、ダイクストラ法は<strong>12歩・12秒</strong>という結果でした。迷路の絵を見ると、幅優先探索の経路は 9 のマス（ぬかるみ）を1つ通っていますが、ダイクストラ法の経路は 9 のマスを1つも通らず、すべて 1 のマスだけを歩いています。第4回では3通りの行き方を手で用意して比べましたが、ダイクストラ法は<strong>自動で</strong>いちばん安い経路を見つけています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題1の実行結果から、2つの経路の歩数と合計秒数を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどこで分かれているかを言葉で説明する。</span></div>
     </div>
@@ -842,16 +846,21 @@ line = <span class="str">&quot;&quot;</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-07-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a07_ex2-ref_result.png" alt="AL2-07-ex2-ref.py の実行結果。確定した順番（コストが小さいマスから順に決まっていく） / ------------------------------------------------------------ / (0, 0)=0秒     (0, 1)=1秒     (0, 2)=2秒     (1, 2)=3秒 / (2, 2)=4秒     (2, 1)=5秒     (2, 0)=6秒     (3, 0)=7秒 / (4, 0)=8秒     (1, 0)=9秒     (4, 1)=9秒     (1, 1)=10秒 / (4, 2)=10秒    (0, 3)=11秒    (4, 3)=11秒    (0, 4)=12秒 / (1, 3)=12秒    (4, 4)=12秒    (1, 4)=13秒    (2, 3)=13秒 / (3, 2)=13秒    (3, 4)=13秒    (2, 4)=14秒    (3, 1)=14秒 / (3, 3)=20秒 / ------------------------------------------------------------ /  / スタート(0,0)から各マスまでの最小コスト / ------------------------------ / 0    1    2   11   12 / 9   10    3   12   13 / 6    5    4   13   14 / 7   14   13   20   13 / 8    9   10   11   12 / ------------------------------ /  / もとの迷路（そのマスを通るのにかかる秒数） / ------------------------------ / 1    1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている" width="502" height="648" loading="lazy">
+      </div>
+      <p class="run-note">確定した順番は (0,0)=0秒 → (0,1)=1秒 → (0,2)=2秒 → (1,2)=3秒 … と、<strong>コストが小さいマスから順</strong>になっています。いちばん最後に確定した (3,3) は20秒で、9のマスに囲まれているためコストが高くなっています。真ん中の表は、スタートからそれぞれのマスへ行くのにかかる最小の秒数です。9のマスがある右上の (0,3) は11秒、(0,4) は12秒と、遠回りしてたどり着く形になっています。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-07-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-07-ex2.py</span>
 <span class="cmt"># ダイクストラ法が「どのマスにいくらでたどり着けるか」を全部求めていることを見る</span>
 <span class="kw">import</span> heapq
 
 cost_map = [
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
     [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
     [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
 ]
 
@@ -925,12 +934,11 @@ line = <span class="str">&quot;&quot;</span>
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex2_result.png" alt="AL2-07-ex2.py の実行結果。確定した順番（コストが小さいマスから順に決まっていく） / ------------------------------------------------------------ / (0, 0)=0秒     (0, 1)=1秒     (0, 2)=2秒     (1, 2)=3秒 / (2, 2)=4秒     (2, 1)=5秒     (2, 0)=6秒     (3, 0)=7秒 / (4, 0)=8秒     (1, 0)=9秒     (4, 1)=9秒     (1, 1)=10秒 / (4, 2)=10秒    (0, 3)=11秒    (4, 3)=11秒    (0, 4)=12秒 / (1, 3)=12秒    (4, 4)=12秒    (1, 4)=13秒    (2, 3)=13秒 / (3, 2)=13秒    (3, 4)=13秒    (2, 4)=14秒    (3, 1)=14秒 / (3, 3)=20秒 / ------------------------------------------------------------ /  / スタート(0,0)から各マスまでの最小コスト / ------------------------------ / 0    1    2   11   12 / 9   10    3   12   13 / 6    5    4   13   14 / 7   14   13   20   13 / 8    9   10   11   12 / ------------------------------ /  / もとの迷路（そのマスを通るのにかかる秒数） / ------------------------------ / 1    1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている" width="502" height="648" loading="lazy">
+        <img src="images/a07_ex2_result.png" alt="AL2-07-ex2.py の実行結果。確定した順番（コストが小さいマスから順に決まっていく） / ------------------------------------------------------------ / (0, 0)=0秒     (1, 0)=1秒     (2, 0)=2秒     (2, 1)=3秒 / (2, 2)=4秒     (1, 2)=5秒     (0, 2)=6秒     (0, 3)=7秒 / (0, 4)=8秒     (0, 1)=9秒     (1, 4)=9秒     (1, 1)=10秒 / (2, 4)=10秒    (3, 0)=11秒    (3, 4)=11秒    (3, 1)=12秒 / (4, 0)=12秒    (4, 4)=12秒    (2, 3)=13秒    (3, 2)=13秒 / (4, 1)=13秒    (4, 3)=13秒    (1, 3)=14秒    (4, 2)=14秒 / (3, 3)=20秒 / ------------------------------------------------------------ /  / スタート(0,0)から各マスまでの最小コスト / ------------------------------ / 0    9    6    7    8 / 1   10    5   14    9 / 2    3    4   13   10 / 11   12   13   20   11 / 12   13   14   13   12 / ------------------------------ /  / もとの迷路（そのマスを通るのにかかる秒数） / ------------------------------ / 1    9    1    1    1 / 1    9    1    9    1 / 1    1    1    9    1 / 9    9    9    9    1 / 1    1    1    1    1 / ------------------------------ /  / ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている" width="502" height="648" loading="lazy">
       </div>
-      <p class="run-note">確定した順番は (0,0)=0秒 → (0,1)=1秒 → (0,2)=2秒 → (1,2)=3秒 … と、<strong>コストが小さいマスから順</strong>になっています。いちばん最後に確定した (3,3) は20秒で、9のマスに囲まれているためコストが高くなっています。真ん中の表は、スタートからそれぞれのマスへ行くのにかかる最小の秒数です。9のマスがある右上の (0,3) は11秒、(0,4) は12秒と、遠回りしてたどり着く形になっています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
   </div>
 </section>

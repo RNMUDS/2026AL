@@ -413,21 +413,26 @@ step = <span class="num">0</span>
 <span class="fn">print</span>(<span class="str">&quot;新宿から各駅までの最短時間&quot;</span>)
 <span class="kw">for</span> station <span class="kw">in</span> railway:
     <span class="fn">print</span>(<span class="str">f&quot;  {station}: {distance[station]}分&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-05-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a05_ex1-ref_result.png" alt="AL2-05-ex1-ref.py の実行結果。ダイクストラ法で、新宿から各駅までの最短時間を求める / （* が付いている駅は「もう変わらないと決まった駅」） / -------------------------------------------------------------------------- / 手順0 なしを選ぶ  新宿:  0 渋谷:  - 池袋:  - 上野:  - 東京:  - 品川:  - / 渋谷 の時間を - から 7 に書き直した（新宿 経由: 0 + 7） / 池袋 の時間を - から 9 に書き直した（新宿 経由: 0 + 9） / 品川 の時間を - から 30 に書き直した（新宿 経由: 0 + 30） / 手順1 新宿を選ぶ  新宿: 0* 渋谷:  7 池袋:  9 上野:  - 東京:  - 品川: 30 / 品川 の時間を 30 から 16 に書き直した（渋谷 経由: 7 + 9） / 手順2 渋谷を選ぶ  新宿: 0* 渋谷: 7* 池袋:  9 上野:  - 東京:  - 品川: 16 / 上野 の時間を - から 21 に書き直した（池袋 経由: 9 + 12） / 手順3 池袋を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野: 21 東京:  - 品川: 16 / 東京 の時間を - から 27 に書き直した（品川 経由: 16 + 11） / 手順4 品川を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野: 21 東京: 27 品川:16* / 手順5 上野を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野:21* 東京: 27 品川:16* / 手順6 東京を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野:21* 東京:27* 品川:16* / -------------------------------------------------------------------------- /  / 新宿から各駅までの最短時間 / 新宿: 0分 / 渋谷: 7分 / 池袋: 9分 / 上野: 21分 / 東京: 27分 / 品川: 16分" width="584" height="548" loading="lazy">
+      </div>
+      <p class="run-note">手順1で新宿を確定させると、渋谷7分・池袋9分・品川30分が書き込まれます。手順2で渋谷を確定させたとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。直通の30分より、渋谷で乗りかえる16分のほうが早いことが見つかったためです。手順3以降、品川の16分はもう書き直されず、手順4で確定しています。最終的に、新宿から東京までは27分と求まりました。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-05-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-05-ex1.py</span>
 <span class="cmt"># ダイクストラ法（1）: 距離表が1ステップずつ決まっていく様子を見る</span>
 <span class="cmt"># 出発点から各駅までの「合計時間がいちばん短い行き方」を求める。</span>
 
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;横浜&quot;</span>: [(<span class="str">&quot;川崎&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;鶴見&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">28</span>)],
+    <span class="str">&quot;川崎&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;鶴見&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;目黒&quot;</span>, <span class="num">8</span>)],
+    <span class="str">&quot;目黒&quot;</span>: [(<span class="str">&quot;鶴見&quot;</span>, <span class="num">8</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">14</span>)],
+    <span class="str">&quot;大森&quot;</span>: [(<span class="str">&quot;目黒&quot;</span>, <span class="num">14</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">5</span>)],
+    <span class="str">&quot;蒲田&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">28</span>), (<span class="str">&quot;川崎&quot;</span>, <span class="num">11</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">5</span>)],
 }
 
-start = <span class="str">&quot;新宿&quot;</span>
+start = <span class="str">&quot;横浜&quot;</span>
 INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)      <span class="cmt"># inf は「まだ行き方が分かっていない」ことを表す無限大</span>
 
 <span class="cmt"># distance = 出発点からその駅までの、今わかっているいちばん短い時間</span>
@@ -452,7 +457,7 @@ settled = <span class="fn">set</span>()
     <span class="fn">print</span>(<span class="str">f&quot;手順{step} {chosen}を選ぶ  &quot;</span> + <span class="str">&quot; &quot;</span>.join(parts))
 
 
-<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法で、新宿から各駅までの最短時間を求める&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法で、横浜から各駅までの最短時間を求める&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;（* が付いている駅は「もう変わらないと決まった駅」）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">74</span>)
 <span class="fn">show_table</span>(<span class="num">0</span>, <span class="str">&quot;なし&quot;</span>)
@@ -492,7 +497,7 @@ step = <span class="num">0</span>
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">74</span>)
 <span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;新宿から各駅までの最短時間&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;横浜から各駅までの最短時間&quot;</span>)
 <span class="kw">for</span> station <span class="kw">in</span> railway:
     <span class="fn">print</span>(<span class="str">f&quot;  {station}: {distance[station]}分&quot;</span>)</pre>
       <div class="concept-box" style="margin-top:0.8rem">
@@ -507,12 +512,11 @@ step = <span class="num">0</span>
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_result.png" alt="AL2-05-ex1.py の実行結果。ダイクストラ法で、新宿から各駅までの最短時間を求める / （* が付いている駅は「もう変わらないと決まった駅」） / -------------------------------------------------------------------------- / 手順0 なしを選ぶ  新宿:  0 渋谷:  - 池袋:  - 上野:  - 東京:  - 品川:  - / 渋谷 の時間を - から 7 に書き直した（新宿 経由: 0 + 7） / 池袋 の時間を - から 9 に書き直した（新宿 経由: 0 + 9） / 品川 の時間を - から 30 に書き直した（新宿 経由: 0 + 30） / 手順1 新宿を選ぶ  新宿: 0* 渋谷:  7 池袋:  9 上野:  - 東京:  - 品川: 30 / 品川 の時間を 30 から 16 に書き直した（渋谷 経由: 7 + 9） / 手順2 渋谷を選ぶ  新宿: 0* 渋谷: 7* 池袋:  9 上野:  - 東京:  - 品川: 16 / 上野 の時間を - から 21 に書き直した（池袋 経由: 9 + 12） / 手順3 池袋を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野: 21 東京:  - 品川: 16 / 東京 の時間を - から 27 に書き直した（品川 経由: 16 + 11） / 手順4 品川を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野: 21 東京: 27 品川:16* / 手順5 上野を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野:21* 東京: 27 品川:16* / 手順6 東京を選ぶ  新宿: 0* 渋谷: 7* 池袋: 9* 上野:21* 東京:27* 品川:16* / -------------------------------------------------------------------------- /  / 新宿から各駅までの最短時間 / 新宿: 0分 / 渋谷: 7分 / 池袋: 9分 / 上野: 21分 / 東京: 27分 / 品川: 16分" width="584" height="548" loading="lazy">
+        <img src="images/a05_ex1_result.png" alt="AL2-05-ex1.py の実行結果。ダイクストラ法で、横浜から各駅までの最短時間を求める / （* が付いている駅は「もう変わらないと決まった駅」） / -------------------------------------------------------------------------- / 手順0 なしを選ぶ  横浜:  0 川崎:  - 鶴見:  - 目黒:  - 大森:  - 蒲田:  - / 川崎 の時間を - から 9 に書き直した（横浜 経由: 0 + 9） / 鶴見 の時間を - から 6 に書き直した（横浜 経由: 0 + 6） / 蒲田 の時間を - から 28 に書き直した（横浜 経由: 0 + 28） / 手順1 横浜を選ぶ  横浜: 0* 川崎:  9 鶴見:  6 目黒:  - 大森:  - 蒲田: 28 / 目黒 の時間を - から 14 に書き直した（鶴見 経由: 6 + 8） / 手順2 鶴見を選ぶ  横浜: 0* 川崎:  9 鶴見: 6* 目黒: 14 大森:  - 蒲田: 28 / 蒲田 の時間を 28 から 20 に書き直した（川崎 経由: 9 + 11） / 手順3 川崎を選ぶ  横浜: 0* 川崎: 9* 鶴見: 6* 目黒: 14 大森:  - 蒲田: 20 / 大森 の時間を - から 28 に書き直した（目黒 経由: 14 + 14） / 手順4 目黒を選ぶ  横浜: 0* 川崎: 9* 鶴見: 6* 目黒:14* 大森: 28 蒲田: 20 / 大森 の時間を 28 から 25 に書き直した（蒲田 経由: 20 + 5） / 手順5 蒲田を選ぶ  横浜: 0* 川崎: 9* 鶴見: 6* 目黒:14* 大森: 25 蒲田:20* / 手順6 大森を選ぶ  横浜: 0* 川崎: 9* 鶴見: 6* 目黒:14* 大森:25* 蒲田:20* / -------------------------------------------------------------------------- /  / 横浜から各駅までの最短時間 / 横浜: 0分 / 川崎: 9分 / 鶴見: 6分 / 目黒: 14分 / 大森: 25分 / 蒲田: 20分" width="584" height="568" loading="lazy">
       </div>
-      <p class="run-note">手順1で新宿を確定させると、渋谷7分・池袋9分・品川30分が書き込まれます。手順2で渋谷を確定させたとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。直通の30分より、渋谷で乗りかえる16分のほうが早いことが見つかったためです。手順3以降、品川の16分はもう書き直されず、手順4で確定しています。最終的に、新宿から東京までは27分と求まりました。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題1の実行結果から、「時間を書き直した」と表示された行をすべて書き写す。あわせて、品川の時間が30分から16分に書き直された理由を、自分の言葉で説明する。</span></div>
     </div>
@@ -595,21 +599,26 @@ settled = <span class="fn">set</span>()
     <span class="fn">print</span>(<span class="str">f&quot;  {station}: {came_from[station]}&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;came_from をゴールから逆にたどると、道順ができあがる&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-05-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a05_ex2-ref_result.png" alt="AL2-05-ex2-ref.py の実行結果。新宿から各駅への最短の行き方 / ------------------------------------------------------------ / 渋谷     7分   新宿 → 渋谷 / 池袋     9分   新宿 → 池袋 / 上野    21分   新宿 → 池袋 → 上野 / 東京    27分   新宿 → 渋谷 → 品川 → 東京 / 品川    16分   新宿 → 渋谷 → 品川 / ------------------------------------------------------------ /  / came_from の中身（どの駅へは、どこから来るのがいちばん早いか） / 新宿: None / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / came_from をゴールから逆にたどると、道順ができあがる" width="479" height="408" loading="lazy">
+      </div>
+      <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」で27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 → 品川 → 渋谷 → 新宿 となり、順番をひっくり返せば道順になります。第1回の幅優先探索で経路を復元したときと、まったく同じやり方です。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-05-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-05-ex2.py</span>
 <span class="cmt"># ダイクストラ法（2）: 最短時間だけでなく「どの道を通ったか」も記録する</span>
 <span class="cmt"># 距離を書き直したときに「どこから来たか」も一緒に記録しておけば、あとで道順を復元できる。</span>
 
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;横浜&quot;</span>: [(<span class="str">&quot;川崎&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;鶴見&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">28</span>)],
+    <span class="str">&quot;川崎&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;鶴見&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;目黒&quot;</span>, <span class="num">8</span>)],
+    <span class="str">&quot;目黒&quot;</span>: [(<span class="str">&quot;鶴見&quot;</span>, <span class="num">8</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">14</span>)],
+    <span class="str">&quot;大森&quot;</span>: [(<span class="str">&quot;目黒&quot;</span>, <span class="num">14</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">5</span>)],
+    <span class="str">&quot;蒲田&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">28</span>), (<span class="str">&quot;川崎&quot;</span>, <span class="num">11</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">5</span>)],
 }
 
-start = <span class="str">&quot;新宿&quot;</span>
+start = <span class="str">&quot;横浜&quot;</span>
 INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 distance = {}
@@ -655,7 +664,7 @@ settled = <span class="fn">set</span>()
     <span class="kw">return</span> route
 
 
-<span class="fn">print</span>(<span class="str">&quot;新宿から各駅への最短の行き方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;横浜から各駅への最短の行き方&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
 <span class="kw">for</span> station <span class="kw">in</span> railway:
     <span class="kw">if</span> station == start:
@@ -683,12 +692,11 @@ settled = <span class="fn">set</span>()
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。新宿から各駅への最短の行き方 / ------------------------------------------------------------ / 渋谷     7分   新宿 → 渋谷 / 池袋     9分   新宿 → 池袋 / 上野    21分   新宿 → 池袋 → 上野 / 東京    27分   新宿 → 渋谷 → 品川 → 東京 / 品川    16分   新宿 → 渋谷 → 品川 / ------------------------------------------------------------ /  / came_from の中身（どの駅へは、どこから来るのがいちばん早いか） / 新宿: None / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / came_from をゴールから逆にたどると、道順ができあがる" width="479" height="408" loading="lazy">
+        <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。横浜から各駅への最短の行き方 / ------------------------------------------------------------ / 川崎     9分   横浜 → 川崎 / 鶴見     6分   横浜 → 鶴見 / 目黒    14分   横浜 → 鶴見 → 目黒 / 大森    25分   横浜 → 川崎 → 蒲田 → 大森 / 蒲田    20分   横浜 → 川崎 → 蒲田 / ------------------------------------------------------------ /  / came_from の中身（どの駅へは、どこから来るのがいちばん早いか） / 横浜: None / 川崎: 横浜 / 鶴見: 横浜 / 目黒: 鶴見 / 大森: 蒲田 / 蒲田: 川崎 /  / came_from をゴールから逆にたどると、道順ができあがる" width="479" height="408" loading="lazy">
       </div>
-      <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」で27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 → 品川 → 渋谷 → 新宿 となり、順番をひっくり返せば道順になります。第1回の幅優先探索で経路を復元したときと、まったく同じやり方です。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
   </div>
 </section>

@@ -3,7 +3,7 @@
 import math
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -179,9 +179,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>巡回セールスマン問題を4つの方法で解きます。
       第9回の貪欲法に「すべての都市を出発点にして試す」やり方を足した4つ目も加えます。</p>
 
-{code_pair('AL2-11-ex1.py')}
-
-{run('a11_ex1_result.png', '全探索・bitDP・貪欲法(全出発点) の3つが、いずれも<strong>46.8</strong>という同じ答えを出しました。'
+{example_pair('AL2-11-ex1.py', '全探索・bitDP・貪欲法(全出発点) の3つが、いずれも<strong>46.8</strong>という同じ答えを出しました。'
      '出発点を1つに固定した貪欲法だけが53.2で、6.4長くなっています。'
      '注目すべきは<strong>貪欲法(全出発点)</strong>で、8回ぶん計算しても0.000022秒しかかからず、'
      '全探索の約40分の1の時間で同じ答えにたどり着いています。'
@@ -191,9 +189,7 @@ ex1_body = f"""      <p>巡回セールスマン問題を4つの方法で解き�
 ex2_body = f"""      <p>都市の数を6個から16個まで変えて、3つの方法の答えと時間を一度に測ります。
       全探索は12都市までで打ち切ります。実行に10秒ほどかかります。</p>
 
-{code_pair('AL2-11-ex2.py')}
-
-{run('a11_ex2_result.png', '全探索と bitDP の答えは、どの大きさでも<strong>完全に一致</strong>しています。'
+{example_pair('AL2-11-ex2.py', '全探索と bitDP の答えは、どの大きさでも<strong>完全に一致</strong>しています。'
      '12都市では、全探索に<strong>約8秒</strong>かかったのに対し、bitDP は0.01秒ほどで、<strong>数百倍</strong>の差がつきました。'
      '14都市と16都市では、全探索は終わらないため省略しています。'
      '貪欲法の答えは、12都市で80.5（最適は73.1）と約10%長くなっていますが、時間はほとんどゼロです。'

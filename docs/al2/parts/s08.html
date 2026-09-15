@@ -318,18 +318,23 @@ height = <span class="num">15</span>
         line = line + mark
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * (width * <span class="num">2</span> + <span class="num">4</span>))</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-08-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex1-ref_result.png" alt="AL2-08-ex1-ref.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=2, y=2) / 郵便局: (x=10, y=3) / 図書館: (x=14, y=9) / カフェ: (x=6, y=12) / 公園: (x=3, y=8) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    8.1   13.9   10.8    6.1 / 1       8.1    0.0    7.2    9.8    8.6 / 2      13.9    7.2    0.0    8.5   11.0 / 3      10.8    9.8    8.5    0.0    5.0 / 4       6.1    8.6   11.0    5.0    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 8.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 0 . . . . . . . . . . . . . . . . . / . . . . . . . . . . 1 . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . 4 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 2 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 3 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
+      </div>
+      <p class="run-note">5つの都市について、5行5列の距離の表ができました。ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。また、0行1列と1行0列がどちらも 8.1 のように、表は<strong>左上から右下の線を軸にして対称</strong>になっています。行きと帰りで同じ距離だからです。いちばん下の地図では、5つの都市の位置関係が確かめられます。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-08-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex1.py</span>
 <span class="cmt"># 巡回セールスマン問題の準備: 都市の位置から距離の表を作る</span>
 <span class="kw">import</span> math
 
 <span class="cmt"># 都市の名前と位置（x, y）</span>
 cities = [
-    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
-    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
-    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
-    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">4</span>, <span class="num">3</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">15</span>, <span class="num">8</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">8</span>, <span class="num">13</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">2</span>, <span class="num">10</span>),
 ]
 
 n = <span class="fn">len</span>(cities)
@@ -398,12 +403,11 @@ height = <span class="num">15</span>
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a08_ex1_result.png" alt="AL2-08-ex1.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=2, y=2) / 郵便局: (x=10, y=3) / 図書館: (x=14, y=9) / カフェ: (x=6, y=12) / 公園: (x=3, y=8) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    8.1   13.9   10.8    6.1 / 1       8.1    0.0    7.2    9.8    8.6 / 2      13.9    7.2    0.0    8.5   11.0 / 3      10.8    9.8    8.5    0.0    5.0 / 4       6.1    8.6   11.0    5.0    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 8.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 0 . . . . . . . . . . . . . . . . . / . . . . . . . . . . 1 . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . 4 . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . 2 . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . 3 . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
+        <img src="images/a08_ex1_result.png" alt="AL2-08-ex1.py の実行結果。都市の位置 / ---------------------------------- / 学校: (x=4, y=3) / 郵便局: (x=11, y=2) / 図書館: (x=15, y=8) / カフェ: (x=8, y=13) / 公園: (x=2, y=10) / ---------------------------------- /  / 都市の番号 / 0 = 学校 / 1 = 郵便局 / 2 = 図書館 / 3 = カフェ / 4 = 公園 /  / 距離の表（きょり行列） / ---------------------------------------- / 0      1      2      3      4 / 0       0.0    7.1   12.1   10.8    7.3 / 1       7.1    0.0    7.2   11.4   12.0 / 2      12.1    7.2    0.0    8.6   13.2 / 3      10.8   11.4    8.6    0.0    6.7 / 4       7.3   12.0   13.2    6.7    0.0 / ---------------------------------------- /  / 読み方: 0行1列 = 7.1 → 学校から郵便局までの距離 / ななめの線（自分自身との距離）はすべて 0.0 / 表は左上から右下の線を軸にして対称になっている /  / 都市の位置を絵にしたもの（左上が (0,0)、右へ x、下へ y） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . 1 . . . . . . . . / . . . . 0 . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 2 . . . . / . . . . . . . . . . . . . . . . . . . . / . . 4 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 3 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / --------------------------------------------" width="390" height="1008" loading="lazy">
       </div>
-      <p class="run-note">5つの都市について、5行5列の距離の表ができました。ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。また、0行1列と1行0列がどちらも 8.1 のように、表は<strong>左上から右下の線を軸にして対称</strong>になっています。行きと帰りで同じ距離だからです。いちばん下の地図では、5つの都市の位置関係が確かめられます。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -493,97 +497,11 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
 <span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-08-ex2.py</code> の名前で保存して実行する</p>
-<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex2.py</span>
-<span class="cmt"># 巡回セールスマン問題を全探索で解く</span>
-<span class="cmt"># 学校（0番）を出発し、ほかの4つの都市をすべて1回ずつ回って、学校へ戻る。</span>
-<span class="cmt"># 回る順番をすべて書き出し、いちばん短いものをさがす。</span>
-<span class="kw">import</span> math
-<span class="kw">from</span> itertools <span class="kw">import</span> permutations
-
-cities = [
-    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
-    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
-    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
-    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
-]
-
-n = <span class="fn">len</span>(cities)
-
-distance = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    row = []
-    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
-        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
-        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
-    distance.append(row)
-
-
-<span class="kw">def</span> <span class="fn">tour_length</span>(order):
-    <span class="str">&quot;&quot;&quot;0番を出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
-    total = <span class="num">0.0</span>
-    here = <span class="num">0</span>
-    <span class="kw">for</span> city <span class="kw">in</span> order:
-        total = total + distance[here][city]
-        here = city
-    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    <span class="kw">return</span> <span class="fn">round</span>(total, <span class="num">1</span>)
-
-
-<span class="kw">def</span> <span class="fn">tour_name</span>(order):
-    <span class="str">&quot;&quot;&quot;ルートを「学校 → 郵便局 → …」という文字列にして返す&quot;&quot;&quot;</span>
-    names = [cities[<span class="num">0</span>][<span class="num">0</span>]]
-    <span class="kw">for</span> city <span class="kw">in</span> order:
-        names.append(cities[city][<span class="num">0</span>])
-    names.append(cities[<span class="num">0</span>][<span class="num">0</span>])
-    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
-
-
-<span class="cmt"># permutations は「並べ方をすべて作る」道具</span>
-<span class="cmt"># 1, 2, 3, 4 の並べ方は 4×3×2×1 = 24通り</span>
-all_orders = <span class="fn">list</span>(<span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
-
-<span class="fn">print</span>(<span class="str">&quot;学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-
-best_order = <span class="kw">None</span>
-best_length = <span class="kw">None</span>
-
-<span class="kw">for</span> order <span class="kw">in</span> all_orders:
-    length = <span class="fn">tour_length</span>(order)
-    mark = <span class="str">&quot;&quot;</span>
-    <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> length &lt; best_length:
-        best_length = length
-        best_order = order
-        mark = <span class="str">&quot;  ← いまのところ最短&quot;</span>
-    <span class="fn">print</span>(<span class="str">f&quot;  {order}  {length:&gt;6}&quot;</span> + mark)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_orders), <span class="str">&quot;通り&quot;</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;いちばん短いルート&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(best_order))
-<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
-<span class="fn">print</span>()
-
-<span class="cmt"># 逆回りは同じ長さになることを確かめる</span>
-reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(best_order))
-<span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
-<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1〜4番の都市の並べ方をすべて作る（学校は0番で固定）</td><td style="white-space:nowrap">A. <code>permutations([1, 2, 3, 4])</code><br>B. <code>permutations([0, 1, 2, 3, 4])</code><br>C. <code>[1, 2, 3, 4]</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の都市から学校（0番）へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>0</code><br>C. <code>distance[here][1]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a08_ex2-ref_result.png" alt="AL2-08-ex2-ref.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    34.9  ← いまのところ最短 / (1, 2, 4, 3)    42.1 / (1, 3, 2, 4)    43.5 / (1, 3, 4, 2)    47.8 / (1, 4, 2, 3)    47.0 / (1, 4, 3, 2)    44.1 / (2, 1, 3, 4)    42.0 / (2, 1, 4, 3)    45.5 / (2, 3, 1, 4)    46.9 / (2, 3, 4, 1)    44.1 / (2, 4, 1, 3)    54.1 / (2, 4, 3, 1)    47.8 / (3, 1, 2, 4)    44.9 / (3, 1, 4, 2)    54.1 / (3, 2, 1, 4)    41.2 / (3, 2, 4, 1)    47.0 / (3, 4, 1, 2)    45.5 / (3, 4, 2, 1)    42.1 / (4, 1, 2, 3)    41.2 / (4, 1, 3, 2)    46.9 / (4, 2, 1, 3)    44.9 / (4, 2, 3, 1)    43.5 / (4, 3, 1, 2)    42.0 / (4, 3, 2, 1)    34.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9" width="494" height="768" loading="lazy">
+      </div>
+      <p class="run-note">24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。ルートは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」です。いちばん下に表示した逆回りのルートも、同じ34.9になっています。同じ道を反対向きに走るだけなので、距離が変わらないためです。24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 434" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索: 24通りの順番を1つずつ試して、いちばん短いものを選ぶ</text>
@@ -699,12 +617,101 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
         <text x="350" y="418" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">全探索は必ず正しい答えを出すが、都市が増えると終わらなくなる</text>
         </svg>
       </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-08-ex2.py</code> の名前で保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex2.py</span>
+<span class="cmt"># 巡回セールスマン問題を全探索で解く</span>
+<span class="cmt"># 学校（0番）を出発し、ほかの4つの都市をすべて1回ずつ回って、学校へ戻る。</span>
+<span class="cmt"># 回る順番をすべて書き出し、いちばん短いものをさがす。</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
 
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">4</span>, <span class="num">3</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">15</span>, <span class="num">8</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">8</span>, <span class="num">13</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">2</span>, <span class="num">10</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">1</span>))
+    distance.append(row)
+
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番を出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+    <span class="kw">return</span> <span class="fn">round</span>(total, <span class="num">1</span>)
+
+
+<span class="kw">def</span> <span class="fn">tour_name</span>(order):
+    <span class="str">&quot;&quot;&quot;ルートを「学校 → 郵便局 → …」という文字列にして返す&quot;&quot;&quot;</span>
+    names = [cities[<span class="num">0</span>][<span class="num">0</span>]]
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        names.append(cities[city][<span class="num">0</span>])
+    names.append(cities[<span class="num">0</span>][<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">&quot; → &quot;</span>.join(names)
+
+
+<span class="cmt"># permutations は「並べ方をすべて作る」道具</span>
+<span class="cmt"># 1, 2, 3, 4 の並べ方は 4×3×2×1 = 24通り</span>
+all_orders = <span class="fn">list</span>(<span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
+
+<span class="fn">print</span>(<span class="str">&quot;学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+
+best_order = <span class="kw">None</span>
+best_length = <span class="kw">None</span>
+
+<span class="kw">for</span> order <span class="kw">in</span> all_orders:
+    length = <span class="fn">tour_length</span>(order)
+    mark = <span class="str">&quot;&quot;</span>
+    <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> length &lt; best_length:
+        best_length = length
+        best_order = order
+        mark = <span class="str">&quot;  ← いまのところ最短&quot;</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  {order}  {length:&gt;6}&quot;</span> + mark)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_orders), <span class="str">&quot;通り&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;いちばん短いルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(best_order))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, best_length)
+<span class="fn">print</span>()
+
+<span class="cmt"># 逆回りは同じ長さになることを確かめる</span>
+reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(best_order))
+<span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
+<span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1〜4番の都市の並べ方をすべて作る（学校は0番で固定）</td><td style="white-space:nowrap">A. <code>permutations([1, 2, 3, 4])</code><br>B. <code>permutations([0, 1, 2, 3, 4])</code><br>C. <code>[1, 2, 3, 4]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の都市から学校（0番）へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>0</code><br>C. <code>distance[here][1]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a08_ex2_result.png" alt="AL2-08-ex2.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    34.9  ← いまのところ最短 / (1, 2, 4, 3)    42.1 / (1, 3, 2, 4)    43.5 / (1, 3, 4, 2)    47.8 / (1, 4, 2, 3)    47.0 / (1, 4, 3, 2)    44.1 / (2, 1, 3, 4)    42.0 / (2, 1, 4, 3)    45.5 / (2, 3, 1, 4)    46.9 / (2, 3, 4, 1)    44.1 / (2, 4, 1, 3)    54.1 / (2, 4, 3, 1)    47.8 / (3, 1, 2, 4)    44.9 / (3, 1, 4, 2)    54.1 / (3, 2, 1, 4)    41.2 / (3, 2, 4, 1)    47.0 / (3, 4, 1, 2)    45.5 / (3, 4, 2, 1)    42.1 / (4, 1, 2, 3)    41.2 / (4, 1, 3, 2)    46.9 / (4, 2, 1, 3)    44.9 / (4, 2, 3, 1)    43.5 / (4, 3, 1, 2)    42.0 / (4, 3, 2, 1)    34.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9" width="494" height="768" loading="lazy">
+        <img src="images/a08_ex2_result.png" alt="AL2-08-ex2.py の実行結果。学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す / -------------------------------------------------------------- / (1, 2, 3, 4)    36.9  ← いまのところ最短 / (1, 2, 4, 3)    45.0 / (1, 3, 2, 4)    47.6 / (1, 3, 4, 2)    50.5 / (1, 4, 2, 3)    51.7 / (1, 4, 3, 2)    46.5 / (2, 1, 3, 4)    44.7 / (2, 1, 4, 3)    48.8 / (2, 3, 1, 4)    51.4 / (2, 3, 4, 1)    46.5 / (2, 4, 1, 3)    59.5 / (2, 4, 3, 1)    50.5 / (3, 1, 2, 4)    49.9 / (3, 1, 4, 2)    59.5 / (3, 2, 1, 4)    45.9 / (3, 2, 4, 1)    51.7 / (3, 4, 1, 2)    48.8 / (3, 4, 2, 1)    45.0 / (4, 1, 2, 3)    45.9 / (4, 1, 3, 2)    51.4 / (4, 2, 1, 3)    49.9 / (4, 2, 3, 1)    47.6 / (4, 3, 1, 2)    44.7 / (4, 3, 2, 1)    36.9 / -------------------------------------------------------------- / 試した順番の数: 24 通り /  / いちばん短いルート / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 36.9 /  / 逆回りのルート / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 36.9" width="494" height="768" loading="lazy">
       </div>
-      <p class="run-note">24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。ルートは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」です。いちばん下に表示した逆回りのルートも、同じ34.9になっています。同じ道を反対向きに走るだけなので、距離が変わらないためです。24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、最短ルートと合計距離、いちばん長かったルートと合計距離を書く。あわせて、24通りの中に「同じ形のルート」が2つずつある理由を説明する。</span></div>
     </div>

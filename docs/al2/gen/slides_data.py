@@ -92,7 +92,7 @@ SLIDES = {
 "06": dict(
     topic="heapq の木",
     run_file="AL2-06-ex1.py",
-    own="<code>for value in [8, 3, 5, 1, 9, 2]</code> の6つの数を、自分で決めた<strong>6つのばらばらな数</strong>に書き換える。",
+    own="<code>for value in [6, 4, 7, 2, 8, 1]</code> の6つの数を、自分で決めた<strong>6つのばらばらな数</strong>に書き換える。",
     draw="6つ入れ終わったときの <code>heapq</code> の中身を<strong>木の形（親が上、子が下）</strong>で描き、取り出される順番を書く。",
     elements=[
         "木の形で描いた中身（いちばん上が先頭）",

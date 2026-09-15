@@ -395,7 +395,12 @@ best_route, best_length = <span class="fn">brute_force</span>()
 
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">round</span>(greedy_length - best_length, <span class="num">1</span>))
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は 24通り すべてを試すことなく、たった 4回の比較でルートを作った。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-09-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a09_ex1-ref_result.png" alt="AL2-09-ex1-ref.py の実行結果。貪欲法の進み方 / 学校 にいる → まだ行っていない都市の中でいちばん近いのは 公園（6.1） / 公園 にいる → まだ行っていない都市の中でいちばん近いのは カフェ（5.0） / カフェ にいる → まだ行っていない都市の中でいちばん近いのは 図書館（8.5） / 図書館 にいる → まだ行っていない都市の中でいちばん近いのは 郵便局（7.2） / 郵便局 から出発点の 学校 へ戻る（8.1） /  / 貪欲法の答え / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9 /  / 全探索の答え（本当の最短） / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 差: 0.0 / 貪欲法は 24通り すべてを試すことなく、たった 4回の比較でルートを作った。" width="508" height="388" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は「学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校」というルートを作り、合計は<strong>34.9</strong>でした。全探索で求めた最短も34.9なので、<strong>差は0</strong>です。ただし2つのルートをよく見ると、回る向きが逆になっているだけで、通る道はまったく同じです。貪欲法は24通りを試さず、たった4回の比較でルートを作っています。都市が5個と少ないため、たまたま最短に当たったという点に注意してください。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-09-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-09-ex1.py</span>
 <span class="cmt"># 貪欲法で巡回セールスマン問題を解く</span>
 <span class="cmt"># 作戦はとても単純: 「いまいる都市から、まだ行っていない都市のうち</span>
@@ -404,11 +409,11 @@ best_route, best_length = <span class="fn">brute_force</span>()
 <span class="kw">from</span> itertools <span class="kw">import</span> permutations
 
 cities = [
-    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
-    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
-    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
-    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">4</span>, <span class="num">3</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">15</span>, <span class="num">8</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">8</span>, <span class="num">13</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">2</span>, <span class="num">10</span>),
 ]
 
 n = <span class="fn">len</span>(cities)
@@ -500,12 +505,11 @@ best_route, best_length = <span class="fn">brute_force</span>()
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex1_result.png" alt="AL2-09-ex1.py の実行結果。貪欲法の進み方 / 学校 にいる → まだ行っていない都市の中でいちばん近いのは 公園（6.1） / 公園 にいる → まだ行っていない都市の中でいちばん近いのは カフェ（5.0） / カフェ にいる → まだ行っていない都市の中でいちばん近いのは 図書館（8.5） / 図書館 にいる → まだ行っていない都市の中でいちばん近いのは 郵便局（7.2） / 郵便局 から出発点の 学校 へ戻る（8.1） /  / 貪欲法の答え / 学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校 / 合計距離: 34.9 /  / 全探索の答え（本当の最短） / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 34.9 /  / 差: 0.0 / 貪欲法は 24通り すべてを試すことなく、たった 4回の比較でルートを作った。" width="508" height="388" loading="lazy">
+        <img src="images/a09_ex1_result.png" alt="AL2-09-ex1.py の実行結果。貪欲法の進み方 / 学校 にいる → まだ行っていない都市の中でいちばん近いのは 郵便局（7.1） / 郵便局 にいる → まだ行っていない都市の中でいちばん近いのは 図書館（7.2） / 図書館 にいる → まだ行っていない都市の中でいちばん近いのは カフェ（8.6） / カフェ にいる → まだ行っていない都市の中でいちばん近いのは 公園（6.7） / 公園 から出発点の 学校 へ戻る（7.3） /  / 貪欲法の答え / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 36.9 /  / 全探索の答え（本当の最短） / 学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校 / 合計距離: 36.9 /  / 差: 0.0 / 貪欲法は 24通り すべてを試すことなく、たった 4回の比較でルートを作った。" width="508" height="388" loading="lazy">
       </div>
-      <p class="run-note">貪欲法は「学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校」というルートを作り、合計は<strong>34.9</strong>でした。全探索で求めた最短も34.9なので、<strong>差は0</strong>です。ただし2つのルートをよく見ると、回る向きが逆になっているだけで、通る道はまったく同じです。貪欲法は24通りを試さず、たった4回の比較でルートを作っています。都市が5個と少ないため、たまたま最短に当たったという点に注意してください。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -612,7 +616,12 @@ ratio = greedy_length / best_length
 <span class="fn">print</span>(<span class="str">f&quot;速さの差: 貪欲法は全探索の {round(brute_time / greedy_time)} 倍速い&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は速いが、最短ルートを見つけるとはかぎらない。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-09-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a09_ex2-ref_result.png" alt="AL2-09-ex2-ref.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000777秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 155 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+      </div>
+      <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-09-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-09-ex2.py</span>
 <span class="cmt"># 都市を8個に増やして、貪欲法と全探索を比べる</span>
 <span class="kw">import</span> math
@@ -620,14 +629,14 @@ ratio = greedy_length / best_length
 <span class="kw">from</span> itertools <span class="kw">import</span> permutations
 
 cities = [
-    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
-    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
-    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
-    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
-    (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>),
-    (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>),
-    (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">4</span>, <span class="num">3</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">11</span>, <span class="num">2</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">15</span>, <span class="num">8</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">8</span>, <span class="num">13</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">2</span>, <span class="num">10</span>),
+    (<span class="str">&quot;駅&quot;</span>, <span class="num">18</span>, <span class="num">5</span>),
+    (<span class="str">&quot;病院&quot;</span>, <span class="num">13</span>, <span class="num">14</span>),
+    (<span class="str">&quot;書店&quot;</span>, <span class="num">9</span>, <span class="num">6</span>),
 ]
 
 n = <span class="fn">len</span>(cities)
@@ -726,12 +735,11 @@ ratio = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000007秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000835秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 117 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 書店 → 郵便局 → 図書館 → 駅 → 病院 → カフェ → 公園 → 学校 / 合計距離: 51.1   かかった時間: 0.000006秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 47.6   かかった時間: 0.000800秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 3.6 / 貪欲法は最短ルートより 7.5% 長い / 速さの差: 貪欲法は全探索の 129 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
       </div>
-      <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、貪欲法と全探索の「合計距離」「かかった時間」「試した順番の数」を表にまとめる。あわせて、2つのルートを見比べて、どの都市の順番が入れかわっているかを書く。</span></div>
     </div>

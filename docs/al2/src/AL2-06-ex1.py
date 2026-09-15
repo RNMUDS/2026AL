@@ -5,7 +5,7 @@ import heapq
 # --- その1: 数を入れて取り出す ---
 numbers = []                    # ふつうのリストを用意する
 
-for value in [8, 3, 5, 1, 9, 2]:
+for value in [6, 4, 7, 2, 8, 1]:
     heapq.heappush(numbers, value)      # heappush で1つずつ入れる
     print(f"{value} を入れた → 中身: {numbers}")
 
@@ -28,10 +28,10 @@ print()
 # タプルを入れると、1番目の要素で比べてくれる。
 # ダイクストラ法では (今わかっている時間, 駅の名前) の組を入れる。
 tasks = []
-heapq.heappush(tasks, (16, "品川"))
-heapq.heappush(tasks, (7, "渋谷"))
-heapq.heappush(tasks, (21, "上野"))
-heapq.heappush(tasks, (9, "池袋"))
+heapq.heappush(tasks, (13, "蒲田"))
+heapq.heappush(tasks, (9, "川崎"))
+heapq.heappush(tasks, (25, "目黒"))
+heapq.heappush(tasks, (6, "鶴見"))
 
 print("(時間, 駅名) の組を入れて取り出す")
 while len(tasks) > 0:

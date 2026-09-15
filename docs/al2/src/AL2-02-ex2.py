@@ -2,13 +2,13 @@
 from collections import deque
 
 maze = [
-    "S.....#",
-    ".####.#",
-    ".#....#",
-    ".#.##..",
-    ".#..#.#",
-    ".##.#.#",
-    "......G",
+    "S..#...",
+    ".#.#.#.",
+    ".#...#.",
+    ".####..",
+    "...#.#.",
+    ".#.#.#.",
+    ".#....G",
 ]
 
 rows = len(maze)
@@ -89,5 +89,5 @@ def draw(path, title):
 
 
 print()
-draw(bfs_path, "幅優先探索の経路（12歩・最短）")
-draw(dfs_path, "深さ優先探索の経路（18歩・最短ではない）")
+draw(bfs_path, f"幅優先探索の経路（{len(bfs_path) - 1}歩・最短）")
+draw(dfs_path, f"深さ優先探索の経路（{len(dfs_path) - 1}歩・最短ではない）")

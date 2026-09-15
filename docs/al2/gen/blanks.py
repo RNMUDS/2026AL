@@ -217,9 +217,9 @@ BLANKS.update({
     B("smallest = heapq.heappop(numbers)", "heapq.heappop(numbers)",
       "いちばん小さいものを取り出す",
       ["numbers.pop()", "numbers[0]"]),
-    B('heapq.heappush(tasks, (7, "渋谷"))', '(7, "渋谷")',
+    B('heapq.heappush(tasks, (9, "川崎"))', '(9, "川崎")',
       "（時間, 駅名）の順の組にすると、時間の小さい順に並ぶ",
-      ['("渋谷", 7)', "7"]),
+      ['("川崎", 9)', "9"]),
 ],
 "AL2-07-ex1.py": [
     B("current = queue.popleft()", "queue.popleft()",

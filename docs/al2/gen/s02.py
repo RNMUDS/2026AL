@@ -3,7 +3,7 @@
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -262,9 +262,7 @@ ex1_body = f"""      <p>前期に幅優先探索で解いたのと同じ形の�
         <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>stack.pop()</code></td><td>いちばん新しい行</td></tr>
       </table>
 
-{code_pair('AL2-02-ex1.py')}
-
-{run('a02_ex1_result.png', '深さ優先探索が見つけた道は<strong>18歩</strong>でした。'
+{example_pair('AL2-02-ex1.py', '深さ優先探索が見つけた道は<strong>18歩</strong>でした。'
      '同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。'
      '迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。'
      '一方で調べたマスの数は<strong>19マス</strong>だけでした。')}"""
@@ -272,14 +270,10 @@ ex1_body = f"""      <p>前期に幅優先探索で解いたのと同じ形の�
 ex2_body = f"""      <p>幅優先探索と深さ優先探索を1つのプログラムにまとめ、同じ迷路で走らせて比べます。
       <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。</p>
 
-{code_pair('AL2-02-ex2.py')}
-
-{fig_visit_order()}
-
-{run('a02_ex2_result.png', '幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。'
+{example_pair('AL2-02-ex2.py', '幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。'
      '幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。'
      '深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。'
-     'どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。')}
+     'どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。', fig_visit_order())}
 
 {notion('例題2の実行結果から、幅優先探索と深さ優先探索の「歩数」と「調べたマス数」を表にまとめる。'
         'あわせて、2つの迷路の絵を見比べて、経路がどう違うかを言葉で説明する。')}"""

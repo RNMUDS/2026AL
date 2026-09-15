@@ -569,7 +569,12 @@ edge_count = edge_count // <span class="num">2</span>
     <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっている&quot;</span>)
 <span class="kw">else</span>:
     <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-03-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex1-ref_result.png" alt="AL2-03-ex1-ref.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 新宿: 渋谷、池袋、東京 / 渋谷: 新宿、品川 / 池袋: 新宿、上野 / 東京: 新宿、品川、上野 / 品川: 渋谷、東京 / 上野: 池袋、東京 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 新宿のとなりの駅: [&#x27;渋谷&#x27;, &#x27;池袋&#x27;, &#x27;東京&#x27;] / 品川のとなりの駅: [&#x27;渋谷&#x27;, &#x27;東京&#x27;] /  / 新宿と品川は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
+      </div>
+      <p class="run-note">6つの駅それぞれについて、となりの駅が一覧で表示されました。<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。辺（路線）の数を数えるときに <code>// 2</code> で半分にしているのは、1本の路線が「新宿の側」と「渋谷の側」の両方から数えられてしまうためです。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-03-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex1.py</span>
 <span class="cmt"># グラフを「隣接リスト」で表す</span>
 <span class="cmt"># 隣接リスト = それぞれの頂点について「となりにある頂点」を並べた表</span>
@@ -577,12 +582,12 @@ edge_count = edge_count // <span class="num">2</span>
 <span class="cmt"># 6つの駅と、駅どうしをつなぐ路線をグラフにする</span>
 <span class="cmt"># 頂点 = 駅、辺 = 路線</span>
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;渋谷&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
-    <span class="str">&quot;池袋&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;東京&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;品川&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;上野&quot;</span>: [<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
+    <span class="str">&quot;横浜&quot;</span>: [<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;大森&quot;</span>],
+    <span class="str">&quot;川崎&quot;</span>: [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;蒲田&quot;</span>, <span class="str">&quot;鶴見&quot;</span>],
+    <span class="str">&quot;鶴見&quot;</span>: [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;目黒&quot;</span>, <span class="str">&quot;川崎&quot;</span>],
+    <span class="str">&quot;大森&quot;</span>: [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;蒲田&quot;</span>],
+    <span class="str">&quot;蒲田&quot;</span>: [<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;大森&quot;</span>],
+    <span class="str">&quot;目黒&quot;</span>: [<span class="str">&quot;鶴見&quot;</span>],
 }
 
 <span class="fn">print</span>(<span class="str">&quot;隣接リストで表した路線図&quot;</span>)
@@ -605,15 +610,15 @@ edge_count = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
 <span class="fn">print</span>()
 
 <span class="cmt"># となりの駅をすぐに取り出せることが、隣接リストの長所</span>
-<span class="fn">print</span>(<span class="str">&quot;新宿のとなりの駅:&quot;</span>, railway[<span class="str">&quot;新宿&quot;</span>])
-<span class="fn">print</span>(<span class="str">&quot;品川のとなりの駅:&quot;</span>, railway[<span class="str">&quot;品川&quot;</span>])
+<span class="fn">print</span>(<span class="str">&quot;横浜のとなりの駅:&quot;</span>, railway[<span class="str">&quot;横浜&quot;</span>])
+<span class="fn">print</span>(<span class="str">&quot;蒲田のとなりの駅:&quot;</span>, railway[<span class="str">&quot;蒲田&quot;</span>])
 <span class="fn">print</span>()
 
-<span class="cmt"># 「新宿と品川は直接つながっているか」を調べる</span>
-<span class="kw">if</span> <span class="str">&quot;品川&quot;</span> <span class="kw">in</span> railway[<span class="str">&quot;新宿&quot;</span>]:
-    <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっている&quot;</span>)
+<span class="cmt"># 「横浜と蒲田は直接つながっているか」を調べる</span>
+<span class="kw">if</span> <span class="str">&quot;蒲田&quot;</span> <span class="kw">in</span> railway[<span class="str">&quot;横浜&quot;</span>]:
+    <span class="fn">print</span>(<span class="str">&quot;横浜と蒲田は直接つながっている&quot;</span>)
 <span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">&quot;新宿と品川は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
+    <span class="fn">print</span>(<span class="str">&quot;横浜と蒲田は直接つながっていない（乗りかえが必要）&quot;</span>)</pre>
       <div class="concept-box" style="margin-top:0.8rem">
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
@@ -625,12 +630,11 @@ edge_count = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a03_ex1_result.png" alt="AL2-03-ex1.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 新宿: 渋谷、池袋、東京 / 渋谷: 新宿、品川 / 池袋: 新宿、上野 / 東京: 新宿、品川、上野 / 品川: 渋谷、東京 / 上野: 池袋、東京 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 新宿のとなりの駅: [&#x27;渋谷&#x27;, &#x27;池袋&#x27;, &#x27;東京&#x27;] / 品川のとなりの駅: [&#x27;渋谷&#x27;, &#x27;東京&#x27;] /  / 新宿と品川は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
+        <img src="images/a03_ex1_result.png" alt="AL2-03-ex1.py の実行結果。隣接リストで表した路線図 / -------------------------------------------- / 横浜: 川崎、鶴見、大森 / 川崎: 横浜、蒲田、鶴見 / 鶴見: 横浜、目黒、川崎 / 大森: 横浜、蒲田 / 蒲田: 川崎、大森 / 目黒: 鶴見 / -------------------------------------------- / 頂点（駅）の数: 6 / 辺（路線）の数: 7 /  / 横浜のとなりの駅: [&#x27;川崎&#x27;, &#x27;鶴見&#x27;, &#x27;大森&#x27;] / 蒲田のとなりの駅: [&#x27;川崎&#x27;, &#x27;大森&#x27;] /  / 横浜と蒲田は直接つながっていない（乗りかえが必要）" width="380" height="368" loading="lazy">
       </div>
-      <p class="run-note">6つの駅それぞれについて、となりの駅が一覧で表示されました。<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。辺（路線）の数を数えるときに <code>// 2</code> で半分にしているのは、1本の路線が「新宿の側」と「渋谷の側」の両方から数えられてしまうためです。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -705,91 +709,11 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
 <span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
     <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-03-ex2.py</code> の名前で保存して実行する</p>
-<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex2.py</span>
-<span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
-<span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
-
-stations = [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>]
-
-<span class="cmt"># 路線（辺）の一覧</span>
-lines = [
-    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>),
-    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>),
-    (<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;東京&quot;</span>),
-    (<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>),
-    (<span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>),
-    (<span class="str">&quot;東京&quot;</span>, <span class="str">&quot;上野&quot;</span>),
-    (<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>),
-]
-
-n = <span class="fn">len</span>(stations)
-
-<span class="cmt"># 全部のマスを0にした表を作る</span>
-matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n)]
-
-<span class="cmt"># 路線があるマスだけ1にする（行き帰りの両方を1にする）</span>
-<span class="kw">for</span> a, b <span class="kw">in</span> lines:
-    <span class="cmt"># index() は「リストの中で何番目にあるか」を返す。stations.index(&quot;渋谷&quot;) なら 1</span>
-    i = stations.index(a)
-    j = stations.index(b)
-    matrix[i][j] = <span class="num">1</span>
-    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-
-<span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
-<span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    <span class="fn">print</span>(<span class="str">f&quot;  {i} = {stations[i]}&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;隣接行列（1 = つながっている、0 = つながっていない）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
-<span class="fn">print</span>(<span class="str">&quot;          &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    row = <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{matrix[i][j]:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n))
-    <span class="fn">print</span>(<span class="str">f&quot;  {i} {stations[i]}  &quot;</span> + row)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># 隣接行列は「つながっているか」を1回で調べられる</span>
-a = <span class="str">&quot;新宿&quot;</span>
-b = <span class="str">&quot;品川&quot;</span>
-i = stations.index(a)
-j = stations.index(b)
-<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
-
-a = <span class="str">&quot;新宿&quot;</span>
-b = <span class="str">&quot;東京&quot;</span>
-i = stations.index(a)
-j = stations.index(b)
-<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
-<span class="fn">print</span>()
-
-<span class="cmt"># 使うマスの数を比べる</span>
-matrix_cells = n * n
-list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-<span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;駅の数を増やしたときの比較（1駅あたり3路線とした場合）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)
-<span class="fn">print</span>(<span class="str">&quot;    駅の数   隣接行列のマス数   隣接リストのマス数&quot;</span>)
-<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
-    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>路線は両方向に通れるので、行と列を入れかえた場所にも1を書く</td><td style="white-space:nowrap">A. <code>matrix[i][j] = 1</code><br>B. <code>matrix[j][i] = 1</code><br>C. <code>matrix[j][i] = 0</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>隣接リストのマスの数。1本の路線は両方の駅に書かれる</td><td style="white-space:nowrap">A. <code>n * n</code><br>B. <code>len(lines)</code><br>C. <code>len(lines) * 2</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a03_ex2-ref_result.png" alt="AL2-03-ex2-ref.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
+      </div>
+      <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">駅の数が増えたとき、表に必要なマスの数はどうなるか</text>
@@ -825,12 +749,95 @@ list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
         <text x="350" y="328" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">駅が5000個になると、隣接行列は隣接リストの約800倍のマスが必要になる</text>
         </svg>
       </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-03-ex2.py</code> の名前で保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex2.py</span>
+<span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
+<span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
 
+stations = [<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;大森&quot;</span>, <span class="str">&quot;蒲田&quot;</span>, <span class="str">&quot;目黒&quot;</span>]
+
+<span class="cmt"># 路線（辺）の一覧</span>
+lines = [
+    (<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;川崎&quot;</span>),
+    (<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;鶴見&quot;</span>),
+    (<span class="str">&quot;横浜&quot;</span>, <span class="str">&quot;大森&quot;</span>),
+    (<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;蒲田&quot;</span>),
+    (<span class="str">&quot;川崎&quot;</span>, <span class="str">&quot;鶴見&quot;</span>),
+    (<span class="str">&quot;大森&quot;</span>, <span class="str">&quot;蒲田&quot;</span>),
+    (<span class="str">&quot;鶴見&quot;</span>, <span class="str">&quot;目黒&quot;</span>),
+]
+
+n = <span class="fn">len</span>(stations)
+
+<span class="cmt"># 全部のマスを0にした表を作る</span>
+matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n)]
+
+<span class="cmt"># 路線があるマスだけ1にする（行き帰りの両方を1にする）</span>
+<span class="kw">for</span> a, b <span class="kw">in</span> lines:
+    <span class="cmt"># index() は「リストの中で何番目にあるか」を返す。stations.index(&quot;川崎&quot;) なら 1</span>
+    i = stations.index(a)
+    j = stations.index(b)
+    matrix[i][j] = <span class="num">1</span>
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+
+<span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
+<span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} = {stations[i]}&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;隣接行列（1 = つながっている、0 = つながっていない）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>(<span class="str">&quot;          &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{matrix[i][j]:&gt;4}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n))
+    <span class="fn">print</span>(<span class="str">f&quot;  {i} {stations[i]}  &quot;</span> + row)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># 隣接行列は「つながっているか」を1回で調べられる</span>
+a = <span class="str">&quot;横浜&quot;</span>
+b = <span class="str">&quot;蒲田&quot;</span>
+i = stations.index(a)
+j = stations.index(b)
+<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
+
+a = <span class="str">&quot;横浜&quot;</span>
+b = <span class="str">&quot;大森&quot;</span>
+i = stations.index(a)
+j = stations.index(b)
+<span class="fn">print</span>(<span class="str">f&quot;{a} と {b} はつながっているか → matrix[{i}][{j}] =&quot;</span>, matrix[i][j])
+<span class="fn">print</span>()
+
+<span class="cmt"># 使うマスの数を比べる</span>
+matrix_cells = n * n
+list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+<span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;駅の数を増やしたときの比較（1駅あたり3路線とした場合）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)
+<span class="fn">print</span>(<span class="str">&quot;    駅の数   隣接行列のマス数   隣接リストのマス数&quot;</span>)
+<span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
+    <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>路線は両方向に通れるので、行と列を入れかえた場所にも1を書く</td><td style="white-space:nowrap">A. <code>matrix[i][j] = 1</code><br>B. <code>matrix[j][i] = 1</code><br>C. <code>matrix[j][i] = 0</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>隣接リストのマスの数。1本の路線は両方の駅に書かれる</td><td style="white-space:nowrap">A. <code>n * n</code><br>B. <code>len(lines)</code><br>C. <code>len(lines) * 2</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 新宿 / 1 = 渋谷 / 2 = 池袋 / 3 = 東京 / 4 = 品川 / 5 = 上野 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 新宿     0   1   1   1   0   0 / 1 渋谷     1   0   0   0   1   0 / 2 池袋     1   0   0   0   0   1 / 3 東京     1   0   0   0   1   1 / 4 品川     0   1   0   1   0   0 / 5 上野     0   0   1   1   0   0 / ---------------------------------------- /  / 新宿 と 品川 はつながっているか → matrix[0][4] = 0 / 新宿 と 東京 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
+        <img src="images/a03_ex2_result.png" alt="AL2-03-ex2.py の実行結果。駅の番号 / 0 = 横浜 / 1 = 川崎 / 2 = 鶴見 / 3 = 大森 / 4 = 蒲田 / 5 = 目黒 /  / 隣接行列（1 = つながっている、0 = つながっていない） / ---------------------------------------- / 0   1   2   3   4   5 / 0 横浜     0   1   1   1   0   0 / 1 川崎     1   0   1   0   1   0 / 2 鶴見     1   1   0   0   0   1 / 3 大森     1   0   0   0   1   0 / 4 蒲田     0   1   0   1   0   0 / 5 目黒     0   0   1   0   0   0 / ---------------------------------------- /  / 横浜 と 蒲田 はつながっているか → matrix[0][4] = 0 / 横浜 と 大森 はつながっているか → matrix[0][3] = 1 /  / 隣接行列が使うマスの数: 36 マス（駅の数の2乗） / 隣接リストが使うマスの数: 14 マス（路線の数の2倍） /  / 駅の数を増やしたときの比較（1駅あたり3路線とした場合） / ------------------------------------------------ / 駅の数   隣接行列のマス数   隣接リストのマス数 / 6                 36                   36 / 50               2500                  300 / 500             250000                 3000 / 5000           25000000                30000 / ------------------------------------------------" width="404" height="708" loading="lazy">
       </div>
-      <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
     </div>
@@ -1034,7 +1041,7 @@ list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

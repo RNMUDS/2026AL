@@ -4,7 +4,7 @@ import math
 from itertools import permutations
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -282,9 +282,7 @@ ex1_body = f"""      <p>巡回セールスマン問題を解く準備として�
         <code>**2</code> は2乗、<code>math.sqrt</code> は平方根（ルート）を求める命令です。</p>
       </div>
 
-{code_pair('AL2-08-ex1.py')}
-
-{run('a08_ex1_result.png', '5つの都市について、5行5列の距離の表ができました。'
+{example_pair('AL2-08-ex1.py', '5つの都市について、5行5列の距離の表ができました。'
      'ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。'
      'また、0行1列と1行0列がどちらも 8.1 のように、表は<strong>左上から右下の線を軸にして対称</strong>になっています。'
      '行きと帰りで同じ距離だからです。'
@@ -302,15 +300,11 @@ ex2_body = f"""      <p>学校を出発点とし、残りの4つの都市を回�
         </p>
       </div>
 
-{code_pair('AL2-08-ex2.py')}
-
-{fig_bruteforce()}
-
-{run('a08_ex2_result.png', '24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。'
+{example_pair('AL2-08-ex2.py', '24通りすべての合計距離が表示され、最短は<strong>34.9</strong>でした。'
      'ルートは「学校 → 郵便局 → 図書館 → カフェ → 公園 → 学校」です。'
      'いちばん下に表示した逆回りのルートも、同じ34.9になっています。'
      '同じ道を反対向きに走るだけなので、距離が変わらないためです。'
-     '24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。')}
+     '24通りの中には、実際には12通りの「別のルート」しかなく、残り12通りはその逆回りだということです。', fig_bruteforce())}
 
 {notion('例題2の実行結果から、最短ルートと合計距離、いちばん長かったルートと合計距離を書く。'
         'あわせて、24通りの中に「同じ形のルート」が2つずつある理由を説明する。')}"""

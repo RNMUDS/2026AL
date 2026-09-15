@@ -339,77 +339,11 @@ count = <span class="num">0</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;秘密の数&quot;</span>, secret, <span class="str">&quot;を&quot;</span>, count, <span class="str">&quot;回の質問で当てました&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-01-ex1.py</code> の名前で保存して実行する</p>
-<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex1.py</span>
-<span class="cmt"># 数当てゲーム: コンピュータが「秘密の数」を当てる</span>
-<span class="cmt"># 1 から 100 までの中に秘密の数が1つある。</span>
-<span class="cmt"># コンピュータは「中央を聞く」作戦で当てにいく。</span>
-<span class="cmt"># 「中央を聞いて、答えによって範囲を半分に減らす」をくり返す方法を</span>
-<span class="cmt"># 二分探索という。前期に習った探索の復習。</span>
-
-<span class="cmt"># --- 準備: 変数を用意する ---</span>
-<span class="cmt"># 変数 = 値に名前を付けて覚えておく箱。「名前 = 値」の形で作る</span>
-secret = <span class="num">73</span>      <span class="cmt"># 秘密の数（あとで自由に変えてよい）</span>
-low = <span class="num">1</span>          <span class="cmt"># 探す範囲の下限（いま「この数以上」と分かっている値）</span>
-high = <span class="num">100</span>       <span class="cmt"># 探す範囲の上限（いま「この数以下」と分かっている値）</span>
-count = <span class="num">0</span>        <span class="cmt"># 何回目の質問かを数える。最初は 0 回</span>
-
-<span class="cmt"># print() は () の中身を画面に表示する命令</span>
-<span class="fn">print</span>(<span class="str">&quot;秘密の数を 1〜100 の中から当てます&quot;</span>)
-<span class="cmt"># 文字列 * 数 は、その文字列を数の回数だけくり返してつなげる</span>
-<span class="cmt"># 例 &quot;-&quot; * 3 は &quot;---&quot; になる。ここでは区切り線を 44 個の - で引いている</span>
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-
-<span class="cmt"># --- 二分探索のくり返し ---</span>
-<span class="cmt"># while は「条件が正しいあいだ、中の処理をくり返す」文</span>
-<span class="cmt"># low &lt;= high は「探す範囲がまだ残っている」という意味。</span>
-<span class="cmt"># 範囲がなくなる（low が high を追いこす）と、くり返しが終わる</span>
-<span class="kw">while</span> low &lt;= high:
-    count = count + <span class="num">1</span>               <span class="cmt"># 質問の回数を 1 増やす</span>
-    <span class="cmt"># // は「小数を切り捨てる割り算」。例 7 // 2 は 3（3.5 の小数を捨てる）</span>
-    <span class="cmt"># (low + high) // 2 で、範囲の中央の整数が求まる</span>
-    middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-
-    <span class="cmt"># print では , で区切ると、値のあいだに空白を入れて並べて表示できる</span>
-    <span class="cmt"># end=&quot;  &quot; は「最後に改行せず、空白 2 つを付ける」という指定。</span>
-    <span class="cmt"># こうすると、次の print の内容が同じ行の続きに表示される</span>
-    <span class="fn">print</span>(<span class="str">&quot;質問&quot;</span>, count, <span class="str">&quot;回目: 範囲&quot;</span>, low, <span class="str">&quot;〜&quot;</span>, high, <span class="str">&quot;／中央は&quot;</span>, middle, end=<span class="str">&quot;  &quot;</span>)
-
-    <span class="cmt"># if / elif / else は「条件によって処理を分ける」文</span>
-    <span class="cmt"># == は「等しいか」を調べる。= （代入）とは別物なので注意</span>
-    <span class="kw">if</span> middle == secret:
-        <span class="fn">print</span>(<span class="str">&quot;→ 正解！&quot;</span>)
-        <span class="cmt"># break は「くり返しをその場でやめて、while の外に出る」命令</span>
-        <span class="kw">break</span>
-    <span class="cmt"># elif は「上の条件が違ったとき、次にこの条件を調べる」</span>
-    <span class="kw">elif</span> middle &lt; secret:
-        <span class="fn">print</span>(<span class="str">&quot;→ もっと大きい&quot;</span>)
-        <span class="cmt"># 答えは中央より大きいので、中央より左（小さい側）はもう不要。</span>
-        <span class="cmt"># 例 範囲 1〜100 で中央 50 が「もっと大きい」なら、次は 51〜100</span>
-        <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    <span class="cmt"># else は「どの条件にも当てはまらなかったとき」</span>
-    <span class="kw">else</span>:
-        <span class="fn">print</span>(<span class="str">&quot;→ もっと小さい&quot;</span>)
-        <span class="cmt"># 答えは中央より小さいので、中央より右（大きい側）はもう不要。</span>
-        <span class="cmt"># 例 範囲 51〜100 で中央 75 が「もっと小さい」なら、次は 51〜74</span>
-        high = middle - <span class="num">1</span>           <span class="cmt"># 上限を下げて、左半分だけを残す</span>
-
-<span class="cmt"># --- 結果の表示 ---</span>
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="cmt"># 100 個の数でも、範囲が半分ずつ減るので 7 回以内に必ず当たる</span>
-<span class="fn">print</span>(<span class="str">&quot;秘密の数&quot;</span>, secret, <span class="str">&quot;を&quot;</span>, count, <span class="str">&quot;回の質問で当てました&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>low と high の中央の位置。整数になる割り算を使う</td><td style="white-space:nowrap">A. <code>(low + high) / 2</code><br>B. <code>low + high // 2</code><br>C. <code>(low + high) // 2</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>中央より大きい側に答えがあるので、調べる範囲の下限を中央の1つ上にする</td><td style="white-space:nowrap">A. <code>low = middle + 1</code><br>B. <code>high = middle - 1</code><br>C. <code>low = middle</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a01_ex1-ref_result.png" alt="AL2-01-ex1-ref.py の実行結果。秘密の数を 1〜100 の中から当てます / -------------------------------------------- / 質問 1 回目: 範囲 1 〜 100 ／中央は 50  → もっと大きい / 質問 2 回目: 範囲 51 〜 100 ／中央は 75  → もっと小さい / 質問 3 回目: 範囲 51 〜 74 ／中央は 62  → もっと大きい / 質問 4 回目: 範囲 63 〜 74 ／中央は 68  → もっと大きい / 質問 5 回目: 範囲 69 〜 74 ／中央は 71  → もっと大きい / 質問 6 回目: 範囲 72 〜 74 ／中央は 73  → 正解！ / -------------------------------------------- / 秘密の数 73 を 6 回の質問で当てました" width="403" height="248" loading="lazy">
+      </div>
+      <p class="run-note">質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。1から100までの100個の中から、たった<strong>6回</strong>の質問で73を当てられました。「中央を聞いて、外れた半分を捨てる」という作戦が二分探索です。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 720 378" width="720" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="360" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">秘密の数 73 をさがす: 質問のたびに範囲が半分になる</text>
@@ -472,12 +406,81 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
         <text x="360" y="360" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">残りの個数は 100 → 50 → 24 → 12 → 6 → 3 と、質問のたびにおよそ半分になる</text>
         </svg>
       </div>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-01-ex1.py</code> の名前で保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex1.py</span>
+<span class="cmt"># 数当てゲーム: コンピュータが「秘密の数」を当てる</span>
+<span class="cmt"># 1 から 100 までの中に秘密の数が1つある。</span>
+<span class="cmt"># コンピュータは「中央を聞く」作戦で当てにいく。</span>
+<span class="cmt"># 「中央を聞いて、答えによって範囲を半分に減らす」をくり返す方法を</span>
+<span class="cmt"># 二分探索という。前期に習った探索の復習。</span>
 
+<span class="cmt"># --- 準備: 変数を用意する ---</span>
+<span class="cmt"># 変数 = 値に名前を付けて覚えておく箱。「名前 = 値」の形で作る</span>
+secret = <span class="num">41</span>      <span class="cmt"># 秘密の数（あとで自由に変えてよい）</span>
+low = <span class="num">1</span>          <span class="cmt"># 探す範囲の下限（いま「この数以上」と分かっている値）</span>
+high = <span class="num">100</span>       <span class="cmt"># 探す範囲の上限（いま「この数以下」と分かっている値）</span>
+count = <span class="num">0</span>        <span class="cmt"># 何回目の質問かを数える。最初は 0 回</span>
+
+<span class="cmt"># print() は () の中身を画面に表示する命令</span>
+<span class="fn">print</span>(<span class="str">&quot;秘密の数を 1〜100 の中から当てます&quot;</span>)
+<span class="cmt"># 文字列 * 数 は、その文字列を数の回数だけくり返してつなげる</span>
+<span class="cmt"># 例 &quot;-&quot; * 3 は &quot;---&quot; になる。ここでは区切り線を 44 個の - で引いている</span>
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+
+<span class="cmt"># --- 二分探索のくり返し ---</span>
+<span class="cmt"># while は「条件が正しいあいだ、中の処理をくり返す」文</span>
+<span class="cmt"># low &lt;= high は「探す範囲がまだ残っている」という意味。</span>
+<span class="cmt"># 範囲がなくなる（low が high を追いこす）と、くり返しが終わる</span>
+<span class="kw">while</span> low &lt;= high:
+    count = count + <span class="num">1</span>               <span class="cmt"># 質問の回数を 1 増やす</span>
+    <span class="cmt"># // は「小数を切り捨てる割り算」。例 7 // 2 は 3（3.5 の小数を捨てる）</span>
+    <span class="cmt"># (low + high) // 2 で、範囲の中央の整数が求まる</span>
+    middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+
+    <span class="cmt"># print では , で区切ると、値のあいだに空白を入れて並べて表示できる</span>
+    <span class="cmt"># end=&quot;  &quot; は「最後に改行せず、空白 2 つを付ける」という指定。</span>
+    <span class="cmt"># こうすると、次の print の内容が同じ行の続きに表示される</span>
+    <span class="fn">print</span>(<span class="str">&quot;質問&quot;</span>, count, <span class="str">&quot;回目: 範囲&quot;</span>, low, <span class="str">&quot;〜&quot;</span>, high, <span class="str">&quot;／中央は&quot;</span>, middle, end=<span class="str">&quot;  &quot;</span>)
+
+    <span class="cmt"># if / elif / else は「条件によって処理を分ける」文</span>
+    <span class="cmt"># == は「等しいか」を調べる。= （代入）とは別物なので注意</span>
+    <span class="kw">if</span> middle == secret:
+        <span class="fn">print</span>(<span class="str">&quot;→ 正解！&quot;</span>)
+        <span class="cmt"># break は「くり返しをその場でやめて、while の外に出る」命令</span>
+        <span class="kw">break</span>
+    <span class="cmt"># elif は「上の条件が違ったとき、次にこの条件を調べる」</span>
+    <span class="kw">elif</span> middle &lt; secret:
+        <span class="fn">print</span>(<span class="str">&quot;→ もっと大きい&quot;</span>)
+        <span class="cmt"># 答えは中央より大きいので、中央より左（小さい側）はもう不要。</span>
+        <span class="cmt"># 例 範囲 1〜100 で中央 50 が「もっと大きい」なら、次は 51〜100</span>
+        <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+    <span class="cmt"># else は「どの条件にも当てはまらなかったとき」</span>
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">&quot;→ もっと小さい&quot;</span>)
+        <span class="cmt"># 答えは中央より小さいので、中央より右（大きい側）はもう不要。</span>
+        <span class="cmt"># 例 範囲 51〜100 で中央 75 が「もっと小さい」なら、次は 51〜74</span>
+        high = middle - <span class="num">1</span>           <span class="cmt"># 上限を下げて、左半分だけを残す</span>
+
+<span class="cmt"># --- 結果の表示 ---</span>
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="cmt"># 100 個の数でも、範囲が半分ずつ減るので 7 回以内に必ず当たる</span>
+<span class="fn">print</span>(<span class="str">&quot;秘密の数&quot;</span>, secret, <span class="str">&quot;を&quot;</span>, count, <span class="str">&quot;回の質問で当てました&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>low と high の中央の位置。整数になる割り算を使う</td><td style="white-space:nowrap">A. <code>(low + high) / 2</code><br>B. <code>low + high // 2</code><br>C. <code>(low + high) // 2</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>中央より大きい側に答えがあるので、調べる範囲の下限を中央の1つ上にする</td><td style="white-space:nowrap">A. <code>low = middle + 1</code><br>B. <code>high = middle - 1</code><br>C. <code>low = middle</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex1_result.png" alt="AL2-01-ex1.py の実行結果。秘密の数を 1〜100 の中から当てます / -------------------------------------------- / 質問 1 回目: 範囲 1 〜 100 ／中央は 50  → もっと大きい / 質問 2 回目: 範囲 51 〜 100 ／中央は 75  → もっと小さい / 質問 3 回目: 範囲 51 〜 74 ／中央は 62  → もっと大きい / 質問 4 回目: 範囲 63 〜 74 ／中央は 68  → もっと大きい / 質問 5 回目: 範囲 69 〜 74 ／中央は 71  → もっと大きい / 質問 6 回目: 範囲 72 〜 74 ／中央は 73  → 正解！ / -------------------------------------------- / 秘密の数 73 を 6 回の質問で当てました" width="403" height="248" loading="lazy">
+        <img src="images/a01_ex1_result.png" alt="AL2-01-ex1.py の実行結果。秘密の数を 1〜100 の中から当てます / -------------------------------------------- / 質問 1 回目: 範囲 1 〜 100 ／中央は 50  → もっと小さい / 質問 2 回目: 範囲 1 〜 49 ／中央は 25  → もっと大きい / 質問 3 回目: 範囲 26 〜 49 ／中央は 37  → もっと大きい / 質問 4 回目: 範囲 38 〜 49 ／中央は 43  → もっと小さい / 質問 5 回目: 範囲 38 〜 42 ／中央は 40  → もっと大きい / 質問 6 回目: 範囲 41 〜 42 ／中央は 41  → 正解！ / -------------------------------------------- / 秘密の数 41 を 6 回の質問で当てました" width="395" height="248" loading="lazy">
       </div>
-      <p class="run-note">質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。1から100までの100個の中から、たった<strong>6回</strong>の質問で73を当てられました。「中央を聞いて、外れた半分を捨てる」という作戦が二分探索です。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -560,7 +563,62 @@ best_time = <span class="kw">None</span>
 <span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_routes), <span class="str">&quot;通り&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;いちばん短い順番: 学校 →&quot;</span>, <span class="str">&quot; → &quot;</span>.join(best_route), <span class="str">&quot;→ 学校&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;そのときの合計時間:&quot;</span>, best_time, <span class="str">&quot;分&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-01-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a01_ex2-ref_result.png" alt="AL2-01-ex2-ref.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 26 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 36 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 32 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 36 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 32 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 26 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 郵便局 → 図書館 → カフェ → 学校 / そのときの合計時間: 26 分" width="419" height="288" loading="lazy">
+      </div>
+      <p class="run-note">6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。「学校 → 郵便局 → 図書館 → カフェ → 学校」と「学校 → カフェ → 図書館 → 郵便局 → 学校」の2つが同じ26分になっています。2つは進む向きが逆なだけで、通る道は同じだからです。すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。</p>
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 296" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索: 6通りの順番をすべて試して、いちばん短いものを選ぶ</text>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <text x="30" y="68" fill="#888" font-size="11">1通り目</text>
+          <text x="96" y="68" fill="#E0E0E0" font-size="12">学校 → 郵便局 → 図書館 → カフェ → 学校</text>
+          <rect x="430" y="52" width="104" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
+          <text x="544" y="67" fill="#ccc" font-size="11">26分</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.770;0.800;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <rect x="430" y="52" width="104" height="20" rx="5" fill="#76B900" stroke="#76B900"/>
+          <rect x="22" y="48" width="512" height="28" rx="8" fill="none" stroke="#76B900" stroke-width="2.5"/>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.110;0.140;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <text x="30" y="102" fill="#888" font-size="11">2通り目</text>
+          <text x="96" y="102" fill="#E0E0E0" font-size="12">学校 → 郵便局 → カフェ → 図書館 → 学校</text>
+          <rect x="430" y="86" width="144" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
+          <text x="584" y="101" fill="#ccc" font-size="11">36分</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.220;0.250;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <text x="30" y="136" fill="#888" font-size="11">3通り目</text>
+          <text x="96" y="136" fill="#E0E0E0" font-size="12">学校 → 図書館 → 郵便局 → カフェ → 学校</text>
+          <rect x="430" y="120" width="128" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
+          <text x="568" y="135" fill="#ccc" font-size="11">32分</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.330;0.360;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <text x="30" y="170" fill="#888" font-size="11">4通り目</text>
+          <text x="96" y="170" fill="#E0E0E0" font-size="12">学校 → 図書館 → カフェ → 郵便局 → 学校</text>
+          <rect x="430" y="154" width="144" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
+          <text x="584" y="169" fill="#ccc" font-size="11">36分</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.440;0.470;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <text x="30" y="204" fill="#888" font-size="11">5通り目</text>
+          <text x="96" y="204" fill="#E0E0E0" font-size="12">学校 → カフェ → 郵便局 → 図書館 → 学校</text>
+          <rect x="430" y="188" width="128" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
+          <text x="568" y="203" fill="#ccc" font-size="11">32分</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.550;0.580;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <text x="30" y="238" fill="#888" font-size="11">6通り目</text>
+          <text x="96" y="238" fill="#E0E0E0" font-size="12">学校 → カフェ → 図書館 → 郵便局 → 学校</text>
+          <rect x="430" y="222" width="104" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
+          <text x="544" y="237" fill="#ccc" font-size="11">26分</text>
+        </g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.770;0.800;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
+          <rect x="430" y="222" width="104" height="20" rx="5" fill="#76B900" stroke="#76B900"/>
+          <rect x="22" y="218" width="512" height="28" rx="8" fill="none" stroke="#76B900" stroke-width="2.5"/>
+        </g>
+        <text x="350" y="278" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.770;0.800;1" dur="12s" repeatCount="indefinite" fill="freeze"/>最短は26分。逆回りの2通りは同じ時間になる</text>
+        </svg>
+      </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-01-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex2.py</span>
 <span class="cmt"># 後期のテーマ「最適化」の入口</span>
 <span class="cmt"># 学校を出発して3か所を回り、学校へ戻る。いちばん短い順番はどれか。</span>
@@ -573,14 +631,14 @@ best_time = <span class="kw">None</span>
 <span class="cmt"># { キー: 値, ... } は辞書。キーから値を引ける表のようなデータ。</span>
 <span class="cmt"># ここではキーが (&quot;学校&quot;, &quot;郵便局&quot;) のようなタプル（2 つの値の組）、</span>
 <span class="cmt"># 値がその 2 地点のあいだの移動時間（分）。</span>
-<span class="cmt"># 例 travel_time[(&quot;学校&quot;, &quot;郵便局&quot;)] と書くと 8 が取り出せる</span>
+<span class="cmt"># 例 travel_time[(&quot;学校&quot;, &quot;郵便局&quot;)] と書くと 9 が取り出せる</span>
 travel_time = {
-    (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;郵便局&quot;</span>): <span class="num">8</span>,
-    (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;図書館&quot;</span>): <span class="num">12</span>,
-    (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;カフェ&quot;</span>): <span class="num">5</span>,
+    (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;郵便局&quot;</span>): <span class="num">9</span>,
+    (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;図書館&quot;</span>): <span class="num">5</span>,
+    (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;カフェ&quot;</span>): <span class="num">8</span>,
     (<span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;図書館&quot;</span>): <span class="num">6</span>,
-    (<span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;カフェ&quot;</span>): <span class="num">9</span>,
-    (<span class="str">&quot;図書館&quot;</span>, <span class="str">&quot;カフェ&quot;</span>): <span class="num">7</span>,
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;カフェ&quot;</span>): <span class="num">4</span>,
+    (<span class="str">&quot;図書館&quot;</span>, <span class="str">&quot;カフェ&quot;</span>): <span class="num">12</span>,
 }
 
 
@@ -665,63 +723,11 @@ best_time = <span class="kw">None</span>                    <span class="cmt"># 
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 296" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">全探索: 6通りの順番をすべて試して、いちばん短いものを選ぶ</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <text x="30" y="68" fill="#888" font-size="11">1通り目</text>
-          <text x="96" y="68" fill="#E0E0E0" font-size="12">学校 → 郵便局 → 図書館 → カフェ → 学校</text>
-          <rect x="430" y="52" width="104" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
-          <text x="544" y="67" fill="#ccc" font-size="11">26分</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.770;0.800;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <rect x="430" y="52" width="104" height="20" rx="5" fill="#76B900" stroke="#76B900"/>
-          <rect x="22" y="48" width="512" height="28" rx="8" fill="none" stroke="#76B900" stroke-width="2.5"/>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.110;0.140;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <text x="30" y="102" fill="#888" font-size="11">2通り目</text>
-          <text x="96" y="102" fill="#E0E0E0" font-size="12">学校 → 郵便局 → カフェ → 図書館 → 学校</text>
-          <rect x="430" y="86" width="144" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
-          <text x="584" y="101" fill="#ccc" font-size="11">36分</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.220;0.250;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <text x="30" y="136" fill="#888" font-size="11">3通り目</text>
-          <text x="96" y="136" fill="#E0E0E0" font-size="12">学校 → 図書館 → 郵便局 → カフェ → 学校</text>
-          <rect x="430" y="120" width="128" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
-          <text x="568" y="135" fill="#ccc" font-size="11">32分</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.330;0.360;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <text x="30" y="170" fill="#888" font-size="11">4通り目</text>
-          <text x="96" y="170" fill="#E0E0E0" font-size="12">学校 → 図書館 → カフェ → 郵便局 → 学校</text>
-          <rect x="430" y="154" width="144" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
-          <text x="584" y="169" fill="#ccc" font-size="11">36分</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.440;0.470;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <text x="30" y="204" fill="#888" font-size="11">5通り目</text>
-          <text x="96" y="204" fill="#E0E0E0" font-size="12">学校 → カフェ → 郵便局 → 図書館 → 学校</text>
-          <rect x="430" y="188" width="128" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
-          <text x="568" y="203" fill="#ccc" font-size="11">32分</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.550;0.580;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <text x="30" y="238" fill="#888" font-size="11">6通り目</text>
-          <text x="96" y="238" fill="#E0E0E0" font-size="12">学校 → カフェ → 図書館 → 郵便局 → 学校</text>
-          <rect x="430" y="222" width="104" height="20" rx="5" fill="#3a3a3a" stroke="#555"/>
-          <text x="544" y="237" fill="#ccc" font-size="11">26分</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.770;0.800;1" dur="12s" repeatCount="indefinite" fill="freeze"/>
-          <rect x="430" y="222" width="104" height="20" rx="5" fill="#76B900" stroke="#76B900"/>
-          <rect x="22" y="218" width="512" height="28" rx="8" fill="none" stroke="#76B900" stroke-width="2.5"/>
-        </g>
-        <text x="350" y="278" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.770;0.800;1" dur="12s" repeatCount="indefinite" fill="freeze"/>最短は26分。逆回りの2通りは同じ時間になる</text>
-        </svg>
-      </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex2_result.png" alt="AL2-01-ex2.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 26 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 36 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 32 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 36 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 32 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 26 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 郵便局 → 図書館 → カフェ → 学校 / そのときの合計時間: 26 分" width="419" height="288" loading="lazy">
+        <img src="images/a01_ex2_result.png" alt="AL2-01-ex2.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 35 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 30 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 23 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 30 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 23 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 35 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 図書館 → 郵便局 → カフェ → 学校 / そのときの合計時間: 23 分" width="419" height="288" loading="lazy">
       </div>
-      <p class="run-note">6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。「学校 → 郵便局 → 図書館 → カフェ → 学校」と「学校 → カフェ → 図書館 → 郵便局 → 学校」の2つが同じ26分になっています。2つは進む向きが逆なだけで、通る道は同じだからです。すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
     <div class="note-warn">
       <strong>後期につながる注意点:</strong> 回る場所が3か所なら6通りですが、場所が増えると候補の数は急激に増えます。

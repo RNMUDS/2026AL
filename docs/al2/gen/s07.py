@@ -4,7 +4,7 @@ import heapq
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -305,9 +305,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>床にコストがある迷路（マスごとに通る秒数がちがう）を、幅優先探索とダイクストラ法の両方で解いて比べます。
       迷路も経路も同じプログラムの中であつかい、結果を並べて表示します。</p>
 
-{code_pair('AL2-07-ex1.py')}
-
-{run('a07_ex1_result.png', '幅優先探索は<strong>8歩・16秒</strong>、ダイクストラ法は<strong>12歩・12秒</strong>という結果でした。'
+{example_pair('AL2-07-ex1.py', '幅優先探索は<strong>8歩・16秒</strong>、ダイクストラ法は<strong>12歩・12秒</strong>という結果でした。'
      '迷路の絵を見ると、幅優先探索の経路は 9 のマス（ぬかるみ）を1つ通っていますが、'
      'ダイクストラ法の経路は 9 のマスを1つも通らず、すべて 1 のマスだけを歩いています。'
      '第4回では3通りの行き方を手で用意して比べましたが、ダイクストラ法は<strong>自動で</strong>いちばん安い経路を見つけています。')}
@@ -318,9 +316,7 @@ ex1_body = f"""      <p>床にコストがある迷路（マスごとに通る�
 ex2_body = f"""      <p>ダイクストラ法は、ゴールの最小コストだけを求めているわけではありません。
       止めずに最後まで動かすと、<strong>すべてのマスへの最小コスト</strong>が同時に求まります。</p>
 
-{code_pair('AL2-07-ex2.py')}
-
-{run('a07_ex2_result.png', '確定した順番は (0,0)=0秒 → (0,1)=1秒 → (0,2)=2秒 → (1,2)=3秒 … と、'
+{example_pair('AL2-07-ex2.py', '確定した順番は (0,0)=0秒 → (0,1)=1秒 → (0,2)=2秒 → (1,2)=3秒 … と、'
      '<strong>コストが小さいマスから順</strong>になっています。'
      'いちばん最後に確定した (3,3) は20秒で、9のマスに囲まれているためコストが高くなっています。'
      '真ん中の表は、スタートからそれぞれのマスへ行くのにかかる最小の秒数です。'

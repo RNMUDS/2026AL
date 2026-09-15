@@ -476,7 +476,12 @@ distance = []
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-15-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a15_ex1-ref_result.png" alt="AL2-15-ex1-ref.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0696秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
+      </div>
+      <p class="run-note">前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。後半では、全探索と bitDP がどちらも<strong>50.1</strong>という同じ答えを出し、貪欲法だけが58.2と長くなっています。かかった時間は、全探索が0.08秒ほどに対し bitDP は0.002秒ほどで、数十倍の差がつきました。後期の授業で1行ずつ書いてきたコードが、すべてここに集まっています。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-15-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-15-ex1.py</span>
 <span class="cmt"># 後期のまとめ: 学んだ6つのアルゴリズムを、一度にすべて動かす</span>
 <span class="kw">import</span> heapq
@@ -503,15 +508,15 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 <span class="cmt"># 前半: 2地点間の経路をさがす3つの方法</span>
 <span class="cmt"># ============================================================</span>
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;横浜&quot;</span>: [(<span class="str">&quot;川崎&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;鶴見&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">28</span>)],
+    <span class="str">&quot;川崎&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;鶴見&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;目黒&quot;</span>, <span class="num">8</span>)],
+    <span class="str">&quot;目黒&quot;</span>: [(<span class="str">&quot;鶴見&quot;</span>, <span class="num">8</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">14</span>)],
+    <span class="str">&quot;大森&quot;</span>: [(<span class="str">&quot;目黒&quot;</span>, <span class="num">14</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">5</span>)],
+    <span class="str">&quot;蒲田&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">28</span>), (<span class="str">&quot;川崎&quot;</span>, <span class="num">11</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">5</span>)],
 }
-start = <span class="str">&quot;新宿&quot;</span>
-goal = <span class="str">&quot;東京&quot;</span>
+start = <span class="str">&quot;横浜&quot;</span>
+goal = <span class="str">&quot;大森&quot;</span>
 
 
 <span class="kw">def</span> <span class="fn">build</span>(came_from, goal):
@@ -592,7 +597,7 @@ goal = <span class="str">&quot;東京&quot;</span>
 
 
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
-<span class="fn">print</span>(<span class="str">&quot;  前半: 新宿から東京までの経路をさがす&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  前半: 横浜から大森までの経路をさがす&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
 <span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">&quot;路線の本数&quot;</span>, <span class="num">14</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計時間&quot;</span>, <span class="num">12</span>) + <span class="str">&quot;経路&quot;</span>)
 <span class="kw">for</span> name, function, learned <span class="kw">in</span> [(<span class="str">&quot;幅優先探索&quot;</span>, bfs, <span class="str">&quot;第1〜3回&quot;</span>),
@@ -706,12 +711,11 @@ distance = []
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0715秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0016秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
+        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 横浜から大森までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           33分        横浜 → 蒲田 → 大森 / 深さ優先探索        2本           33分        横浜 → 蒲田 → 大森 / ダイクストラ法      3本           25分        横浜 → 川崎 → 蒲田 → 大森 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0679秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
       </div>
-      <p class="run-note">前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。後半では、全探索と bitDP がどちらも<strong>50.1</strong>という同じ答えを出し、貪欲法だけが58.2と長くなっています。かかった時間は、全探索が0.08秒ほどに対し bitDP は0.002秒ほどで、数十倍の差がつきました。後期の授業で1行ずつ書いてきたコードが、すべてここに集まっています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -932,7 +936,44 @@ best_value = <span class="kw">None</span>
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-15-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a15_ex2-ref_result.png" alt="AL2-15-ex2-ref.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.677秒         第15回 / bitDP                   91.1      最適              6.025秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
+      </div>
+      <p class="run-note"><strong>bitDP だけが最適の91.1</strong>を出し、6秒ほどかかりました。近似解の3つ（貪欲法の全出発点版・焼きなまし法・遺伝的アルゴリズム）は、最適より<strong>わずか4〜6%長いだけ</strong>で、いずれも1秒以内に終わっています。出発点を1つに固定した貪欲法だけが15.9%長く、明らかに劣っています。20都市では bitDP が使えましたが、25都市を超えると表が大きすぎて使えなくなります。そのとき頼りになるのが、この3つの近似解法です。</p>
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 370" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">20都市の巡回セールスマン問題を5つの方法で解いた結果</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">全探索なら19の階乗＝約12京通り。まったく終わらない（秒数は測ったときの一例）</text>
+        <text x="24" y="84" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法</text>
+        <text x="24" y="102" fill="#888888" font-size="10">第9回　／　0.000秒</text>
+        <rect x="230" y="70" width="315" height="24" rx="5" fill="#FF5252" opacity="0.85"/>
+        <text x="555" y="88" fill="#FF5252" font-size="12" font-weight="700">105.7</text>
+        <text x="607" y="88" fill="#888888" font-size="10">最適より15.9%長い</text>
+        <text x="24" y="138" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法(全出発点)</text>
+        <text x="24" y="156" fill="#888888" font-size="10">第11回　／　0.000秒</text>
+        <rect x="230" y="124" width="152" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="392" y="142" fill="#FFB800" font-size="12" font-weight="700">95.0</text>
+        <text x="444" y="142" fill="#888888" font-size="10">最適より4.2%長い</text>
+        <text x="24" y="192" fill="#E0E0E0" font-size="12" font-weight="700">焼きなまし法</text>
+        <text x="24" y="210" fill="#888888" font-size="10">第15回　／　0.015秒</text>
+        <rect x="230" y="178" width="155" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="395" y="196" fill="#FFB800" font-size="12" font-weight="700">95.2</text>
+        <text x="447" y="196" fill="#888888" font-size="10">最適より4.5%長い</text>
+        <text x="24" y="246" fill="#E0E0E0" font-size="12" font-weight="700">遺伝的アルゴリズム</text>
+        <text x="24" y="264" fill="#888888" font-size="10">第15回　／　0.533秒</text>
+        <rect x="230" y="232" width="172" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
+        <text x="412" y="250" fill="#FFB800" font-size="12" font-weight="700">96.3</text>
+        <text x="464" y="250" fill="#888888" font-size="10">最適より5.7%長い</text>
+        <text x="24" y="300" fill="#E0E0E0" font-size="12" font-weight="700">bitDP（必ず最適）</text>
+        <text x="24" y="318" fill="#888888" font-size="10">第10回　／　6.214秒</text>
+        <rect x="230" y="286" width="93" height="24" rx="5" fill="#76B900" opacity="0.85"/>
+        <text x="333" y="304" fill="#76B900" font-size="12" font-weight="700">91.1</text>
+        <line x1="323" y1="58" x2="323" y2="326" stroke="#76B900" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="350" y="352" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">近似解の3つは、最適の4〜6%長いだけ。しかも bitDP より圧倒的に速い</text>
+        </svg>
+      </div>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-15-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-15-ex2.py</span>
 <span class="cmt"># 20都市の巡回セールスマン問題を、5つの方法で解いて比べる</span>
 <span class="kw">import</span> heapq
@@ -944,7 +985,7 @@ random.seed(<span class="num">2026</span>)
 
 cities = []
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
-    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+    cities.append(((i * <span class="num">5</span>) % <span class="num">21</span>, (i * <span class="num">13</span>) % <span class="num">17</span>))
 
 n = <span class="fn">len</span>(cities)
 INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
@@ -1163,45 +1204,11 @@ best_value = <span class="kw">None</span>
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 370" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">20都市の巡回セールスマン問題を5つの方法で解いた結果</text>
-        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">全探索なら19の階乗＝約12京通り。まったく終わらない（秒数は測ったときの一例）</text>
-        <text x="24" y="84" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法</text>
-        <text x="24" y="102" fill="#888888" font-size="10">第9回　／　0.000秒</text>
-        <rect x="230" y="70" width="315" height="24" rx="5" fill="#FF5252" opacity="0.85"/>
-        <text x="555" y="88" fill="#FF5252" font-size="12" font-weight="700">105.7</text>
-        <text x="607" y="88" fill="#888888" font-size="10">最適より15.9%長い</text>
-        <text x="24" y="138" fill="#E0E0E0" font-size="12" font-weight="700">貪欲法(全出発点)</text>
-        <text x="24" y="156" fill="#888888" font-size="10">第11回　／　0.000秒</text>
-        <rect x="230" y="124" width="152" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="392" y="142" fill="#FFB800" font-size="12" font-weight="700">95.0</text>
-        <text x="444" y="142" fill="#888888" font-size="10">最適より4.2%長い</text>
-        <text x="24" y="192" fill="#E0E0E0" font-size="12" font-weight="700">焼きなまし法</text>
-        <text x="24" y="210" fill="#888888" font-size="10">第15回　／　0.015秒</text>
-        <rect x="230" y="178" width="155" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="395" y="196" fill="#FFB800" font-size="12" font-weight="700">95.2</text>
-        <text x="447" y="196" fill="#888888" font-size="10">最適より4.5%長い</text>
-        <text x="24" y="246" fill="#E0E0E0" font-size="12" font-weight="700">遺伝的アルゴリズム</text>
-        <text x="24" y="264" fill="#888888" font-size="10">第15回　／　0.533秒</text>
-        <rect x="230" y="232" width="172" height="24" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="412" y="250" fill="#FFB800" font-size="12" font-weight="700">96.3</text>
-        <text x="464" y="250" fill="#888888" font-size="10">最適より5.7%長い</text>
-        <text x="24" y="300" fill="#E0E0E0" font-size="12" font-weight="700">bitDP（必ず最適）</text>
-        <text x="24" y="318" fill="#888888" font-size="10">第10回　／　6.214秒</text>
-        <rect x="230" y="286" width="93" height="24" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="333" y="304" fill="#76B900" font-size="12" font-weight="700">91.1</text>
-        <line x1="323" y1="58" x2="323" y2="326" stroke="#76B900" stroke-width="2" stroke-dasharray="5 4"/>
-        <text x="350" y="352" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">近似解の3つは、最適の4〜6%長いだけ。しかも bitDP より圧倒的に速い</text>
-        </svg>
-      </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.015秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.689秒         第15回 / bitDP                   91.1      最適              6.069秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
+        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  66.7      +6.5（10.8%）     0.000秒         第9回 / 貪欲法(全出発点)        60.2      +0.0（0.0%）      0.000秒         第11回 / 焼きなまし法            66.7      +6.5（10.8%）     0.015秒         第15回 / 遺伝的アルゴリズム      61.1      +0.9（1.5%）      0.675秒         第15回 / bitDP                   60.2      最適              6.039秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
       </div>
-      <p class="run-note"><strong>bitDP だけが最適の91.1</strong>を出し、6秒ほどかかりました。近似解の3つ（貪欲法の全出発点版・焼きなまし法・遺伝的アルゴリズム）は、最適より<strong>わずか4〜6%長いだけ</strong>で、いずれも1秒以内に終わっています。出発点を1つに固定した貪欲法だけが15.9%長く、明らかに劣っています。20都市では bitDP が使えましたが、25都市を超えると表が大きすぎて使えなくなります。そのとき頼りになるのが、この3つの近似解法です。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の表から、5つの方法それぞれの「答え」「最適との差」「かかった時間」を書き写す。あわせて、「25都市を超えたらどの方法を使うか」を、理由とともに書く。</span></div>
     </div>

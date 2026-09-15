@@ -23,7 +23,7 @@ for page in sorted(HERE.glob("session*.html")):
         if "── " not in label:
             continue
         name = label.split("── ")[-1].strip()
-        if not name.endswith(".py") or "-ref" in name:
+        if not name.endswith(".py"):
             continue
         code = H.unescape(re.sub("<.*?>", "",
                re.sub(r'<span class="code-label">.*?</span>', "", block, flags=re.S))).strip("\n")

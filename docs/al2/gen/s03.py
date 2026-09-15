@@ -3,7 +3,7 @@
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, answers, code, example, fig, keywords,
                     notion, reveal, run, section, setup_guide, standard,
                     write)
@@ -293,9 +293,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>6つの駅と7本の路線からなる路線図を、隣接リストの形でPythonに書き写します。
       隣接リストは<strong>辞書</strong>を使い、「駅の名前」を鍵、「となりの駅を並べたリスト」を値にします。</p>
 
-{code_pair('AL2-03-ex1.py')}
-
-{run('a03_ex1_result.png', '6つの駅それぞれについて、となりの駅が一覧で表示されました。'
+{example_pair('AL2-03-ex1.py', '6つの駅それぞれについて、となりの駅が一覧で表示されました。'
      '<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。'
      '辺（路線）の数を数えるときに <code>// 2</code> で半分にしているのは、'
      '1本の路線が「新宿の側」と「渋谷の側」の両方から数えられてしまうためです。')}"""
@@ -303,14 +301,10 @@ ex1_body = f"""      <p>6つの駅と7本の路線からなる路線図を、隣
 ex2_body = f"""      <p>例題1とまったく同じ路線図を、今度は隣接行列の形で書き写します。
       6つの駅があるので、たて6マス・よこ6マスの表を作ります。</p>
 
-{code_pair('AL2-03-ex2.py')}
-
-{fig_size_compare()}
-
-{run('a03_ex2_result.png', '同じ路線図が、6×6＝36マスの表になりました。'
+{example_pair('AL2-03-ex2.py', '同じ路線図が、6×6＝36マスの表になりました。'
      '表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。'
      '「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。'
-     '一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。')}
+     '一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。', fig_size_compare())}
 
 {notion('例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。'
         'あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。')}"""

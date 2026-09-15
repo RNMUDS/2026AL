@@ -4,7 +4,7 @@ import math
 from itertools import permutations
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -267,9 +267,7 @@ ex1_body = f"""      <p>第8回と同じ5つの都市に、貪欲法を使いま
       「いまいる都市から、まだ行っていない都市のうちいちばん近いところへ進む」をくり返すだけです。
       全探索の答えと比べます。</p>
 
-{code_pair('AL2-09-ex1.py')}
-
-{run('a09_ex1_result.png', '貪欲法は「学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校」というルートを作り、合計は<strong>34.9</strong>でした。'
+{example_pair('AL2-09-ex1.py', '貪欲法は「学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校」というルートを作り、合計は<strong>34.9</strong>でした。'
      '全探索で求めた最短も34.9なので、<strong>差は0</strong>です。'
      'ただし2つのルートをよく見ると、回る向きが逆になっているだけで、通る道はまったく同じです。'
      '貪欲法は24通りを試さず、たった4回の比較でルートを作っています。'
@@ -277,9 +275,7 @@ ex1_body = f"""      <p>第8回と同じ5つの都市に、貪欲法を使いま
 
 ex2_body = f"""      <p>都市を8個に増やして、同じ比較をします。都市が増えると結果はどう変わるでしょうか。</p>
 
-{code_pair('AL2-09-ex2.py')}
-
-{run('a09_ex2_result.png', '貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。'
+{example_pair('AL2-09-ex2.py', '貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。'
      '貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。'
      '一方で速さは、貪欲法が全探索の約150倍でした。'
      '都市が5個のときは同じ答えでしたが、8個になると差が出ています。'

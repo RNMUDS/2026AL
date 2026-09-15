@@ -351,7 +351,12 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
 
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;1番目の要素（時間）が小さい順に出てくる&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-06-ex1.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a06_ex1-ref_result.png" alt="AL2-06-ex1-ref.py の実行結果。8 を入れた → 中身: [8] / 3 を入れた → 中身: [3, 8] / 5 を入れた → 中身: [3, 8, 5] / 1 を入れた → 中身: [1, 3, 5, 8] / 9 を入れた → 中身: [1, 3, 5, 8, 9] / 2 を入れた → 中身: [1, 3, 2, 8, 9, 5] /  / 中身の並びはバラバラに見えるが、先頭は必ずいちばん小さい数になっている / いまの先頭: 1 /  / 取り出す順番 / 取り出した: 1   残り: [2, 3, 5, 8, 9] / 取り出した: 2   残り: [3, 8, 5, 9] / 取り出した: 3   残り: [5, 8, 9] / 取り出した: 5   残り: [8, 9] / 取り出した: 8   残り: [9] / 取り出した: 9   残り: [] /  / 入れた順番は 8, 3, 5, 1, 9, 2 だが、取り出す順番は小さい順になる / ---------------------------------------------------- /  / (時間, 駅名) の組を入れて取り出す / 7分の 渋谷 を取り出した / 9分の 池袋 を取り出した / 16分の 品川 を取り出した / 21分の 上野 を取り出した /  / 1番目の要素（時間）が小さい順に出てくる" width="465" height="608" loading="lazy">
+      </div>
+      <p class="run-note">8, 3, 5, 1, 9, 2 の順に入れたのに、取り出す順番は 1, 2, 3, 5, 8, 9 と小さい順になりました。入れている途中の中身（例: <code>[1, 3, 2, 8, 9, 5]</code>）は小さい順に並んでいませんが、<strong>先頭だけは必ずいちばん小さい数</strong>になっています。後半では <code>(16, "品川")</code> のような組を入れており、1番目の要素である時間が小さい順に出てきています。ダイクストラ法では、この形をそのまま使います。</p>
+<p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-06-ex1.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex1.py</span>
 <span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
 <span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
@@ -360,7 +365,7 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
 <span class="cmt"># --- その1: 数を入れて取り出す ---</span>
 numbers = []                    <span class="cmt"># ふつうのリストを用意する</span>
 
-<span class="kw">for</span> value <span class="kw">in</span> [<span class="num">8</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>]:
+<span class="kw">for</span> value <span class="kw">in</span> [<span class="num">6</span>, <span class="num">4</span>, <span class="num">7</span>, <span class="num">2</span>, <span class="num">8</span>, <span class="num">1</span>]:
     <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     <span class="fn">print</span>(<span class="str">f&quot;{value} を入れた → 中身: {numbers}&quot;</span>)
 
@@ -383,10 +388,10 @@ numbers = []                    <span class="cmt"># ふつうのリストを用�
 <span class="cmt"># タプルを入れると、1番目の要素で比べてくれる。</span>
 <span class="cmt"># ダイクストラ法では (今わかっている時間, 駅の名前) の組を入れる。</span>
 tasks = []
-heapq.heappush(tasks, (<span class="num">16</span>, <span class="str">&quot;品川&quot;</span>))
+heapq.heappush(tasks, (<span class="num">13</span>, <span class="str">&quot;蒲田&quot;</span>))
 heapq.heappush(tasks, <span class="blank">____</span>)      <span class="cmt"># ← 穴3</span>
-heapq.heappush(tasks, (<span class="num">21</span>, <span class="str">&quot;上野&quot;</span>))
-heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池袋&quot;</span>))
+heapq.heappush(tasks, (<span class="num">25</span>, <span class="str">&quot;目黒&quot;</span>))
+heapq.heappush(tasks, (<span class="num">6</span>, <span class="str">&quot;鶴見&quot;</span>))
 
 <span class="fn">print</span>(<span class="str">&quot;(時間, 駅名) の組を入れて取り出す&quot;</span>)
 <span class="kw">while</span> <span class="fn">len</span>(tasks) &gt; <span class="num">0</span>:
@@ -401,18 +406,17 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
         <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
         <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>heapq に1つ入れる（入れたあとも「先頭がいちばん小さい」が保たれる）</td><td style="white-space:nowrap">A. <code>heapq.heappop(numbers)</code><br>B. <code>numbers.append(value)</code><br>C. <code>heapq.heappush(numbers, value)</code></td></tr>
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いちばん小さいものを取り出す</td><td style="white-space:nowrap">A. <code>numbers[0]</code><br>B. <code>numbers.pop()</code><br>C. <code>heapq.heappop(numbers)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>（時間, 駅名）の順の組にすると、時間の小さい順に並ぶ</td><td style="white-space:nowrap">A. <code>(&quot;渋谷&quot;, 7)</code><br>B. <code>(7, &quot;渋谷&quot;)</code><br>C. <code>7</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>（時間, 駅名）の順の組にすると、時間の小さい順に並ぶ</td><td style="white-space:nowrap">A. <code>(&quot;川崎&quot;, 9)</code><br>B. <code>(9, &quot;川崎&quot;)</code><br>C. <code>9</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex1_result.png" alt="AL2-06-ex1.py の実行結果。8 を入れた → 中身: [8] / 3 を入れた → 中身: [3, 8] / 5 を入れた → 中身: [3, 8, 5] / 1 を入れた → 中身: [1, 3, 5, 8] / 9 を入れた → 中身: [1, 3, 5, 8, 9] / 2 を入れた → 中身: [1, 3, 2, 8, 9, 5] /  / 中身の並びはバラバラに見えるが、先頭は必ずいちばん小さい数になっている / いまの先頭: 1 /  / 取り出す順番 / 取り出した: 1   残り: [2, 3, 5, 8, 9] / 取り出した: 2   残り: [3, 8, 5, 9] / 取り出した: 3   残り: [5, 8, 9] / 取り出した: 5   残り: [8, 9] / 取り出した: 8   残り: [9] / 取り出した: 9   残り: [] /  / 入れた順番は 8, 3, 5, 1, 9, 2 だが、取り出す順番は小さい順になる / ---------------------------------------------------- /  / (時間, 駅名) の組を入れて取り出す / 7分の 渋谷 を取り出した / 9分の 池袋 を取り出した / 16分の 品川 を取り出した / 21分の 上野 を取り出した /  / 1番目の要素（時間）が小さい順に出てくる" width="465" height="608" loading="lazy">
+        <img src="images/a06_ex1_result.png" alt="AL2-06-ex1.py の実行結果。6 を入れた → 中身: [6] / 4 を入れた → 中身: [4, 6] / 7 を入れた → 中身: [4, 6, 7] / 2 を入れた → 中身: [2, 4, 7, 6] / 8 を入れた → 中身: [2, 4, 7, 6, 8] / 1 を入れた → 中身: [1, 4, 2, 6, 8, 7] /  / 中身の並びはバラバラに見えるが、先頭は必ずいちばん小さい数になっている / いまの先頭: 1 /  / 取り出す順番 / 取り出した: 1   残り: [2, 4, 7, 6, 8] / 取り出した: 2   残り: [4, 6, 7, 8] / 取り出した: 4   残り: [6, 8, 7] / 取り出した: 6   残り: [7, 8] / 取り出した: 7   残り: [8] / 取り出した: 8   残り: [] /  / 入れた順番は 8, 3, 5, 1, 9, 2 だが、取り出す順番は小さい順になる / ---------------------------------------------------- /  / (時間, 駅名) の組を入れて取り出す / 6分の 鶴見 を取り出した / 9分の 川崎 を取り出した / 13分の 蒲田 を取り出した / 25分の 目黒 を取り出した /  / 1番目の要素（時間）が小さい順に出てくる" width="465" height="608" loading="lazy">
       </div>
-      <p class="run-note">8, 3, 5, 1, 9, 2 の順に入れたのに、取り出す順番は 1, 2, 3, 5, 8, 9 と小さい順になりました。入れている途中の中身（例: <code>[1, 3, 2, 8, 9, 5]</code>）は小さい順に並んでいませんが、<strong>先頭だけは必ずいちばん小さい数</strong>になっています。後半では <code>(16, "品川")</code> のような組を入れており、1番目の要素である時間が小さい順に出てきています。ダイクストラ法では、この形をそのまま使います。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
 
     <div class="card example">
@@ -493,7 +497,12 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;第5回の例題1・例題2と、まったく同じ答えになっている&quot;</span>)</pre>
-<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、<code>AL2-06-ex2.py</code> の名前で保存して実行する</p>
+      <p class="run-label">▶ 実行結果</p>
+      <div class="run-capture">
+        <img src="images/a06_ex2-ref_result.png" alt="AL2-06-ex2-ref.py の実行結果。heapq から取り出した順番 / -------------------------------------------------------- / (0分, 新宿) → 新宿 を 0分で確定 / 渋谷 を 7分として queue に入れた / 池袋 を 9分として queue に入れた / 品川 を 30分として queue に入れた / (7分, 渋谷) → 渋谷 を 7分で確定 / 品川 を 16分として queue に入れた / (9分, 池袋) → 池袋 を 9分で確定 / 上野 を 21分として queue に入れた / (16分, 品川) → 品川 を 16分で確定 / 東京 を 27分として queue に入れた / (21分, 上野) → 上野 を 21分で確定 / (27分, 東京) → 東京 を 27分で確定 / (30分, 品川) → すでに確定済みなので読み飛ばす / -------------------------------------------------------- /  / 新宿から各駅への最短の行き方 / -------------------------------------------------------- / 渋谷     7分   新宿 → 渋谷 / 池袋     9分   新宿 → 池袋 / 上野    21分   新宿 → 池袋 → 上野 / 東京    27分   新宿 → 渋谷 → 品川 → 東京 / 品川    16分   新宿 → 渋谷 → 品川 / -------------------------------------------------------- /  / 第5回の例題1・例題2と、まったく同じ答えになっている" width="449" height="588" loading="lazy">
+      </div>
+      <p class="run-note">取り出した順番は (0分, 新宿) → (7分, 渋谷) → (9分, 池袋) → (16分, 品川) → (21分, 上野) → (27分, 東京) でした。第5回の例題1で確定した順番とまったく同じです。いちばん最後に <strong>(30分, 品川) → すでに確定済みなので読み飛ばす</strong> と表示されています。品川は最初に30分として箱に入れられ、あとから16分として入れ直されました。16分のほうが先に取り出されて確定したので、残っていた30分の組は読み飛ばされています。</p>
+<p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-06-ex2.py</code> の名前で保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex2.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法</span>
 <span class="cmt"># 第5回では「まだ決まっていない駅を全部見て、いちばん小さい駅をさがす」ことをしていた。</span>
@@ -501,15 +510,15 @@ settled = <span class="fn">set</span>()
 <span class="kw">import</span> heapq
 
 railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;横浜&quot;</span>: [(<span class="str">&quot;川崎&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;鶴見&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">28</span>)],
+    <span class="str">&quot;川崎&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;鶴見&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;目黒&quot;</span>, <span class="num">8</span>)],
+    <span class="str">&quot;目黒&quot;</span>: [(<span class="str">&quot;鶴見&quot;</span>, <span class="num">8</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">14</span>)],
+    <span class="str">&quot;大森&quot;</span>: [(<span class="str">&quot;目黒&quot;</span>, <span class="num">14</span>), (<span class="str">&quot;蒲田&quot;</span>, <span class="num">5</span>)],
+    <span class="str">&quot;蒲田&quot;</span>: [(<span class="str">&quot;横浜&quot;</span>, <span class="num">28</span>), (<span class="str">&quot;川崎&quot;</span>, <span class="num">11</span>), (<span class="str">&quot;大森&quot;</span>, <span class="num">5</span>)],
 }
 
-start = <span class="str">&quot;新宿&quot;</span>
+start = <span class="str">&quot;横浜&quot;</span>
 INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
 distance = {}
@@ -560,7 +569,7 @@ settled = <span class="fn">set</span>()
     <span class="kw">return</span> route
 
 
-<span class="fn">print</span>(<span class="str">&quot;新宿から各駅への最短の行き方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;横浜から各駅への最短の行き方&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="kw">for</span> station <span class="kw">in</span> railway:
     <span class="kw">if</span> station == start:
@@ -581,12 +590,11 @@ settled = <span class="fn">set</span>()
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex2_result.png" alt="AL2-06-ex2.py の実行結果。heapq から取り出した順番 / -------------------------------------------------------- / (0分, 新宿) → 新宿 を 0分で確定 / 渋谷 を 7分として queue に入れた / 池袋 を 9分として queue に入れた / 品川 を 30分として queue に入れた / (7分, 渋谷) → 渋谷 を 7分で確定 / 品川 を 16分として queue に入れた / (9分, 池袋) → 池袋 を 9分で確定 / 上野 を 21分として queue に入れた / (16分, 品川) → 品川 を 16分で確定 / 東京 を 27分として queue に入れた / (21分, 上野) → 上野 を 21分で確定 / (27分, 東京) → 東京 を 27分で確定 / (30分, 品川) → すでに確定済みなので読み飛ばす / -------------------------------------------------------- /  / 新宿から各駅への最短の行き方 / -------------------------------------------------------- / 渋谷     7分   新宿 → 渋谷 / 池袋     9分   新宿 → 池袋 / 上野    21分   新宿 → 池袋 → 上野 / 東京    27分   新宿 → 渋谷 → 品川 → 東京 / 品川    16分   新宿 → 渋谷 → 品川 / -------------------------------------------------------- /  / 第5回の例題1・例題2と、まったく同じ答えになっている" width="449" height="588" loading="lazy">
+        <img src="images/a06_ex2_result.png" alt="AL2-06-ex2.py の実行結果。heapq から取り出した順番 / -------------------------------------------------------- / (0分, 横浜) → 横浜 を 0分で確定 / 川崎 を 9分として queue に入れた / 鶴見 を 6分として queue に入れた / 蒲田 を 28分として queue に入れた / (6分, 鶴見) → 鶴見 を 6分で確定 / 目黒 を 14分として queue に入れた / (9分, 川崎) → 川崎 を 9分で確定 / 蒲田 を 20分として queue に入れた / (14分, 目黒) → 目黒 を 14分で確定 / 大森 を 28分として queue に入れた / (20分, 蒲田) → 蒲田 を 20分で確定 / 大森 を 25分として queue に入れた / (25分, 大森) → 大森 を 25分で確定 / (28分, 大森) → すでに確定済みなので読み飛ばす / (28分, 蒲田) → すでに確定済みなので読み飛ばす / -------------------------------------------------------- /  / 横浜から各駅への最短の行き方 / -------------------------------------------------------- / 川崎     9分   横浜 → 川崎 / 鶴見     6分   横浜 → 鶴見 / 目黒    14分   横浜 → 鶴見 → 目黒 / 大森    25分   横浜 → 川崎 → 蒲田 → 大森 / 蒲田    20分   横浜 → 川崎 → 蒲田 / -------------------------------------------------------- /  / 第5回の例題1・例題2と、まったく同じ答えになっている" width="449" height="628" loading="lazy">
       </div>
-      <p class="run-note">取り出した順番は (0分, 新宿) → (7分, 渋谷) → (9分, 池袋) → (16分, 品川) → (21分, 上野) → (27分, 東京) でした。第5回の例題1で確定した順番とまったく同じです。いちばん最後に <strong>(30分, 品川) → すでに確定済みなので読み飛ばす</strong> と表示されています。品川は最初に30分として箱に入れられ、あとから16分として入れ直されました。16分のほうが先に取り出されて確定したので、残っていた30分の組は読み飛ばされています。</p>
+      <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、「読み飛ばす」と表示された行を書き写す。あわせて、品川が2回 queue に入れられた理由と、30分の組を読み飛ばしてよい理由を説明する。</span></div>
     </div>
@@ -622,7 +630,7 @@ settled = <span class="fn">set</span>()
       </div>
       <div class="setup-step">
         <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-06-ex1.py</code> を開き、<code>for value in [8, 3, 5, 1, 9, 2]</code> の6つの数を、自分で決めた<strong>6つのばらばらな数</strong>に書き換える。
+        <p style="font-size:0.95rem"><code>AL2-06-ex1.py</code> を開き、<code>for value in [6, 4, 7, 2, 8, 1]</code> の6つの数を、自分で決めた<strong>6つのばらばらな数</strong>に書き換える。
         保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
@@ -839,7 +847,7 @@ settled = <span class="fn">set</span>()
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
           <tr><td><code>AL2-06-ex1.py</code></td><td>穴1</td><td><code>heapq.heappush(numbers, value)</code></td></tr>
           <tr><td><code>AL2-06-ex1.py</code></td><td>穴2</td><td><code>heapq.heappop(numbers)</code></td></tr>
-          <tr><td><code>AL2-06-ex1.py</code></td><td>穴3</td><td><code>(7, &quot;渋谷&quot;)</code></td></tr>
+          <tr><td><code>AL2-06-ex1.py</code></td><td>穴3</td><td><code>(9, &quot;川崎&quot;)</code></td></tr>
           <tr><td><code>AL2-06-ex2.py</code></td><td>穴1</td><td><code>heapq.heappop(queue)</code></td></tr>
           <tr><td><code>AL2-06-ex2.py</code></td><td>穴2</td><td><code>current in settled</code></td></tr>
           <tr><td><code>AL2-06-ex2.py</code></td><td>穴3</td><td><code>(new_distance, name)</code></td></tr>

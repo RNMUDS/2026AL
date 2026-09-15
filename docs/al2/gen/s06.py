@@ -2,7 +2,7 @@
 """第6回: ダイクストラ法（2）実装入門 の本文を組み立てる。"""
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, example_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -269,9 +269,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>ダイクストラ法に使う前に、<code>heapq</code> がどう動くかだけを確かめます。
       数を入れる例と、<code>(時間, 駅名)</code> の組を入れる例の2つを実行します。</p>
 
-{code_pair('AL2-06-ex1.py')}
-
-{run('a06_ex1_result.png', '8, 3, 5, 1, 9, 2 の順に入れたのに、取り出す順番は 1, 2, 3, 5, 8, 9 と小さい順になりました。'
+{example_pair('AL2-06-ex1.py', '8, 3, 5, 1, 9, 2 の順に入れたのに、取り出す順番は 1, 2, 3, 5, 8, 9 と小さい順になりました。'
      '入れている途中の中身（例: <code>[1, 3, 2, 8, 9, 5]</code>）は小さい順に並んでいませんが、'
      '<strong>先頭だけは必ずいちばん小さい数</strong>になっています。'
      '後半では <code>(16, "品川")</code> のような組を入れており、1番目の要素である時間が小さい順に出てきています。'
@@ -280,9 +278,7 @@ ex1_body = f"""      <p>ダイクストラ法に使う前に、<code>heapq</code
 ex2_body = f"""      <p>第5回のダイクストラ法を、<code>heapq</code> を使う形に書き直します。
       「まだ決まっていない駅を全部見る」ループがなくなり、<code>heappop</code> の1行に置きかわります。</p>
 
-{code_pair('AL2-06-ex2.py')}
-
-{run('a06_ex2_result.png', '取り出した順番は (0分, 新宿) → (7分, 渋谷) → (9分, 池袋) → (16分, 品川) → (21分, 上野) → (27分, 東京) でした。'
+{example_pair('AL2-06-ex2.py', '取り出した順番は (0分, 新宿) → (7分, 渋谷) → (9分, 池袋) → (16分, 品川) → (21分, 上野) → (27分, 東京) でした。'
      '第5回の例題1で確定した順番とまったく同じです。'
      'いちばん最後に <strong>(30分, 品川) → すでに確定済みなので読み飛ばす</strong> と表示されています。'
      '品川は最初に30分として箱に入れられ、あとから16分として入れ直されました。'
