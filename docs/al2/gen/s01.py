@@ -56,7 +56,7 @@ def fig_roadmap():
         if i < n - 1:
             s.append(f'        <line x1="{x+124}" y1="110" x2="{x+132}" y2="110" stroke="#555" stroke-width="2"/>')
     s.append(f'        <text x="350" y="188" text-anchor="middle" fill="{AMBER}" font-size="12" font-weight="700">'
-             '前期は「探す」。後期は「たくさんある選び方の中から、いちばん良い選び方を見つける」</text>')
+             '前期は「探す」。後期は「数多くある選び方の中から、いちばん良い選び方を見つける」</text>')
     return fig(700, 205, "\n".join(s))
 
 
@@ -67,7 +67,7 @@ def fig_search_vs_optimize():
     s = []
     # 左: 探す
     s.append(f'        <text x="175" y="28" text-anchor="middle" fill="{GRAY}" font-size="13" font-weight="700">前期の問題「探す」</text>')
-    s.append('        <text x="175" y="48" text-anchor="middle" fill="#E0E0E0" font-size="11">たくさんのデータの中から目的の1つを見つける</text>')
+    s.append('        <text x="175" y="48" text-anchor="middle" fill="#E0E0E0" font-size="11">数多くのデータの中から見つける</text>')
     values = [14, 8, 23, 5, 31, 42, 19, 7]
     target_index = 5
     for i, v in enumerate(values):
@@ -335,7 +335,7 @@ NAV = [
 sub = slide_submission("01")
 
 overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
-      前期のアルゴリズム論及び演習Iでは、「たくさんのデータの中から目的の1つを<strong>探す</strong>」方法を学びました。
+      前期のアルゴリズム論及び演習Iでは、「数多くのデータの中から<strong>見つける</strong>」方法を学びました。
       逐次探索、二分探索、ハッシュ法、そして迷路の幅優先探索です。
       後期のアルゴリズム論及び演習IIでは、一歩進んだ問題をあつかいます。
       <strong>やり方が何通りもあるとき、いちばん良いやり方を見つける</strong>という問題です。
@@ -365,8 +365,8 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       <table>
         <tr><th>道具</th><th>いつ使うか</th><th>学ぶ回</th></tr>
         <tr><td><strong style="color:#76B900">グラフ</strong></td><td>地図・路線図・人のつながりを、コンピュータが扱える形に書き写すための表現方法</td><td>第3〜4回</td></tr>
-        <tr><td><strong style="color:#76B900">ダイクストラ法</strong></td><td>出発点から各地点までの「最も安い行き方」を求める。カーナビの中身にあたる手法</td><td>第5〜7回</td></tr>
-        <tr><td><strong style="color:#76B900">巡回セールスマン問題</strong></td><td>全ての地点を1回ずつ回って戻る最短ルートを求める。宅配便の配送計画にあたる問題</td><td>第8〜10回</td></tr>
+        <tr><td><strong style="color:#76B900">ダイクストラ法</strong></td><td>出発点から目的地まで行くときに、<strong>どの道を通るか</strong>を選ぶ。通らない地点があってよく、答えは1本の道。カーナビの経路案内にあたる手法</td><td>第5〜7回</td></tr>
+        <tr><td><strong style="color:#76B900">巡回セールスマン問題</strong></td><td><strong>全ての地点を1回ずつ必ず回って</strong>出発点に戻るときに、<strong>どの順番で回るか</strong>を選ぶ。答えは地点の並び順。宅配便の配送計画にあたる問題</td><td>第8〜10回</td></tr>
       </table>
     </div>
 
@@ -374,26 +374,25 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       <h4>評価方法と、毎回の課題</h4>
       <p style="font-size:0.95rem">定期試験はありません。<strong>毎回の課題の提出で100%</strong>の評価となります。</p>
       <p style="font-size:0.95rem;margin-top:0.6rem">
-        課題は毎回同じ形です。<strong>Googleスライドを1本だけ作り、毎回1枚ずつ足していきます。</strong>
-        1枚の中身は「自分で決めた数値で例題を動かし、その動きを図形で描いたもの」です。
+        課題は毎回同じ形です。<strong>Googleスライドを作成し、PDFに書き出してManabaに提出します。</strong>
+        スライドの中身は「その回のアルゴリズムの仕組みを、コード上の変数や数値を用いて図で説明したもの」です。
       </p>
       <table>
         <tr><th>課題</th><th>やること</th><th>点（毎回）</th></tr>
-        <tr><td><strong>標準課題</strong>（必須）</td><td>自分の数値で例題を動かし、その動きを<strong>図形で描いた</strong>スライド1枚</td><td>70点（遅れ・要件不足は減点）</td></tr>
-        <tr><td><strong>発展課題</strong>（任意）</td><td>学んだアルゴリズムを使った<strong>画面のあるアプリ</strong>を、毎回の到達点に分けて育てる（4作品）。AI を使ってよい</td><td>到達点を満たせば 30点。部分点なし</td></tr>
+        <tr><td><strong>標準課題</strong>（必須）</td><td>例題を自分の数値で動かし、アルゴリズムの仕組みを<strong>コード上の変数や数値を用いて図で説明</strong>したスライド</td><td>70点（遅れ・要件不足は減点）</td></tr>
+        <tr><td><strong>発展課題</strong>（任意）</td><td>学んだアルゴリズムを使った<strong>画面のあるアプリ</strong>を、毎回の到達点に分けて育てる（4作品）</td><td>到達点を満たせば 30点。部分点なし</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         毎回100点満点で、成績は<strong>15回の平均</strong>です。
-        標準課題を毎回満点にすれば<strong>70点</strong>。
-        <strong>90点以上（S評価）</strong>には、発展課題の到達点を15回中10回以上満たすことが必要です。
+        標準課題を毎回満点にすれば<strong>70点</strong>になります。
       </p>
       <div class="note-warn" style="margin-top:0.8rem">
         <strong>毎回同じ4つの約束</strong>
         <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
-          <li>自分で決めた数値で例題を動かし、その動きを図形で描く</li>
+          <li>例題を自分で決めた数値で動かし、アルゴリズムの仕組みをコード上の変数や数値を用いて図形で説明する</li>
           <li>画像の貼り付けは不可（図形・矢印・テキストボックスで描く）</li>
           <li>図の中に自分の数値を入れる</li>
-          <li>文章は1〜2行まで</li>
+          <li>文章は1枚につき1〜2行まで</li>
         </ol>
       </div>
     </div>
@@ -401,15 +400,15 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
     <div class="card" style="border-left:4px solid #76B900">
       <div class="card-header">
         <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
-        <h3>Googleスライドを1本つくる（第1回だけ）</h3>
+        <h3>Googleスライドの作り方と出し方（毎回）</h3>
       </div>
       <div class="setup-step">
-        <p class="step-title">Step 1: スライドを作る</p>
+        <p class="step-title">Step 1: その回のスライドを新しく作る</p>
         <ol>
           <li>ブラウザで <strong>slides.google.com</strong> を開く（大学のGoogleアカウントでログイン）</li>
           <li><strong>空白</strong>を選んで新しいスライドを作る</li>
-          <li>左上のファイル名を <strong>「アルゴリズム論II 解説資料 ○○（自分の名前）」</strong>に変える</li>
-          <li>1枚目を表紙にして、授業名・自分の学籍番号・名前を書く</li>
+          <li>左上のファイル名を <strong>「AL2 第○回 学籍番号 名前」</strong>に変える（例: AL2 第1回 2611234 大妻花子）</li>
+          <li>1枚目に「第○回: テーマ名」の見出しを書き、図を描く。枚数は自由（1枚に収まらなければ分けてよい）</li>
         </ol>
       </div>
       <div class="setup-step">
@@ -418,22 +417,21 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
           <li>右上の<strong>「共有」</strong>をクリック</li>
           <li>「一般的なアクセス」を <strong>「リンクを知っている全員」</strong>に変える</li>
           <li>権限は <strong>「閲覧者」</strong>のままでよい</li>
-          <li><strong>「リンクをコピー」</strong>を押して、URLをどこかに控えておく</li>
+          <li><strong>「リンクをコピー」</strong>を押して、URLを控えておく</li>
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">
-          共有していないと、提出しても中身が見られず、未提出あつかいになります。必ず設定してください。</p>
+          共有URLは、図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。</p>
       </div>
       <div class="setup-step">
-        <p class="step-title">Step 3: 毎回の出し方を覚える</p>
+        <p class="step-title">Step 3: 提出する</p>
         <ol>
-          <li>その回の1枚をスライドに足す</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出し、<strong>コメント欄に共有URLを貼る</strong></li>
         </ol>
       </div>
       <div class="note-warn">
-        <strong>スライドは15回ぶんずっと同じ1本を使います。</strong>毎回新しく作らないでください。
-        回ごとに「第○回: テーマ名」の見出しスライドを入れておくと、あとで見返しやすくなります。
+        <strong>毎回、新しいファイルを作ります。</strong>前の回のファイルに足さないでください。
+        発展課題をやった回は、その回の同じファイルに発展課題のスライドも入れます。
       </div>
     </div>
 
