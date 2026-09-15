@@ -3,6 +3,7 @@
 import heapq
 from collections import deque
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -374,7 +375,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '地形を変えると経路はどう変わるか', ex4_body)}"""
 
-ans = answers([blank_answers("07"),
+ans = answers([slide_example("07"), blank_answers("07"),
     ("確かめ用の数値", """        <p><strong>問い1（いちばん下の行を9にしたとき）</strong></p>
         <table>
           <tr><th>方法</th><th>書き換える前</th><th>書き換えたあと</th></tr>

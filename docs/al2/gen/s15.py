@@ -2,6 +2,7 @@
 """第15回: まとめ の本文を組み立てる。"""
 import math
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -298,7 +299,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '5つの方法をまとめて比べる', ex4_body)}"""
 
-ans = answers([blank_answers("15"),
+ans = answers([slide_example("15"), blank_answers("15"),
     ("確かめ用の数値", """        <p><strong>例題4（20都市）の結果</strong></p>
         <table>
           <tr><th>方法</th><th>答え</th><th>最適との差</th><th>時間</th></tr>

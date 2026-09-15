@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """第5回: ダイクストラ法（1）考え方 の本文を組み立てる。"""
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -353,7 +354,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '出発点を変える／全探索と答え合わせ', ex4_body)}"""
 
-ans = answers([blank_answers("05"),
+ans = answers([slide_example("05"), blank_answers("05"),
     ("確かめ用の数値", """        <p><strong>問い1（渋谷を出発点にしたとき）</strong></p>
         <table>
           <tr><th>駅</th><th>渋谷</th><th>新宿</th><th>品川</th><th>池袋</th><th>東京</th><th>上野</th></tr>

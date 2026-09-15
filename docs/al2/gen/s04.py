@@ -2,6 +2,7 @@
 """第4回: 重み付きグラフとは の本文を組み立てる。"""
 import math
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -310,7 +311,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '全探索が使えなくなる大きさ', ex4_body)}"""
 
-ans = answers([blank_answers("04"),
+ans = answers([slide_example("04"), blank_answers("04"),
     ("確かめ用の数値", """        <p><strong>問い2（新宿—品川を12分にしたとき）</strong></p>
         <table>
           <tr><th>行き方</th><th>30分のとき</th><th>12分のとき</th></tr>

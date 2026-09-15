@@ -2,6 +2,7 @@
 """第2回: 幅優先探索・深さ優先探索の発展 の本文を組み立てる。"""
 from collections import deque
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -329,7 +330,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '壁のない広場で比べる', ex4_body)}"""
 
-ans = answers([blank_answers("02"),
+ans = answers([slide_example("02"), blank_answers("02"),
     ("確かめ用の数値", """        <table>
           <tr><th>項目</th><th>書き換える前</th><th>書き換えたあと</th></tr>
           <tr><td>幅優先探索の歩数</td><td>12歩</td><td><strong style="color:#76B900">12歩（変わらない）</strong></td></tr>

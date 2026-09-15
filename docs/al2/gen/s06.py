@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """第6回: ダイクストラ法（2）実装入門 の本文を組み立てる。"""
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -340,7 +341,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '大きめの迷路を解く', ex4_body)}"""
 
-ans = answers([blank_answers("06"),
+ans = answers([slide_example("06"), blank_answers("06"),
     ("確かめ用の数値", """        <p><strong>問い2（池袋—品川 5分 を足したとき）</strong></p>
         <table>
           <tr><th>駅</th><th>足す前</th><th>足したあと</th></tr>

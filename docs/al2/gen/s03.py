@@ -2,6 +2,7 @@
 """第3回: グラフとデータ構造の再確認 の本文を組み立てる。"""
 from collections import deque
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, answers, code, example, fig, keywords,
                     notion, reveal, run, section, setup_guide, standard,
@@ -360,7 +361,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '迷路をグラフに書き直して解く', ex4_body)}"""
 
-ans = answers([blank_answers("03"),
+ans = answers([slide_example("03"), blank_answers("03"),
     ("確かめ用の数値", """        <table>
           <tr><th>駅の数</th><th>隣接行列</th><th>隣接リスト</th></tr>
           <tr><td>6</td><td>36マス</td><td>36マス</td></tr>

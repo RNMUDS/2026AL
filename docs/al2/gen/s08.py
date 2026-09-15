@@ -3,6 +3,7 @@
 import math
 from itertools import permutations
 from slides_data import SLIDES
+from slide_examples import slide_example
 from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
@@ -364,7 +365,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '最短ルートの中身を区間ごとに見る', ex4_body)}"""
 
-ans = answers([blank_answers("08"),
+ans = answers([slide_example("08"), blank_answers("08"),
     ("確かめ用の数値", """        <p><strong>問い1（長方形の4すみ・手計算）</strong></p>
         <table>
           <tr><th>ルート</th><th>計算</th><th>合計</th></tr>
