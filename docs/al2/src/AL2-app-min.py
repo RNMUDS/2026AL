@@ -1,5 +1,5 @@
 # いちばん小さい Gradio アプリ
-# VS Code の ▷ で実行すると、ブラウザに画面が開く
+# VS Code の右上の実行ボタン（三角）で実行すると、ブラウザに画面が開く
 import gradio as gr
 
 

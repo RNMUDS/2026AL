@@ -313,32 +313,59 @@
 <span class="cmt"># 数当てゲーム: コンピュータが「秘密の数」を当てる</span>
 <span class="cmt"># 1 から 100 までの中に秘密の数が1つある。</span>
 <span class="cmt"># コンピュータは「まん中を聞く」作戦で当てにいく。</span>
+<span class="cmt"># 「まん中を聞いて、答えによって範囲を半分に減らす」をくり返す方法を</span>
+<span class="cmt"># 二分探索（にぶんたんさく）という。前期に習った探索の復習。</span>
 
+<span class="cmt"># --- 準備: 変数を用意する ---</span>
+<span class="cmt"># 変数 = 値に名前を付けて覚えておく箱。「名前 = 値」の形で作る</span>
 secret = <span class="num">73</span>      <span class="cmt"># 秘密の数（あとで自由に変えてよい）</span>
-low = <span class="num">1</span>          <span class="cmt"># 探す範囲の下限</span>
-high = <span class="num">100</span>       <span class="cmt"># 探す範囲の上限</span>
-count = <span class="num">0</span>        <span class="cmt"># 何回目の質問かを数える</span>
+low = <span class="num">1</span>          <span class="cmt"># 探す範囲の下限（いま「この数以上」と分かっている値）</span>
+high = <span class="num">100</span>       <span class="cmt"># 探す範囲の上限（いま「この数以下」と分かっている値）</span>
+count = <span class="num">0</span>        <span class="cmt"># 何回目の質問かを数える。最初は 0 回</span>
 
+<span class="cmt"># print() は () の中身を画面に表示する命令</span>
 <span class="fn">print</span>(<span class="str">&quot;秘密の数を 1〜100 の中から当てます&quot;</span>)
+<span class="cmt"># 文字列 * 数 は、その文字列を数の回数だけくり返してつなげる</span>
+<span class="cmt"># 例 &quot;-&quot; * 3 は &quot;---&quot; になる。ここでは区切り線を 44 個の - で引いている</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
 
+<span class="cmt"># --- 二分探索のくり返し ---</span>
+<span class="cmt"># while は「条件が正しいあいだ、中の処理をくり返す」文</span>
+<span class="cmt"># low &lt;= high は「探す範囲がまだ残っている」という意味。</span>
+<span class="cmt"># 範囲がなくなる（low が high を追いこす）と、くり返しが終わる</span>
 <span class="kw">while</span> low &lt;= high:
-    count = count + <span class="num">1</span>
-    middle = (low + high) // <span class="num">2</span>      <span class="cmt"># 範囲のまん中（// は小数を切り捨てる割り算）</span>
+    count = count + <span class="num">1</span>               <span class="cmt"># 質問の回数を 1 増やす</span>
+    <span class="cmt"># // は「小数を切り捨てる割り算」。例 7 // 2 は 3（3.5 の小数を捨てる）</span>
+    <span class="cmt"># (low + high) // 2 で、範囲のまん中の整数が求まる</span>
+    middle = (low + high) // <span class="num">2</span>      <span class="cmt"># 範囲のまん中の整数</span>
 
+    <span class="cmt"># print では , で区切ると、値のあいだに空白を入れて並べて表示できる</span>
+    <span class="cmt"># end=&quot;  &quot; は「最後に改行せず、空白 2 つを付ける」という指定。</span>
+    <span class="cmt"># こうすると、次の print の内容が同じ行の続きに表示される</span>
     <span class="fn">print</span>(<span class="str">&quot;質問&quot;</span>, count, <span class="str">&quot;回目: 範囲&quot;</span>, low, <span class="str">&quot;〜&quot;</span>, high, <span class="str">&quot;／まん中は&quot;</span>, middle, end=<span class="str">&quot;  &quot;</span>)
 
+    <span class="cmt"># if / elif / else は「条件によって処理を分ける」文</span>
+    <span class="cmt"># == は「等しいか」を調べる。= （代入）とは別物なので注意</span>
     <span class="kw">if</span> middle == secret:
         <span class="fn">print</span>(<span class="str">&quot;→ 正解！&quot;</span>)
+        <span class="cmt"># break は「くり返しをその場でやめて、while の外に出る」命令</span>
         <span class="kw">break</span>
+    <span class="cmt"># elif は「上の条件が違ったとき、次にこの条件を調べる」</span>
     <span class="kw">elif</span> middle &lt; secret:
         <span class="fn">print</span>(<span class="str">&quot;→ もっと大きい&quot;</span>)
+        <span class="cmt"># 答えはまん中より大きいので、まん中より左（小さい側）はもう不要。</span>
+        <span class="cmt"># 例 範囲 1〜100 でまん中 50 が「もっと大きい」なら、次は 51〜100</span>
         low = middle + <span class="num">1</span>            <span class="cmt"># 下限を上げて、右半分だけを残す</span>
+    <span class="cmt"># else は「どの条件にも当てはまらなかったとき」</span>
     <span class="kw">else</span>:
         <span class="fn">print</span>(<span class="str">&quot;→ もっと小さい&quot;</span>)
+        <span class="cmt"># 答えはまん中より小さいので、まん中より右（大きい側）はもう不要。</span>
+        <span class="cmt"># 例 範囲 51〜100 でまん中 75 が「もっと小さい」なら、次は 51〜74</span>
         high = middle - <span class="num">1</span>           <span class="cmt"># 上限を下げて、左半分だけを残す</span>
 
+<span class="cmt"># --- 結果の表示 ---</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="cmt"># 100 個の数でも、範囲が半分ずつ減るので 7 回以内に必ず当たる</span>
 <span class="fn">print</span>(<span class="str">&quot;秘密の数&quot;</span>, secret, <span class="str">&quot;を&quot;</span>, count, <span class="str">&quot;回の質問で当てました&quot;</span>)</pre>
 
       <div class="diagram-container">
@@ -406,7 +433,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex1_result.png" alt="AL2-01-ex1.py の実行結果。秘密の数を 1〜100 の中から当てます / -------------------------------------------- / 質問 1 回目: 範囲 1 〜 100 ／まん中は 50  → もっと大きい / 質問 2 回目: 範囲 51 〜 100 ／まん中は 75  → もっと小さい / 質問 3 回目: 範囲 51 〜 74 ／まん中は 62  → もっと大きい / 質問 4 回目: 範囲 63 〜 74 ／まん中は 68  → もっと大きい / 質問 5 回目: 範囲 69 〜 74 ／まん中は 71  → もっと大きい / 質問 6 回目: 範囲 72 〜 74 ／まん中は 73  → 正解！ / -------------------------------------------- / 秘密の数 73 を 6 回の質問で当てました" width="415" height="248" loading="lazy">
+        <img src="images/a01_ex1_result.png">
       </div>
       <p class="run-note">質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。1から100までの100個の中から、たった<strong>6回</strong>の質問で73を当てられました。「まん中を聞いて、外れた半分を捨てる」という作戦が二分探索です。</p>
     </div>
@@ -421,46 +448,83 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
 <pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex2.py</span>
 <span class="cmt"># 同じ「探す」でも、やり方によって手数がどれだけ違うかを数える</span>
+<span class="cmt"># 前期に習った2つの探索（逐次探索・二分探索）を関数にして、</span>
+<span class="cmt"># データの個数を増やしながら「何回調べたか」を比べる。</span>
 
 
+<span class="cmt"># --- 逐次探索（線形探索） ---</span>
+<span class="cmt"># def は「関数を作る」文。関数 = 処理に名前を付けて、何度でも呼び出せるもの</span>
+<span class="cmt"># 関数名の後ろの () の中が引数（ひきすう）= 関数に渡す値の受け取り口</span>
 <span class="kw">def</span> <span class="fn">linear_search_count</span>(data, target):
-    <span class="str">&quot;&quot;&quot;先頭から1つずつ調べる（逐次探索）。調べた回数を返す&quot;&quot;&quot;</span>
-    count = <span class="num">0</span>
+    <span class="str">&quot;&quot;&quot;先頭から1つずつ調べる（逐次探索）。調べた回数を返す
+
+    data   = 探す対象のリスト（小さい順に並んでいなくてもよい）
+    target = 探したい値
+    &quot;&quot;&quot;</span>
+    count = <span class="num">0</span>                       <span class="cmt"># 調べた回数。最初は 0 回</span>
+    <span class="cmt"># for 変数 in リスト: は「リストの要素を先頭から1つずつ取り出して</span>
+    <span class="cmt"># 変数に入れ、中の処理をくり返す」文。value に 1, 2, 3, ... が順に入る</span>
     <span class="kw">for</span> value <span class="kw">in</span> data:
-        count = count + <span class="num">1</span>
-        <span class="kw">if</span> value == target:
-            <span class="kw">return</span> count
-    <span class="kw">return</span> count
+        count = count + <span class="num">1</span>           <span class="cmt"># 1 つ見るたびに回数を 1 増やす</span>
+        <span class="kw">if</span> value == target:         <span class="cmt"># 探している値と同じなら</span>
+            <span class="cmt"># return は「関数の答えを返して、関数を終える」命令</span>
+            <span class="kw">return</span> count            <span class="cmt"># ここまでに調べた回数を答えとして返す</span>
+    <span class="kw">return</span> count                    <span class="cmt"># 最後まで見つからなければ全部の回数を返す</span>
 
 
+<span class="cmt"># --- 二分探索 ---</span>
 <span class="kw">def</span> <span class="fn">binary_search_count</span>(data, target):
-    <span class="str">&quot;&quot;&quot;まん中と比べて半分ずつ捨てる（二分探索）。調べた回数を返す&quot;&quot;&quot;</span>
-    low = <span class="num">0</span>
-    high = <span class="fn">len</span>(data) - <span class="num">1</span>
-    count = <span class="num">0</span>
+    <span class="str">&quot;&quot;&quot;まん中と比べて半分ずつ捨てる（二分探索）。調べた回数を返す
+
+    data   = 小さい順に並んだリスト（並んでいないと正しく動かない）
+    target = 探したい値
+    &quot;&quot;&quot;</span>
+    <span class="cmt"># リストの位置（添字）は 0 から始まる。data[0] が先頭の要素</span>
+    low = <span class="num">0</span>                         <span class="cmt"># 探す範囲の先頭の位置</span>
+    <span class="cmt"># len(data) はリストの要素数。最後の要素の位置は「要素数 - 1」になる</span>
+    <span class="cmt"># 例 要素が 10 個なら、位置は 0〜9 なので最後は 9</span>
+    high = <span class="fn">len</span>(data) - <span class="num">1</span>            <span class="cmt"># 探す範囲の最後の位置</span>
+    count = <span class="num">0</span>                       <span class="cmt"># 調べた回数</span>
+    <span class="cmt"># while は「条件が正しいあいだ、中の処理をくり返す」文</span>
+    <span class="cmt"># 探す範囲が残っている（low が high を追いこしていない）あいだ続ける</span>
     <span class="kw">while</span> low &lt;= high:
-        count = count + <span class="num">1</span>
+        count = count + <span class="num">1</span>           <span class="cmt"># まん中を 1 回見るたびに回数を 1 増やす</span>
+        <span class="cmt"># // は小数を切り捨てる割り算。例 9 // 2 は 4</span>
         middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+        <span class="cmt"># data[middle] は「リストの middle 番目の要素」を取り出す書き方</span>
         <span class="kw">if</span> data[middle] == target:
-            <span class="kw">return</span> count
+            <span class="kw">return</span> count            <span class="cmt"># 見つかったので、調べた回数を返す</span>
         <span class="kw">elif</span> data[middle] &lt; target:
+            <span class="cmt"># まん中の値が小さすぎる → 答えは右側にある。左半分を捨てる</span>
             <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">else</span>:
+            <span class="cmt"># まん中の値が大きすぎる → 答えは左側にある。右半分を捨てる</span>
             high = middle - <span class="num">1</span>
-    <span class="kw">return</span> count
+    <span class="kw">return</span> count                    <span class="cmt"># 見つからなかったときも回数を返す</span>
 
 
+<span class="cmt"># --- データの個数を変えて、2つの探索の回数を比べる ---</span>
+<span class="cmt"># 表の見出し行。文字列の中の空白で、列の位置をそろえている</span>
 <span class="fn">print</span>(<span class="str">&quot;データの個数     逐次探索の回数     二分探索の回数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)                     <span class="cmt"># &quot;-&quot; を 50 個つなげた区切り線</span>
 
+<span class="cmt"># [10, 100, ...] はリスト。size に 10, 100, 1000, ... が順に入る</span>
 <span class="kw">for</span> size <span class="kw">in</span> [<span class="num">10</span>, <span class="num">100</span>, <span class="num">1000</span>, <span class="num">10000</span>, <span class="num">100000</span>]:
+    <span class="cmt"># range(a, b) は a から b - 1 までの整数を順に作る（b は含まない）</span>
+    <span class="cmt"># 例 range(1, 4) は 1, 2, 3。list() でそれをリストに変換する</span>
     data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, size + <span class="num">1</span>))   <span class="cmt"># 1, 2, 3, ... という並んだデータを作る</span>
     target = size                     <span class="cmt"># いちばん最後の数をさがす</span>
+    <span class="cmt"># 関数名(値, 値) と書くと関数が呼び出され、return した答えが返ってくる</span>
     times_linear = <span class="fn">linear_search_count</span>(data, target)
     times_binary = <span class="fn">binary_search_count</span>(data, target)
+    <span class="cmt"># f&quot;...&quot; は f文字列。{} の中に変数を書くと、その値が文字列に埋めこまれる</span>
+    <span class="cmt"># {size:&gt;10} は「10 文字分の幅で右そろえ」という表示の指定</span>
+    <span class="cmt"># 例 f&quot;{7:&gt;4}&quot; は &quot;   7&quot;（空白 3 つと 7）になる</span>
     <span class="fn">print</span>(<span class="str">f&quot;{size:&gt;10}   {times_linear:&gt;14}   {times_binary:&gt;14}&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)
+<span class="cmt"># 逐次探索の回数は個数と同じだけ増えるが、</span>
+<span class="cmt"># 二分探索の回数は個数が 10 倍になっても 3〜4 回しか増えない</span>
 <span class="fn">print</span>(<span class="str">&quot;データが10倍になっても、二分探索の回数はほとんど増えない&quot;</span>)</pre>
       <div class="concept-box" style="margin-top:0.8rem">
       <h4>穴埋め（____ を埋めてから実行する）</h4>
@@ -528,7 +592,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex2_result.png" alt="AL2-01-ex2.py の実行結果。データの個数     逐次探索の回数     二分探索の回数 / -------------------------------------------------- / 10               10                4 / 100              100                7 / 1000             1000               10 / 10000            10000               14 / 100000           100000               17 / -------------------------------------------------- / データが10倍になっても、二分探索の回数はほとんど増えない" width="404" height="228" loading="lazy">
+        <img src="images/a01_ex2_result.png">
       </div>
       <p class="run-note">データの個数が10倍になるたびに、逐次探索の回数も<strong>10倍</strong>に増えています（10 → 100 → 1000 → 10000 → 100000）。一方の二分探索は 4 → 7 → 10 → 14 → 17 と、<strong>3〜4回ずつしか増えません</strong>。データが10万個あっても17回で見つかります。同じ答えにたどり着くのに、手数がまったく違うという点が重要です。</p>
 
@@ -546,9 +610,18 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
 <pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex3.py</span>
 <span class="cmt"># 前期の復習: 幅優先探索（はばゆうせんたんさく）で迷路の最短経路を求める</span>
+<span class="cmt"># 幅優先探索 = スタートに近いマスから順に、しらみつぶしに調べていく探索。</span>
+<span class="cmt"># 近い順に調べるので、最初にゴールに着いたときの道が最短経路になる。</span>
+
+<span class="cmt"># import は「他のファイル（ライブラリ）にある道具を使えるようにする」文。</span>
+<span class="cmt"># from collections import deque で、collections という道具箱の中の</span>
+<span class="cmt"># deque（デック）だけを取り出して使えるようにしている</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
+<span class="cmt"># --- 迷路のデータ ---</span>
 <span class="cmt"># S = スタート、G = ゴール、# = 壁、. = 通路</span>
+<span class="cmt"># [ ... ] はリスト。ここでは「文字列を 7 個ならべたリスト」で迷路を表す。</span>
+<span class="cmt"># maze[0] が 1 行目の文字列 &quot;S.....#&quot;、maze[0][0] がその 1 文字目 &quot;S&quot;</span>
 maze = [
     <span class="str">&quot;S.....#&quot;</span>,
     <span class="str">&quot;.####.#&quot;</span>,
@@ -559,69 +632,109 @@ maze = [
     <span class="str">&quot;......G&quot;</span>,
 ]
 
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+<span class="cmt"># len() はリストなら要素数、文字列なら文字数を返す</span>
+rows = <span class="fn">len</span>(maze)                    <span class="cmt"># 行の数（縦のマス数）= 7</span>
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])                 <span class="cmt"># 列の数（横のマス数）= 1 行目の文字数 = 7</span>
 
-<span class="cmt"># スタートとゴールの位置（行, 列）を探す</span>
+<span class="cmt"># --- スタートとゴールの位置（行, 列）を探す ---</span>
+<span class="cmt"># range(rows) は 0 から rows - 1 までの整数を順に作る。例 range(3) は 0, 1, 2</span>
+<span class="cmt"># for を 2 つ重ねて、すべての行 r とすべての列 c の組み合わせを調べる</span>
 <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
     <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="cmt"># maze[r][c] は「r 行目の文字列の c 文字目」= マス (r, c) の文字</span>
         <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            <span class="cmt"># (r, c) はタプル。2 つの値をひとまとめにしたもので、</span>
+            <span class="cmt"># 「行 r・列 c の位置」を 1 つの値として扱える。例 (0, 0)</span>
             start = (r, c)
         <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
             goal = (r, c)
 
 <span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> maze:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
-<span class="fn">print</span>()
+<span class="kw">for</span> line <span class="kw">in</span> maze:                   <span class="cmt"># 迷路を 1 行ずつ取り出して表示する</span>
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)              <span class="cmt"># 文字列 + 文字列 は 2 つをつなげる</span>
+<span class="fn">print</span>()                             <span class="cmt"># print() だけだと空の行を表示する</span>
 
 <span class="cmt"># --- 幅優先探索 ---</span>
 <span class="cmt"># queue = これから調べる場所を書いたメモ。先に書いたものから先に読む。</span>
-queue = <span class="fn">deque</span>()
-queue.append(start)
+queue = <span class="fn">deque</span>()                 <span class="cmt"># 簡単に言うと「先入れ先出し」のリスト</span>
+<span class="cmt"># deque は「double-ended queue」の略で、</span>
+<span class="cmt"># 両端から要素を追加・削除できるリストのこと</span>
+<span class="cmt"># つまり、queue.append() で末尾に追加、</span>
+<span class="cmt"># queue.popleft() で先頭から取り出すことができる</span>
+<span class="cmt"># 例 [1, 2, 3] という deque があったとき、</span>
+<span class="cmt"># queue.append(4) をすると [1, 2, 3, 4] になり、</span>
+<span class="cmt"># queue.popleft() をすると先頭の 1 が取り出されて [2, 3, 4] になる</span>
+queue.append(start)             <span class="cmt"># スタート地点を最初に調べる場所として追加する</span>
 
 <span class="cmt"># came_from = 「その場所へ、どこから来たか」を記録する辞書</span>
+<span class="cmt"># 辞書（dict）は {キー: 値} の形で「キーから値を引ける」データ。</span>
+<span class="cmt"># 例 {&quot;りんご&quot;: 100} なら、辞書[&quot;りんご&quot;] で 100 が取り出せる</span>
+<span class="cmt"># ここではキーがマスの位置（タプル）、値が「1 つ前のマスの位置」。</span>
+<span class="cmt"># スタートには前のマスがないので None（何もない、という特別な値）を入れる。</span>
+<span class="cmt"># この辞書は「もう来たことがある場所の一覧」としても使う</span>
 came_from = {start: <span class="kw">None</span>}
 
+<span class="cmt"># メモ（queue）に調べる場所が残っているあいだ、くり返す</span>
 <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
     current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-    <span class="kw">if</span> current == goal:
-        <span class="kw">break</span>
+    <span class="kw">if</span> current == goal:                <span class="cmt"># ゴールに着いたら</span>
+        <span class="kw">break</span>                          <span class="cmt"># break でくり返しを終える</span>
 
+    <span class="cmt"># r, c = current で、タプル (行, 列) の中身を 2 つの変数に分けて取り出す</span>
+    <span class="cmt"># 例 current が (2, 5) なら r = 2, c = 5 になる</span>
     r, c = current
     <span class="cmt"># 上・下・左・右の4方向を順に調べる</span>
+    <span class="cmt"># (dr, dc) は「行と列をどれだけ動かすか」。(-1, 0) は上へ 1、(0, 1) は右へ 1</span>
     <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-        nr = r + dr
-        nc = c + dc
+        nr = r + dr                    <span class="cmt"># となりのマスの行（n は next の n）</span>
+        nc = c + dc                    <span class="cmt"># となりのマスの列</span>
+        <span class="cmt"># or は「どれか 1 つでも正しければ正しい」。行か列が範囲の外なら…</span>
         <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="cmt"># continue は「この回の残りを飛ばして、for の次の回へ進む」命令</span>
             <span class="kw">continue</span>                   <span class="cmt"># 迷路の外なので調べない</span>
         <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
             <span class="kw">continue</span>                   <span class="cmt"># 壁なので通れない</span>
+        <span class="cmt"># 辞書の in は「そのキーが辞書にあるか」を調べる（あれば True）</span>
         <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
             <span class="kw">continue</span>                   <span class="cmt"># すでに来たことがある場所</span>
+        <span class="cmt"># 辞書[キー] = 値 で、新しい組を辞書に書きこむ</span>
+        <span class="cmt"># 「(nr, nc) へは current から来た」と記録する</span>
         came_from[(nr, nc)] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        queue.append((nr, nc))
+        queue.append((nr, nc))         <span class="cmt"># あとで調べるようにメモの末尾に追加</span>
 
 <span class="cmt"># --- ゴールからスタートへ逆にたどって経路を復元する ---</span>
-path = []
-node = goal
+<span class="cmt"># came_from を使うと、ゴール → その前のマス → さらに前 … とたどれる。</span>
+<span class="cmt"># スタートまでたどると None になるので、そこで止める</span>
+path = []                           <span class="cmt"># 通った場所を入れる空のリスト</span>
+node = goal                         <span class="cmt"># ゴールから始める</span>
+<span class="cmt"># is not None は「None ではない（まだスタートを通り過ぎていない）」という条件</span>
 <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-    path.append(node)
-    node = came_from[node]
+    path.append(node)               <span class="cmt"># リストの末尾に追加する</span>
+    node = came_from[node]          <span class="cmt"># 1 つ前のマスへ戻る</span>
+<span class="cmt"># ゴールから順に入っているので、reverse() でリストの並びを逆にする</span>
+<span class="cmt"># 例 [3, 2, 1] が [1, 2, 3] になる</span>
 path.reverse()
 
+<span class="cmt"># path にはスタートも入っているので、歩数は「マスの数 - 1」</span>
 <span class="fn">print</span>(<span class="str">&quot;最短経路の歩数:&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;通った場所の数:&quot;</span>, <span class="fn">len</span>(path), <span class="str">&quot;マス&quot;</span>)
 <span class="fn">print</span>()
 
-<span class="cmt"># 経路を * で塗って表示する</span>
+<span class="cmt"># --- 経路を * で塗って表示する ---</span>
+<span class="cmt"># 文字列は 1 文字だけ書きかえることができないので、いったんリストに変える。</span>
+<span class="cmt"># list(&quot;S..&quot;) は [&quot;S&quot;, &quot;.&quot;, &quot;.&quot;] のように 1 文字ずつのリストになる。</span>
+<span class="cmt"># [list(line) for line in maze] はリスト内包表記といい、</span>
+<span class="cmt"># 「maze の各行 line について list(line) を作り、それを並べたリスト」を作る。</span>
+<span class="cmt"># 結果は「リストの中にリストが入った」二次元のリストになる</span>
 picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-<span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
+<span class="kw">for</span> (r, c) <span class="kw">in</span> path:                 <span class="cmt"># 経路の各マス (r, c) について</span>
+    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:        <span class="cmt"># 通路なら（S と G はそのまま残す）</span>
+        picture[r][c] = <span class="str">&quot;*&quot;</span>         <span class="cmt"># * に書きかえる</span>
 
 <span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
 <span class="kw">for</span> line <span class="kw">in</span> picture:
+    <span class="cmt"># &quot;&quot;.join(リスト) は、リストの要素をつなげて 1 つの文字列にする</span>
+    <span class="cmt"># 例 &quot;&quot;.join([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]) は &quot;abc&quot;</span>
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
       <div class="concept-box" style="margin-top:0.8rem">
       <h4>穴埋め（____ を埋めてから実行する）</h4>
@@ -868,7 +981,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex3_result.png" alt="AL2-01-ex3.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 最短経路の歩数: 12 歩 / 通った場所の数: 13 マス /  / 最短経路（* が通り道） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G" width="380" height="448" loading="lazy">
+        <img src="images/a01_ex3_result.png">
       </div>
       <p class="run-note">スタートからゴールまで<strong>12歩</strong>で着く道が見つかりました。2つ目の迷路図で <code>*</code> が付いているマスが通り道です。左端の列をまっすぐ下り、いちばん下の行を右へ進む道になっています。幅優先探索は「歩数が少ない順」に調べるので、最初に届いた道がそのまま最短経路になります。</p>
 
@@ -896,8 +1009,16 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 <pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex4.py</span>
 <span class="cmt"># 後期のテーマ「最適化」の入口</span>
 <span class="cmt"># 学校を出発して3か所を回り、学校へ戻る。いちばん短い順番はどれか。</span>
+<span class="cmt"># 「考えられる順番を全部試して、いちばん良いものを選ぶ」やり方を</span>
+<span class="cmt"># 全探索（ぜんたんさく）という。前期に習った探索の復習であり、</span>
+<span class="cmt"># 後期に学ぶ「最適化」のいちばん素朴な方法でもある。</span>
 
+<span class="cmt"># --- 移動時間の表 ---</span>
 <span class="cmt"># 2地点のあいだの移動時間（分）</span>
+<span class="cmt"># { キー: 値, ... } は辞書。キーから値を引ける表のようなデータ。</span>
+<span class="cmt"># ここではキーが (&quot;学校&quot;, &quot;郵便局&quot;) のようなタプル（2 つの値の組）、</span>
+<span class="cmt"># 値がその 2 地点のあいだの移動時間（分）。</span>
+<span class="cmt"># 例 travel_time[(&quot;学校&quot;, &quot;郵便局&quot;)] と書くと 8 が取り出せる</span>
 travel_time = {
     (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;郵便局&quot;</span>): <span class="num">8</span>,
     (<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;図書館&quot;</span>): <span class="num">12</span>,
@@ -908,25 +1029,42 @@ travel_time = {
 }
 
 
+<span class="cmt"># def は「関数を作る」文。() の中の a, b が引数（関数に渡す値の受け取り口）</span>
 <span class="kw">def</span> <span class="fn">minutes_between</span>(a, b):
-    <span class="str">&quot;&quot;&quot;2地点 a と b のあいだの移動時間を返す（表は片方向しか書いていないので両方ためす）&quot;&quot;&quot;</span>
+    <span class="str">&quot;&quot;&quot;2地点 a と b のあいだの移動時間（分）を返す
+
+    表には (&quot;学校&quot;, &quot;郵便局&quot;) のように片方向しか書いていないので、
+    (a, b) と (b, a) の両方をためす。
+    &quot;&quot;&quot;</span>
+    <span class="cmt"># 辞書の in は「そのキーが辞書にあるか」を調べる</span>
     <span class="kw">if</span> (a, b) <span class="kw">in</span> travel_time:
-        <span class="kw">return</span> travel_time[(a, b)]
-    <span class="kw">return</span> travel_time[(b, a)]
+        <span class="cmt"># return は「関数の答えを返して、関数を終える」命令</span>
+        <span class="kw">return</span> travel_time[(a, b)]      <span class="cmt"># 辞書[キー] で値を取り出す</span>
+    <span class="kw">return</span> travel_time[(b, a)]          <span class="cmt"># 逆向きのキーで取り出す</span>
 
 
 <span class="kw">def</span> <span class="fn">total_minutes</span>(route):
-    <span class="str">&quot;&quot;&quot;学校 → route の順に回る → 学校 に戻るまでの合計時間を返す&quot;&quot;&quot;</span>
-    total = <span class="num">0</span>
-    place = <span class="str">&quot;学校&quot;</span>
+    <span class="str">&quot;&quot;&quot;学校 → route の順に回る → 学校 に戻るまでの合計時間（分）を返す
+
+    route = 回る順番を並べたリスト。例 [&quot;郵便局&quot;, &quot;図書館&quot;, &quot;カフェ&quot;]
+    &quot;&quot;&quot;</span>
+    total = <span class="num">0</span>                           <span class="cmt"># 合計時間。最初は 0 分</span>
+    place = <span class="str">&quot;学校&quot;</span>                      <span class="cmt"># いまいる場所。出発は学校</span>
+    <span class="cmt"># for 変数 in リスト: は「リストの要素を先頭から順に取り出してくり返す」文</span>
+    <span class="cmt"># next_place に &quot;郵便局&quot;, &quot;図書館&quot;, ... と、次に行く場所が順に入る</span>
     <span class="kw">for</span> next_place <span class="kw">in</span> route:
+        <span class="cmt"># いまの場所から次の場所までの時間を足す</span>
         total = total + <span class="fn">minutes_between</span>(place, next_place)
-        place = next_place
+        place = next_place              <span class="cmt"># 移動したので、いまの場所を更新する</span>
     total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> total
 
 
+<span class="cmt"># --- 回る順番をすべて書き出す ---</span>
 <span class="cmt"># 3か所を回る順番は、全部で 6 通りある。全部書き出して1つずつ試す。</span>
+<span class="cmt"># （最初に 3 通り、次に残り 2 通り、最後は 1 通りなので 3 × 2 × 1 = 6 通り）</span>
+<span class="cmt"># [ [...], [...], ... ] は「リストの中にリストが入った」形。</span>
+<span class="cmt"># all_routes[0] が最初の順番 [&quot;郵便局&quot;, &quot;図書館&quot;, &quot;カフェ&quot;] になる</span>
 all_routes = [
     [<span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;図書館&quot;</span>, <span class="str">&quot;カフェ&quot;</span>],
     [<span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;カフェ&quot;</span>, <span class="str">&quot;図書館&quot;</span>],
@@ -937,18 +1075,26 @@ all_routes = [
 ]
 
 <span class="fn">print</span>(<span class="str">&quot;学校 → 3か所 → 学校 の合計時間をすべて調べる&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)                     <span class="cmt"># &quot;-&quot; を 52 個つなげた区切り線</span>
 
-best_route = <span class="kw">None</span>
-best_time = <span class="kw">None</span>
+<span class="cmt"># --- 全探索: 1つずつ試して、いちばん短いものを覚えておく ---</span>
+<span class="cmt"># None は「まだ何もない」を表す特別な値。最初は最短の記録がないので None</span>
+best_route = <span class="kw">None</span>                   <span class="cmt"># これまでにいちばん短かった順番</span>
+best_time = <span class="kw">None</span>                    <span class="cmt"># そのときの合計時間</span>
 
-<span class="kw">for</span> route <span class="kw">in</span> all_routes:
-    minutes = <span class="fn">total_minutes</span>(route)
+<span class="kw">for</span> route <span class="kw">in</span> all_routes:            <span class="cmt"># 6 通りの順番を 1 つずつ取り出す</span>
+    minutes = <span class="fn">total_minutes</span>(route)  <span class="cmt"># 関数を呼び出して合計時間を計算する</span>
+    <span class="cmt"># &quot; → &quot;.join(リスト) は、リストの要素を &quot; → &quot; でつないだ文字列を作る</span>
+    <span class="cmt"># 例 &quot; → &quot;.join([&quot;a&quot;, &quot;b&quot;]) は &quot;a → b&quot;</span>
     <span class="fn">print</span>(<span class="str">&quot;学校 →&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route), <span class="str">&quot;→ 学校 :&quot;</span>, minutes, <span class="str">&quot;分&quot;</span>)
+    <span class="cmt"># is None は「まだ記録がない（最初の 1 回目）」という条件。</span>
+    <span class="cmt"># or は「どちらか一方でも正しければ正しい」。</span>
+    <span class="cmt"># 最初の 1 回目、または これまでの記録より短いときに、記録を更新する</span>
     <span class="kw">if</span> best_time <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         best_time = minutes
         best_route = route
 
+<span class="cmt"># --- 結果の表示 ---</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
 <span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_routes), <span class="str">&quot;通り&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;いちばん短い順番: 学校 →&quot;</span>, <span class="str">&quot; → &quot;</span>.join(best_route), <span class="str">&quot;→ 学校&quot;</span>)
@@ -1018,7 +1164,7 @@ best_time = <span class="kw">None</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex4_result.png" alt="AL2-01-ex4.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 26 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 36 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 32 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 36 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 32 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 26 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 郵便局 → 図書館 → カフェ → 学校 / そのときの合計時間: 26 分" width="419" height="288" loading="lazy">
+        <img src="images/a01_ex4_result.png">
       </div>
       <p class="run-note">6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。「学校 → 郵便局 → 図書館 → カフェ → 学校」と「学校 → カフェ → 図書館 → 郵便局 → 学校」の2つが同じ26分になっています。2つは進む向きが逆なだけで、通る道は同じだからです。すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。</p>
 
@@ -1174,7 +1320,7 @@ Mac:      python3 -m pip install gradio</pre>
         <p style="font-size:0.95rem"><code>AL2/work</code> フォルダを作り、<code>app.py</code> という名前で保存する。</p>
 <pre data-blanks="0"><span class="code-label">Python ── app.py（Gradio）</span>
 <span class="cmt"># いちばん小さい Gradio アプリ</span>
-<span class="cmt"># VS Code の ▷ で実行すると、ブラウザに画面が開く</span>
+<span class="cmt"># VS Code の右上の実行ボタン（三角）で実行すると、ブラウザに画面が開く</span>
 <span class="kw">import</span> gradio <span class="kw">as</span> gr
 
 
