@@ -43,5 +43,5 @@ def tree_help(unit="か所", root="出発点", names=("A", "B"), unit_word="分"
     s.append(f'        <text x="350" y="366" text-anchor="middle" fill="#E0E0E0" font-size="12">'
              f'3{unit}を回るときは、1段目が3つ、2段目が2つに分かれて、枝の先は 3×2×1 = 6本になる</text>')
     s.append(f'        <text x="350" y="386" text-anchor="middle" fill="{GRAY}" font-size="11">'
-             '合計は自分の数値で実行した結果から写す。いちばん短い枝に★などの印を付ける</text>')
+             '合計は実行結果から写す。そのあと1本目から順に比べ、「いまのところ最短」がどう変わるかを描く</text>')
     return fig(700, 400, "\n".join(s))

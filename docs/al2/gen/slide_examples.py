@@ -55,27 +55,41 @@ def ex01():
     order = [("郵便局", [("図書館", "カフェ", 26), ("カフェ", "図書館", 36)]),
              ("図書館", [("郵便局", "カフェ", 32), ("カフェ", "郵便局", 36)]),
              ("カフェ", [("郵便局", "図書館", 32), ("図書館", "郵便局", 26)])]
-    s = [_box(290, 62, 60, 24, LIGHT, GREEN, 1.5), _t(320, 79, "学校", 11, INK, "middle", 700)]
+    s = [_t(40, 74, "① 数え上げる（枝分かれ図）", 11, INK, "start", 700),
+         _box(200, 62, 60, 22, LIGHT, GREEN, 1.5), _t(230, 77, "学校", 11, INK, "middle", 700)]
     leaf = 0
     for i, (first, rest) in enumerate(order):
-        x1 = 130 + i * 190
-        s.append(_arrow(320, 86, x1 + 30, 118))
-        s.append(_box(x1, 118, 60, 24)); s.append(_t(x1 + 30, 135, first))
+        x1 = 70 + i * 130
+        s.append(_arrow(230, 84, x1 + 30, 104))
+        s.append(_box(x1, 106, 60, 20)); s.append(_t(x1 + 30, 120, first, 10))
         for j, (second, third, total) in enumerate(rest):
-            x2 = x1 - 45 + j * 90
-            s.append(_arrow(x1 + 30, 142, x2 + 30, 174))
-            s.append(_box(x2, 174, 60, 24)); s.append(_t(x2 + 30, 191, second))
-            s.append(_arrow(x2 + 30, 198, x2 + 30, 226))
-            s.append(_box(x2, 226, 60, 24)); s.append(_t(x2 + 30, 243, third))
+            x2 = x1 - 32 + j * 64
+            s.append(_arrow(x1 + 30, 126, x2 + 30, 146))
+            s.append(_box(x2, 148, 60, 20)); s.append(_t(x2 + 30, 162, second, 10))
+            s.append(_arrow(x2 + 30, 168, x2 + 30, 186))
+            s.append(_box(x2, 188, 60, 20)); s.append(_t(x2 + 30, 202, third, 10))
             best = total == 26
-            s.append(_box(x2 - 4, 262, 68, 26, "#E8F5D8" if best else LIGHT, GREEN if best else "#999", 2 if best else 1))
-            s.append(_t(x2 + 30, 280, f"{total}分", 12, GREEN if best else INK, "middle", 700 if best else None))
-            if best:
-                s.append(_t(x2 + 30, 304, "★最短", 10, GREEN))
+            s.append(_box(x2, 216, 60, 22, "#E8F5D8" if best else LIGHT, GREEN if best else "#999", 2 if best else 1))
+            s.append(_t(x2 + 30, 231, f"{total}分", 11, GREEN if best else INK, "middle", 700 if best else None))
             leaf += 1
-    s.append(_t(610, 79, "最後は学校へ戻る", 9.5, GRAY, "end"))
-    return _slide("01", "6通りの順番と合計時間", "\n".join(s),
-                  ["学校→郵便局→図書館→カフェ と 学校→カフェ→図書館→郵便局 が 26分でいちばん短い（逆回りは同じ時間になる）。"])
+            s.append(_t(x2 + 30, 252, f"{leaf}本目", 8.5, GRAY))
+    s.append(_t(40, 252, "② 計算する →", 10, INK, "start", 700))
+    # ③ 比べて残す
+    s.append(_t(450, 74, "③ 比べて残す（best_time の変化）", 11, INK, "start", 700))
+    trace = [("1本目 26", "記録なし → 26 に", True), ("2本目 36", "26 より長い → 捨てる", False), ("3本目 32", "26 より長い → 捨てる", False),
+             ("4本目 36", "捨てる", False), ("5本目 32", "捨てる", False), ("6本目 26", "26 より短くない → 捨てる", False)]
+    for k, (a, b, upd) in enumerate(trace):
+        y = 92 + k * 26
+        s.append(_box(450, y, 62, 20, "#E8F5D8" if upd else "#FFFFFF", GREEN if upd else "#BBB"))
+        s.append(_t(481, y + 14, a, 9.5, INK, "middle", 700 if upd else None))
+        s.append(_t(518, y + 14, b, 9, GREEN if upd else GRAY, "start"))
+        if k < 5:
+            s.append(_arrow(481, y + 20, 481, y + 26, GRAY, 1.2))
+    s.append(_t(450, 262, "残った答え: 学校→郵便局→図書館→カフェ→学校", 10, GREEN, "start", 700))
+    s.append(_t(450, 276, "26分（6本目も26分だが「より短い」ときだけ", 8.5, GRAY, "start"))
+    s.append(_t(450, 288, "書き換えるので、1本目が残る）", 8.5, GRAY, "start"))
+    return _slide("01", "全探索 ── 全部試して、いちばん短いものを選ぶ方法", "\n".join(s),
+                  ["自分の数値では6本の合計が 26・36・32・36・32・26 で、記録は1本目の 26 のまま最後まで書き換わらなかった。"])
 
 
 def ex02():
