@@ -68,11 +68,13 @@ def code_pair(filename):
     n = re.search(r"ex(\d)", filename).group(1)
     src = (HERE / "src" / filename).read_text(encoding="utf-8").rstrip("\n")
     ref = highlight(strip_comments(src))
-    ref_pre = (f'<p class="run-label">例題{n}（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>\n'
-               f'<pre data-blanks="0"><span class="code-label">Python ── {filename}（参考）</span>\n{ref}</pre>')
+    ref_name = filename.replace(".py", "-ref.py")
+    ref_pre = (f'<p class="run-label">例題{n}（参考）── 完成したコード。コメントなしで全体の流れをつかむ。'
+               f'保存するなら <code>{ref_name}</code> の名前で</p>\n'
+               f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{ref}</pre>')
     prac = code(filename)
     return (ref_pre + f'\n<p class="run-label" style="margin-top:1.4rem">例題{n}（実践）── 要の行が ____ になっている。'
-            f'コメントを読みながら埋めて、保存して実行する</p>\n' + prac)
+            f'コメントを読みながら埋めて、<code>{filename}</code> の名前で保存して実行する</p>\n' + prac)
 
 
 def _choices(filename, i, b):
@@ -239,7 +241,7 @@ def setup_guide(no, files):
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: {filelist}</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル（実践）: {filelist}。参考のコードを保存するときは、名前の最後に <code>-ref</code> を付ける</p>
       </div>
 
       <div class="note-warn">
@@ -249,7 +251,9 @@ def setup_guide(no, files):
           <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
               丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
         </ol>
-        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
+        <p style="margin-top:0.5rem">ファイル名は、参考が <code>AL2-{no}-ex1-ref.py</code>（ref = reference、参考）、
+        実践が <code>AL2-{no}-ex1.py</code> のように分けます（同じ名前にすると上書きされてしまうため）。
+        課題で使うのは<strong>実践</strong>のファイルです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
         どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
