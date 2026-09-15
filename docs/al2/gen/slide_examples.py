@@ -205,30 +205,38 @@ def ex06():
 
 def ex07():
     cost = [[1, 1, 1, 9, 1], [9, 9, 1, 9, 1], [1, 1, 1, 9, 1], [1, 9, 9, 9, 1], [1, 1, 1, 1, 1]]
-    bfs = [(r, 0) for r in range(5)] + [(4, c) for c in range(1, 5)]
-    dij = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4)]
-    cell = 44; ox, oy = 70, 72
+    best = [[0, 1, 2, 11, 12], [9, 10, 3, 12, 13], [6, 5, 4, 13, 14], [7, 14, 13, 20, 13], [8, 9, 10, 11, 12]]
+    order = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0)]
+    path = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4)]
+    cell = 44; ox, oy = 60, 70
     s = []
     for r in range(5):
         for c in range(5):
             x, y = ox + c * cell, oy + r * cell
-            s.append(_box(x, y, cell, cell, "#FFE0B2" if cost[r][c] == 9 else "#FFFFFF", "#AAA", 1, 0))
-            s.append(_t(x + cell / 2, y + cell / 2 + 4, str(cost[r][c]), 12, INK))
-    for path, color, dx in [(bfs, BLUE, -7), (dij, GREEN, 7)]:
-        pts = " ".join(f"{ox + c * cell + cell / 2 + dx},{oy + r * cell + cell / 2 + dx}" for r, c in path)
-        s.append(f'<polyline points="{pts}" fill="none" stroke="{color}" stroke-width="4" opacity="0.7"/>')
-    s.append(_t(ox, oy - 8, "S", 11, GREEN, "start", 700)); s.append(_t(ox + 5 * cell, oy + 5 * cell + 12, "G", 11, GREEN, "end", 700))
-    s.append(f'<line x1="330" y1="100" x2="370" y2="100" stroke="{BLUE}" stroke-width="4"/>')
-    s.append(_t(378, 104, "幅優先探索: 8歩 ／ 16秒", 11.5, INK, "start", 700))
-    s.append(_t(378, 120, "歩数は最少だが 9 のマスを1つ通る", 10.5, "#444", "start"))
-    s.append(f'<line x1="330" y1="160" x2="370" y2="160" stroke="{GREEN}" stroke-width="4"/>')
-    s.append(_t(378, 164, "ダイクストラ法: 12歩 ／ 12秒", 11.5, INK, "start", 700))
-    s.append(_t(378, 180, "4歩よけいに歩くが 9 のマスを通らない", 10.5, "#444", "start"))
-    s.append(_box(330, 205, 14, 14, "#FFE0B2", "#AAA")); s.append(_t(350, 216, "コスト 9 のマス（ぬかるみ）", 10.5, INK, "start"))
-    s.append(_t(330, 250, "分かれ目: 幅優先探索は S からすぐ下（9）へ、", 10.5, RED, "start"))
-    s.append(_t(330, 266, "ダイクストラ法は右へ回りこんで 9 を避ける", 10.5, RED, "start"))
-    return _slide("07", "床コスト迷路の2つの経路", "\n".join(s),
-                  ["自分のコストでは、幅優先探索 8歩16秒・ダイクストラ法 12歩12秒で、2つの経路は S の直後で分かれた（実行結果と一致）。"])
+            steps = r + c
+            far = best[r][c] > steps
+            s.append(_box(x, y, cell, cell, "#FFE0B2" if cost[r][c] == 9 else ("#E8F5D8" if far else "#FFFFFF"), "#AAA", 1, 0))
+            s.append(_t(x + cell / 2, y + cell / 2 + 6, str(best[r][c]), 14, RED if far else INK, "middle", 700))
+            s.append(_t(x + cell - 3, y + 11, str(cost[r][c]), 8, GRAY, "end"))
+    pts = " ".join(f"{ox + c * cell + cell / 2},{oy + r * cell + cell / 2}" for r, c in path)
+    s.append(f'<polyline points="{pts}" fill="none" stroke="{GREEN}" stroke-width="3" opacity="0.5"/>')
+    for k, (r, c) in enumerate(order, 1):
+        x, y = ox + c * cell, oy + r * cell
+        s.append(f'<circle cx="{x + 9}" cy="{y + 9}" r="7" fill="{BLUE}"/>')
+        s.append(_t(x + 9, y + 12, str(k), 8, "#FFFFFF", "middle", 700))
+    s.append(_t(300, 90, "大きい数字 = スタートからの最小コスト", 11, INK, "start", 700))
+    s.append(_t(300, 106, "右上の小さい数字 = そのマスのコスト", 10, GRAY, "start"))
+    s.append(f'<circle cx="307" cy="128" r="7" fill="{BLUE}"/>'); s.append(_t(307, 131, "1", 8, "#FFFFFF", "middle", 700))
+    s.append(_t(320, 132, "確定した順番 ①〜⑧（コストの小さい順）", 10.5, INK, "start"))
+    s.append(_t(320, 148, "(0,0)=0 → (0,1)=1 → (0,2)=2 → (1,2)=3 → (2,2)=4 …", 9.5, BLUE, "start"))
+    s.append(_box(300, 164, 14, 14, "#FFE0B2", "#AAA")); s.append(_t(320, 175, "コスト 9 のマス", 10.5, INK, "start"))
+    s.append(_box(300, 186, 14, 14, "#E8F5D8", "#AAA")); s.append(_t(320, 197, "最小コスト > 歩数 のマス（赤い数字）", 10.5, INK, "start"))
+    s.append(_t(300, 222, "例: (2,0) は 2歩で着くが最小コストは 6。", 10.5, RED, "start"))
+    s.append(_t(300, 238, "下へ 9+9 と進むより、右へ回って 1 を通る方が安い", 10.5, RED, "start"))
+    s.append(f'<line x1="300" y1="262" x2="340" y2="262" stroke="{GREEN}" stroke-width="3" opacity="0.5"/>')
+    s.append(_t(348, 266, "ゴールまでの経路（12秒）", 10.5, INK, "start"))
+    return _slide("07", "ダイクストラ法の広がり方（最小コスト）", "\n".join(s),
+                  ["自分のコストでは、最小コストの表が実行結果と一致し、確定の順番は (0,0)→(0,1)→(0,2)→(1,2)→(2,2)→… だった。"])
 
 
 def ex08():
@@ -283,22 +291,31 @@ def ex09():
 
 
 def ex10():
-    names = ["公園", "カフェ", "図書館", "郵便局", "学校"]
-    bits = "00101"
-    s = [_t(320, 78, "5けたの 0/1 で「回った場所」を表す（右のけたが0番）", 11.5, INK, "middle", 700)]
-    for i, (name, b) in enumerate(zip(names, bits)):
-        x = 130 + i * 80
-        s.append(_t(x + 30, 108, f"{4 - i}番", 10, GRAY))
-        s.append(_t(x + 30, 124, name, 11, INK, "middle", 700))
-        on = b == "1"
-        s.append(_box(x, 134, 60, 50, "#E8F5D8" if on else "#FFFFFF", GREEN if on else "#999", 2 if on else 1))
-        s.append(_t(x + 30, 168, b, 22, GREEN if on else "#BBB", "middle", 700))
-    s.append(_t(320, 214, "bits = 5 → 2進数 00101", 12, INK, "middle", 700))
-    s.append(_t(320, 236, "1 のけた: 0番（学校）と 2番（図書館）", 11.5, GREEN, "middle", 700))
-    s.append(_t(320, 262, "回った場所 = {学校, 図書館}　まだ = {郵便局, カフェ, 公園}", 11, INK))
-    s.append(_t(320, 290, "確かめ方: 00101 & (1 << 2) = 00100 ≠ 0 なので図書館は入っている", 10.5, GRAY))
-    return _slide("10", "集合を2進数で表す", "\n".join(s),
-                  ["自分で決めた数 5 は 00101 で、回った場所は学校と図書館。実行結果の「いまの集合: 00101」と一致した。"])
+    rows = [("00001", "学校", [("学校", "0.0")]),
+            ("00011", "学校, 郵便局", [("郵便局", "8.1")]),
+            ("00111", "学校, 郵便局, 図書館", [("郵便局", "21.1"), ("図書館", "15.3")]),
+            ("01111", "学校, 郵便局, 図書館, カフェ", [("郵便局", "26.5"), ("図書館", "26.5"), ("カフェ", "23.8")]),
+            ("11111", "全部", [("郵便局", "26.8"), ("図書館", "28.1"), ("カフェ", "30.4"), ("公園", "28.8")])]
+    s = [_t(40, 78, "状態 = （回った都市の集合, いまいる都市）。表には各状態までの最短距離を覚えておく", 10.5, INK, "start", 700)]
+    for i, (bits, names, vals) in enumerate(rows):
+        y = 90 + i * 46
+        s.append(_box(40, y, 300, 38, "#E8F5D8" if i == 4 else LIGHT, GREEN if i == 4 else "#AAA", 1.5 if i == 4 else 1))
+        s.append(_t(50, y + 16, bits, 12, GREEN, "start", 700))
+        s.append(_t(110, y + 16, f"= {names}", 10, INK, "start"))
+        s.append(_t(50, y + 31, "いまいる都市ごとの最短:  " + "  ".join(f"{n} {v}" for n, v in vals), 9.5, "#444", "start"))
+        if i < 4:
+            s.append(_arrow(60, y + 38, 60, y + 46, GRAY, 1.5))
+            s.append(_t(70, y + 45, "都市を1つ足す", 8.5, GRAY, "start"))
+    s.append(_t(360, 100, "最後の行から答えを出す", 11, INK, "start", 700))
+    for k, line in enumerate(["郵便局 26.8 + 8.1 = 34.9 ★", "図書館 28.1 + 13.9 = 42.0", "カフェ 30.4 + 10.8 = 41.2", "公園 28.8 + 6.1 = 34.9 ★"]):
+        s.append(_t(360, 120 + k * 18, line, 10.5, GREEN if "★" in line else INK, "start"))
+    s.append(_t(360, 200, "（最後の都市から学校へ戻る距離を足す）", 9.5, GRAY, "start"))
+    s.append(_t(360, 226, "bitDP の答え: 34.9", 13, GREEN, "start", 700))
+    s.append(_t(360, 246, "実行結果の「bitDP の答え: 34.9」と一致", 10, INK, "start"))
+    s.append(_t(360, 274, "同じ集合に別の順番で着いても、", 9.5, RED, "start"))
+    s.append(_t(360, 288, "表には短いほうだけ残る（だから速い）", 9.5, RED, "start"))
+    return _slide("10", "bitDP の状態と表", "\n".join(s),
+                  ["自分の座標では、表の5行の値が実行結果と一致し、最後の行に学校へ戻る距離を足すと 34.9 が最小になった。"])
 
 
 def ex11():
@@ -319,25 +336,31 @@ def ex11():
 
 
 def ex12():
-    rounds = [("はじめ", 1, 100, None, 100), ("1回目", 51, 100, 50, 50), ("2回目", 51, 74, 75, 24), ("3回目", 63, 74, 62, 12), ("4回目", 69, 74, 68, 6)]
-    s = [_t(320, 78, "秘密の数 73 を「中央を聞く」作戦で当てる", 11.5, INK, "middle", 700)]
-    def X(v):
-        return 90 + (v - 1) * 5
-    for i, (label, lo, hi, asked, count) in enumerate(rounds):
-        y = 100 + i * 38
-        s.append(_t(84, y + 14, label, 10.5, INK, "end", 700))
-        s.append(_box(X(1), y, 500, 20, "#EEE", "#CCC", 1, 3))
-        s.append(_box(X(lo), y, X(hi) - X(lo) + 5, 20, "#E8F5D8", GREEN, 1.5, 3))
-        s.append(_t(X(lo) + 2, y - 3, str(lo), 9, GREEN, "start"))
-        s.append(_t(X(hi) + 5, y - 3, str(hi), 9, GREEN, "end"))
-        s.append(f'<line x1="{X(73) + 2}" y1="{y - 2}" x2="{X(73) + 2}" y2="{y + 22}" stroke="{RED}" stroke-width="2"/>')
-        if asked:
-            s.append(f'<circle cx="{X(asked) + 2}" cy="{y + 10}" r="5" fill="{AMBER}"/>')
-            s.append(_t(84, y + 28, f"聞いた {asked}", 9, AMBER, "end"))
-        s.append(_t(606, y + 14, f"{count}個", 10.5, GREEN, "start", 700))
-    s.append(_t(320, 300, "候補は 100 → 50 → 24 → 12 → 6 と半分ずつ減る（赤い線 = 73）", 11, INK))
-    return _slide("12", "候補が半分に減る", "\n".join(s),
-                  ["自分の数 73 では、聞いた数が 50・75・62・68 で、残りの候補は 50・24・12・6 個。実行結果の作戦Bの列と一致した。"])
+    table = [[0] * 11, [0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10], [0, 0, 0, 0, 0, 8, 10, 10, 10, 10, 10],
+             [0, 0, 0, 0, 0, 8, 10, 10, 10, 10, 16], [0, 0, 0, 0, 0, 8, 10, 10, 10, 12, 16]]
+    labels = ["なし", "1個目 村人 6分10点", "2個目 宝箱 5分8点", "3個目 鉱石 5分8点", "4個目 釣り 9分12点"]
+    cw, ch = 34, 26; ox, oy = 150, 92
+    s = [_t(40, 78, "動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間）", 11, INK, "start", 700)]
+    for t in range(11):
+        s.append(_t(ox + t * cw + cw / 2, oy - 6, str(t), 10, GRAY))
+    for i in range(5):
+        y = oy + i * ch
+        s.append(_t(ox - 6, y + 17, labels[i], 9.5, INK, "end"))
+        for t in range(11):
+            x = ox + t * cw
+            up = i > 0 and table[i][t] > table[i - 1][t]
+            s.append(_box(x, y, cw, ch, "#E8F5D8" if up else "#FFFFFF", "#CCC", 1, 0))
+            s.append(_t(x + cw / 2, y + 17, str(table[i][t]), 10.5, GREEN if up else INK, "middle", 700 if up else None))
+    trace = [(4, 10), (3, 10), (2, 5), (1, 0)]
+    for (r1, c1), (r2, c2) in zip(trace, trace[1:]):
+        s.append(_arrow(ox + c1 * cw + cw / 2, oy + r1 * ch + 4, ox + c2 * cw + cw / 2, oy + r2 * ch + ch - 4, RED, 2))
+    s.append(_box(ox + 10 * cw, oy + 4 * ch, cw, ch, "none", RED, 2.5, 0))
+    s.append(_t(40, 244, "色のマス = 前の行より値が増えた（そのクエストを受けると得になった）", 10, GREEN, "start"))
+    s.append(_t(40, 262, "赤い矢印 = 右下 16 から左上へたどる。値が上の行と違えばそのクエストを選び、時間ぶん左へ動く", 10, RED, "start"))
+    s.append(_t(40, 280, "(4,10)=16 は (3,10)=16 と同じ → 4個目は選ばない ／ (3,10)=16 ≠ (2,10)=10 → 鉱石を選ぶ、5分左へ ／ (2,5)=8 ≠ (1,5)=0 → 宝箱を選ぶ", 9, INK, "start"))
+    s.append(_t(40, 300, "選んだもの: 宝箱をあける・鉱石を掘る　合計 16点（貪欲法の 10点 より 6点 多い）", 11, GREEN, "start", 700))
+    return _slide("12", "動的計画法の表（ナップサック問題）", "\n".join(s),
+                  ["自分のクエストでは、表の右下が 16 になり、たどると宝箱と鉱石が選ばれた。実行結果の「動的計画法」の答えと一致。"])
 
 
 def ex13():

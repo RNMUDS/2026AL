@@ -603,7 +603,7 @@ brute_best = <span class="kw">None</span>
       <h2>標準課題: アルゴリズムの仕組みを図で説明する</h2>
     </div>
     <p style="margin-bottom:1.5rem">
-      第10回のGoogleスライドを新しく作り、見出しを「第10回: 集合を2進数で表す」にしてください。
+      第10回のGoogleスライドを新しく作り、見出しを「第10回: bitDP の状態と表」にしてください。
       その回のアルゴリズムの仕組みを、<strong>コード上の変数や自分で決めた数値を用いて図で説明</strong>します。
       枚数は自由です（1枚に収まらなければ分けてかまいません）。
     </p>
@@ -621,21 +621,22 @@ brute_best = <span class="kw">None</span>
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題</span>
-        <h3>集合を2進数で表すを図形で描く</h3>
+        <h3>bitDP の状態と表を図形で描く</h3>
       </div>
       <div class="setup-step">
         <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-10-ex1.py</code> を開き、<code>city_names</code> を自分の5つの場所に書き換え、<code>bits = 5</code> の 5 を<strong>自分で決めた数（1〜31）</strong>に書き換える。
+        <p style="font-size:0.95rem"><code>AL2-10-ex2.py</code> を開き、<code>cities</code> の座標を<strong>4か所以上</strong>書き換える。
         保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
-        <p style="font-size:0.95rem"><strong>5けたの箱</strong>を描き、各けたがどの場所かを書く。自分で決めた数について、各けたの 0/1 と、それが表す「回った場所」を描く。</p>
+        <p style="font-size:0.95rem">実行結果の表の5行（00001 → 00011 → 00111 → 01111 → 11111）を、上から下へ<strong>5つの「状態の箱」</strong>として描く。各箱に「回った都市の集合（2進数と都市名）」と「いまいる都市ごとの最短距離」を書き、箱の間を「都市を1つ足す」矢印でつなぐ。最後の箱から「学校へ戻る距離」を足して答えを出す計算を書く。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
-          <li>5けたの箱と、各けたに対応する場所の名前</li>
-          <li>自分で決めた数の 0/1 の並び</li>
-          <li>その並びが表す「回った場所」の一覧</li>
+          <li>5つの状態の箱（2進数と、それが表す回った都市）</li>
+          <li>各状態の「いまいる都市ごとの最短距離」（実行結果の表の値）</li>
+          <li>最後の行の値に「学校へ戻る距離」を足して、いちばん短いものを選ぶ計算（= bitDP の答え）</li>
         </ol>
       </div>
       <div class="setup-step">
@@ -645,7 +646,7 @@ brute_best = <span class="kw">None</span>
       </div>
       <div class="concept-box" style="margin-top:1rem">
         <h4>課題要件（満点の条件）</h4>
-        <p style="font-size:0.95rem;margin:0">0/1 の並びと「回った場所」が実行結果と一致する</p>
+        <p style="font-size:0.95rem;margin:0">5行の値が実行結果の表と一致し、計算した答えが実行結果の「bitDP の答え」と一致する</p>
       </div>
     </div>
 
@@ -806,34 +807,48 @@ brute_best = <span class="kw">None</span>
       <div class="diagram-container">
         <svg viewBox="0 0 700 416" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif">
         <rect x="30" y="20" width="640" height="360" rx="6" fill="#FFFFFF" stroke="#555"/>
-        <text x="48" y="48" text-anchor="start" fill="#222222" font-size="15" font-weight="700">第10回: 集合を2進数で表す</text>
+        <text x="48" y="48" text-anchor="start" fill="#222222" font-size="15" font-weight="700">第10回: bitDP の状態と表</text>
         <line x1="48" y1="56" x2="652" y2="56" stroke="#DDD"/>
-        <g transform="translate(30,20)"><text x="320" y="78" text-anchor="middle" fill="#222222" font-size="11.5" font-weight="700">5けたの 0/1 で「回った場所」を表す（右のけたが0番）</text>
-<text x="160" y="108" text-anchor="middle" fill="#777777" font-size="10">4番</text>
-<text x="160" y="124" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">公園</text>
-<rect x="130" y="134" width="60" height="50" rx="4" fill="#FFFFFF" stroke="#999" stroke-width="1"/>
-<text x="160" y="168" text-anchor="middle" fill="#BBB" font-size="22" font-weight="700">0</text>
-<text x="240" y="108" text-anchor="middle" fill="#777777" font-size="10">3番</text>
-<text x="240" y="124" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">カフェ</text>
-<rect x="210" y="134" width="60" height="50" rx="4" fill="#FFFFFF" stroke="#999" stroke-width="1"/>
-<text x="240" y="168" text-anchor="middle" fill="#BBB" font-size="22" font-weight="700">0</text>
-<text x="320" y="108" text-anchor="middle" fill="#777777" font-size="10">2番</text>
-<text x="320" y="124" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">図書館</text>
-<rect x="290" y="134" width="60" height="50" rx="4" fill="#E8F5D8" stroke="#3E7A00" stroke-width="2"/>
-<text x="320" y="168" text-anchor="middle" fill="#3E7A00" font-size="22" font-weight="700">1</text>
-<text x="400" y="108" text-anchor="middle" fill="#777777" font-size="10">1番</text>
-<text x="400" y="124" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">郵便局</text>
-<rect x="370" y="134" width="60" height="50" rx="4" fill="#FFFFFF" stroke="#999" stroke-width="1"/>
-<text x="400" y="168" text-anchor="middle" fill="#BBB" font-size="22" font-weight="700">0</text>
-<text x="480" y="108" text-anchor="middle" fill="#777777" font-size="10">0番</text>
-<text x="480" y="124" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">学校</text>
-<rect x="450" y="134" width="60" height="50" rx="4" fill="#E8F5D8" stroke="#3E7A00" stroke-width="2"/>
-<text x="480" y="168" text-anchor="middle" fill="#3E7A00" font-size="22" font-weight="700">1</text>
-<text x="320" y="214" text-anchor="middle" fill="#222222" font-size="12" font-weight="700">bits = 5 → 2進数 00101</text>
-<text x="320" y="236" text-anchor="middle" fill="#3E7A00" font-size="11.5" font-weight="700">1 のけた: 0番（学校）と 2番（図書館）</text>
-<text x="320" y="262" text-anchor="middle" fill="#222222" font-size="11">回った場所 = {学校, 図書館}　まだ = {郵便局, カフェ, 公園}</text>
-<text x="320" y="290" text-anchor="middle" fill="#777777" font-size="10.5">確かめ方: 00101 & (1 << 2) = 00100 ≠ 0 なので図書館は入っている</text></g>
-        <text x="48" y="354" text-anchor="start" fill="#333" font-size="10.5">自分で決めた数 5 は 00101 で、回った場所は学校と図書館。実行結果の「いまの集合: 00101」と一致した。</text>
+        <g transform="translate(30,20)"><text x="40" y="78" text-anchor="start" fill="#222222" font-size="10.5" font-weight="700">状態 = （回った都市の集合, いまいる都市）。表には各状態までの最短距離を覚えておく</text>
+<rect x="40" y="90" width="300" height="38" rx="4" fill="#F4F4F4" stroke="#AAA" stroke-width="1"/>
+<text x="50" y="106" text-anchor="start" fill="#3E7A00" font-size="12" font-weight="700">00001</text>
+<text x="110" y="106" text-anchor="start" fill="#222222" font-size="10">= 学校</text>
+<text x="50" y="121" text-anchor="start" fill="#444" font-size="9.5">いまいる都市ごとの最短:  学校 0.0</text>
+<line x1="60" y1="128" x2="60.0" y2="128.0" stroke="#777777" stroke-width="1.5"/><polygon points="60,136 64.0,128.0 56.0,128.0" fill="#777777"/>
+<text x="70" y="135" text-anchor="start" fill="#777777" font-size="8.5">都市を1つ足す</text>
+<rect x="40" y="136" width="300" height="38" rx="4" fill="#F4F4F4" stroke="#AAA" stroke-width="1"/>
+<text x="50" y="152" text-anchor="start" fill="#3E7A00" font-size="12" font-weight="700">00011</text>
+<text x="110" y="152" text-anchor="start" fill="#222222" font-size="10">= 学校, 郵便局</text>
+<text x="50" y="167" text-anchor="start" fill="#444" font-size="9.5">いまいる都市ごとの最短:  郵便局 8.1</text>
+<line x1="60" y1="174" x2="60.0" y2="174.0" stroke="#777777" stroke-width="1.5"/><polygon points="60,182 64.0,174.0 56.0,174.0" fill="#777777"/>
+<text x="70" y="181" text-anchor="start" fill="#777777" font-size="8.5">都市を1つ足す</text>
+<rect x="40" y="182" width="300" height="38" rx="4" fill="#F4F4F4" stroke="#AAA" stroke-width="1"/>
+<text x="50" y="198" text-anchor="start" fill="#3E7A00" font-size="12" font-weight="700">00111</text>
+<text x="110" y="198" text-anchor="start" fill="#222222" font-size="10">= 学校, 郵便局, 図書館</text>
+<text x="50" y="213" text-anchor="start" fill="#444" font-size="9.5">いまいる都市ごとの最短:  郵便局 21.1  図書館 15.3</text>
+<line x1="60" y1="220" x2="60.0" y2="220.0" stroke="#777777" stroke-width="1.5"/><polygon points="60,228 64.0,220.0 56.0,220.0" fill="#777777"/>
+<text x="70" y="227" text-anchor="start" fill="#777777" font-size="8.5">都市を1つ足す</text>
+<rect x="40" y="228" width="300" height="38" rx="4" fill="#F4F4F4" stroke="#AAA" stroke-width="1"/>
+<text x="50" y="244" text-anchor="start" fill="#3E7A00" font-size="12" font-weight="700">01111</text>
+<text x="110" y="244" text-anchor="start" fill="#222222" font-size="10">= 学校, 郵便局, 図書館, カフェ</text>
+<text x="50" y="259" text-anchor="start" fill="#444" font-size="9.5">いまいる都市ごとの最短:  郵便局 26.5  図書館 26.5  カフェ 23.8</text>
+<line x1="60" y1="266" x2="60.0" y2="266.0" stroke="#777777" stroke-width="1.5"/><polygon points="60,274 64.0,266.0 56.0,266.0" fill="#777777"/>
+<text x="70" y="273" text-anchor="start" fill="#777777" font-size="8.5">都市を1つ足す</text>
+<rect x="40" y="274" width="300" height="38" rx="4" fill="#E8F5D8" stroke="#3E7A00" stroke-width="1.5"/>
+<text x="50" y="290" text-anchor="start" fill="#3E7A00" font-size="12" font-weight="700">11111</text>
+<text x="110" y="290" text-anchor="start" fill="#222222" font-size="10">= 全部</text>
+<text x="50" y="305" text-anchor="start" fill="#444" font-size="9.5">いまいる都市ごとの最短:  郵便局 26.8  図書館 28.1  カフェ 30.4  公園 28.8</text>
+<text x="360" y="100" text-anchor="start" fill="#222222" font-size="11" font-weight="700">最後の行から答えを出す</text>
+<text x="360" y="120" text-anchor="start" fill="#3E7A00" font-size="10.5">郵便局 26.8 + 8.1 = 34.9 ★</text>
+<text x="360" y="138" text-anchor="start" fill="#222222" font-size="10.5">図書館 28.1 + 13.9 = 42.0</text>
+<text x="360" y="156" text-anchor="start" fill="#222222" font-size="10.5">カフェ 30.4 + 10.8 = 41.2</text>
+<text x="360" y="174" text-anchor="start" fill="#3E7A00" font-size="10.5">公園 28.8 + 6.1 = 34.9 ★</text>
+<text x="360" y="200" text-anchor="start" fill="#777777" font-size="9.5">（最後の都市から学校へ戻る距離を足す）</text>
+<text x="360" y="226" text-anchor="start" fill="#3E7A00" font-size="13" font-weight="700">bitDP の答え: 34.9</text>
+<text x="360" y="246" text-anchor="start" fill="#222222" font-size="10">実行結果の「bitDP の答え: 34.9」と一致</text>
+<text x="360" y="274" text-anchor="start" fill="#C62828" font-size="9.5">同じ集合に別の順番で着いても、</text>
+<text x="360" y="288" text-anchor="start" fill="#C62828" font-size="9.5">表には短いほうだけ残る（だから速い）</text></g>
+        <text x="48" y="354" text-anchor="start" fill="#333" font-size="10.5">自分の座標では、表の5行の値が実行結果と一致し、最後の行に学校へ戻る距離を足すと 34.9 が最小になった。</text>
         <text x="350.0" y="404" text-anchor="middle" fill="#999" font-size="11">スライドの例（例題の数値で描いたもの。自分の数値に置きかえて描く）</text>
         </svg>
       </div>
