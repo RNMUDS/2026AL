@@ -198,8 +198,7 @@
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    例題4は実行に10秒ほどかかります。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -241,15 +240,15 @@
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-15-ex1.py</code>, <code>AL2-15-ex2.py</code>, <code>AL2-15-ex3.py</code>, <code>AL2-15-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-15-ex1.py</code>, <code>AL2-15-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -493,7 +492,7 @@ distance = []
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0689秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
+        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0682秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
       </div>
       <p class="run-note">前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。後半では、全探索と bitDP がどちらも<strong>50.1</strong>という同じ答えを出し、貪欲法だけが58.2と長くなっています。かかった時間は、全探索が0.08秒ほどに対し bitDP は0.002秒ほどで、数十倍の差がつきました。後期の授業で1行ずつ書いてきたコードが、すべてここに集まっています。</p>
     </div>
@@ -501,333 +500,12 @@ distance = []
     <div class="card example">
       <div class="card-header">
         <span class="tag tag-example">例題 2</span>
-        <h3>焼きなまし法を体験する</h3>
-      </div>
-      <p>後期では扱わなかった<strong>焼きなまし法</strong>を体験します。
-      20都市の問題を、貪欲法が作ったルートから始めて、少しずつ短くしていきます。</p>
-
-      <div class="concept-box">
-        <h4>コードの中で起きていること</h4>
-        <ul class="point-list">
-          <li>2つの都市を選んで、順番を<strong>入れかえてみる</strong></li>
-          <li>短くなったら、必ず受け入れる</li>
-          <li>長くなった場合も、<code>math.exp(-差 / 温度)</code> の確率で受け入れる</li>
-          <li>1回ごとに温度を0.9995倍して、少しずつ冷ましていく</li>
-        </ul>
-        <p style="font-size:0.92rem;margin-top:0.6rem;color:#bbb">
-          <code>math.exp(-差 / 温度)</code> は、差が小さいほど、また温度が高いほど1に近づく値です。
-          「少しだけ悪くなる変更」は受け入れやすく、「大きく悪くなる変更」は受け入れにくくなります。
-        </p>
-      </div>
-
-<pre data-blanks="3"><span class="code-label">Python ── AL2-15-ex2.py</span>
-<span class="cmt"># 発展手法その1: 焼きなまし法（やきなましほう / Simulated Annealing）</span>
-<span class="cmt"># 考え方: 「いまより悪くなる変更も、たまには受け入れる」</span>
-<span class="cmt">#         最初は悪い変更もよく受け入れ、だんだん受け入れなくなっていく。</span>
-<span class="cmt">#         鉄を熱してゆっくり冷ますと、内部のひずみが取れることに由来する名前。</span>
-<span class="kw">import</span> math
-<span class="kw">import</span> random
-
-<span class="cmt"># 乱数の種を決めておくと、何度実行しても同じ結果になる</span>
-random.seed(<span class="num">2026</span>)
-
-<span class="cmt"># 20都市。全探索では 19! ＝ 約12京通りになり、まったく終わらない</span>
-cities = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
-    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
-
-n = <span class="fn">len</span>(cities)
-distance = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    row = []
-    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
-        row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
-                             + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
-    distance.append(row)
-
-
-<span class="kw">def</span> <span class="fn">tour_length</span>(order):
-    <span class="str">&quot;&quot;&quot;0番から出発し、order の順に回って0番へ戻るまでの合計距離&quot;&quot;&quot;</span>
-    total = <span class="num">0.0</span>
-    here = <span class="num">0</span>
-    <span class="kw">for</span> city <span class="kw">in</span> order:
-        total = total + distance[here][city]
-        here = city
-    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
-
-
-<span class="kw">def</span> <span class="fn">greedy_order</span>():
-    <span class="str">&quot;&quot;&quot;出発点にする最初のルートを、貪欲法で作る&quot;&quot;&quot;</span>
-    visited = [<span class="num">0</span>]
-    here = <span class="num">0</span>
-    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
-        nearest = <span class="kw">None</span>
-        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
-            <span class="kw">if</span> j <span class="kw">in</span> visited:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
-                nearest = j
-        visited.append(nearest)
-        here = nearest
-    <span class="kw">return</span> visited[<span class="num">1</span>:]
-
-
-order = <span class="fn">greedy_order</span>()
-current = <span class="fn">tour_length</span>(order)
-best_order = <span class="fn">list</span>(order)
-best_length = current
-
-temperature = <span class="num">10.0</span>          <span class="cmt"># 最初の「熱さ」。大きいほど悪い変更も受け入れる</span>
-cooling = <span class="num">0.9995</span>            <span class="cmt"># 1回ごとに温度をかける数（1より少し小さい）</span>
-steps = <span class="num">20000</span>
-
-accepted_worse = <span class="num">0</span>
-<span class="fn">print</span>(<span class="str">&quot;焼きなまし法で20都市のルートを短くしていく&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">f&quot;  はじめのルート（貪欲法）: {round(current, 1)}&quot;</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;  途中経過&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
-<span class="fn">print</span>(<span class="str">&quot;  ステップ      温度     いまのルート   いちばん良いルート&quot;</span>)
-
-<span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(steps):
-    <span class="cmt"># 2つの都市を選んで、順番を入れかえてみる</span>
-    i = random.randrange(n - <span class="num">1</span>)
-    j = random.randrange(n - <span class="num">1</span>)
-    <span class="kw">if</span> i == j:
-        <span class="kw">continue</span>
-    candidate = <span class="fn">list</span>(order)
-    candidate[i], candidate[j] = candidate[j], candidate[i]
-    new_length = <span class="fn">tour_length</span>(candidate)
-
-    difference = new_length - current
-    <span class="kw">if</span> difference &lt; <span class="num">0</span>:
-        accept = <span class="kw">True</span>                       <span class="cmt"># 短くなったので必ず受け入れる</span>
-    <span class="kw">else</span>:
-        <span class="cmt"># 悪くなる場合でも、温度が高いうちは受け入れることがある</span>
-        chance = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        accept = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        <span class="kw">if</span> accept:
-            accepted_worse = accepted_worse + <span class="num">1</span>
-
-    <span class="kw">if</span> accept:
-        order = candidate
-        current = new_length
-        <span class="kw">if</span> current &lt; best_length:
-            best_length = current
-            best_order = <span class="fn">list</span>(order)
-
-    temperature = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
-
-    <span class="kw">if</span> step % <span class="num">4000</span> == <span class="num">0</span>:
-        <span class="fn">print</span>(<span class="str">f&quot;  {step:&gt;8}   {temperature:&gt;7.3f}   {round(current, 1):&gt;14}&quot;</span>
-              <span class="str">f&quot;   {round(best_length, 1):&gt;18}&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">58</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">f&quot;  最後のルート: {round(best_length, 1)}&quot;</span>)
-<span class="fn">print</span>(<span class="str">f&quot;  はじめから何%短くなったか: &quot;</span>
-      <span class="str">f&quot;{round((1 - best_length / tour_length(greedy_order())) * 100, 1)}%&quot;</span>)
-<span class="fn">print</span>(<span class="str">f&quot;  「悪くなる変更」を受け入れた回数: {accepted_worse:,}回&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;わざと悪くなる変更を受け入れることで、&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;貪欲法がはまりこむ「局所最適」から抜け出せる。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;温度が下がるにつれて悪い変更を受け入れなくなり、答えが落ち着いていく。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>悪くなる量が小さいほど、温度が高いほど、受け入れる確率が高い</td><td style="white-space:nowrap">A. <code>math.exp(-difference / temperature)</code><br>B. <code>difference / temperature</code><br>C. <code>math.exp(difference / temperature)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>0〜1の乱数が確率より小さければ受け入れる</td><td style="white-space:nowrap">A. <code>random.random() &lt; chance</code><br>B. <code>chance &gt; 1</code><br>C. <code>random.random() &gt; chance</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>1回ごとに温度を少しずつ下げる</td><td style="white-space:nowrap">A. <code>temperature + cooling</code><br>B. <code>temperature / cooling</code><br>C. <code>temperature * cooling</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。焼きなまし法で20都市のルートを短くしていく / -------------------------------------------------------------- / はじめのルート（貪欲法）: 105.7 /  / 途中経過 / ---------------------------------------------------------- / ステップ      温度     いまのルート   いちばん良いルート / 0     9.995            105.7                105.7 / 4000     1.490            104.3                 95.2 / 8000     0.223             95.2                 95.2 / 12000     0.034             95.2                 95.2 / 16000     0.005             95.2                 95.2 / ---------------------------------------------------------- /  / 最後のルート: 95.2 / はじめから何%短くなったか: 9.9% / 「悪くなる変更」を受け入れた回数: 478回 / -------------------------------------------------------------- /  / わざと悪くなる変更を受け入れることで、 / 貪欲法がはまりこむ「局所最適」から抜け出せる。 / 温度が下がるにつれて悪い変更を受け入れなくなり、答えが落ち着いていく。" width="494" height="488" loading="lazy">
-      </div>
-      <p class="run-note">貪欲法が作った<strong>105.7</strong>のルートが、20,000ステップの改善で<strong>95.2</strong >まで短くなりました。約9.9%の改善です。途中経過を見ると、温度が9.995から0.005まで下がっていく間に答えが落ち着いていきます。「悪くなる変更」を478回受け入れており、その回り道があったからこそ局所最適から抜け出せています。<code>random.seed(2026)</code> で乱数を固定しているので、何度実行しても同じ結果になります。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>遺伝的アルゴリズムを体験する</h3>
-      </div>
-      <p>もう1つの発展手法、<strong>遺伝的アルゴリズム</strong>を体験します。
-      100個のルートを「集団」として持ち、良いものどうしを組み合わせて次の世代を作ります。</p>
-
-<pre data-blanks="3"><span class="code-label">Python ── AL2-15-ex3.py</span>
-<span class="cmt"># 発展手法その2: 遺伝的アルゴリズム（いでんてきアルゴリズム / Genetic Algorithm）</span>
-<span class="cmt"># 考え方: たくさんのルートを「集団」として持ち、</span>
-<span class="cmt">#         良いルートどうしを組み合わせて次の世代を作ることをくり返す。</span>
-<span class="cmt">#         生き物の進化をまねた方法。</span>
-<span class="kw">import</span> math
-<span class="kw">import</span> random
-
-random.seed(<span class="num">2026</span>)
-
-cities = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
-    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
-
-n = <span class="fn">len</span>(cities)
-distance = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    row = []
-    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
-        row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
-                             + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
-    distance.append(row)
-
-
-<span class="kw">def</span> <span class="fn">tour_length</span>(order):
-    <span class="str">&quot;&quot;&quot;0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す&quot;&quot;&quot;</span>
-    total = <span class="num">0.0</span>
-    here = <span class="num">0</span>
-    <span class="kw">for</span> city <span class="kw">in</span> order:
-        total = total + distance[here][city]
-        here = city
-    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
-
-
-<span class="kw">def</span> <span class="fn">make_random_order</span>():
-    <span class="str">&quot;&quot;&quot;0番以外の都市をばらばらに並べたルートを1つ作る&quot;&quot;&quot;</span>
-    order = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, n))
-    random.shuffle(order)
-    <span class="kw">return</span> order
-
-
-<span class="kw">def</span> <span class="fn">choose_parent</span>(population):
-    <span class="str">&quot;&quot;&quot;3つをランダムに選び、その中でいちばん短いものを親にする（トーナメント選択）&quot;&quot;&quot;</span>
-    a = random.choice(population)
-    b = random.choice(population)
-    c = random.choice(population)
-    best = a
-    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-        best = b
-    <span class="kw">if</span> <span class="fn">tour_length</span>(c) &lt; <span class="fn">tour_length</span>(best):
-        best = c
-    <span class="kw">return</span> best
-
-
-<span class="kw">def</span> <span class="fn">crossover</span>(parent1, parent2):
-    <span class="str">&quot;&quot;&quot;2つの親から子を作る。
-    親1の一部をそのまま使い、残りを親2に出てくる順に並べる。&quot;&quot;&quot;</span>
-    size = <span class="fn">len</span>(parent1)
-    left = random.randrange(size)
-    right = random.randrange(size)
-    <span class="kw">if</span> left &gt; right:
-        left, right = right, left
-
-    child = [<span class="kw">None</span>] * size
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(left, right + <span class="num">1</span>):
-        child[i] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-
-    used = <span class="fn">set</span>(child[left:right + <span class="num">1</span>])
-    position = <span class="num">0</span>
-    <span class="kw">for</span> city <span class="kw">in</span> parent2:
-        <span class="kw">if</span> city <span class="kw">in</span> used:
-            <span class="kw">continue</span>
-        <span class="kw">while</span> child[position] <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-            position = position + <span class="num">1</span>
-        child[position] = city             <span class="cmt"># 残りは親2の順に入れる</span>
-    <span class="kw">return</span> child
-
-
-<span class="kw">def</span> <span class="fn">mutate</span>(order):
-    <span class="str">&quot;&quot;&quot;まれに2か所を入れかえる（突然変異）&quot;&quot;&quot;</span>
-    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
-        i = random.randrange(<span class="fn">len</span>(order))
-        j = random.randrange(<span class="fn">len</span>(order))
-        order[i], order[j] = order[j], order[i]
-    <span class="kw">return</span> order
-
-
-population_size = <span class="num">100</span>
-generations = <span class="num">1000</span>
-
-<span class="cmt"># 第1世代をランダムに作る</span>
-population = []
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(population_size):
-    population.append(<span class="fn">make_random_order</span>())
-
-best_order = population[<span class="num">0</span>]
-<span class="kw">for</span> order <span class="kw">in</span> population:
-    <span class="kw">if</span> <span class="fn">tour_length</span>(order) &lt; <span class="fn">tour_length</span>(best_order):
-        best_order = order
-best_length = <span class="fn">tour_length</span>(best_order)
-
-<span class="fn">print</span>(<span class="str">&quot;遺伝的アルゴリズムで20都市のルートを短くしていく&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">f&quot;  集団の大きさ: {population_size} ／ 世代数: {generations}&quot;</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;  世代      集団の平均      いちばん良いルート&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-
-<span class="kw">for</span> generation <span class="kw">in</span> <span class="fn">range</span>(generations):
-    <span class="cmt"># 次の世代を作る</span>
-    next_population = [<span class="fn">list</span>(best_order)]        <span class="cmt"># いちばん良いものは必ず残す</span>
-    <span class="kw">while</span> <span class="fn">len</span>(next_population) &lt; population_size:
-        parent1 = <span class="fn">choose_parent</span>(population)
-        parent2 = <span class="fn">choose_parent</span>(population)
-        child = <span class="fn">crossover</span>(parent1, parent2)
-        child = <span class="fn">mutate</span>(child)
-        next_population.append(child)
-    population = next_population
-
-    <span class="kw">for</span> order <span class="kw">in</span> population:
-        length = <span class="fn">tour_length</span>(order)
-        <span class="kw">if</span> length &lt; best_length:
-            best_length = length
-            best_order = <span class="fn">list</span>(order)
-
-    <span class="kw">if</span> generation % <span class="num">100</span> == <span class="num">0</span>:
-        average = <span class="fn">sum</span>(<span class="fn">tour_length</span>(o) <span class="kw">for</span> o <span class="kw">in</span> population) / <span class="fn">len</span>(population)
-        <span class="fn">print</span>(<span class="str">f&quot;  {generation:&gt;4}   {round(average, 1):&gt;12}   {round(best_length, 1):&gt;18}&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">f&quot;  最後のルート: {round(best_length, 1)}&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;最初はばらばらのルートしかないが、&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;良いものどうしを組み合わせるうちに短くなっていく。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;集団の平均も、世代が進むにつれて下がっていく。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>候補のうち、いちばん短いものを親に選ぶ</td><td style="white-space:nowrap">A. <code>b &lt; best</code><br>B. <code>tour_length(b) &gt; tour_length(best)</code><br>C. <code>tour_length(b) &lt; tour_length(best)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>left〜right の部分は親1からそのまま受けつぐ</td><td style="white-space:nowrap">A. <code>None</code><br>B. <code>parent2[i]</code><br>C. <code>parent1[i]</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>30%の確率で突然変異を起こす</td><td style="white-space:nowrap">A. <code>random.random() &gt; 0.3</code><br>B. <code>random.random() &lt; 0.3</code><br>C. <code>random.random() &lt; 3</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a15_ex3_result.png" alt="AL2-15-ex3.py の実行結果。遺伝的アルゴリズムで20都市のルートを短くしていく / -------------------------------------------------------------- / 集団の大きさ: 100 ／ 世代数: 1000 /  / 世代      集団の平均      いちばん良いルート / ---------------------------------------------- / 0          219.7                170.6 / 100          105.5                 98.2 / 200          108.8                 96.7 / 300          106.9                 96.7 / 400          104.7                 96.7 / 500          105.8                 96.7 / 600          105.2                 96.7 / 700          106.7                 96.7 / 800          104.9                 96.7 / 900          104.8                 96.7 / ---------------------------------------------- /  / 最後のルート: 96.7 / -------------------------------------------------------------- /  / 最初はばらばらのルートしかないが、 / 良いものどうしを組み合わせるうちに短くなっていく。 / 集団の平均も、世代が進むにつれて下がっていく。" width="494" height="528" loading="lazy">
-      </div>
-      <p class="run-note">第1世代ではいちばん良いルートでも<strong>170.6</strong>と、でたらめに近い長さでした。100世代で98.2まで縮み、最終的に<strong>96.7</strong>になっています。集団の平均も219.7から105前後まで下がっており、集団全体が良くなっていることが分かります。200世代以降は最良の値が変わっていません。集団の中身が似てきて、新しい組み合わせが生まれにくくなったためです。突然変異の確率を上げると、もう少し先まで改善が続くことがあります。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
         <h3>5つの方法をまとめて比べる</h3>
       </div>
       <p>20都市の問題を、後期に学んだ方法と発展手法を合わせて5つで解き、まとめて比べます。
       実行に10秒ほどかかります。</p>
 
-<pre data-blanks="2"><span class="code-label">Python ── AL2-15-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-15-ex2.py</span>
 <span class="cmt"># 20都市の巡回セールスマン問題を、5つの方法で解いて比べる</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> math
@@ -1050,7 +728,7 @@ best_value = <span class="kw">None</span>
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
         <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>表の各方法を順に呼び出して答えを受け取る</td><td style="white-space:nowrap">A. <code>function</code><br>B. <code>function()</code><br>C. <code>methods()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>表の各方法を順に呼び出して答えを受け取る</td><td style="white-space:nowrap">A. <code>function()</code><br>B. <code>methods()</code><br>C. <code>function</code></td></tr>
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>5つの答えのうち、いちばん短いものを求める</td><td style="white-space:nowrap">A. <code>best_value is None or value &lt; best_value</code><br>B. <code>best_value is None</code><br>C. <code>value &gt; best_value</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
@@ -1093,11 +771,11 @@ best_value = <span class="kw">None</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex4_result.png" alt="AL2-15-ex4.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.671秒         第15回 / bitDP                   91.1      最適              5.959秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
+        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.682秒         第15回 / bitDP                   91.1      最適              5.952秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
       </div>
       <p class="run-note"><strong>bitDP だけが最適の91.1</strong>を出し、6秒ほどかかりました。近似解の3つ（貪欲法の全出発点版・焼きなまし法・遺伝的アルゴリズム）は、最適より<strong>わずか4〜6%長いだけ</strong>で、いずれも1秒以内に終わっています。出発点を1つに固定した貪欲法だけが15.9%長く、明らかに劣っています。20都市では bitDP が使えましたが、25都市を超えると表が大きすぎて使えなくなります。そのとき頼りになるのが、この3つの近似解法です。</p>
 
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の表から、5つの方法それぞれの「答え」「最適との差」「かかった時間」を書き写す。あわせて、「25都市を超えたらどの方法を使うか」を、理由とともに書く。</span></div>
+      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の表から、5つの方法それぞれの「答え」「最適との差」「かかった時間」を書き写す。あわせて、「25都市を超えたらどの方法を使うか」を、理由とともに書く。</span></div>
     </div>
   </div>
 </section>
@@ -1131,7 +809,7 @@ best_value = <span class="kw">None</span>
       </div>
       <div class="setup-step">
         <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-15-ex4.py</code> を開き、<code>random.seed(2026)</code> の 2026 を<strong>自分の学籍番号の下4けた</strong>に書き換える（焼きなまし法と遺伝的アルゴリズムの結果が変わる）。
+        <p style="font-size:0.95rem"><code>AL2-15-ex2.py</code> を開き、<code>random.seed(2026)</code> の 2026 を<strong>自分の学籍番号の下4けた</strong>に書き換える（焼きなまし法と遺伝的アルゴリズムの結果が変わる）。
         保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
@@ -1361,19 +1039,13 @@ best_value = <span class="kw">None</span>
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
-          <tr><td><code>AL2-15-ex2.py</code></td><td>穴1</td><td><code>math.exp(-difference / temperature)</code></td></tr>
-          <tr><td><code>AL2-15-ex2.py</code></td><td>穴2</td><td><code>random.random() &lt; chance</code></td></tr>
-          <tr><td><code>AL2-15-ex2.py</code></td><td>穴3</td><td><code>temperature * cooling</code></td></tr>
-          <tr><td><code>AL2-15-ex3.py</code></td><td>穴1</td><td><code>tour_length(b) &lt; tour_length(best)</code></td></tr>
-          <tr><td><code>AL2-15-ex3.py</code></td><td>穴2</td><td><code>parent1[i]</code></td></tr>
-          <tr><td><code>AL2-15-ex3.py</code></td><td>穴3</td><td><code>random.random() &lt; 0.3</code></td></tr>
-          <tr><td><code>AL2-15-ex4.py</code></td><td>穴1</td><td><code>function()</code></td></tr>
-          <tr><td><code>AL2-15-ex4.py</code></td><td>穴2</td><td><code>best_value is None or value &lt; best_value</code></td></tr>
+          <tr><td><code>AL2-15-ex2.py</code></td><td>穴1</td><td><code>function()</code></td></tr>
+          <tr><td><code>AL2-15-ex2.py</code></td><td>穴2</td><td><code>best_value is None or value &lt; best_value</code></td></tr>
         </table>
       </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
-        <p><strong>例題4（20都市）の結果</strong></p>
+        <p><strong>例題2（20都市）の結果</strong></p>
         <table>
           <tr><th>方法</th><th>答え</th><th>最適との差</th><th>時間</th></tr>
           <tr><td>貪欲法</td><td>105.7</td><td>+15.9%</td><td>ほぼ0秒</td></tr>

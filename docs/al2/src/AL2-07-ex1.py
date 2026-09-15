@@ -2,7 +2,7 @@
 import heapq
 from collections import deque
 
-# 第4回の例題3と同じ迷路（1 = 舗装路1秒、9 = ぬかるみ9秒）
+# 床コスト付きの迷路（1 = 舗装路1秒、9 = ぬかるみ9秒）
 cost_map = [
     [1, 1, 1, 9, 1],
     [9, 9, 1, 9, 1],

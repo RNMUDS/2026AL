@@ -1,107 +1,96 @@
-# アイテム集めパズルを貪欲法で解く
-# 迷路の中に4つのアイテムがある。全部拾ってゴールへ行くまでの歩数を短くしたい。
-from collections import deque
+# ナップサック問題: 決められた時間の中で、得点がいちばん高くなる組み合わせを選ぶ
+# ゲームの「制限時間内にどのイベントをこなすか」という場面にあたる。
 
-maze = [
-    "S..#....",
-    ".#.#.##.",
-    ".#...#..",
-    ".###.#..",
-    ".....#..",
-    "#.##....",
-    "...#.##.",
-    ".#......",
+# (名前, かかる分数, もらえる得点)
+quests = [
+    ("村人を助ける", 6, 10),
+    ("宝箱をあける", 5, 8),
+    ("鉱石を掘る", 5, 8),
+    ("釣りをする", 9, 12),
 ]
 
-items = {
-    "A": (0, 2),
-    "B": (1, 7),
-    "C": (2, 0),
-    "D": (2, 3),
-}
-
-rows = len(maze)
-cols = len(maze[0])
-start = (0, 0)
-goal = (rows - 1, cols - 1)
+limit = 10          # 使える時間（分）
+n = len(quests)
 
 
-def steps_from(origin):
-    """origin から、通れるすべてのマスまでの歩数を求める（幅優先探索）"""
-    dist = {origin: 0}
-    queue = deque([origin])
-    while len(queue) > 0:
-        r, c = queue.popleft()
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nr = r + dr
-            nc = c + dc
-            if nr < 0 or nr >= rows or nc < 0 or nc >= cols:
-                continue
-            if maze[nr][nc] == "#":
-                continue
-            if (nr, nc) in dist:
-                continue
-            dist[(nr, nc)] = dist[(r, c)] + 1
-            queue.append((nr, nc))
-    return dist
+def pad(text, width):
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
+    length = 0
+    for ch in text:
+        if ord(ch) > 0x2000:
+            length = length + 2
+        else:
+            length = length + 1
+    return text + " " * (width - length)
 
 
-print("迷路（S=スタート  G=ゴール  #=壁）とアイテムの位置")
-print("-" * 30)
-picture = [list(line) for line in maze]
-picture[0][0] = "S"
-picture[rows - 1][cols - 1] = "G"
-for name, (r, c) in items.items():
-    picture[r][c] = name
-for line in picture:
-    print("  " + "".join(line))
-print("-" * 30)
+print(f"使える時間: {limit}分")
+print("-" * 46)
+print(pad("できること", 24) + pad("かかる分", 10) + pad("得点", 8) + " 1分あたり")
+for name, minutes, score in quests:
+    print(pad(name, 24) + pad(f"{minutes}分", 10) + pad(f"{score}点", 8)
+          + f"{score / minutes:>10.2f}")
+print("-" * 46)
 print()
 
-# すべての地点どうしの歩数を、幅優先探索で先に求めておく
-places = {"S": start, "G": goal}
-for name, position in items.items():
-    places[name] = position
+# --- 方法1: 貪欲法（1分あたりの得点が高いものから選ぶ） ---
+# 「1分あたりの得点」を計算して、大きい順に番号を並べる
+# key= には「並べかえの基準にする値を返す関数」を渡す。reverse=True で大きい順になる
+order = sorted(range(n), key=lambda i: quests[i][2] / quests[i][1], reverse=True)
+used = 0
+greedy_score = 0
+greedy_names = []
+for i in order:
+    name, minutes, score = quests[i]
+    if used + minutes <= limit:
+        used = used + minutes
+        greedy_score = greedy_score + score
+        greedy_names.append(name)
 
-table = {}
-for name, position in places.items():
-    dist = steps_from(position)
-    table[name] = {}
-    for other, other_position in places.items():
-        table[name][other] = dist[other_position]
-
-print("地点どうしの歩数の表")
-print("-" * 44)
-names = ["S", "A", "B", "C", "D", "G"]
-print("      " + "".join(f"{m:>6}" for m in names))
-for name in names:
-    print(f"  {name}   " + "".join(f"{table[name][m]:>6}" for m in names))
-print("-" * 44)
+print("方法1: 貪欲法（1分あたりの得点が高い順に、入るだけ入れる）")
+print("  選んだもの:", "、".join(greedy_names))
+print(f"  使った時間: {used}分 ／ 合計得点: {greedy_score}点")
 print()
 
-# --- 貪欲法: いまいる場所からいちばん近いアイテムへ向かう ---
-here = "S"
-remaining = ["A", "B", "C", "D"]
-total = 0
-order = ["S"]
+# --- 方法2: 動的計画法（表を作って最適解を求める） ---
+# best[i][t] = 「前から i 個まで見て、使える時間が t 分のときの最高得点」
+best = []
+for i in range(n + 1):
+    best.append([0] * (limit + 1))
 
-print("貪欲法の進み方")
-while len(remaining) > 0:
-    nearest = None
-    for name in remaining:
-        if nearest is None or table[here][name] < table[here][nearest]:
-            nearest = name
-    print(f"  {here} にいる → いちばん近いアイテムは {nearest}（{table[here][nearest]}歩）")
-    total = total + table[here][nearest]
-    order.append(nearest)
-    remaining.remove(nearest)
-    here = nearest
+for i in range(1, n + 1):
+    name, minutes, score = quests[i - 1]
+    for t in range(limit + 1):
+        # i番目を選ばない場合
+        best[i][t] = best[i - 1][t]
+        # i番目を選ぶ場合（時間が足りるときだけ）
+        if t >= minutes:
+            if best[i - 1][t - minutes] + score > best[i][t]:
+                best[i][t] = best[i - 1][t - minutes] + score
 
-total = total + table[here]["G"]
-order.append("G")
-print(f"  {here} からゴールへ（{table[here]['G']}歩）")
+print("動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間）")
+print("-" * 62)
+print("      " + "".join(f"{t:>4}" for t in range(limit + 1)))
+for i in range(n + 1):
+    label = "なし" if i == 0 else f"{i}個目"
+    print(pad(label, 6) + "".join(f"{best[i][t]:>4}" for t in range(limit + 1)))
+print("-" * 62)
 print()
 
-print("貪欲法の答え")
-print("  拾う順番:", " → ".join(order))
-print("  合計歩数:", total, "歩")
+# どれを選んだかを逆にたどって調べる
+chosen = []
+t = limit
+for i in range(n, 0, -1):
+    if best[i][t] != best[i - 1][t]:
+        name, minutes, score = quests[i - 1]
+        chosen.append(name)
+        t = t - minutes
+chosen.reverse()
+
+print("方法2: 動的計画法（すべての組み合わせを表で調べる）")
+print("  選んだもの:", "、".join(chosen))
+print(f"  合計得点: {best[n][limit]}点")
+print()
+print("差:", best[n][limit] - greedy_score, "点")
+print("貪欲法は「1分あたりの得点」だけを見るので、")
+print("時間がぴったり収まる組み合わせを見のがしてしまう。")

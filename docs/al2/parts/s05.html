@@ -249,7 +249,7 @@
 
     <div class="note-warn">
       <strong>成り立たなくなる場合:</strong> 重みにマイナスの値が混ざると、上の理由が使えなくなります。
-      「遠回りをすると時間が減る」ことが起きてしまうためです。例題3で実際に確かめます。
+      「遠回りをすると時間が減る」ことが起きてしまうためです。後期の路線図や迷路では、時間やコストがマイナスになることはないので安心して使えます。
     </div>
   </div>
 </section>
@@ -260,7 +260,7 @@
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -302,15 +302,15 @@
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-05-ex1.py</code>, <code>AL2-05-ex2.py</code>, <code>AL2-05-ex3.py</code>, <code>AL2-05-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-05-ex1.py</code>, <code>AL2-05-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -527,289 +527,6 @@ settled = <span class="fn">set</span>()
         <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。新宿から各駅への最短の行き方 / ------------------------------------------------------------ / 渋谷     7分   新宿 → 渋谷 / 池袋     9分   新宿 → 池袋 / 上野    21分   新宿 → 池袋 → 上野 / 東京    27分   新宿 → 渋谷 → 品川 → 東京 / 品川    16分   新宿 → 渋谷 → 品川 / ------------------------------------------------------------ /  / came_from の中身（どの駅へは、どこから来るのがいちばん早いか） / 新宿: None / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / came_from をゴールから逆にたどると、道順ができあがる" width="479" height="408" loading="lazy">
       </div>
       <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」で27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 → 品川 → 渋谷 → 新宿 となり、順番をひっくり返せば道順になります。第1回の幅優先探索で経路を復元したときと、まったく同じやり方です。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>マイナスの重みがあると間違える</h3>
-      </div>
-      <p>ダイクストラ法が正しく動くのは「重みがすべて0以上」のときだけです。
-      マイナスの重みが1本でも混ざると、答えを間違えます。
-      3つのお店をめぐる例で確かめます。B店を通ると5円のクーポンがもらえるので、
-      B店からA店へ向かう辺の重みは <code>-5</code> になっています。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-05-ex3.py</span>
-<span class="cmt"># ダイクストラ法（3）: マイナスの重みがあると答えを間違える</span>
-<span class="cmt"># 3つのお店をめぐる。辺の重みは「かかる金額（円）」。</span>
-<span class="cmt"># B店を通ると5円のクーポンがもらえるので、B店からA店へ行く辺の重みは -5 になる。</span>
-
-shops = {
-    <span class="str">&quot;スタート&quot;</span>: [(<span class="str">&quot;A店&quot;</span>, <span class="num">1</span>), (<span class="str">&quot;B店&quot;</span>, <span class="num">2</span>)],
-    <span class="str">&quot;B店&quot;</span>: [(<span class="str">&quot;A店&quot;</span>, -<span class="num">5</span>)],
-    <span class="str">&quot;A店&quot;</span>: [],
-}
-
-start = <span class="str">&quot;スタート&quot;</span>
-INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-
-
-<span class="kw">def</span> <span class="fn">dijkstra</span>():
-    <span class="str">&quot;&quot;&quot;ダイクストラ法で、スタートから各店までの最小金額を求める&quot;&quot;&quot;</span>
-    distance = {}
-    <span class="kw">for</span> shop <span class="kw">in</span> shops:
-        distance[shop] = INF
-    distance[start] = <span class="num">0</span>
-    settled = <span class="fn">set</span>()
-
-    <span class="fn">print</span>(<span class="str">&quot;ダイクストラ法の進み方&quot;</span>)
-    <span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(shops):
-        current = <span class="kw">None</span>
-        <span class="kw">for</span> shop <span class="kw">in</span> shops:
-            <span class="kw">if</span> shop <span class="kw">in</span> settled <span class="kw">or</span> distance[shop] == INF:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[shop] &lt; distance[current]:
-                current = shop
-        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
-            <span class="kw">break</span>
-        <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        <span class="fn">print</span>(<span class="str">f&quot;  {current} を「{distance[current]}円で確定」とした&quot;</span>)
-        <span class="kw">for</span> name, price <span class="kw">in</span> shops[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> settled:
-                <span class="fn">print</span>(<span class="str">f&quot;      {name} へ {distance[current]} + ({price}) = &quot;</span>
-                      <span class="str">f&quot;{distance[current] + price} 円で行けるが、&quot;</span>
-                      <span class="str">f&quot;{name} はすでに確定しているので無視された&quot;</span>)
-                <span class="kw">continue</span>
-            new_price = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-            <span class="kw">if</span> new_price &lt; distance[name]:
-                distance[name] = new_price
-    <span class="kw">return</span> distance
-
-
-<span class="kw">def</span> <span class="fn">all_routes</span>(here, visited):
-    <span class="str">&quot;&quot;&quot;同じ店を2度通らない行き方をすべて返す&quot;&quot;&quot;</span>
-    result = [[here]]
-    <span class="kw">for</span> name, price <span class="kw">in</span> shops[here]:
-        <span class="kw">if</span> name <span class="kw">in</span> visited:
-            <span class="kw">continue</span>
-        <span class="kw">for</span> rest <span class="kw">in</span> <span class="fn">all_routes</span>(name, visited + [name]):
-            result.append([here] + rest)
-    <span class="kw">return</span> result
-
-
-<span class="kw">def</span> <span class="fn">route_price</span>(route):
-    <span class="str">&quot;&quot;&quot;route の順に進んだときの合計金額を返す&quot;&quot;&quot;</span>
-    total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
-        <span class="kw">for</span> name, price <span class="kw">in</span> shops[route[i]]:
-            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
-                total = total + price
-                <span class="kw">break</span>
-    <span class="kw">return</span> total
-
-
-<span class="fn">print</span>(<span class="str">&quot;お店のつながり（数字は金額・円。マイナスはクーポンで安くなることを表す）&quot;</span>)
-<span class="kw">for</span> shop <span class="kw">in</span> shops:
-    <span class="kw">if</span> <span class="fn">len</span>(shops[shop]) == <span class="num">0</span>:
-        <span class="fn">print</span>(<span class="str">f&quot;  {shop}: つながる先なし&quot;</span>)
-    <span class="kw">else</span>:
-        parts = []
-        <span class="kw">for</span> name, price <span class="kw">in</span> shops[shop]:
-            parts.append(<span class="str">f&quot;{name}({price}円)&quot;</span>)
-        <span class="fn">print</span>(<span class="str">f&quot;  {shop}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(parts))
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
-<span class="fn">print</span>()
-
-result = <span class="fn">dijkstra</span>()
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法が出した答え&quot;</span>)
-<span class="kw">for</span> shop <span class="kw">in</span> shops:
-    <span class="fn">print</span>(<span class="str">f&quot;  {shop}: {result[shop]}円&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;すべての行き方を書き出して確かめる&quot;</span>)
-best = {}
-<span class="kw">for</span> route <span class="kw">in</span> <span class="fn">all_routes</span>(start, [start]):
-    goal = route[-<span class="num">1</span>]
-    price = <span class="fn">route_price</span>(route)
-    <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: {price}円&quot;</span>)
-    <span class="kw">if</span> goal <span class="kw">not</span> <span class="kw">in</span> best <span class="kw">or</span> price &lt; best[goal]:
-        best[goal] = price
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;本当の最小金額&quot;</span>)
-<span class="kw">for</span> shop <span class="kw">in</span> shops:
-    <span class="fn">print</span>(<span class="str">f&quot;  {shop}: {best[shop]}円&quot;</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;A店について、ダイクストラ法は&quot;</span>, result[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円と答えたが、本当は&quot;</span>, best[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円で行ける。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いちばん小さい店を「確定」にする（マイナスがあると、ここが間違いのもとになる）</td><td style="white-space:nowrap">A. <code>settled.remove(current)</code><br>B. <code>settled.add(current)</code><br>C. <code>settled.add(start)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>確定した店までの金額に、その道の金額を足す</td><td style="white-space:nowrap">A. <code>distance[name] + price</code><br>B. <code>distance[current] + price</code><br>C. <code>price</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 326" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="15">マイナスの重みがあると、ダイクストラ法は間違える</text>
-        <circle cx="110" cy="160" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="110" y="165" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">スタート</text>
-        <circle cx="560" cy="160" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="560" y="165" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">A店</text>
-        <circle cx="335" cy="260" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="335" y="265" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">B店</text>
-        <line x1="144" y1="160" x2="526" y2="160" stroke="#666" stroke-width="2"/>
-        <rect x="318" y="140" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
-        <text x="340" y="157" text-anchor="middle" fill="#bbb" font-size="12">1円</text>
-        <line x1="136" y1="180" x2="308" y2="248" stroke="#666" stroke-width="2"/>
-        <rect x="196" y="200" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
-        <text x="218" y="217" text-anchor="middle" fill="#bbb" font-size="12">2円</text>
-        <line x1="366" y1="246" x2="534" y2="184" stroke="#FF5252" stroke-width="3"/>
-        <rect x="432" y="196" width="56" height="24" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
-        <text x="460" y="213" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">-5円</text>
-        <text x="460" y="240" text-anchor="middle" fill="#888888" font-size="10">B店でもらえるクーポン</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.280;0.300;1" dur="12s" repeatCount="indefinite"/>
-          <text x="350" y="60" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">① スタートを0円で確定</text>
-          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">A店は1円、B店は2円と分かった</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.320;0.340;0.580;0.600;1" dur="12s" repeatCount="indefinite"/>
-          <text x="350" y="60" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">② いちばん小さいA店（1円）を確定</text>
-          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">「A店は1円で決まり」としてしまう</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.620;0.640;0.960;0.980;1" dur="12s" repeatCount="indefinite"/>
-          <text x="350" y="60" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="700">③ B店（2円）を確定すると -3円 が見つかる</text>
-          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">しかしA店はもう確定済みなので、書き直されない</text>
-        </g>
-        <text x="350" y="310" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">ダイクストラ法の答え: A店は1円　／　本当の答え: A店は -3円</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a05_ex3_result.png" alt="AL2-05-ex3.py の実行結果。お店のつながり（数字は金額・円。マイナスはクーポンで安くなることを表す） / スタート: A店(1円)、B店(2円) / B店: A店(-5円) / A店: つながる先なし / ------------------------------------------------------------ /  / ダイクストラ法の進み方 / スタート を「0円で確定」とした / A店 を「1円で確定」とした / B店 を「2円で確定」とした / A店 へ 2 + (-5) = -3 円で行けるが、A店 はすでに確定しているので無視された /  / ダイクストラ法が出した答え / スタート: 0円 / B店: 2円 / A店: 1円 /  / すべての行き方を書き出して確かめる / スタート: 0円 / スタート → A店: 1円 / スタート → B店: 2円 / スタート → B店 → A店: -3円 /  / 本当の最小金額 / スタート: 0円 / B店: 2円 / A店: -3円 /  / A店について、ダイクストラ法は 1 円と答えたが、本当は -3 円で行ける。 / マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。" width="553" height="648" loading="lazy">
-      </div>
-      <p class="run-note">ダイクストラ法はA店を<strong>1円</strong>と答えましたが、すべての行き方を書き出すと「スタート → B店 → A店」で<strong>-3円</strong>で行けることが分かります。ダイクストラ法は、A店を1円で確定させたあとにB店を調べています。そのときA店へ -3円で行けることが見つかりますが、A店はすでに確定しているので<strong>無視されてしまいます</strong>。「遠回りをすると安くなる」ことが起きると、確定という考え方そのものが成り立たなくなります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題3の実行結果から、ダイクストラ法の答えと本当の答えを書く。あわせて、ダイクストラ法がA店の -3円 を採用できなかった理由を、実行結果の「無視された」という行を引用しながら説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>出発点を変える／全探索と答え合わせ</h3>
-      </div>
-      <p>出発点を6つの駅すべてに変えて距離表を作り、
-      さらに全探索（すべての行き方を書き出す方法）の答えと一致するかを機械的に確かめます。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-05-ex4.py</span>
-<span class="cmt"># ダイクストラ法（4）: 出発点を変えて表を作り、全探索の答えと一致するか確かめる</span>
-
-railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
-}
-
-INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-
-
-<span class="kw">def</span> <span class="fn">dijkstra</span>(start):
-    <span class="str">&quot;&quot;&quot;start から各駅までの最短時間を辞書で返す&quot;&quot;&quot;</span>
-    distance = {}
-    <span class="kw">for</span> station <span class="kw">in</span> railway:
-        distance[station] = INF
-    distance[start] = <span class="num">0</span>
-    settled = <span class="fn">set</span>()
-
-    <span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
-        current = <span class="kw">None</span>
-        <span class="kw">for</span> station <span class="kw">in</span> railway:
-            <span class="kw">if</span> station <span class="kw">in</span> settled <span class="kw">or</span> distance[station] == INF:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
-                current = station
-        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
-            <span class="kw">break</span>
-        settled.add(current)
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> settled:
-                <span class="kw">continue</span>
-            new_distance = distance[current] + minutes
-            <span class="kw">if</span> new_distance &lt; distance[name]:
-                distance[name] = new_distance
-    <span class="kw">return</span> distance
-
-
-<span class="kw">def</span> <span class="fn">brute_force</span>(start):
-    <span class="str">&quot;&quot;&quot;すべての行き方を書き出して、各駅までの最短時間を求める（答え合わせ用）&quot;&quot;&quot;</span>
-    best = {start: <span class="num">0</span>}
-
-    <span class="kw">def</span> <span class="fn">walk</span>(here, total, visited):
-        <span class="str">&quot;&quot;&quot;ここから先の行き方を、同じ場所を2度通らないようにすべてたどる&quot;&quot;&quot;</span>
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
-            <span class="kw">if</span> name <span class="kw">in</span> visited:
-                <span class="kw">continue</span>
-            new_total = total + minutes
-            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-                best[name] = new_total
-            <span class="fn">walk</span>(name, new_total, visited + [name])
-
-    <span class="fn">walk</span>(start, <span class="num">0</span>, [start])
-    <span class="kw">return</span> best
-
-
-stations = <span class="fn">list</span>(railway)
-
-<span class="fn">print</span>(<span class="str">&quot;出発点を変えたときの最短時間の表（分）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="cmt"># 駅名は全角なので、見出しは空白5つ＋駅名（全角2文字＝半角4文字ぶん）でそろえる</span>
-<span class="fn">print</span>(<span class="str">&quot;出発点&quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">&quot;     &quot;</span> + s <span class="kw">for</span> s <span class="kw">in</span> stations))
-<span class="kw">for</span> start <span class="kw">in</span> stations:
-    result = <span class="fn">dijkstra</span>(start)
-    <span class="fn">print</span>(start + <span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{result[s]:&gt;9}&quot;</span> <span class="kw">for</span> s <span class="kw">in</span> stations))
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法と全探索の答えが一致するか確かめる&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-all_same = <span class="kw">True</span>
-<span class="kw">for</span> start <span class="kw">in</span> stations:
-    fast = <span class="fn">dijkstra</span>(start)
-    slow = <span class="fn">brute_force</span>(start)
-    <span class="kw">for</span> goal <span class="kw">in</span> stations:
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
-            <span class="fn">print</span>(<span class="str">f&quot;  ちがう: {start} → {goal}  ダイクストラ {fast[goal]} / 全探索 {slow[goal]}&quot;</span>)
-            all_same = <span class="kw">False</span>
-<span class="kw">if</span> all_same:
-    <span class="fn">print</span>(<span class="str">&quot;  すべての出発点・すべての目的地で、答えは完全に一致した&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>初めて着いた駅か、これまでより短いときに記録する</td><td style="white-space:nowrap">A. <code>name not in best or new_total &lt; best[name]</code><br>B. <code>new_total &gt; best[name]</code><br>C. <code>name in best</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>2つの方法の答えがちがっていたら「同じでない」にする</td><td style="white-space:nowrap">A. <code>fast == slow</code><br>B. <code>fast[goal] == slow[goal]</code><br>C. <code>fast[goal] != slow[goal]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a05_ex4_result.png" alt="AL2-05-ex4.py の実行結果。出発点を変えたときの最短時間の表（分） / -------------------------------------------------------- / 出発点     新宿     渋谷     池袋     上野     東京     品川 / 新宿          0        7        9       21       27       16 / 渋谷          7        0       16       26       20        9 / 池袋          9       16        0       12       18       25 / 上野         21       26       12        0        6       17 / 東京         27       20       18        6        0       11 / 品川         16        9       25       17       11        0 / -------------------------------------------------------- /  / ダイクストラ法と全探索の答えが一致するか確かめる / -------------------------------------------------------- / すべての出発点・すべての目的地で、答えは完全に一致した / -------------------------------------------------------- /  / 重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。" width="523" height="388" loading="lazy">
-      </div>
-      <p class="run-note">6つの駅それぞれを出発点にした表ができました。表は左上から右下への線を軸にして<strong>対称</strong>になっています。行き帰りで同じ時間がかかる路線図なので、新宿から東京への27分と、東京から新宿への27分は同じ値になります。ダイクストラ法と全探索の答えは、すべての組み合わせで完全に一致しました。重みがすべて0以上であれば、ダイクストラ法は全探索と同じ正しい答えを、はるかに速く出せます。</p>
     </div>
   </div>
 </section>
@@ -1118,10 +835,6 @@ all_same = <span class="kw">True</span>
           <tr><td><code>AL2-05-ex2.py</code></td><td>穴1</td><td><code>distance[station] &lt; distance[current]</code></td></tr>
           <tr><td><code>AL2-05-ex2.py</code></td><td>穴2</td><td><code>distance[current] + minutes</code></td></tr>
           <tr><td><code>AL2-05-ex2.py</code></td><td>穴3</td><td><code>new_distance &lt; distance[name]</code></td></tr>
-          <tr><td><code>AL2-05-ex3.py</code></td><td>穴1</td><td><code>settled.add(current)</code></td></tr>
-          <tr><td><code>AL2-05-ex3.py</code></td><td>穴2</td><td><code>distance[current] + price</code></td></tr>
-          <tr><td><code>AL2-05-ex4.py</code></td><td>穴1</td><td><code>name not in best or new_total &lt; best[name]</code></td></tr>
-          <tr><td><code>AL2-05-ex4.py</code></td><td>穴2</td><td><code>fast[goal] != slow[goal]</code></td></tr>
         </table>
       </div>
       <div class="ans-item">

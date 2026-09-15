@@ -350,7 +350,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       </ol>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         3つの問いに答えれば、使うべきアルゴリズムはほぼ1つに決まります。
-        例題4では、3つの問いをそのままプログラムにしたものを動かします。
+        迷ったときは、この3つの問いを上から順に自分に投げかけてください。
       </p>
     </div>
 
@@ -421,8 +421,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    例題3は実行に10秒ほどかかります。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -464,15 +463,15 @@ a.sub-item:hover { border-color: #4A7A00; }
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-11-ex1.py</code>, <code>AL2-11-ex2.py</code>, <code>AL2-11-ex3.py</code>, <code>AL2-11-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-11-ex1.py</code>, <code>AL2-11-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -491,151 +490,12 @@ a.sub-item:hover { border-color: #4A7A00; }
     <div class="card example">
       <div class="card-header">
         <span class="tag tag-example">例題 1</span>
-        <h3>3つの探索を同じグラフで比べる</h3>
-      </div>
-      <p>同じ路線図・同じ出発点・同じ目的地に対して、幅優先探索・深さ優先探索・ダイクストラ法の3つを走らせ、
-      出てくる経路を比べます。</p>
-
-<pre data-blanks="0"><span class="code-label">Python ── AL2-11-ex1.py</span>
-<span class="cmt"># 同じグラフを、3つの探索アルゴリズムで解いて比べる</span>
-<span class="kw">import</span> heapq
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-<span class="cmt"># 重み付きグラフ（数字は乗車時間・分）</span>
-railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
-}
-
-start = <span class="str">&quot;新宿&quot;</span>
-goal = <span class="str">&quot;東京&quot;</span>
-INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-
-
-<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
-    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間&quot;&quot;&quot;</span>
-    total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
-            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
-                total = total + minutes
-                <span class="kw">break</span>
-    <span class="kw">return</span> total
-
-
-<span class="kw">def</span> <span class="fn">build</span>(came_from, goal):
-    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
-    route = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        route.append(node)
-        node = came_from[node]
-    route.reverse()
-    <span class="kw">return</span> route
-
-
-<span class="kw">def</span> <span class="fn">bfs</span>():
-    <span class="str">&quot;&quot;&quot;幅優先探索: 乗る路線の本数がいちばん少ない道&quot;&quot;&quot;</span>
-    came_from = {start: <span class="kw">None</span>}
-    queue = <span class="fn">deque</span>([start])
-    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-        current = queue.popleft()
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[name] = current
-            queue.append(name)
-    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
-
-
-<span class="kw">def</span> <span class="fn">dfs</span>():
-    <span class="str">&quot;&quot;&quot;深さ優先探索: 行けるところまで進む道&quot;&quot;&quot;</span>
-    came_from = {start: <span class="kw">None</span>}
-    stack = [start]
-    <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
-        current = stack.pop()
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[name] = current
-            stack.append(name)
-    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
-
-
-<span class="kw">def</span> <span class="fn">dijkstra</span>():
-    <span class="str">&quot;&quot;&quot;ダイクストラ法: 合計時間がいちばん短い道&quot;&quot;&quot;</span>
-    distance = {}
-    came_from = {}
-    <span class="kw">for</span> station <span class="kw">in</span> railway:
-        distance[station] = INF
-        came_from[station] = <span class="kw">None</span>
-    distance[start] = <span class="num">0</span>
-    queue = [(<span class="num">0</span>, start)]
-    settled = <span class="fn">set</span>()
-    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-        minutes, current = heapq.heappop(queue)
-        <span class="kw">if</span> current <span class="kw">in</span> settled:
-            <span class="kw">continue</span>
-        settled.add(current)
-        <span class="kw">for</span> name, weight <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> minutes + weight &lt; distance[name]:
-                distance[name] = minutes + weight
-                came_from[name] = current
-                heapq.heappush(queue, (distance[name], name))
-    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
-
-
-<span class="kw">def</span> <span class="fn">pad</span>(text, width):
-    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、表示の幅をそろえる&quot;&quot;&quot;</span>
-    length = <span class="num">0</span>
-    <span class="kw">for</span> ch <span class="kw">in</span> text:
-        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
-            length = length + <span class="num">2</span>
-        <span class="kw">else</span>:
-            length = length + <span class="num">1</span>
-    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
-
-
-<span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} まで、3つの方法で経路を求める&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法            路線の本数   合計時間   経路&quot;</span>)
-<span class="kw">for</span> name, function <span class="kw">in</span> [(<span class="str">&quot;幅優先探索&quot;</span>, bfs), (<span class="str">&quot;深さ優先探索&quot;</span>, dfs), (<span class="str">&quot;ダイクストラ法&quot;</span>, dijkstra)]:
-    route = <span class="fn">function</span>()
-    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">16</span>)
-          + <span class="str">f&quot;{len(route)-1:&gt;8}本&quot;</span>
-          + <span class="str">f&quot;{route_minutes(route):&gt;9}分   &quot;</span>
-          + <span class="str">&quot; → &quot;</span>.join(route))
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。&quot;</span>)</pre>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a11_ex1_result.png" alt="AL2-11-ex1.py の実行結果。新宿 から 東京 まで、3つの方法で経路を求める / ------------------------------------------------------------------ / 方法            路線の本数   合計時間   経路 / 幅優先探索             2本       41分   新宿 → 品川 → 東京 / 深さ優先探索           2本       41分   新宿 → 品川 → 東京 / ダイクストラ法         3本       27分   新宿 → 渋谷 → 品川 → 東京 / ------------------------------------------------------------------ /  / 幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。 / 深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。" width="524" height="248" loading="lazy">
-      </div>
-      <p class="run-note">幅優先探索とダイクストラ法は、はっきり違う経路を返しました。幅優先探索は<strong>2本・41分</strong>の「新宿 → 品川 → 東京」を選び、ダイクストラ法は<strong>3本・27分</strong>の「新宿 → 渋谷 → 品川 → 東京」を選んでいます。乗りかえが1回増えるかわりに、14分も早く着くということです。深さ優先探索は、たまたま幅優先探索と同じ経路になりました。深さ優先探索は「本数」も「時間」も最小にしないので、同じになるかどうかは、たまたま調べた順番で決まります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題1の実行結果から、3つの方法それぞれの「路線の本数」「合計時間」「経路」を表にまとめる。あわせて、幅優先探索とダイクストラ法の答えが違う理由を説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 2</span>
         <h3>巡回セールスマン問題を4つの方法で解く</h3>
       </div>
       <p>巡回セールスマン問題を4つの方法で解きます。
       第9回の貪欲法に「すべての都市を出発点にして試す」やり方を足した4つ目も加えます。</p>
 
-<pre data-blanks="2"><span class="code-label">Python ── AL2-11-ex2.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-11-ex1.py</span>
 <span class="cmt"># 巡回セールスマン問題を4つの方法で解いて比べる</span>
 <span class="kw">import</span> math
 <span class="kw">import</span> time
@@ -704,7 +564,7 @@ distance = []
 
 <span class="kw">def</span> <span class="fn">greedy</span>():
     <span class="str">&quot;&quot;&quot;貪欲法（出発点は0番の都市に固定）&quot;&quot;&quot;</span>
-    <span class="kw">return</span> <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+    <span class="kw">return</span> <span class="fn">greedy_from</span>(<span class="num">0</span>)
 
 
 <span class="kw">def</span> <span class="fn">greedy_all_starts</span>():
@@ -712,7 +572,7 @@ distance = []
     best = <span class="kw">None</span>
     <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
         value = <span class="fn">greedy_from</span>(start)
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best:
             best = value
     <span class="kw">return</span> best
 
@@ -773,34 +633,23 @@ best_value = <span class="kw">None</span>
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は出発点を全部試すだけで、答えが最適に近づく。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;それでも全探索や bitDP より圧倒的に速い。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>ふつうの貪欲法は0番（学校）から出発する</td><td style="white-space:nowrap">A. <code>greedy_from(0)</code><br>B. <code>greedy_all_starts()</code><br>C. <code>greedy_from(n)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>出発点を変えた貪欲法のうち、いちばん短いものを残す</td><td style="white-space:nowrap">A. <code>best is None</code><br>B. <code>value &gt; best</code><br>C. <code>best is None or value &lt; best</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex2_result.png" alt="AL2-11-ex2.py の実行結果。8都市の巡回セールスマン問題を4つの方法で解く / ------------------------------------------------------------------------ / 方法                    答え  最適との差          時間   性質 / 全探索                  46.8         0.0    0.000739秒   必ず最適 / 貪欲法                  53.2         6.4    0.000005秒   最適とはかぎらない / 貪欲法(全出発点)        46.8         0.0    0.000021秒   最適とはかぎらない / bitDP                   46.8         0.0    0.000229秒   必ず最適 / ------------------------------------------------------------------------ /  / 貪欲法は出発点を全部試すだけで、答えが最適に近づく。 / それでも全探索や bitDP より圧倒的に速い。" width="569" height="268" loading="lazy">
+        <img src="images/a11_ex1_result.png" alt="AL2-11-ex1.py の実行結果。8都市の巡回セールスマン問題を4つの方法で解く / ------------------------------------------------------------------------ / 方法                    答え  最適との差          時間   性質 / 全探索                  46.8         0.0    0.000738秒   必ず最適 / 貪欲法                  53.2         6.4    0.000005秒   最適とはかぎらない / 貪欲法(全出発点)        46.8         0.0    0.000021秒   最適とはかぎらない / bitDP                   46.8         0.0    0.000231秒   必ず最適 / ------------------------------------------------------------------------ /  / 貪欲法は出発点を全部試すだけで、答えが最適に近づく。 / それでも全探索や bitDP より圧倒的に速い。" width="569" height="268" loading="lazy">
       </div>
       <p class="run-note">全探索・bitDP・貪欲法(全出発点) の3つが、いずれも<strong>46.8</strong>という同じ答えを出しました。出発点を1つに固定した貪欲法だけが53.2で、6.4長くなっています。注目すべきは<strong>貪欲法(全出発点)</strong>で、8回ぶん計算しても0.000022秒しかかからず、全探索の約40分の1の時間で同じ答えにたどり着いています。ただし、たまたま最適に当たっただけで、いつでも当たる保証はありません。「必ず最適」と書けるのは全探索と bitDP だけです。</p>
     </div>
 
     <div class="card example">
       <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
+        <span class="tag tag-example">例題 2</span>
         <h3>大きさを変えて一括で測る</h3>
       </div>
       <p>都市の数を6個から16個まで変えて、3つの方法の答えと時間を一度に測ります。
       全探索は12都市までで打ち切ります。実行に10秒ほどかかります。</p>
 
-<pre data-blanks="2"><span class="code-label">Python ── AL2-11-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-11-ex2.py</span>
 <span class="cmt"># 問題の大きさを変えて、3つの方法の時間を一括で測る</span>
 <span class="kw">import</span> math
 <span class="kw">import</span> time
@@ -928,7 +777,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
         <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>全探索は12都市までにする（それ以上は長すぎる）</td><td style="white-space:nowrap">A. <code>count &lt; 6</code><br>B. <code>count &gt;= 12</code><br>C. <code>count &lt;= 12</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>全探索は12都市までにする（それ以上は長すぎる）</td><td style="white-space:nowrap">A. <code>count &lt;= 12</code><br>B. <code>count &lt; 6</code><br>C. <code>count &gt;= 12</code></td></tr>
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>全部回って here にいる状態から、0番へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>best[full][here]</code><br>C. <code>best[full][here] + distance[here][0]</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
@@ -938,102 +787,11 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex3_result.png" alt="AL2-11-ex3.py の実行結果。都市の数を変えて、3つの方法の答えと時間を測る / （全探索は12都市までで打ち切る。時間がかかりすぎるため） / ---------------------------------------------------------------------------- / 都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間 / 6都市     57.8 /   0.000秒     57.8 /0.000003秒     57.8 /   0.000秒 / 8都市     58.0 /   0.001秒     58.7 /0.000003秒     58.0 /   0.000秒 / 10都市     59.5 /   0.064秒     60.2 /0.000005秒     59.5 /   0.001秒 / 12都市     73.1 /   8.133秒     80.5 /0.000021秒     73.1 /   0.009秒 / 14都市        （長すぎるため省略）     83.3 /0.000010秒     75.9 /   0.044秒 / 16都市        （長すぎるため省略）     87.1 /0.000012秒     79.7 /   0.225秒 / ---------------------------------------------------------------------------- /  / 全探索と bitDP の答えは、どの大きさでも完全に一致している。 / 貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。" width="599" height="328" loading="lazy">
+        <img src="images/a11_ex2_result.png" alt="AL2-11-ex2.py の実行結果。都市の数を変えて、3つの方法の答えと時間を測る / （全探索は12都市までで打ち切る。時間がかかりすぎるため） / ---------------------------------------------------------------------------- / 都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間 / 6都市     57.8 /   0.000秒     57.8 /0.000004秒     57.8 /   0.000秒 / 8都市     58.0 /   0.001秒     58.7 /0.000003秒     58.0 /   0.000秒 / 10都市     59.5 /   0.069秒     60.2 /0.000010秒     59.5 /   0.002秒 / 12都市     73.1 /   8.319秒     80.5 /0.000012秒     73.1 /   0.008秒 / 14都市        （長すぎるため省略）     83.3 /0.000009秒     75.9 /   0.045秒 / 16都市        （長すぎるため省略）     87.1 /0.000014秒     79.7 /   0.230秒 / ---------------------------------------------------------------------------- /  / 全探索と bitDP の答えは、どの大きさでも完全に一致している。 / 貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。" width="599" height="328" loading="lazy">
       </div>
       <p class="run-note">全探索と bitDP の答えは、どの大きさでも<strong>完全に一致</strong>しています。12都市では、全探索に<strong>約8秒</strong>かかったのに対し、bitDP は0.01秒ほどで、<strong>数百倍</strong>の差がつきました。14都市と16都市では、全探索は終わらないため省略しています。貪欲法の答えは、12都市で80.5（最適は73.1）と約10%長くなっていますが、時間はほとんどゼロです。「必ず最適・遅い」「必ず最適・速い」「近似・非常に速い」の3種類がそろっていることを確かめてください。</p>
 
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題3の表から、都市の数ごとの3つの答えと時間を書き写す。あわせて、12都市のときに全探索と bitDP の時間が何倍違うかを計算し、答えが同じである理由を説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>条件からアルゴリズムを選ぶ</h3>
-      </div>
-      <p>3つの問い（どんな問題か／重みがあるか／最適解が必要か）を、そのままプログラムにします。
-      条件を渡すと、使うべきアルゴリズムと理由が返ってきます。</p>
-
-<pre data-blanks="3"><span class="code-label">Python ── AL2-11-ex4.py</span>
-<span class="cmt"># 条件から「どのアルゴリズムを使うべきか」を判定するプログラム</span>
-<span class="cmt"># 後期に学んだ5つのアルゴリズムを、条件で選び分ける。</span>
-
-
-<span class="kw">def</span> <span class="fn">pad</span>(text, width):
-    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
-    length = <span class="num">0</span>
-    <span class="kw">for</span> ch <span class="kw">in</span> text:
-        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
-            length = length + <span class="num">2</span>
-        <span class="kw">else</span>:
-            length = length + <span class="num">1</span>
-    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
-
-
-<span class="kw">def</span> <span class="fn">choose</span>(kind, weighted, size, need_best):
-    <span class="str">&quot;&quot;&quot;条件から使うべきアルゴリズムを1つ選んで、名前と理由を返す
-
-    kind      : &quot;経路&quot; なら2地点間の最短経路、&quot;巡回&quot; なら全部回って戻る問題
-    weighted  : 辺に重み（時間や距離の差）があるなら True
-    size      : 頂点や都市の数
-    need_best : 必ず最適解が必要なら True
-    &quot;&quot;&quot;</span>
-    <span class="kw">if</span> kind == <span class="str">&quot;経路&quot;</span>:
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-            <span class="kw">if</span> need_best:
-                <span class="kw">return</span> <span class="str">&quot;幅優先探索&quot;</span>, <span class="str">&quot;重みがないので、歩数の少ない順に広げれば必ず最短になる&quot;</span>
-            <span class="kw">return</span> <span class="str">&quot;深さ優先探索&quot;</span>, <span class="str">&quot;最短でなくてよいなら、調べるマスが少ない深さ優先探索で足りる&quot;</span>
-        <span class="kw">return</span> <span class="str">&quot;ダイクストラ法&quot;</span>, <span class="str">&quot;重みがあるので、コストの小さい順に確定していく必要がある&quot;</span>
-
-    <span class="cmt"># kind == &quot;巡回&quot;</span>
-    <span class="kw">if</span> <span class="kw">not</span> need_best:
-        <span class="kw">return</span> <span class="str">&quot;貪欲法&quot;</span>, <span class="str">&quot;最適でなくてよいので、いちばん近い都市へ進むだけで一瞬で終わる&quot;</span>
-    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
-        <span class="kw">return</span> <span class="str">&quot;全探索&quot;</span>, <span class="str">f&quot;{size}都市なら順番の数が少なく、全部試しても一瞬で終わる&quot;</span>
-    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
-        <span class="kw">return</span> <span class="str">&quot;bitDP&quot;</span>, <span class="str">f&quot;{size}都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる&quot;</span>
-    <span class="kw">return</span> <span class="str">&quot;貪欲法&quot;</span>, <span class="str">f&quot;{size}都市では bitDP でも表が大きすぎる。近似解を使うしかない&quot;</span>
-
-
-cases = [
-    (<span class="str">&quot;駅の乗りかえ回数を最小にする&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">False</span>, <span class="num">9000</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;迷路のゴールに行けるかだけ判定する&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">False</span>, <span class="num">400</span>, <span class="kw">False</span>),
-    (<span class="str">&quot;カーナビで最も早く着く道を案内する&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">True</span>, <span class="num">100000</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;床コストのある迷路を最小コストで抜ける&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">True</span>, <span class="num">10000</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;修学旅行で6か所を回る順番を決める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">6</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;工場のドリルが18か所をあける順番を決める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">18</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;宅配便が100軒を回る順番を5秒で決める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">100</span>, <span class="kw">False</span>),
-    (<span class="str">&quot;配送センターが30軒の最適な順番を1晩かけて求める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">30</span>, <span class="kw">True</span>),
-]
-
-<span class="fn">print</span>(<span class="str">&quot;条件から使うべきアルゴリズムを選ぶ&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
-<span class="kw">for</span> description, kind, weighted, size, need_best <span class="kw">in</span> cases:
-    name, reason = <span class="fn">choose</span>(kind, weighted, size, need_best)
-    <span class="fn">print</span>(<span class="fn">pad</span>(description, <span class="num">48</span>) + <span class="str">&quot;→ &quot;</span> + name)
-    <span class="fn">print</span>(<span class="str">&quot;    理由: &quot;</span> + reason)
-    <span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;同じ「巡回」の問題でも、都市の数と「最適解が必要か」で答えが変わる。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;アルゴリズムは1つを覚えるのではなく、使い分けられることが大切。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>重みがなければ、幅優先探索か深さ優先探索で足りる</td><td style="white-space:nowrap">A. <code>need_best</code><br>B. <code>not weighted</code><br>C. <code>weighted</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>全探索が一瞬で終わる都市数の上限</td><td style="white-space:nowrap">A. <code>size &lt;= 20</code><br>B. <code>size &lt;= 10</code><br>C. <code>size &gt; 10</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>bitDP の表が現実的な大きさに収まる都市数の上限</td><td style="white-space:nowrap">A. <code>size &lt;= 10</code><br>B. <code>size &lt;= 20</code><br>C. <code>size &lt;= 100</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a11_ex4_result.png" alt="AL2-11-ex4.py の実行結果。条件から使うべきアルゴリズムを選ぶ / ============================================================================ / 駅の乗りかえ回数を最小にする                    → 幅優先探索 / 理由: 重みがないので、歩数の少ない順に広げれば必ず最短になる /  / 迷路のゴールに行けるかだけ判定する              → 深さ優先探索 / 理由: 最短でなくてよいなら、調べるマスが少ない深さ優先探索で足りる /  / カーナビで最も早く着く道を案内する              → ダイクストラ法 / 理由: 重みがあるので、コストの小さい順に確定していく必要がある /  / 床コストのある迷路を最小コストで抜ける          → ダイクストラ法 / 理由: 重みがあるので、コストの小さい順に確定していく必要がある /  / 修学旅行で6か所を回る順番を決める               → 全探索 / 理由: 6都市なら順番の数が少なく、全部試しても一瞬で終わる /  / 工場のドリルが18か所をあける順番を決める        → bitDP / 理由: 18都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる /  / 宅配便が100軒を回る順番を5秒で決める            → 貪欲法 / 理由: 最適でなくてよいので、いちばん近い都市へ進むだけで一瞬で終わる /  / 配送センターが30軒の最適な順番を1晩かけて求める → 貪欲法 / 理由: 30都市では bitDP でも表が大きすぎる。近似解を使うしかない /  / ============================================================================ /  / 同じ「巡回」の問題でも、都市の数と「最適解が必要か」で答えが変わる。 / アルゴリズムは1つを覚えるのではなく、使い分けられることが大切。" width="599" height="648" loading="lazy">
-      </div>
-      <p class="run-note">8つの場面について、それぞれ使うべきアルゴリズムと理由が表示されました。同じ「巡回」の問題でも、6都市なら全探索、18都市なら bitDP、100軒なら貪欲法と、答えが変わっています。注目すべきは最後の<strong>「30軒の最適な順番を1晩かけて求める」</strong>で、最適解がほしくても、30都市では bitDP の表が大きすぎるため、貪欲法を選ぶしかありません。<code>choose</code> 関数の中身を読むと、条件がそのまま <code>if</code> 文になっていることが分かります。</p>
+      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の表から、都市の数ごとの3つの答えと時間を書き写す。あわせて、12都市のときに全探索と bitDP の時間が何倍違うかを計算し、答えが同じである理由を説明する。</span></div>
     </div>
   </div>
 </section>
@@ -1067,7 +825,7 @@ cases = [
       </div>
       <div class="setup-step">
         <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-11-ex3.py</code> を開き、<code>for count in [6, 8, 10, 12, 14, 16]</code> の都市数の一覧を、自分で決めた<strong>4つ</strong>に書き換える（12以下を2つ以上入れる）。
+        <p style="font-size:0.95rem"><code>AL2-11-ex2.py</code> を開き、<code>for count in [6, 8, 10, 12, 14, 16]</code> の都市数の一覧を、自分で決めた<strong>4つ</strong>に書き換える（12以下を2つ以上入れる）。
         保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
@@ -1239,7 +997,7 @@ cases = [
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

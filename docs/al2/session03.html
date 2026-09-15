@@ -302,7 +302,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p style="font-size:0.95rem;margin-top:0.8rem">
         見た目はまるで違いますが、どれも「頂点」と「辺」だけで書き直せます。
         書き直してしまえば、<strong>同じ1つのプログラムで4つとも解ける</strong>ようになります。
-        例題4では、迷路をグラフに書き直して、例題3とまったく同じ幅優先探索で解きます。
+        第2回の迷路も、マスを頂点、となり合うマスの間を辺にすれば、同じグラフとして扱えます。
       </p>
     </div>
 
@@ -452,7 +452,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -494,15 +494,15 @@ a.sub-item:hover { border-color: #4A7A00; }
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code>, <code>AL2-03-ex3.py</code>, <code>AL2-03-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -714,371 +714,6 @@ list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
     </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>グラフの上を幅優先探索する</h3>
-      </div>
-      <p>迷路で使った幅優先探索を、そのままグラフに使います。
-      「新宿から各駅まで、何本の路線に乗ればたどり着けるか」を求めます。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex3.py</span>
-<span class="cmt"># グラフの上を幅優先探索する</span>
-<span class="cmt"># 迷路と同じ考え方で、「新宿から各駅まで何本の路線に乗ればよいか」を求める</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-railway = {
-    <span class="str">&quot;新宿&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;渋谷&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
-    <span class="str">&quot;池袋&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;東京&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;品川&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;上野&quot;</span>: [<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-}
-
-start = <span class="str">&quot;新宿&quot;</span>
-
-<span class="cmt"># rides = 「その駅まで何本の路線に乗ればよいか」を記録する辞書</span>
-rides = {start: <span class="num">0</span>}
-came_from = {start: <span class="kw">None</span>}
-
-queue = <span class="fn">deque</span>([start])
-
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索の進み方&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-
-<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = queue.popleft()
-    <span class="fn">print</span>(<span class="str">f&quot;{current} を調べる（乗る路線の数: {rides[current]}本）&quot;</span>)
-    <span class="kw">for</span> next_station <span class="kw">in</span> railway[current]:
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-            <span class="kw">continue</span>                     <span class="cmt"># すでに調べた駅</span>
-        rides[next_station] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        came_from[next_station] = current
-        queue.append(next_station)
-        <span class="fn">print</span>(<span class="str">f&quot;    → {next_station} は {rides[next_station]}本でたどり着ける&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">f&quot;{start} から各駅までに乗る路線の数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="kw">for</span> station <span class="kw">in</span> railway:
-    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {rides[station]}本&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># 経路を復元して表示する</span>
-<span class="kw">for</span> goal <span class="kw">in</span> [<span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>]:
-    route = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        route.append(node)
-        node = came_from[node]
-    route.reverse()
-    <span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} への行き方:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>すでに乗車回数が決まっている駅は飛ばす</td><td style="white-space:nowrap">A. <code>next_station in railway</code><br>B. <code>next_station == start</code><br>C. <code>next_station in rides</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりの駅の乗車回数は、いまの駅の回数に1を足したもの</td><td style="white-space:nowrap">A. <code>rides[current] + 1</code><br>B. <code>1</code><br>C. <code>rides[current]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 322" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">新宿から出発して、乗る路線の数が少ない駅から順に広がる</text>
-        <line x1="176" y1="146" x2="206" y2="252" stroke="#555" stroke-width="2"/>
-        <line x1="176" y1="146" x2="260" y2="62" stroke="#555" stroke-width="2"/>
-        <line x1="176" y1="146" x2="408" y2="152" stroke="#555" stroke-width="2"/>
-        <line x1="206" y1="252" x2="356" y2="252" stroke="#555" stroke-width="2"/>
-        <line x1="408" y1="152" x2="356" y2="252" stroke="#555" stroke-width="2"/>
-        <line x1="408" y1="152" x2="470" y2="62" stroke="#555" stroke-width="2"/>
-        <line x1="260" y1="62" x2="470" y2="62" stroke="#555" stroke-width="2"/>
-        <circle cx="260" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
-        <circle cx="176" cy="146" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
-        <circle cx="470" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
-        <circle cx="408" cy="152" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
-        <circle cx="206" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
-        <circle cx="356" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="260" cy="62" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
-          <text x="260" y="28" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="176" cy="146" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
-          <text x="176" y="112" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">0本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.563;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="470" cy="62" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
-          <text x="470" y="28" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">2本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="408" cy="152" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
-          <text x="408" y="118" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="206" cy="252" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
-          <text x="206" y="218" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.563;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="356" cy="252" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
-          <text x="356" y="218" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">2本</text>
-        </g>
-        <text x="350" y="306" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">0本（新宿）→ 1本（渋谷・池袋・東京）→ 2本（品川・上野）の順に決まっていく</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a03_ex3_result.png" alt="AL2-03-ex3.py の実行結果。幅優先探索の進み方 / -------------------------------------------- / 新宿 を調べる（乗る路線の数: 0本） / → 渋谷 は 1本でたどり着ける / → 池袋 は 1本でたどり着ける / → 東京 は 1本でたどり着ける / 渋谷 を調べる（乗る路線の数: 1本） / → 品川 は 2本でたどり着ける / 池袋 を調べる（乗る路線の数: 1本） / → 上野 は 2本でたどり着ける / 東京 を調べる（乗る路線の数: 1本） / 品川 を調べる（乗る路線の数: 2本） / 上野 を調べる（乗る路線の数: 2本） / -------------------------------------------- /  / 新宿 から各駅までに乗る路線の数 / -------------------------------------------- / 新宿: 0本 / 渋谷: 1本 / 池袋: 1本 / 東京: 1本 / 品川: 2本 / 上野: 2本 / -------------------------------------------- /  / 新宿 から 品川 への行き方: 新宿 → 渋谷 → 品川 / 新宿 から 上野 への行き方: 新宿 → 池袋 → 上野" width="380" height="588" loading="lazy">
-      </div>
-      <p class="run-note">新宿から見て、渋谷・池袋・東京は<strong>1本</strong>、品川・上野は<strong>2本</strong>という結果になりました。実行結果の上半分を見ると、幅優先探索が「新宿 → 渋谷・池袋・東京 → 品川・上野」の順に調べていることが分かります。1本で行ける駅をすべて調べ終えてから、2本で行ける駅に進んでいます。迷路のときとまったく同じ進み方です。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>迷路をグラフに書き直して解く</h3>
-      </div>
-      <p>迷路をグラフ（隣接リスト）に書き直してから、例題3と同じ幅優先探索で解きます。
-      迷路の1マスを1つの頂点とし、頂点の名前を <code>"(行,列)"</code> という文字列にします。</p>
-
-<pre data-blanks="3"><span class="code-label">Python ── AL2-03-ex4.py</span>
-<span class="cmt"># 迷路もグラフである</span>
-<span class="cmt"># 迷路の1マスを頂点、となり合うマスどうしのつながりを辺と考えると、</span>
-<span class="cmt"># 迷路は「頂点がたくさんあるグラフ」になる。</span>
-<span class="cmt"># 迷路をグラフ（隣接リスト）に変換してから、例題3と同じ幅優先探索で解く。</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-maze = [
-    <span class="str">&quot;S.#..&quot;</span>,
-    <span class="str">&quot;..#..&quot;</span>,
-    <span class="str">&quot;....#&quot;</span>,
-    <span class="str">&quot;#.#..&quot;</span>,
-    <span class="str">&quot;...#G&quot;</span>,
-]
-
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
-
-<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> maze:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
-<span class="fn">print</span>()
-
-<span class="cmt"># --- 手順1: 迷路を隣接リストに変換する ---</span>
-graph = {}
-
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-            <span class="kw">continue</span>                      <span class="cmt"># 壁は頂点にしない</span>
-        name = <span class="str">f&quot;({r},{c})&quot;</span>               <span class="cmt"># 頂点の名前は「(行,列)」にする</span>
-        graph[name] = []
-        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-            nr = r + dr
-            nc = c + dc
-            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
-                <span class="kw">continue</span>
-            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-
-<span class="fn">print</span>(<span class="str">&quot;迷路を隣接リストに変換した結果（最初の6個だけ表示）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-count = <span class="num">0</span>
-<span class="kw">for</span> name <span class="kw">in</span> graph:
-    <span class="fn">print</span>(<span class="str">f&quot;  {name}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(graph[name]))
-    count = count + <span class="num">1</span>
-    <span class="kw">if</span> count == <span class="num">6</span>:
-        <span class="kw">break</span>
-<span class="fn">print</span>(<span class="str">&quot;  ...&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>(<span class="str">&quot;頂点（通れるマス）の数:&quot;</span>, <span class="fn">len</span>(graph))
-<span class="fn">print</span>()
-
-<span class="cmt"># --- 手順2: 例題3とまったく同じ幅優先探索で解く ---</span>
-start = <span class="str">&quot;(0,0)&quot;</span>
-goal = <span class="str">f&quot;({rows-1},{cols-1})&quot;</span>
-
-steps = {start: <span class="num">0</span>}
-came_from = {start: <span class="kw">None</span>}
-queue = <span class="fn">deque</span>([start])
-
-<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = queue.popleft()
-    <span class="kw">if</span> current == goal:
-        <span class="kw">break</span>
-    <span class="kw">for</span> next_node <span class="kw">in</span> graph[current]:
-        <span class="kw">if</span> next_node <span class="kw">in</span> steps:
-            <span class="kw">continue</span>
-        steps[next_node] = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
-        came_from[next_node] = current
-        queue.append(next_node)
-
-route = []
-node = goal
-<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-    route.append(node)
-    node = came_from[node]
-route.reverse()
-
-<span class="fn">print</span>(<span class="str">&quot;スタートからゴールまでの歩数:&quot;</span>, steps[goal], <span class="str">&quot;歩&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;通る順番:&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot; → &quot;</span>.join(route))
-<span class="fn">print</span>()
-
-picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-<span class="kw">for</span> name <span class="kw">in</span> route:
-    r, c = name.strip(<span class="str">&quot;()&quot;</span>).split(<span class="str">&quot;,&quot;</span>)
-    r = <span class="fn">int</span>(r)
-    c = <span class="fn">int</span>(c)
-    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
-
-<span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> picture:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>壁のマスは頂点にしない</td><td style="white-space:nowrap">A. <code>maze[r][c] == &quot;#&quot;</code><br>B. <code>maze[r][c] == &quot;.&quot;</code><br>C. <code>maze[r][c] == &quot;S&quot;</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>通れるとなりのマスを、この頂点の隣接リストに足す</td><td style="white-space:nowrap">A. <code>graph[name] = [f&quot;({nr},{nc})&quot;]</code><br>B. <code>graph[name].append(f&quot;({nr},{nc})&quot;)</code><br>C. <code>graph[name].append(name)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>となりの頂点までの歩数は、いまの頂点の歩数に1を足したもの</td><td style="white-space:nowrap">A. <code>steps[current] + 1</code><br>B. <code>steps[current]</code><br>C. <code>steps[start] + 1</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">迷路もグラフ: 1マスが頂点、となり合うマスのつながりが辺</text>
-        <rect x="60" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <text x="78.5" y="83.5" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">S</text>
-        <rect x="100" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="60" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="158.5" y="83.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="180" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="60" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="100" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="100" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="158.5" y="123.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="180" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="60" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="100" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="180" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="140" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="238.5" y="163.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="60" y="180" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="78.5" y="203.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="100" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="180" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="158.5" y="203.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="180" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="60" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="100" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="180" y="220" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="198.5" y="243.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="220" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <text x="238.5" y="243.5" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">G</text>
-        <text x="160.0" y="284" text-anchor="middle" fill="#888888" font-size="12">迷路として見た形</text>
-        <line x1="398" y1="78" x2="398" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="78" x2="438" y2="78" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="78" x2="438" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="78" x2="518" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="78" x2="558" y2="78" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="558" y1="78" x2="558" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="118" x2="398" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="118" x2="438" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="118" x2="438" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="118" x2="518" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="118" x2="558" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="158" x2="438" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="158" x2="438" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="158" x2="478" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="478" y1="158" x2="518" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="158" x2="518" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="198" x2="438" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="198" x2="558" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="558" y1="198" x2="558" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="238" x2="438" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="238" x2="478" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <circle cx="398" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,0</text>
-        <circle cx="438" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,1</text>
-        <circle cx="518" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,3</text>
-        <circle cx="558" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,4</text>
-        <circle cx="398" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,0</text>
-        <circle cx="438" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,1</text>
-        <circle cx="518" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,3</text>
-        <circle cx="558" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,4</text>
-        <circle cx="398" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,0</text>
-        <circle cx="438" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,1</text>
-        <circle cx="478" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="478" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,2</text>
-        <circle cx="518" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,3</text>
-        <circle cx="438" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,1</text>
-        <circle cx="518" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,3</text>
-        <circle cx="558" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,4</text>
-        <circle cx="398" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,0</text>
-        <circle cx="438" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,1</text>
-        <circle cx="478" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="478" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,2</text>
-        <circle cx="558" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,4</text>
-        <text x="480.0" y="284" text-anchor="middle" fill="#888888" font-size="12">グラフとして見た形</text>
-        <text x="350" y="312" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">壁のマスは頂点にしない。通れるマスどうしだけを辺でつなぐ</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a03_ex4_result.png" alt="AL2-03-ex4.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.#.. / ..#.. / ....# / #.#.. / ...#G /  / 迷路を隣接リストに変換した結果（最初の6個だけ表示） / -------------------------------------------- / (0,0): (1,0)、(0,1) / (0,1): (1,1)、(0,0) / (0,3): (1,3)、(0,4) / (0,4): (1,4)、(0,3) / (1,0): (0,0)、(2,0)、(1,1) / (1,1): (0,1)、(2,1)、(1,0) / ... / -------------------------------------------- / 頂点（通れるマス）の数: 19 /  / スタートからゴールまでの歩数: 8 歩 / 通る順番: / (0,0) → (1,0) → (2,0) → (2,1) → (2,2) → (2,3) → (3,3) → (3,4) → (4,4) /  / 最短経路（* が通り道） / S.#.. / *.#.. / ****# / #.#** / ...#G" width="601" height="628" loading="lazy">
-      </div>
-      <p class="run-note">5マス×5マスの迷路のうち、壁ではないマスは<strong>19個</strong>ありました。19個の頂点と、となり合うマスどうしの辺からなるグラフに書き直せています。書き直したあとは、例題3の路線図とまったく同じコードで最短経路（8歩）が求まりました。見た目がまったく違う迷路と路線図が、グラフという同じ形に書き直すことで、同じプログラムで解けるようになります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の実行結果から、迷路の頂点の数と、(0,0) の頂点につながっている頂点を書き写す。あわせて、迷路をグラフに書き直したことで何が便利になったかを、自分の言葉で説明する。</span></div>
-    </div>
   </div>
 </section>
 
@@ -1283,7 +918,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

@@ -447,7 +447,7 @@ a.sub-item:hover { border-color: #4A7A00; }
 
     <div class="note-warn">
       <strong>成り立たなくなる場合:</strong> 重みにマイナスの値が混ざると、上の理由が使えなくなります。
-      「遠回りをすると時間が減る」ことが起きてしまうためです。例題3で実際に確かめます。
+      「遠回りをすると時間が減る」ことが起きてしまうためです。後期の路線図や迷路では、時間やコストがマイナスになることはないので安心して使えます。
     </div>
   </div>
 </section>
@@ -458,7 +458,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -500,15 +500,15 @@ a.sub-item:hover { border-color: #4A7A00; }
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-05-ex1.py</code>, <code>AL2-05-ex2.py</code>, <code>AL2-05-ex3.py</code>, <code>AL2-05-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-05-ex1.py</code>, <code>AL2-05-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -726,289 +726,6 @@ settled = <span class="fn">set</span>()
       </div>
       <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」で27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 → 品川 → 渋谷 → 新宿 となり、順番をひっくり返せば道順になります。第1回の幅優先探索で経路を復元したときと、まったく同じやり方です。</p>
     </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>マイナスの重みがあると間違える</h3>
-      </div>
-      <p>ダイクストラ法が正しく動くのは「重みがすべて0以上」のときだけです。
-      マイナスの重みが1本でも混ざると、答えを間違えます。
-      3つのお店をめぐる例で確かめます。B店を通ると5円のクーポンがもらえるので、
-      B店からA店へ向かう辺の重みは <code>-5</code> になっています。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-05-ex3.py</span>
-<span class="cmt"># ダイクストラ法（3）: マイナスの重みがあると答えを間違える</span>
-<span class="cmt"># 3つのお店をめぐる。辺の重みは「かかる金額（円）」。</span>
-<span class="cmt"># B店を通ると5円のクーポンがもらえるので、B店からA店へ行く辺の重みは -5 になる。</span>
-
-shops = {
-    <span class="str">&quot;スタート&quot;</span>: [(<span class="str">&quot;A店&quot;</span>, <span class="num">1</span>), (<span class="str">&quot;B店&quot;</span>, <span class="num">2</span>)],
-    <span class="str">&quot;B店&quot;</span>: [(<span class="str">&quot;A店&quot;</span>, -<span class="num">5</span>)],
-    <span class="str">&quot;A店&quot;</span>: [],
-}
-
-start = <span class="str">&quot;スタート&quot;</span>
-INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-
-
-<span class="kw">def</span> <span class="fn">dijkstra</span>():
-    <span class="str">&quot;&quot;&quot;ダイクストラ法で、スタートから各店までの最小金額を求める&quot;&quot;&quot;</span>
-    distance = {}
-    <span class="kw">for</span> shop <span class="kw">in</span> shops:
-        distance[shop] = INF
-    distance[start] = <span class="num">0</span>
-    settled = <span class="fn">set</span>()
-
-    <span class="fn">print</span>(<span class="str">&quot;ダイクストラ法の進み方&quot;</span>)
-    <span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(shops):
-        current = <span class="kw">None</span>
-        <span class="kw">for</span> shop <span class="kw">in</span> shops:
-            <span class="kw">if</span> shop <span class="kw">in</span> settled <span class="kw">or</span> distance[shop] == INF:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[shop] &lt; distance[current]:
-                current = shop
-        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
-            <span class="kw">break</span>
-        <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        <span class="fn">print</span>(<span class="str">f&quot;  {current} を「{distance[current]}円で確定」とした&quot;</span>)
-        <span class="kw">for</span> name, price <span class="kw">in</span> shops[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> settled:
-                <span class="fn">print</span>(<span class="str">f&quot;      {name} へ {distance[current]} + ({price}) = &quot;</span>
-                      <span class="str">f&quot;{distance[current] + price} 円で行けるが、&quot;</span>
-                      <span class="str">f&quot;{name} はすでに確定しているので無視された&quot;</span>)
-                <span class="kw">continue</span>
-            new_price = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-            <span class="kw">if</span> new_price &lt; distance[name]:
-                distance[name] = new_price
-    <span class="kw">return</span> distance
-
-
-<span class="kw">def</span> <span class="fn">all_routes</span>(here, visited):
-    <span class="str">&quot;&quot;&quot;同じ店を2度通らない行き方をすべて返す&quot;&quot;&quot;</span>
-    result = [[here]]
-    <span class="kw">for</span> name, price <span class="kw">in</span> shops[here]:
-        <span class="kw">if</span> name <span class="kw">in</span> visited:
-            <span class="kw">continue</span>
-        <span class="kw">for</span> rest <span class="kw">in</span> <span class="fn">all_routes</span>(name, visited + [name]):
-            result.append([here] + rest)
-    <span class="kw">return</span> result
-
-
-<span class="kw">def</span> <span class="fn">route_price</span>(route):
-    <span class="str">&quot;&quot;&quot;route の順に進んだときの合計金額を返す&quot;&quot;&quot;</span>
-    total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
-        <span class="kw">for</span> name, price <span class="kw">in</span> shops[route[i]]:
-            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
-                total = total + price
-                <span class="kw">break</span>
-    <span class="kw">return</span> total
-
-
-<span class="fn">print</span>(<span class="str">&quot;お店のつながり（数字は金額・円。マイナスはクーポンで安くなることを表す）&quot;</span>)
-<span class="kw">for</span> shop <span class="kw">in</span> shops:
-    <span class="kw">if</span> <span class="fn">len</span>(shops[shop]) == <span class="num">0</span>:
-        <span class="fn">print</span>(<span class="str">f&quot;  {shop}: つながる先なし&quot;</span>)
-    <span class="kw">else</span>:
-        parts = []
-        <span class="kw">for</span> name, price <span class="kw">in</span> shops[shop]:
-            parts.append(<span class="str">f&quot;{name}({price}円)&quot;</span>)
-        <span class="fn">print</span>(<span class="str">f&quot;  {shop}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(parts))
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
-<span class="fn">print</span>()
-
-result = <span class="fn">dijkstra</span>()
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法が出した答え&quot;</span>)
-<span class="kw">for</span> shop <span class="kw">in</span> shops:
-    <span class="fn">print</span>(<span class="str">f&quot;  {shop}: {result[shop]}円&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;すべての行き方を書き出して確かめる&quot;</span>)
-best = {}
-<span class="kw">for</span> route <span class="kw">in</span> <span class="fn">all_routes</span>(start, [start]):
-    goal = route[-<span class="num">1</span>]
-    price = <span class="fn">route_price</span>(route)
-    <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: {price}円&quot;</span>)
-    <span class="kw">if</span> goal <span class="kw">not</span> <span class="kw">in</span> best <span class="kw">or</span> price &lt; best[goal]:
-        best[goal] = price
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;本当の最小金額&quot;</span>)
-<span class="kw">for</span> shop <span class="kw">in</span> shops:
-    <span class="fn">print</span>(<span class="str">f&quot;  {shop}: {best[shop]}円&quot;</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;A店について、ダイクストラ法は&quot;</span>, result[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円と答えたが、本当は&quot;</span>, best[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円で行ける。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いちばん小さい店を「確定」にする（マイナスがあると、ここが間違いのもとになる）</td><td style="white-space:nowrap">A. <code>settled.remove(current)</code><br>B. <code>settled.add(current)</code><br>C. <code>settled.add(start)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>確定した店までの金額に、その道の金額を足す</td><td style="white-space:nowrap">A. <code>distance[name] + price</code><br>B. <code>distance[current] + price</code><br>C. <code>price</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 326" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#FF5252" font-weight="700" font-size="15">マイナスの重みがあると、ダイクストラ法は間違える</text>
-        <circle cx="110" cy="160" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="110" y="165" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">スタート</text>
-        <circle cx="560" cy="160" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="560" y="165" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">A店</text>
-        <circle cx="335" cy="260" r="34" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="335" y="265" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">B店</text>
-        <line x1="144" y1="160" x2="526" y2="160" stroke="#666" stroke-width="2"/>
-        <rect x="318" y="140" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
-        <text x="340" y="157" text-anchor="middle" fill="#bbb" font-size="12">1円</text>
-        <line x1="136" y1="180" x2="308" y2="248" stroke="#666" stroke-width="2"/>
-        <rect x="196" y="200" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
-        <text x="218" y="217" text-anchor="middle" fill="#bbb" font-size="12">2円</text>
-        <line x1="366" y1="246" x2="534" y2="184" stroke="#FF5252" stroke-width="3"/>
-        <rect x="432" y="196" width="56" height="24" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
-        <text x="460" y="213" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">-5円</text>
-        <text x="460" y="240" text-anchor="middle" fill="#888888" font-size="10">B店でもらえるクーポン</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.280;0.300;1" dur="12s" repeatCount="indefinite"/>
-          <text x="350" y="60" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">① スタートを0円で確定</text>
-          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">A店は1円、B店は2円と分かった</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.320;0.340;0.580;0.600;1" dur="12s" repeatCount="indefinite"/>
-          <text x="350" y="60" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">② いちばん小さいA店（1円）を確定</text>
-          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">「A店は1円で決まり」としてしまう</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.620;0.640;0.960;0.980;1" dur="12s" repeatCount="indefinite"/>
-          <text x="350" y="60" text-anchor="middle" fill="#FF5252" font-size="14" font-weight="700">③ B店（2円）を確定すると -3円 が見つかる</text>
-          <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">しかしA店はもう確定済みなので、書き直されない</text>
-        </g>
-        <text x="350" y="310" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">ダイクストラ法の答え: A店は1円　／　本当の答え: A店は -3円</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a05_ex3_result.png" alt="AL2-05-ex3.py の実行結果。お店のつながり（数字は金額・円。マイナスはクーポンで安くなることを表す） / スタート: A店(1円)、B店(2円) / B店: A店(-5円) / A店: つながる先なし / ------------------------------------------------------------ /  / ダイクストラ法の進み方 / スタート を「0円で確定」とした / A店 を「1円で確定」とした / B店 を「2円で確定」とした / A店 へ 2 + (-5) = -3 円で行けるが、A店 はすでに確定しているので無視された /  / ダイクストラ法が出した答え / スタート: 0円 / B店: 2円 / A店: 1円 /  / すべての行き方を書き出して確かめる / スタート: 0円 / スタート → A店: 1円 / スタート → B店: 2円 / スタート → B店 → A店: -3円 /  / 本当の最小金額 / スタート: 0円 / B店: 2円 / A店: -3円 /  / A店について、ダイクストラ法は 1 円と答えたが、本当は -3 円で行ける。 / マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。" width="553" height="648" loading="lazy">
-      </div>
-      <p class="run-note">ダイクストラ法はA店を<strong>1円</strong>と答えましたが、すべての行き方を書き出すと「スタート → B店 → A店」で<strong>-3円</strong>で行けることが分かります。ダイクストラ法は、A店を1円で確定させたあとにB店を調べています。そのときA店へ -3円で行けることが見つかりますが、A店はすでに確定しているので<strong>無視されてしまいます</strong>。「遠回りをすると安くなる」ことが起きると、確定という考え方そのものが成り立たなくなります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題3の実行結果から、ダイクストラ法の答えと本当の答えを書く。あわせて、ダイクストラ法がA店の -3円 を採用できなかった理由を、実行結果の「無視された」という行を引用しながら説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>出発点を変える／全探索と答え合わせ</h3>
-      </div>
-      <p>出発点を6つの駅すべてに変えて距離表を作り、
-      さらに全探索（すべての行き方を書き出す方法）の答えと一致するかを機械的に確かめます。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-05-ex4.py</span>
-<span class="cmt"># ダイクストラ法（4）: 出発点を変えて表を作り、全探索の答えと一致するか確かめる</span>
-
-railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
-}
-
-INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-
-
-<span class="kw">def</span> <span class="fn">dijkstra</span>(start):
-    <span class="str">&quot;&quot;&quot;start から各駅までの最短時間を辞書で返す&quot;&quot;&quot;</span>
-    distance = {}
-    <span class="kw">for</span> station <span class="kw">in</span> railway:
-        distance[station] = INF
-    distance[start] = <span class="num">0</span>
-    settled = <span class="fn">set</span>()
-
-    <span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
-        current = <span class="kw">None</span>
-        <span class="kw">for</span> station <span class="kw">in</span> railway:
-            <span class="kw">if</span> station <span class="kw">in</span> settled <span class="kw">or</span> distance[station] == INF:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
-                current = station
-        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
-            <span class="kw">break</span>
-        settled.add(current)
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> settled:
-                <span class="kw">continue</span>
-            new_distance = distance[current] + minutes
-            <span class="kw">if</span> new_distance &lt; distance[name]:
-                distance[name] = new_distance
-    <span class="kw">return</span> distance
-
-
-<span class="kw">def</span> <span class="fn">brute_force</span>(start):
-    <span class="str">&quot;&quot;&quot;すべての行き方を書き出して、各駅までの最短時間を求める（答え合わせ用）&quot;&quot;&quot;</span>
-    best = {start: <span class="num">0</span>}
-
-    <span class="kw">def</span> <span class="fn">walk</span>(here, total, visited):
-        <span class="str">&quot;&quot;&quot;ここから先の行き方を、同じ場所を2度通らないようにすべてたどる&quot;&quot;&quot;</span>
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
-            <span class="kw">if</span> name <span class="kw">in</span> visited:
-                <span class="kw">continue</span>
-            new_total = total + minutes
-            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-                best[name] = new_total
-            <span class="fn">walk</span>(name, new_total, visited + [name])
-
-    <span class="fn">walk</span>(start, <span class="num">0</span>, [start])
-    <span class="kw">return</span> best
-
-
-stations = <span class="fn">list</span>(railway)
-
-<span class="fn">print</span>(<span class="str">&quot;出発点を変えたときの最短時間の表（分）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="cmt"># 駅名は全角なので、見出しは空白5つ＋駅名（全角2文字＝半角4文字ぶん）でそろえる</span>
-<span class="fn">print</span>(<span class="str">&quot;出発点&quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">&quot;     &quot;</span> + s <span class="kw">for</span> s <span class="kw">in</span> stations))
-<span class="kw">for</span> start <span class="kw">in</span> stations:
-    result = <span class="fn">dijkstra</span>(start)
-    <span class="fn">print</span>(start + <span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{result[s]:&gt;9}&quot;</span> <span class="kw">for</span> s <span class="kw">in</span> stations))
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法と全探索の答えが一致するか確かめる&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-all_same = <span class="kw">True</span>
-<span class="kw">for</span> start <span class="kw">in</span> stations:
-    fast = <span class="fn">dijkstra</span>(start)
-    slow = <span class="fn">brute_force</span>(start)
-    <span class="kw">for</span> goal <span class="kw">in</span> stations:
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
-            <span class="fn">print</span>(<span class="str">f&quot;  ちがう: {start} → {goal}  ダイクストラ {fast[goal]} / 全探索 {slow[goal]}&quot;</span>)
-            all_same = <span class="kw">False</span>
-<span class="kw">if</span> all_same:
-    <span class="fn">print</span>(<span class="str">&quot;  すべての出発点・すべての目的地で、答えは完全に一致した&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>初めて着いた駅か、これまでより短いときに記録する</td><td style="white-space:nowrap">A. <code>name not in best or new_total &lt; best[name]</code><br>B. <code>new_total &gt; best[name]</code><br>C. <code>name in best</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>2つの方法の答えがちがっていたら「同じでない」にする</td><td style="white-space:nowrap">A. <code>fast == slow</code><br>B. <code>fast[goal] == slow[goal]</code><br>C. <code>fast[goal] != slow[goal]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a05_ex4_result.png" alt="AL2-05-ex4.py の実行結果。出発点を変えたときの最短時間の表（分） / -------------------------------------------------------- / 出発点     新宿     渋谷     池袋     上野     東京     品川 / 新宿          0        7        9       21       27       16 / 渋谷          7        0       16       26       20        9 / 池袋          9       16        0       12       18       25 / 上野         21       26       12        0        6       17 / 東京         27       20       18        6        0       11 / 品川         16        9       25       17       11        0 / -------------------------------------------------------- /  / ダイクストラ法と全探索の答えが一致するか確かめる / -------------------------------------------------------- / すべての出発点・すべての目的地で、答えは完全に一致した / -------------------------------------------------------- /  / 重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。" width="523" height="388" loading="lazy">
-      </div>
-      <p class="run-note">6つの駅それぞれを出発点にした表ができました。表は左上から右下への線を軸にして<strong>対称</strong>になっています。行き帰りで同じ時間がかかる路線図なので、新宿から東京への27分と、東京から新宿への27分は同じ値になります。ダイクストラ法と全探索の答えは、すべての組み合わせで完全に一致しました。重みがすべて0以上であれば、ダイクストラ法は全探索と同じ正しい答えを、はるかに速く出せます。</p>
-    </div>
   </div>
 </section>
 
@@ -1213,7 +930,7 @@ all_same = <span class="kw">True</span>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="Z65ZgbLvDrxBZHc7Tg6VffOwSpEeVop01arFfqjef9KNyOKVlIR8mQAdbUcUPcv4JNSrAGpCRx/6HlWtWBsp+Vf3IMXwmSvWY1YF9MUYECcDtGAt0Fh8mz2GEgBPFMrZCkvvWmITCVNmWC+XTtRCbvwiQStYMWJlrnw7fxZoDrYzWErrP61ZRkv9XSeRh8e4g5yrkzNs2ecEWASrWh1GOzwXkT6H24rAIBzsEdUBrB72ZprFtZMnOSJkctnRmtfIEePUOGWavd1SNKLZM9R2fihK7a+BnuCJcWW9Mz/r0T0zBpMhLeUIxw/XJAaUnGI7g0u4vKWCuSc9QUUdyP5AmBc0wwdJnBYfE/NmNGXw8zVB49AgJTLFea5WAn+c2NggE3Bq2tVWyxi4zYmYHAnvAranqTFSHKTF5erg3pG9uQOrqjzPyd+Y4WfrszHSW6On0/pywEfNBZ1VwEjDfKILod9BU4gogRfRN0oXWMoXU0XrdGosVtTc0VnDHKdVWNAHB4LEFuiacIkjc/FrnTdWgy2oZx+e6S3Y1JANLvV5Mmm0rHlXHCIedbWk9B3xakzHrboCZnfO99jeoE9imIKCWoX5PGTN/VLULpz266llY58p/Ow9IBT5y8kX8Q0Yq2Jjkb/rhlzUjqTKvCBBFdNIpbEhPvMEZtolaQGGV/bB+pxKHpfH0TNRE4VlLwEWSiF6OP6SL5ujCHEqjuIfJH7b7ThgLmq4K5FEzGhaLaWXty++fcWhsA23i/LD/PkF22qexVt/FmhcWa42i5fZgrzV3e0q+UcjCloLjbufxWlcr8Mxcmqt8aO29vt0ln9k7/5rQaziCL6lSAp2MtlqpGX+nNWRcxaPTdnidgtPs86aAEC8g51SC1geinJ2MOgIDsVrtFfTXJhDZtRS++kRH9rkHw3hZOdSqjUjcyasX2q43yWJwF4tbkuNyTOBHnzhtNKuR0U53Bv7fB4+2PRp9abISaiuqHG82JmIKigWoV8M8UjVxlHWsglWB3500+74T80c62Lf742GcAX+L/RPqlA370D3fbpC/qaidgm3DgIcE09j/b1GhYqyRYSH45gqoZpJTRcPLDmzYJHshCqsGm2rEr4N/KS5nE3M/rfKF7qUZeN9uupEkvEXUs7IEwCaQAmGwirqn6A26aA5C8Oy3e015gkCOxt4gi9tbtjOuhYBCOq1L8SaDeMX3hdjBV5JfxIK7nlCv9QNAanj0b29venrvlh7AiDv8fQ0gjscgJswUic27L+iEECb97W5Ilhfhu5wmlTf2Gkx/mePpOr8cTI2ZG/IBE+2wXmsye4B4sl7kt8HEIQqGnsgU96CqbT9sUVPItjtsRzS2ntCAhhW2+cu8r/OCTxxU18Ws+CkMVcabT7S70eK9h6+68ZdMatwnGM0amxFizsFpvFClBMsZSN640T73FhDcRIlivMqqlSJNt0rSjw2X8D364RAGcelBfvbEyUUXBS2xr1qA3Q3/UGn6eaWIJmM5LnIdVwc8GMba6gpy8Nbj+uz25MhbZEBLl0E5hTWGt5SBPM0BeYf8bUaf6rBC3YmuW9P5GVmeFLJqwpSy1PeAKyGMG/d05zPRRQ+2donnMItSTIS8IwP+YnlJl57VbQPT+0EM07zRcvTF9wM18AFwK2tiRoWadVyDHJzk+rXX13YcyFfsk19lX1E+9pOHMHHcI0xdxVAuzJcnhW3xvKcvBU3y+ylBnptrnUuEceVoF7ldHA9PwYqEXHHc3Mf5Wk+MaWupGKvE9UnX3HAueBAv0TOU8ki335uBK80hJ9BxKM1VdWy+Z9Rwx4WrdOKm74QeMieNmnE7jsJaFb71zY3mdd0n1bz7wfFdoS7YAH8lw3h4CyFUaGryRnN11VwtIZqnCQaXx1ZqKgDLzEZjZBkN1y5HWyxg3j9fPmt2y3JiYcSSdKJm05R4s+ukLaI9uOdY5w14D/B/BRgRZf4nnnHaJKlpOdsCtf7ZfKcwGTL9Fa1HM4Cqo3ltYLwl18ngrdxhejozRUzDOjGea59L1Plfktj06Sp7fFdC6A9MwldEsyK4nlX4m8DinNyQY6iI91plt61P91yUPGPTAtNqAnA6rgirRWjbwFUllWb2FAsrygRfzcbIe09dtIMbgzfQSVwFZ7xPok+r3SxcH5H2ovU56pL9XpZNYewHj6sNRgc4+TEH7aForpT+vif+MnyHI3if8C6xNa8GPVxW4OXeyqHg3ebCpyQHQMdw65vbwg4ar0336l9yuZl/xeQXKyF0AkiuMIEaJ2MM2YY1tYW1HFPZnrA52YSfOyR6ba+zHjVXZ32LVMsyS5Kklc/LeUZ/tz5ScvqrebLjjt8Nw03TyUSTmZEMoP/yQrMvlTPlRZLlBGQt3NSXKKutPeMFUppBngwMzSsA92OljoUzl+V9vMyl9yCxADPvAuoNyM1wYYSljggJewFZcbpLMRAo10Q8qHKMouqJWN805kHh7ctqvsjXMwRTs3mvU7qBWT0DgPn9K8ZlAIoLuM975skZYmvWw74YToLvPaDOkpp4rj3ZO+JEsBJXQ09vT9eRFY1vVVBKnPaI6NFFsxiq+uJj+6roy+dxhhuhygUrptKLU1bzw8MjQsb+VIZbX97eKpDKPa6ijdmWvdy/DVHaBtvgg1zhdlSW+IEVnqszPm58HGFSFRkf+cv47XgKOQT4Y2A5DgkL7sKzaLQ+ANEG0Z78ZrHoUUgi2G+XEyerC17n8pvYWsvV6Mx6A31ftNmxZotE0cPPo6TkU8oucCfAeHGWEkndCFIJ8rXCXBuv57/qg/V7dTWdvZzGYK2HV3ijEkHQOP1BjKgDOjl/3uFoM+MteHqyO3sTxMYgG8P4famMXdSiBoSIu794b6zo/EmlkL7kWIQPJe9o35pNmaikIW6kSFAPPAvXOnLAg2BSLrtNggD6ZKenQsoiHTHNE+k2OqQTKcg2jg8kx1/VjItAX3SiheZZE6CkH9yXf/qiqxzwpeV0n09wIW5DKmolVpLFQbyXinBD3NrLpZvhGLniqllDIn2QUFUIkn46oeJQ/HAvNSrzpLviSDlsc5ZlYQyxRDVYwJdLCwpFRsCoBA5D0XoVel6vLAzQJUbQueAcvD45GTQAJ9d4lyAxNPn/fSujg4GkQVJK7UwX7L/hWlLIGHRDcBBC85A3frFrLEqh/7+JrQcEDmhif5goJwC8yoyngak7Cw79eVQHCCyRCqihprpuxOHTf8gJ6pDBMlywkGfL41Ty7Hju20lhCx/xd4YENWEd5M5xGn/YxzR2D/GOEeoA+5cwcSgeIXPZMpp3e63ksWPC+ZYdKpHftdK302Wn+WaiXvN5M4J//E7fHq9+c+JaRhIKGiQ21byJLXtNVfht+pf93QcEByMO73lsph3vVWxMSITb79d3c8nn7cIZRwlirXCnSTYWQwrt9z61gGaDFsHCufHFBEIi0H485K9teudTYsB0oGEJJJKey4Nn9wMGvYlWM8u7ORnFV4xuzczExPnWKiGPwUF1AN3B29owyVW98Q8mF03KPGq5cCGnfxXsDag3cmmEVfdAAX1ZmZPv34zWC+fd0qy3V3p8HNCd+jFe+v1jUwX45AFZCcM116xPsRrY+aLq0DG5UEhTdcHHDfVShLrLyfLXDaxy4Ci2Sk0DgdAF0d0dEzl5s7vHCpY83EZ16zekbV4U9iscAOTtOnqPlnqAhk6TVhgCgx4IZ7tBcQFQyg48pNgEFZ300yPdI3MSGQZJx/U0QSu10U5+415LaMVhvrKmvmiv9K4kmILIZhqSQ6tuklxVH2/dRDwwhdcmSPTZ76qDEQsF4YH0/Uhu0SSZKufD0yhVWd4JWpErHURxWO9WrpuTvrEyML5zy79+OOowowHpjuF0TdIzpqmtG9Qu2ZJf1MSDc4mlWGoUwyNhbaoTDOVBy2DR0Kr1/X5WdURk9B10zD+NCACWCDb2N3Zm1i1sp+dsv+E4GAuqLIkqhghxAFlMOlGl+pxheeGriUquRGElcae3EOhoi7n+3H5nvvLUiKUIL2YCyfrGKfR4O9gqSM28ri5kILyOhPJ13qmZyRF5ZdP7gJgS83gPWsHrGzrcb5gnqAK0KEl6chIHt8BjRYhl5F5k5b+6C4g+GdL3FfRc9aBG8l+JUwxtYV2B1sfhiLNYEM8HrpdcsVSjhXtpPO3eP5zfeWLq8Z25cqKmnYcXDu0PWPoTQq2GAiHo4EDD34B6bYTPvB3cLtqsGLBqnR5C51dOQ3s/MBK8KStmFVk5hCYJJRXF/miBUZGijxlO2tsBMXvDwyn/7lc49LgDarYw8us1Khh93kbmn2xXZCIML6ZYd0BOUly+03GE02pqLVQNCxMgj07KdAY6UIkwP1XvcwfMAFBu2G72NxdlPviaNZMaSApMJfjc1FpHAHluMmyAXctNjUV+vFa0gTnvBqHesVV2JFKug7p0M8qSR6FAhakUh2sNXb1wB68IBqBhNFN8pOfd7xUfzBq0r2iRZZU2fa6x0KNcbb4gO/sskb7Pv5r+NQDXXYgGQ4WlG9DeVAPEIZxwQMpivt8GaIajIYKhiAplcrtKURtxJ4VGdcMhqPGcrPvam6mZjDaZL7XZyHS4AJkvYYs4eATcZAQpdHB1Vmayg4mX+3Y26WV7JY08E/Z/9esmNr9LwkM1OhmbjmO68zeRwVZB5hPZPb+4pPsEjiMp3ruDPUeTHHcr1zFFOyTWW1wkpZDghEb4PMCgvu33aiQU7vpVH11EGaYw91Yedr5rr1jpEoclSJwYh/On4zg/xjYkkdS4YZ/3TVyzkSrhjS/C2hIvifHW/q0eQJKs6eSG2tMNnVW3Yzhx5BWTpzd/APrHXmisQ7prdbR641WmzNuXtjhSMQx/qROk0XeHv0h/9ZEzjkvdMgWTbL8r99YIxzghDHsRGhqvm6dUG8QGYoOAmPqMJ2NcRVJNThPLoEtO8P6a7UXWAP4/eHdby8oUkoDSUk1KtVSnnOa/L/7yLy0J1yHbkdjKDhrFUkdHp9bxXNDP4CTU2MgFypSHYqkfvW6mTKu8GvVRfNhdEio5oT00T5SCLd8P+jrkcBJQzrUCLfWjBRDhTGmmaWdnIs+yW4axrYL623f6Wr+xnsLyPfhFOrp6UtX/6pYkmOFzRzznZuFjQlgN9b+NDIgOfOlQJ2N+iXQA86ynH+FxRsBG5Zy/At79+i9FfVwHvrBvJrfrM7J8ZQmeVyEJKGBXpDhVTXkIXSluxkx9zu5kRL29vTRDjeW9FJg+3916LeoLE9XP3hFKo3ISgVXIjazPC7NRBfGE3Nqw/HH6ULgm177MB9fLkJZnIUYPmGW09RMpceqw5A7xbbyfAwPc1/YpVHQUQpHCbSscQnF6GFOAOjjANGb/XrRcC2i0HKWqOkXGrwMw8QyX5wlAbs/NpJ2MCpulxsxtiUr8jYmok/auvrUdffKugCJQFSHuDWhVo2hQcfFBxk5ZyjqyGkLOfCl/i+Zyy99IHAQsG1uby8SlkRJnkDoQuqAAdkMLWqr+S5X5uHwRCzaLeqdFS9DtqMSxFJPTU6WQAmhj0meHtYWWjmAamdZquNN+t9MXs4GlknRwdGGqDdSDaOjZGf5vt074b7N23h67UVL/ReggbXBQ81liqqoiqp9cma1M8zelG6b8znOCYPsLnQXvC9CURV36f7pK9ziD64Uw/u4Ze61/6IJcYy1vvOSgYbcr1s8ffMmx1f9JdLhc0imhIL/bc5l+0JgHJ25qubvx9fW8JAa4Xnw701DPWPKV/52q98p77kIFRPmzNiVBG/95HPaeImlaT0Xw+enAhUVV8queO5I0bgOEu4beMfKZ4wg1eZcshYqinu+9X4e+978Og7uN3yqwg3DHwOpHHLgjyN7Bj6EN6jK+qdCG/NXTuePWtV/CikxSUZ7CjfpwauQpAaiQuVAQ9H65jkpvC+exTtlqIftK5jgE4DFLbqSFeuuM1R6l4ApFzPOnGTtUxiPkAfXyYIpNt05G5Jphqai0fRzUeeH2botc6j+5RRU9cOLjPi9SrnZ4dyrvn3Gcgow0gijiJbIl2HugD4ltcFiLjztTpJ3vJxyuvKKLHiGSqHNwWkfXq8wGaslMtNf2RNtslq++pfA0yDeDEUaWMymHep4B8Z9Kl4Zpkd/9ylYoXK9WmepRa8xwKUPHvc/6Tbg8bnhyd2rpCzk8OhPJdZP9GfIYRmBlS0/txsq2ONqixd9JD+jeZE95Chcf2VA883ASKsAmZT4TzTsg0wVAMRScGtYWBOT7f8zWKJmEC68gboW0T0IEMv4Kcl4KNqSUf4ekBbiGJbj6eohcZ7DQLSTv0G0feLcRbQm6NfnyqcQJq55SA+0tV319UgXx0VfEZpGjnmpm9kwgxKb4iUEyzSMkiio4puc28jfblESv3hUPGhh6rZ1L2f3XtWmvt9OQJKfLhrGRXCb8tg5Ir4JaQ9j76P+JYRpugCDhfzcAWr836cSdqA2lNBd91N2mgTaWAIiaoEtZrR83NAcxt8rZ/y4ouDoBXFt74qSuOOJU+K8I5JD+Laq9QSAWlLL4tmZmQnAFDhyRqprLEZ3fe5uuEcrbzIrcs7gXiH2ADvhAOkdomVHtPGoec3Vlr6s646VlSQb7H6j/tlMP0yO8JUxUvU/x1z57jGNCUWf7xjwIK3Zn6fxPGHv82aDsJLmh+2+OALb9QHLsISf04fGuwWR6jyx6TYqmMsl5Kg/8woqSdU5niW6FADuNsVJMh8xxGGST2kNEa4CQryR+5IDKr4yYTK5nBoq1xYTAnEzSBplLMtsdDJj4Vss2XMYImcZ/hWRtYU8+Z0W/Wv1udBaRzqmNed/POOiTWxydIX65oIkk75RtbL5WpDsJo92WP5IEnlehrhakDth+u8ngXPVagy8Up0jp4q8ErpeezkcFZbCIydV53KbA50cvhlLsOEcpE9GJ9ItAna4Fdo6U8WqogC0/Miz1To3xiZ+y+8vbr/CYwsv8OGY3ppKiZwJzWg8fQf894Tpfgkgbls2pKtXO6bNHgS/LHm5NF0Bj4eRpZSLyCzJVwboBvQvd5ts+HZSMy8yk5g1CjXvkbvm0PGxpvoorIpJcAMq2dITN0+vy5/8QIhf0HVb+aS1uh+vhBkiL4NkMaRW6w9qTb8UqjKwQmySCys4bGE/BVocavb4v4HEnOZoWdV2yIBlOiT4HUtEe0UJlNb7lVm+HR/Q3RisL95ESHpsVJ20V1/CtBqJjYsbDaqSSVya4nub7tPWuZQ9R9AS9mKKtdjtP0v6igJnZX/p1s0woh51T42zFxHyfrA7732ZC1ta8JYFtHJ6jkgmfL8+Oboq/g1AffoQq5gUiLaVAZ1p2o4zEgK4I5Du/5YI0YAOyWMBjwjBmsmkGczjwvLjfQPtkwUa1jjRKGip6dF5Xwnm9yhENh2P+9bmOPlP2y7Wch0XdC7prA9jwBC+QwG1j6P8fbvYfW5Nf1OEu4CDEQbBZpo26P83v634L9KDgrPr6fNduZaEhYW64YGxjuyIu6PGfs0G7D32EuZcTFnN3pN96Qm5552wqRe7Xk3Tz/K0hXgzUk5q+U//BpYjFADs+IrLDSVv0IdzLhcogUK9TIaQXf67YI7H8ewdHTRbARIppME0J94yJ14cOrOcJWyUnl09OHBArum5ItJ1LCnt7Tmp5KFFhqatJK92TiyRv/UA7Fm3evPAVTkmfLHntU7mk4hTjIDoXy0luVMSV17J2WQfQrdFjSPFNEkcLNdV/ZbClRisUXQLfTqpgpOmxmIvG5/exLzLAVPcyHfwO0OAG+HB7Pl29fbTeQ7dFy/y9M8Q2MWyr68VWDjAPgCUh8WHSg291+Od27qPIfrmdSevecs29jMElIvo0d6VaaG/wCxer+oGy354oLiHQLl9o67/cw4wO+2P2EHZb44wa5UPyiqnU9jUYtBD4Wdn6Ihs5AMy+pIqop4yfI4RtPzjf0jcRpnWph+ktJhreY0JTbRoxvrpypDtdZRmeYi0bIaVSTe7pn979+wNfK8xlofg3mhixwUiXRZDG9zIw4zPRiipBJsXkXXhYTC8nc6DI5EoXV+wlq9DxP6aynjlirV+IXvMxAy/gC3JNHSENYNQXJ9ufNE7jfI6rIHVYvuT3MkomRBzMvdd7zkKo4prTav3NjRn9uC8OBuOw6jkGSL7fyT0EUiOETZTBfPnIcE0WEOJyZkA6Rvp61+pp4SItcD91scX5HE3LvYPZBFTcAEv2wZVNEXtsaQR/9J4W+pbzsJdRS0ziLpTFwjt6XAFcLAUNRNI9UKQJJMvfkQCzUoE3izLeffoNFeFnodCu/ReagGagHtJ7QVwhMCcdafi6jBJFBxL9qL7Q884wFrNbzw8FOXt2/vYGkMrYzgGH6HmZI1mrUUAeQn9XQmMoxFS/SxHNB1AkoPGcCDCweGmByV+YxquK9dY/b4ts0OeDLUdECcSV+DRxuglCXZqC1cyOTzPhIWQ1iqJzmLchswzrOJ9O7a3XYiDwn0+kFn8LvOXR+Y2HSYnHwMx2orEcbQ69SfroS8m1zMA12YuTcalLw6Jyc/FwtBJpz0D70Jo9Tt8x8Fg58aAbMFU0yGkVA8KSP79vO2BS+9kd6PigZL3ATlxC84xK5gKb8s+/8RMpEtfuIcca/1ZTKPJPI7M68jlk7yCweCOgRgqrlzuALDJJmVAI0kmHe6NTIemB+6lzIKiPNoUa0quBaQ8iVvK4wRK+aEJ/xOFIyiILwBwSKdC9mUdCL9dQ/T1DjR1hsAej2pbPn35udfhHeey9rMqEgLLZVUFzg2LE/K8BwBJg6cdPmhJwUhstaxRTi8AEOGciCi+ZqWB3YP11VVNEIGkrMhUPGhZGbqrYL//pj/wwcMehDCzielkV+q9lAarnUB/AdJqfpm5ALy2aHTgxfB2euIthiMuO3LyB/FM3zZOHZbAMAJS4vcMyhCxWJ9Z0Mm1a5l+7w2tw9nakDVCVOche0zfH+tjHHFMP3FZjsFaB3mD5gTuEcekXK31sKvdVIf2AQTsAGfK2Vq3GoSfQtFxGy2MCxtepHpTN7ucYitfn/5sahSJF7YXrBq5jb/M0Vaz6ZzgfMsAzfBAbfeLpxRYIY0osmT4WMkzFdl6x0xXk7R4cER5Clql+LgkS0HiNtWSIbzeNj6G/CmQu0Au/Wp8Fs4RHvaDol5Eocbz4mTGThzDezFPhPzw0lDZZKuXN4Jkxm9VZDSYrvxFkSaKhSCdQ6hWUi71ZCdWV8g7o6ex355G95TAxqSwGUQZfWBUA7OnDjf0Q54bYnSgTqjyxt97TO34J352gMnRIRHxdQrL3GJ9Dg+szIrW+Odk2DjIq7Q35g1pjfBd26C0zletdEB+x1W5lZhgwx//lldKySdmnwopvnqw4735wcRBiHNWkTfxZL2qOu9qQ2OfYbDDjwLwOA4Len7JrnrdskLq/rVKOan6tN1/ksMOANWgqHIXm8izijWzvPrE70SbhzjMbq3JBSwt0u1hpmF4DRUw5hp3e+CjLt21I9qjwqC9uzsxbuoo5Rr9vb/XvEqy8ccQ3A7pcHfZG6Cz8boY+wQy2iobnxhzMU6OYTf8aKgsxrJfbhv4b/wy4TJwXaYnbBdK8e6NxoUCTBQPRvFNeY5SHyqPvXA0FjlQpMCkRrHyOWbymBCWfuEBTL38MBnuFFDe7KX89ZZKxJrfI2Hz8FKXBITP11rOQlIQHOfdiZW/w49ZiC09dq8y0l7QjWmGbvlIGGE0o7Hgu3MXs8zQuCMWrSi/DwtxRckFZ7biETmyM3ry5F6jTzLD4vfkRkU+LLVSOPEMJaoZY2zv3uTdn2b/vHKGtmNeIOrTfYMqA9v8C2+/QdAeCi9RzPLBNE8hG2wmD2aE7c45mnihcBns8YB4OV4Qa5qZAOGVLc8MpFntu0Gwzvsrq2GFfLlDe8rziwXRWcTNP1Rxzzey5+u0BV1JqociV2IJqdBGvayd2r4RpyioADaVgXJDhm9emkzDUoNsIm9IrS7b0oqQbcgSQsXoNPahkAfIPI9lxp9V9EulwtrCwtsjRSnnoHHt86C0UbuLsKaXZHhhusijglNgBzrDeUa7p5M6KrUq/N7pHVhObQICqA9NLosquM7r51J6XikSU0cfaVyGnL8ZkAx+EpOhGQ9WbyMPfy9shQx3+/tR2WPVF6hicGWQnerXLqdy5rkHiDqrizaMXp3lk+NoE4AdoOI91H1/vZqeK4hHtvNT9LgHQL23fVbD/eaJdZeErkUfYcpHbArEEurkFcOQInn01WHx29JHNv9evnjMssb6Q1ZiK9WBDpp59OgaMXDPV4JVTpXJaDdQTYh1FtuJGg6LK6AAIuYYlnKprxqLEYNZ1bB5vSesKnpxpKEn9KaJi/XvqBaa3+UBMQRds2IjcnrvfX6bCnGxgtb1wwvZlE5e6OtOgGlM8Uexx2wRHuaK7XcZoCpihCgAST8tu/wmL9pzqXZtn5XEgdBS4TKM0jQMrCGaVbTAN+bVUJgcPmc1Oly0FbyaTJf2fc5lIBaOYHyMG9AMYBGR/QHiO4WKBsGiVgFWxlfCSNxUyFsMdTfYPAuup3L1UZfWeR/8XAJcrOVy3d4u+A2tTW4KEEXyuCOXonxcKEth9Ee4EeEQ7jdRzZfygBn6XASM5Htqs8BMA/tuTBlrC/An6YawQ1aR9lvU2aCyrZ+OiIWppxcKMC34dQt5vJDr9uNmeKvFnvgoe6pGjDCZ5IwWbiDO9lMOJZXHQJ4/75yeiQ0e6jjLXtTUfNDsijxiX8YN+zMomyDgfaG3bq1ezvQZZxvr69ReqMDH6efcw5/JBWaEFWLqTHswshe7fWFyPXZj0BV7I+J4/GWwgU4mazyB8wZ0ivYpkbaypfyQGBgM1nMHzeqFGmcR4/yuAsw0STgsxZrEoTBs4YoyjbsqBLsYEDVrkFhn/z19EsrOD7yveCQJSNUNbCDNfMhS6yzQ49462Pf6B4hEZV8VlA7WXv+l2PTsjGCIL8PzXwHsjOPtGp8btx463A9KwFtrngDnNcjzaBQlYvWnmrwPj43Wvk9WBdyIT+MHk78ZaZfBSYS422C02ALlvY3W54BqBJhxBckBz3aV0qrUlQQirj/dGMNLGpgt3++EFClZ95Qf+63nGCiUnHqk6wfdPWKupOyaR4KMN1ICtBR/z491kY/0PJKfwEA4wTbukuvgAaRcjr7OqrQ1jlcHHHEt29JaUhWpw+igu+nDCNquIyfvp7+BA54hh7zlvzIW1Uc1VUICRe5ckHnEEY56Ovc8krolWriu/n0zzng7aiW/naeenXVvhrqs+warrLMFgYjtmOQVRNcEtvr/co/gy+tJmnFK5Z3Fla36F0Mfc4X52ashn1FnfABoJeZpCVt0SYi5kj/4nw6N1QIkdWsa2QImuWiic2D3CnB/eEiXiDJEthBOMysH4b8RDurSvksMthogykKcfK9DYtkigJGJbNGVh7waKjct7vomPiikgrafRvm73N4Uy8YyUAWDCY5jlIgE4aJFiUjgrHIeszRMqI7WZFyoVhg8OLc9vuozp5jw+c6g39eDin6+FvF82istE6xhifCdh3sdWojUlLSQAKkv2RkAoj/i3JLqAefE74P6foGUGMH1y76uZCrgvIDSg06yea1MjPkIeQLybOo5xEhEo1bomh9uM39haD1OWxBU/aZ4klIGFU33etCs+03DovSNG335/jsS9x5/h2shpk+w2xTrfAFdHTL1bNMU86c6Cm/OGZ/1/TUeOqijdRJ1QBxjfy3f9yXVFBiIrgWJRyDu+T7qxnvVkLsk2H3U3AqZg4TCTYYQ5WLIVSMZT01axzQQFay/3apGKB0pNrdYTk5FB6T+/CCD4/FTlWIpOB21u1TsNNYPHhuAEPXjZGIYzHS/EuztR8TanF/L+JgGUgMerTSi+IyLBRR/MyBo1G6h3GsIbf6KkkPIefPrm0wy4WN4sbRXLxhYboHDzi5TaDy08QA1gmB1MSEWCBT105RmjcutrqcNe/TTUk+w3FkklelakUS8iHye8jMA2U5HXJ9vcz5JxYVvQAfZA/QVL0dFxillcN74WJHxaOYlpsbe8qQwChOMJL+hxQ4I78az3YSOLphH4J68/RwMLY6mtDlztRCaO1NRqHrGJUwyrTUI78GO9i/MWPEyl8CCXKsgaHbFqn4MjOwjd1iXHw8CcyK14mpDDJGTeqYMBt09dEHkgdacfiQFMB6wJknGRI7FqPzyfVMfvNMyMpqr3AD9ZYVwPhA7+wjEm3uxRYrnTciXz7NZDao6nkPPwQvGHvW2NEip/NpY8E+9C2OyMO82B/IatveXQqxN6vS4ipFtphV1cW+lZEwNFrzHo/ZNKha5Q/4LZ9ow9D3LsAitHv3fP4M2Ki9XXkesAJVOfPWqA2GbYjghDAs6IhxFkXz1lpyv1XsxrJGwXDDWJuiZYK13uLXa6X9iHi1KGVro+eewQL30WfHddmI5EoDBmnn5hpldF/fFVkDx3K7rmamLrUXDw1v66y4pWp78Lb+2RgSp//EeaA5+hJCDeRuDVsLhLM6nQrp4OAwvkiiinSMhLihMZ6mGursydCU+hKeBWT1I9nq/9/Hb0TfEhiPkAzhUYirUHzqTmgU2Q6lsEfarhuR7zFB3mklG1vghvrnWxrceSWCWTdHgdatw4zXfWZPqxJLhdXNc81K8S8lafMeaIl3VPBdYSyiDdTbUwp54X+uZtJaHXicwklFj1UwhZnt5yyqY7ekYFDQynXgvpvrUWqAtRVeiJt5jh3ql17TzavyXboO8zup4rloc6ADfNBhWPDNGtWMNKoAuuKky8zNacZm2/+b+I7DJBjLFL4zWOl96QSoK7aNRZfpQUZV7uC5bFQ2hlN59iThI/TdsVmgbdVW0CQCMACaH7id+vNpQNHqd2qkptWu5STW2q01slRauicuQkOjdwm9JEq3ueY0Y8Uj4BBMKcL/tNGF3btFYB6OiCOCb/kfhrl9VBWJmApQhTU0xMrOjBuKPEftj2CDAhejaZyG9DJ2Z+K5xnOkq5SyiAPGIoovxja871WwOhEhjVSSfXf4PN/YgfbgdzEgl/DRX5Id7hMLP2gAHxF+25JJwBx2LhqhaES4axbt06uKX66CsjeWiYWaQubgAt45EB+7WLA9ZsMPyZTGT+y6oguD8XxBC7uydsf45hZDwuGqDOs3RaK2oL6grPMd6ri0BDYbvJddPS7DZKRZe84j33ThMRBA+12LZ2tW6bmoEpH2FYUAStwbmxYnAPOS9FaDubTrnJHZT2DuXXLEGRA6qnUKtwwIksMonQUxzN3p9eUWLM2ye61hfeUerRvSbN/+6kd27k/blhlLC4NBjxq4wduBoLXukFDeijyY4sM30lUWOJbjn32OexH2yp3jcSxGyNWYZeRziaw/mAnxc1kOvvzgft3ga1YMDvWjWuYMKfjx9cHVXQ6tRNsMTiwJHq3lizg8XxoZJnYdWlOV19qdhiER7NWcTzNVHx4G7el7v5Glig/UmoAcBNlxTxJpqb832JSfdmjhmdeVCcIOkKupSlfx624sZmgDC+vgtAuh8xy7/3FGqXZIoUuZCVshvfeskJ58tqpfVml7+MgqeiIIUbq60FZ58W8uuPguVZTxkoXnMHgxbF+FzCPqv067lF8wXTGv2OQuWDI+XndiHtud8VZJ7pOy+QDLC2LLIfHgBJ+as2a1dN5IWbGnTKMasUMpMFJQgL1k2qBEcowmmiy5YWnog0RwVoZcDVlzIyCTg//djOzr2QI5zq6/DxNl9jDr80l+D9u/nzuuU1y14AAJFr+Nk1RPruiGn4r14Gqby7+J4OVyfGoGVIFxJSDgXqRVtjuTOnVti2x5LrlDFCv6UWr1SSnR+Lrd52AH5f/TbZWq8PbshRCn8m+ANpoN0CP3PZBf8c7G0nokTOIrYDThZzkdBNcJj9iVzDE9T16ZWczJ7nKG/9nlhtCxb5cOL2LV9nea8CheNoEEc1DO4DlFhW5tqVLMtQ4ewo4iQOcJiIsFjRHrGt2aWWvUfYiEs6Pw2PLTwilkTLe9CXAV6+wQTn3lfw4wUZ6PUXxWOv1YzviIZ5KY3kjZk8GY1JfaqM9blA+FeukAC7UPPOxN3JK782ZsH4bV0kDK8mw1LKrrxNdvixcE8d2bA5ufRFqwVhl0yYhdinMmtBbf09fZVeEvGVSb4//NGW6mPmpyuF3EeweDughAfsJHxXVmIsiXOS3vGqQ9CrLh+uSASlyK2NC0LfywHOpSLhhePa2wR/Lywl7LV3ZYIMCqXpEpwA+PHHYDXn9VeZ6/TbMpWjf7E22DKf2P7WyYnuqytOlvlzIxDNlz/CLI70uFmjEtc5y+ozD5sVektAeHr9gdt73P0MTi3bAhKYpeTn1jEZyAOzD2oMTDHqmyN3ZYm3J+eZhx+b9/zfDBpQzvP0mEaosfMzstSqimzWVDjJh85EUJ+04P1+f9LibXBRmqfXtRT1UMZlYxgWr8/87mg8+n8+TH3QrNk1oHvmAPg5bGtL7GxmePskDcVeLx5PGul3mip/oNKxqqHKWkl+40jsjz5mUea8i8ro4aCGv+D7D6Ick9uVp5DpICwece7brqu6XVz9xG6vMmDleNv1bqMyxO8OHcB4IoVXbSMOE7sDkYRLfLygDW4N0AqFcWSOLLizBs+wnm7gY5uTbc4yC2EsVPpEPnVxCSLs4mivtv0jOB6M4YzWFACQ840lf4Y9BiJvLUlJ2xmI6MsbDKxCNFJ3RKSFfYE1KfCGSW3G150DqVrIre/DHJOzVOe+LILPclHDWr3KnN4miif5rxb4pq+P0lHFSnIsuh+254GULAtqgHrMl6mdyNCz4PXpc0kV5t8m4GCCvN7V8nlyYZs5pGKuG5jCW9hrC9/cDo5CHKBHpvPx4+dBDXVNryitJYLFoyf+5DW/P95OZ6wGcsPU/xUoWmijSqlAL6uZ1Gj33IOtbL9F9DOmZW7dhRMMbHqyvLX8eXyLCt+E0kJotwpyNV8rqkFx62W5f4KFTIi81fNdhKey+HaLxcALbYRz/DHdju1VaTs6dO45TGMymQK9IuCXrVUWw7o7aC84PuPAinfMALBkdMYzrekPeWBAvUu61Fbh6vZUu2/V0DKQ+H4nT5TREMUdhpXKNjXk5r6Bwy+9aRh0lYMSsA2jZ+DR02SNwL5UPMA6mYgEAQ/tI0goxsu2rMmWM/oG7PrHO5oqWN/59/GO2471LO+MwVC9HwhBuIHj9QVaMeCN+RgYuLDkqpYKYnY3NQVn4Zd1GfG4l+dRRvvBpDEt2lRiq0lq1WMr+yx7Y7DKhab2dJ0/BsvnpS3tivrPD658v878xS+2zSFoGgy3lKVWzk47YwA2z7DPs+Rkz1BFP/b86re4vZRrRtqqbRHMFDkcFoPgPUK2Y4pGPuTIbIUUL3o1cMo6+YdIZgJCaLNygzJivNPSd0dnS8UIA=="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

@@ -1,38 +1,35 @@
-# 巡回セールスマン問題を4つの方法で解いて比べる
+# 問題の大きさを変えて、3つの方法の時間を一括で測る
 import math
 import time
 from itertools import permutations
 
-cities = [
-    ("学校", 2, 2), ("郵便局", 10, 3), ("図書館", 14, 9), ("カフェ", 6, 12),
-    ("公園", 3, 8), ("駅", 17, 4), ("病院", 12, 13), ("書店", 8, 7),
-]
-
-n = len(cities)
 INF = float("inf")
 
-distance = []
-for i in range(n):
-    row = []
-    for j in range(n):
-        d = math.sqrt((cities[i][1] - cities[j][1]) ** 2 + (cities[i][2] - cities[j][2]) ** 2)
-        row.append(d)
-    distance.append(row)
+
+def make_cities(count):
+    """計算で位置を決めるので、何度実行しても同じ配置になる"""
+    cities = []
+    for i in range(count):
+        cities.append(((i * 7) % 23, (i * 11) % 19))
+    return cities
 
 
-def pad(text, width):
-    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
-    length = 0
-    for ch in text:
-        if ord(ch) > 0x2000:
-            length = length + 2
-        else:
-            length = length + 1
-    return text + " " * (width - length)
+def make_distance(cities):
+    """都市どうしの直線距離を表にして返す"""
+    n = len(cities)
+    table = []
+    for i in range(n):
+        row = []
+        for j in range(n):
+            row.append(math.sqrt((cities[i][0] - cities[j][0]) ** 2
+                                 + (cities[i][1] - cities[j][1]) ** 2))
+        table.append(row)
+    return table
 
 
-def brute_force():
+def brute_force(distance):
     """全探索: すべての順番を試して、いちばん短いものを返す"""
+    n = len(distance)
     best = None
     for order in permutations(range(1, n)):
         total = 0.0
@@ -46,11 +43,12 @@ def brute_force():
     return best
 
 
-def greedy_from(start):
-    """start を出発点にして、貪欲法でルートを作る"""
-    visited = [start]
+def greedy(distance):
+    """貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す"""
+    n = len(distance)
+    visited = [0]
     total = 0.0
-    here = start
+    here = 0
     while len(visited) < n:
         nearest = None
         for j in range(n):
@@ -61,39 +59,26 @@ def greedy_from(start):
         total = total + distance[here][nearest]
         visited.append(nearest)
         here = nearest
-    return total + distance[here][start]
+    return total + distance[here][0]
 
 
-def greedy():
-    """貪欲法（出発点は0番の都市に固定）"""
-    return greedy_from(0)
-
-
-def greedy_all_starts():
-    """すべての都市を出発点にして貪欲法を試し、いちばん良い答えを選ぶ"""
-    best = None
-    for start in range(n):
-        value = greedy_from(start)
-        if best is None or value < best:
-            best = value
-    return best
-
-
-def bit_dp():
+def bit_dp(distance):
     """動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める"""
+    n = len(distance)
     full = (1 << n) - 1
     best = []
     for visited in range(1 << n):
         best.append([INF] * n)
     best[1][0] = 0.0
     for visited in range(1 << n):
+        row = best[visited]
         for here in range(n):
-            if best[visited][here] == INF:
+            if row[here] == INF:
                 continue
             for nxt in range(n):
                 if visited & (1 << nxt):
                     continue
-                new_length = best[visited][here] + distance[here][nxt]
+                new_length = row[here] + distance[here][nxt]
                 if new_length < best[visited | (1 << nxt)][nxt]:
                     best[visited | (1 << nxt)][nxt] = new_length
     answer = INF
@@ -104,34 +89,35 @@ def bit_dp():
     return answer
 
 
-methods = [
-    ("全探索", brute_force, "必ず最適"),
-    ("貪欲法", greedy, "最適とはかぎらない"),
-    ("貪欲法(全出発点)", greedy_all_starts, "最適とはかぎらない"),
-    ("bitDP", bit_dp, "必ず最適"),
-]
+print("都市の数を変えて、3つの方法の答えと時間を測る")
+print("（全探索は12都市までで打ち切る。時間がかかりすぎるため）")
+print("-" * 76)
+print("都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間")
 
-results = []
-for name, function, note in methods:
+for count in [6, 8, 10, 12, 14, 16]:
+    cities = make_cities(count)
+    distance = make_distance(cities)
+
+    if count <= 12:
+        began = time.time()
+        b_value = brute_force(distance)
+        b_time = time.time() - began
+        b_text = f"{round(b_value, 1):>6} /{b_time:>8.3f}秒"
+    else:
+        b_text = "     （長すぎるため省略）"
+
     began = time.time()
-    value = function()
-    elapsed = time.time() - began
-    results.append((name, value, elapsed, note))
+    g_value = greedy(distance)
+    g_time = time.time() - began
 
-best_value = None
-for name, value, elapsed, note in results:
-    if best_value is None or value < best_value:
-        best_value = value
+    began = time.time()
+    d_value = bit_dp(distance)
+    d_time = time.time() - began
 
-print(f"{n}都市の巡回セールスマン問題を4つの方法で解く")
-print("-" * 72)
-print("方法                    答え  最適との差          時間   性質")
-for name, value, elapsed, note in results:
-    print(pad(name, 20)
-          + f"{round(value, 1):>8}"
-          + f"{round(value - best_value, 1):>12}"
-          + f"{elapsed:>12.6f}秒   " + note)
-print("-" * 72)
+    print(f"{count:>4}都市   {b_text}   {round(g_value, 1):>6} /{g_time:>8.6f}秒"
+          f"   {round(d_value, 1):>6} /{d_time:>8.3f}秒")
+
+print("-" * 76)
 print()
-print("貪欲法は出発点を全部試すだけで、答えが最適に近づく。")
-print("それでも全探索や bitDP より圧倒的に速い。")
+print("全探索と bitDP の答えは、どの大きさでも完全に一致している。")
+print("貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。")

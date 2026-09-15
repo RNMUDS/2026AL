@@ -433,8 +433,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを、実際に自分のパソコンで実行してください。
-    まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -475,15 +474,15 @@ a.sub-item:hover { border-color: #4A7A00; }
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-01-ex1.py</code>, <code>AL2-01-ex2.py</code>, <code>AL2-01-ex3.py</code>, <code>AL2-01-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-01-ex1.py</code>, <code>AL2-01-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -639,560 +638,6 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
     <div class="card example">
       <div class="card-header">
         <span class="tag tag-example">例題 2</span>
-        <h3>逐次探索と二分探索の手数を比べる（計算量の復習）</h3>
-      </div>
-      <p>二分探索がどれくらい得なのかを、逐次探索と比べて数で確かめます。
-      逐次探索は先頭から1つずつ調べる方法、二分探索は中央と比べて半分を捨てる方法です。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex2.py</span>
-<span class="cmt"># 同じ「探す」でも、やり方によって手数がどれだけ違うかを数える</span>
-<span class="cmt"># 前期に習った2つの探索（逐次探索・二分探索）を関数にして、</span>
-<span class="cmt"># データの個数を増やしながら「何回調べたか」を比べる。</span>
-
-
-<span class="cmt"># --- 逐次探索（線形探索） ---</span>
-<span class="cmt"># def は「関数を作る」文。関数 = 処理に名前を付けて、何度でも呼び出せるもの</span>
-<span class="cmt"># 関数名の後ろの () の中が引数（ひきすう）= 関数に渡す値の受け取り口</span>
-<span class="kw">def</span> <span class="fn">linear_search_count</span>(data, target):
-    <span class="str">&quot;&quot;&quot;先頭から1つずつ調べる（逐次探索）。調べた回数を返す
-
-    data   = 探す対象のリスト（小さい順に並んでいなくてもよい）
-    target = 探したい値
-    &quot;&quot;&quot;</span>
-    count = <span class="num">0</span>                       <span class="cmt"># 調べた回数。最初は 0 回</span>
-    <span class="cmt"># for 変数 in リスト: は「リストの要素を先頭から1つずつ取り出して</span>
-    <span class="cmt"># 変数に入れ、中の処理をくり返す」文。value に 1, 2, 3, ... が順に入る</span>
-    <span class="kw">for</span> value <span class="kw">in</span> data:
-        count = count + <span class="num">1</span>           <span class="cmt"># 1 つ見るたびに回数を 1 増やす</span>
-        <span class="kw">if</span> value == target:         <span class="cmt"># 探している値と同じなら</span>
-            <span class="cmt"># return は「関数の答えを返して、関数を終える」命令</span>
-            <span class="kw">return</span> count            <span class="cmt"># ここまでに調べた回数を答えとして返す</span>
-    <span class="kw">return</span> count                    <span class="cmt"># 最後まで見つからなければ全部の回数を返す</span>
-
-
-<span class="cmt"># --- 二分探索 ---</span>
-<span class="kw">def</span> <span class="fn">binary_search_count</span>(data, target):
-    <span class="str">&quot;&quot;&quot;中央と比べて半分ずつ捨てる（二分探索）。調べた回数を返す
-
-    data   = 小さい順に並んだリスト（並んでいないと正しく動かない）
-    target = 探したい値
-    &quot;&quot;&quot;</span>
-    <span class="cmt"># リストの位置（添字）は 0 から始まる。data[0] が先頭の要素</span>
-    low = <span class="num">0</span>                         <span class="cmt"># 探す範囲の先頭の位置</span>
-    <span class="cmt"># len(data) はリストの要素数。最後の要素の位置は「要素数 - 1」になる</span>
-    <span class="cmt"># 例 要素が 10 個なら、位置は 0〜9 なので最後は 9</span>
-    high = <span class="fn">len</span>(data) - <span class="num">1</span>            <span class="cmt"># 探す範囲の最後の位置</span>
-    count = <span class="num">0</span>                       <span class="cmt"># 調べた回数</span>
-    <span class="cmt"># while は「条件が正しいあいだ、中の処理をくり返す」文</span>
-    <span class="cmt"># 探す範囲が残っている（low が high を追いこしていない）あいだ続ける</span>
-    <span class="kw">while</span> low &lt;= high:
-        count = count + <span class="num">1</span>           <span class="cmt"># 中央を 1 回見るたびに回数を 1 増やす</span>
-        <span class="cmt"># // は小数を切り捨てる割り算。例 9 // 2 は 4</span>
-        middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        <span class="cmt"># data[middle] は「リストの middle 番目の要素」を取り出す書き方</span>
-        <span class="kw">if</span> data[middle] == target:
-            <span class="kw">return</span> count            <span class="cmt"># 見つかったので、調べた回数を返す</span>
-        <span class="kw">elif</span> data[middle] &lt; target:
-            <span class="cmt"># 中央の値が小さすぎる → 答えは右側にある。左半分を捨てる</span>
-            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        <span class="kw">else</span>:
-            <span class="cmt"># 中央の値が大きすぎる → 答えは左側にある。右半分を捨てる</span>
-            high = middle - <span class="num">1</span>
-    <span class="kw">return</span> count                    <span class="cmt"># 見つからなかったときも回数を返す</span>
-
-
-<span class="cmt"># --- データの個数を変えて、2つの探索の回数を比べる ---</span>
-<span class="cmt"># 表の見出し行。文字列の中の空白で、列の位置をそろえている</span>
-<span class="fn">print</span>(<span class="str">&quot;データの個数     逐次探索の回数     二分探索の回数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)                     <span class="cmt"># &quot;-&quot; を 50 個つなげた区切り線</span>
-
-<span class="cmt"># [10, 100, ...] はリスト。size に 10, 100, 1000, ... が順に入る</span>
-<span class="kw">for</span> size <span class="kw">in</span> [<span class="num">10</span>, <span class="num">100</span>, <span class="num">1000</span>, <span class="num">10000</span>, <span class="num">100000</span>]:
-    <span class="cmt"># range(a, b) は a から b - 1 までの整数を順に作る（b は含まない）</span>
-    <span class="cmt"># 例 range(1, 4) は 1, 2, 3。list() でそれをリストに変換する</span>
-    data = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, size + <span class="num">1</span>))   <span class="cmt"># 1, 2, 3, ... という並んだデータを作る</span>
-    target = size                     <span class="cmt"># いちばん最後の数をさがす</span>
-    <span class="cmt"># 関数名(値, 値) と書くと関数が呼び出され、return した答えが返ってくる</span>
-    times_linear = <span class="fn">linear_search_count</span>(data, target)
-    times_binary = <span class="fn">binary_search_count</span>(data, target)
-    <span class="cmt"># f&quot;...&quot; は f文字列。{} の中に変数を書くと、その値が文字列に埋めこまれる</span>
-    <span class="cmt"># {size:&gt;10} は「10 文字分の幅で右そろえ」という表示の指定</span>
-    <span class="cmt"># 例 f&quot;{7:&gt;4}&quot; は &quot;   7&quot;（空白 3 つと 7）になる</span>
-    <span class="fn">print</span>(<span class="str">f&quot;{size:&gt;10}   {times_linear:&gt;14}   {times_binary:&gt;14}&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)
-<span class="cmt"># 逐次探索の回数は個数と同じだけ増えるが、</span>
-<span class="cmt"># 二分探索の回数は個数が 10 倍になっても 3〜4 回しか増えない</span>
-<span class="fn">print</span>(<span class="str">&quot;データが10倍になっても、二分探索の回数はほとんど増えない&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>low と high の中央の位置。整数になる割り算を使う</td><td style="white-space:nowrap">A. <code>low + high // 2</code><br>B. <code>(low + high) / 2</code><br>C. <code>(low + high) // 2</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>中央より大きい側に答えがあるので、調べる範囲の下側を1つ上に動かす</td><td style="white-space:nowrap">A. <code>low = middle</code><br>B. <code>low = middle + 1</code><br>C. <code>high = middle - 1</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 345" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">データが10倍になったときの手数の増え方</text>
-        <text x="350" y="44" text-anchor="middle" fill="#888" font-size="11">よこ＝データの個数、たて＝調べた回数。どちらの目もりも1目もりで10倍</text>
-        <line x1="100" y1="285.0" x2="670" y2="285.0" stroke="#2a2a2a" stroke-width="1"/>
-        <text x="94" y="289.0" text-anchor="end" fill="#666" font-size="10">1</text>
-        <line x1="100" y1="240.4" x2="670" y2="240.4" stroke="#2a2a2a" stroke-width="1"/>
-        <text x="94" y="244.4" text-anchor="end" fill="#666" font-size="10">10</text>
-        <line x1="100" y1="195.8" x2="670" y2="195.8" stroke="#2a2a2a" stroke-width="1"/>
-        <text x="94" y="199.8" text-anchor="end" fill="#666" font-size="10">100</text>
-        <line x1="100" y1="151.2" x2="670" y2="151.2" stroke="#2a2a2a" stroke-width="1"/>
-        <text x="94" y="155.2" text-anchor="end" fill="#666" font-size="10">1,000</text>
-        <line x1="100" y1="106.6" x2="670" y2="106.6" stroke="#2a2a2a" stroke-width="1"/>
-        <text x="94" y="110.6" text-anchor="end" fill="#666" font-size="10">10,000</text>
-        <line x1="100" y1="62.0" x2="670" y2="62.0" stroke="#2a2a2a" stroke-width="1"/>
-        <text x="94" y="66.0" text-anchor="end" fill="#666" font-size="10">100,000</text>
-        <text x="130" y="305" text-anchor="middle" fill="#888" font-size="10">10</text>
-        <text x="250" y="305" text-anchor="middle" fill="#888" font-size="10">100</text>
-        <text x="370" y="305" text-anchor="middle" fill="#888" font-size="10">1,000</text>
-        <text x="490" y="305" text-anchor="middle" fill="#888" font-size="10">10,000</text>
-        <text x="610" y="305" text-anchor="middle" fill="#888" font-size="10">100,000</text>
-        <text x="385" y="325" text-anchor="middle" fill="#888" font-size="11">データの個数</text>
-        <polyline points="130,240.4 250,195.8 370,151.2 490,106.6 610,62.0" fill="none" stroke="#FF5252" stroke-width="3" stroke-dasharray="900" stroke-dashoffset="900"><animate attributeName="stroke-dashoffset" values="900;0;0" keyTimes="0;0.6;1" dur="9s" repeatCount="indefinite"/></polyline>
-        <circle cx="130" cy="240.4" r="4" fill="#FF5252"/>
-        <text x="130" y="230.4" text-anchor="middle" fill="#FF5252" font-size="10">10</text>
-        <circle cx="250" cy="195.8" r="4" fill="#FF5252"/>
-        <text x="250" y="185.8" text-anchor="middle" fill="#FF5252" font-size="10">100</text>
-        <circle cx="370" cy="151.2" r="4" fill="#FF5252"/>
-        <text x="370" y="141.2" text-anchor="middle" fill="#FF5252" font-size="10">1,000</text>
-        <circle cx="490" cy="106.6" r="4" fill="#FF5252"/>
-        <text x="490" y="96.6" text-anchor="middle" fill="#FF5252" font-size="10">10,000</text>
-        <circle cx="610" cy="62.0" r="4" fill="#FF5252"/>
-        <text x="610" y="52.0" text-anchor="middle" fill="#FF5252" font-size="10">100,000</text>
-        <polyline points="130,258.1 250,247.3 370,240.4 490,233.9 610,230.1" fill="none" stroke="#76B900" stroke-width="3" stroke-dasharray="900" stroke-dashoffset="900"><animate attributeName="stroke-dashoffset" values="900;0;0" keyTimes="0;0.6;1" dur="9s" repeatCount="indefinite"/></polyline>
-        <circle cx="130" cy="258.1" r="4" fill="#76B900"/>
-        <text x="130" y="276.1" text-anchor="middle" fill="#76B900" font-size="10">4</text>
-        <circle cx="250" cy="247.3" r="4" fill="#76B900"/>
-        <text x="250" y="265.3" text-anchor="middle" fill="#76B900" font-size="10">7</text>
-        <circle cx="370" cy="240.4" r="4" fill="#76B900"/>
-        <text x="370" y="258.4" text-anchor="middle" fill="#76B900" font-size="10">10</text>
-        <circle cx="490" cy="233.9" r="4" fill="#76B900"/>
-        <text x="490" y="251.9" text-anchor="middle" fill="#76B900" font-size="10">14</text>
-        <circle cx="610" cy="230.1" r="4" fill="#76B900"/>
-        <text x="610" y="248.1" text-anchor="middle" fill="#76B900" font-size="10">17</text>
-        <rect x="118" y="62" width="212" height="46" rx="8" fill="#141414" stroke="#333"/>
-        <line x1="132" y1="78" x2="158" y2="78" stroke="#FF5252" stroke-width="3"/>
-        <text x="166" y="82" fill="#FF5252" font-size="11">逐次探索（まっすぐ増える）</text>
-        <line x1="132" y1="96" x2="158" y2="96" stroke="#76B900" stroke-width="3"/>
-        <text x="166" y="100" fill="#76B900" font-size="11">二分探索（ほとんど増えない）</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a01_ex2_result.png" alt="AL2-01-ex2.py の実行結果。データの個数     逐次探索の回数     二分探索の回数 / -------------------------------------------------- / 10               10                4 / 100              100                7 / 1000             1000               10 / 10000            10000               14 / 100000           100000               17 / -------------------------------------------------- / データが10倍になっても、二分探索の回数はほとんど増えない" width="404" height="228" loading="lazy">
-      </div>
-      <p class="run-note">データの個数が10倍になるたびに、逐次探索の回数も<strong>10倍</strong>に増えています（10 → 100 → 1000 → 10000 → 100000）。一方の二分探索は 4 → 7 → 10 → 14 → 17 と、<strong>3〜4回ずつしか増えません</strong>。データが10万個あっても17回で見つかります。同じ答えにたどり着くのに、手数がまったく違うという点が重要です。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> データの個数が10倍になったとき、逐次探索の回数と二分探索の回数がそれぞれ何倍になったかを書く。あわせて、10万個のデータから1つ探すとき、逐次探索と二分探索で何回の差があるかを書く。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>迷路を幅優先探索で解く（探索の復習）</h3>
-      </div>
-      <p>前期の最後にあつかった幅優先探索を、迷路で思い出します。
-      幅優先探索は、スタートから<strong>1歩で行ける場所をすべて調べ、次に2歩で行ける場所をすべて調べる</strong>という順番で進みます。
-      波紋が広がるように調べていくため、最初にゴールへ届いたときの歩数が必ず最短になります。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex3.py</span>
-<span class="cmt"># 前期の復習: 幅優先探索（はばゆうせんたんさく）で迷路の最短経路を求める</span>
-<span class="cmt"># 幅優先探索 = スタートに近いマスから順に、しらみつぶしに調べていく探索。</span>
-<span class="cmt"># 近い順に調べるので、最初にゴールに着いたときの道が最短経路になる。</span>
-
-<span class="cmt"># import は「他のファイル（ライブラリ）にある道具を使えるようにする」文。</span>
-<span class="cmt"># from collections import deque で、collections という道具箱の中の</span>
-<span class="cmt"># deque（デック）だけを取り出して使えるようにしている</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-<span class="cmt"># --- 迷路のデータ ---</span>
-<span class="cmt"># S = スタート、G = ゴール、# = 壁、. = 通路</span>
-<span class="cmt"># [ ... ] はリスト。ここでは「文字列を 7 個ならべたリスト」で迷路を表す。</span>
-<span class="cmt"># maze[0] が 1 行目の文字列 &quot;S.....#&quot;、maze[0][0] がその 1 文字目 &quot;S&quot;</span>
-maze = [
-    <span class="str">&quot;S.....#&quot;</span>,
-    <span class="str">&quot;.####.#&quot;</span>,
-    <span class="str">&quot;.#....#&quot;</span>,
-    <span class="str">&quot;.#.##..&quot;</span>,
-    <span class="str">&quot;.#..#.#&quot;</span>,
-    <span class="str">&quot;.##.#.#&quot;</span>,
-    <span class="str">&quot;......G&quot;</span>,
-]
-
-<span class="cmt"># len() はリストなら要素数、文字列なら文字数を返す</span>
-rows = <span class="fn">len</span>(maze)                    <span class="cmt"># 行の数（縦のマス数）= 7</span>
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])                 <span class="cmt"># 列の数（横のマス数）= 1 行目の文字数 = 7</span>
-
-<span class="cmt"># --- スタートとゴールの位置（行, 列）を探す ---</span>
-<span class="cmt"># range(rows) は 0 から rows - 1 までの整数を順に作る。例 range(3) は 0, 1, 2</span>
-<span class="cmt"># for を 2 つ重ねて、すべての行 r とすべての列 c の組み合わせを調べる</span>
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="cmt"># maze[r][c] は「r 行目の文字列の c 文字目」= マス (r, c) の文字</span>
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
-            <span class="cmt"># (r, c) はタプル。2 つの値をひとまとめにしたもので、</span>
-            <span class="cmt"># 「行 r・列 c の位置」を 1 つの値として扱える。例 (0, 0)</span>
-            start = (r, c)
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
-            goal = (r, c)
-
-<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> maze:                   <span class="cmt"># 迷路を 1 行ずつ取り出して表示する</span>
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)              <span class="cmt"># 文字列 + 文字列 は 2 つをつなげる</span>
-<span class="fn">print</span>()                             <span class="cmt"># print() だけだと空の行を表示する</span>
-
-<span class="cmt"># --- 幅優先探索 ---</span>
-<span class="cmt"># queue = これから調べる場所を書いたメモ。先に書いたものから先に読む。</span>
-queue = <span class="fn">deque</span>()                 <span class="cmt"># 簡単に言うと「先入れ先出し」のリスト</span>
-<span class="cmt"># deque は「double-ended queue」の略で、</span>
-<span class="cmt"># 両端から要素を追加・削除できるリストのこと</span>
-<span class="cmt"># つまり、queue.append() で末尾に追加、</span>
-<span class="cmt"># queue.popleft() で先頭から取り出すことができる</span>
-<span class="cmt"># 例 [1, 2, 3] という deque があったとき、</span>
-<span class="cmt"># queue.append(4) をすると [1, 2, 3, 4] になり、</span>
-<span class="cmt"># queue.popleft() をすると先頭の 1 が取り出されて [2, 3, 4] になる</span>
-queue.append(start)             <span class="cmt"># スタート地点を最初に調べる場所として追加する</span>
-
-<span class="cmt"># came_from = 「その場所へ、どこから来たか」を記録する辞書</span>
-<span class="cmt"># 辞書（dict）は {キー: 値} の形で「キーから値を引ける」データ。</span>
-<span class="cmt"># 例 {&quot;りんご&quot;: 100} なら、辞書[&quot;りんご&quot;] で 100 が取り出せる</span>
-<span class="cmt"># ここではキーがマスの位置（タプル）、値が「1 つ前のマスの位置」。</span>
-<span class="cmt"># スタートには前のマスがないので None（何もない、という特別な値）を入れる。</span>
-<span class="cmt"># この辞書は「もう来たことがある場所の一覧」としても使う</span>
-came_from = {start: <span class="kw">None</span>}
-
-<span class="cmt"># メモ（queue）に調べる場所が残っているあいだ、くり返す</span>
-<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-    <span class="kw">if</span> current == goal:                <span class="cmt"># ゴールに着いたら</span>
-        <span class="kw">break</span>                          <span class="cmt"># break でくり返しを終える</span>
-
-    <span class="cmt"># r, c = current で、タプル (行, 列) の中身を 2 つの変数に分けて取り出す</span>
-    <span class="cmt"># 例 current が (2, 5) なら r = 2, c = 5 になる</span>
-    r, c = current
-    <span class="cmt"># 上・下・左・右の4方向を順に調べる</span>
-    <span class="cmt"># (dr, dc) は「行と列をどれだけ動かすか」。(-1, 0) は上へ 1、(0, 1) は右へ 1</span>
-    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-        nr = r + dr                    <span class="cmt"># となりのマスの行（n は next の n）</span>
-        nc = c + dc                    <span class="cmt"># となりのマスの列</span>
-        <span class="cmt"># or は「どれか 1 つでも正しければ正しい」。行か列が範囲の外なら…</span>
-        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
-            <span class="cmt"># continue は「この回の残りを飛ばして、for の次の回へ進む」命令</span>
-            <span class="kw">continue</span>                   <span class="cmt"># 迷路の外なので調べない</span>
-        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
-            <span class="kw">continue</span>                   <span class="cmt"># 壁なので通れない</span>
-        <span class="cmt"># 辞書の in は「そのキーが辞書にあるか」を調べる（あれば True）</span>
-        <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
-            <span class="kw">continue</span>                   <span class="cmt"># すでに来たことがある場所</span>
-        <span class="cmt"># 辞書[キー] = 値 で、新しい組を辞書に書きこむ</span>
-        <span class="cmt"># 「(nr, nc) へは current から来た」と記録する</span>
-        came_from[(nr, nc)] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        queue.append((nr, nc))         <span class="cmt"># あとで調べるようにメモの末尾に追加</span>
-
-<span class="cmt"># --- ゴールからスタートへ逆にたどって経路を復元する ---</span>
-<span class="cmt"># came_from を使うと、ゴール → その前のマス → さらに前 … とたどれる。</span>
-<span class="cmt"># スタートまでたどると None になるので、そこで止める</span>
-path = []                           <span class="cmt"># 通った場所を入れる空のリスト</span>
-node = goal                         <span class="cmt"># ゴールから始める</span>
-<span class="cmt"># is not None は「None ではない（まだスタートを通り過ぎていない）」という条件</span>
-<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-    path.append(node)               <span class="cmt"># リストの末尾に追加する</span>
-    node = came_from[node]          <span class="cmt"># 1 つ前のマスへ戻る</span>
-<span class="cmt"># ゴールから順に入っているので、reverse() でリストの並びを逆にする</span>
-<span class="cmt"># 例 [3, 2, 1] が [1, 2, 3] になる</span>
-path.reverse()
-
-<span class="cmt"># path にはスタートも入っているので、歩数は「マスの数 - 1」</span>
-<span class="fn">print</span>(<span class="str">&quot;最短経路の歩数:&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;通った場所の数:&quot;</span>, <span class="fn">len</span>(path), <span class="str">&quot;マス&quot;</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># --- 経路を * で塗って表示する ---</span>
-<span class="cmt"># 文字列は 1 文字だけ書きかえることができないので、いったんリストに変える。</span>
-<span class="cmt"># list(&quot;S..&quot;) は [&quot;S&quot;, &quot;.&quot;, &quot;.&quot;] のように 1 文字ずつのリストになる。</span>
-<span class="cmt"># [list(line) for line in maze] はリスト内包表記といい、</span>
-<span class="cmt"># 「maze の各行 line について list(line) を作り、それを並べたリスト」を作る。</span>
-<span class="cmt"># 結果は「リストの中にリストが入った」二次元のリストになる</span>
-picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-<span class="kw">for</span> (r, c) <span class="kw">in</span> path:                 <span class="cmt"># 経路の各マス (r, c) について</span>
-    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:        <span class="cmt"># 通路なら（S と G はそのまま残す）</span>
-        picture[r][c] = <span class="str">&quot;*&quot;</span>         <span class="cmt"># * に書きかえる</span>
-
-<span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> picture:
-    <span class="cmt"># &quot;&quot;.join(リスト) は、リストの要素をつなげて 1 つの文字列にする</span>
-    <span class="cmt"># 例 &quot;&quot;.join([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]) は &quot;abc&quot;</span>
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>メモのいちばん古い行を読んで消す（幅優先探索）</td><td style="white-space:nowrap">A. <code>queue.pop()</code><br>B. <code>queue.popleft()</code><br>C. <code>queue[0]</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりのマスに「どこから来たか」として、いま調べているマスを記録する</td><td style="white-space:nowrap">A. <code>(nr, nc)</code><br>B. <code>start</code><br>C. <code>current</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 372" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">幅優先探索: スタートから波のように1歩ずつ広がる</text>
-        <text x="350" y="46" text-anchor="middle" fill="#888" font-size="11">マスの中の数字は「スタートから何歩か」。# は壁、. はまだ調べていない通路</text>
-        <rect x="217" y="62" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="85.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.020;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="62" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="85.0" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">S</text>
-        </g>
-        <rect x="255" y="62" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="273.0" y="85.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.063;0.083;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="255" y="62" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="273.0" y="85.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">1</text>
-        </g>
-        <rect x="293" y="62" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="311.0" y="85.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.126;0.146;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="293" y="62" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="311.0" y="85.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">2</text>
-        </g>
-        <rect x="331" y="62" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="349.0" y="85.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.189;0.209;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="331" y="62" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="349.0" y="85.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">3</text>
-        </g>
-        <rect x="369" y="62" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="387.0" y="85.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.252;0.272;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="369" y="62" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="387.0" y="85.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">4</text>
-        </g>
-        <rect x="407" y="62" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="85.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.315;0.335;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="62" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="85.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">5</text>
-        </g>
-        <rect x="445" y="62" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="463.0" y="85.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="217" y="100" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="123.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.063;0.083;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="100" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="123.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">1</text>
-        </g>
-        <rect x="255" y="100" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="273.0" y="123.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="293" y="100" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="311.0" y="123.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="331" y="100" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="349.0" y="123.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="369" y="100" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="387.0" y="123.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="407" y="100" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="123.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.378;0.398;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="100" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="123.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">6</text>
-        </g>
-        <rect x="445" y="100" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="463.0" y="123.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="217" y="138" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="161.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.126;0.146;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="138" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="161.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">2</text>
-        </g>
-        <rect x="255" y="138" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="273.0" y="161.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="293" y="138" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="311.0" y="161.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.631;0.651;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="293" y="138" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="311.0" y="161.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">10</text>
-        </g>
-        <rect x="331" y="138" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="349.0" y="161.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.568;0.588;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="331" y="138" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="349.0" y="161.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">9</text>
-        </g>
-        <rect x="369" y="138" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="387.0" y="161.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.505;0.525;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="369" y="138" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="387.0" y="161.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">8</text>
-        </g>
-        <rect x="407" y="138" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="161.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.442;0.462;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="138" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="161.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">7</text>
-        </g>
-        <rect x="445" y="138" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="463.0" y="161.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="217" y="176" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="199.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.189;0.209;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="176" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="199.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">3</text>
-        </g>
-        <rect x="255" y="176" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="273.0" y="199.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="293" y="176" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="311.0" y="199.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.694;0.714;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="293" y="176" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="311.0" y="199.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">11</text>
-        </g>
-        <rect x="331" y="176" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="349.0" y="199.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="369" y="176" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="387.0" y="199.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="407" y="176" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="199.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.505;0.525;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="176" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="199.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">8</text>
-        </g>
-        <rect x="445" y="176" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="463.0" y="199.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.568;0.588;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="445" y="176" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="463.0" y="199.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">9</text>
-        </g>
-        <rect x="217" y="214" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="237.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.252;0.272;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="214" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="237.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">4</text>
-        </g>
-        <rect x="255" y="214" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="273.0" y="237.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="293" y="214" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="311.0" y="237.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.757;0.777;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="293" y="214" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="311.0" y="237.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">12</text>
-        </g>
-        <rect x="331" y="214" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="349.0" y="237.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.694;0.714;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="331" y="214" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="349.0" y="237.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">11</text>
-        </g>
-        <rect x="369" y="214" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="387.0" y="237.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="407" y="214" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="237.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.568;0.588;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="214" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="237.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">9</text>
-        </g>
-        <rect x="445" y="214" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="463.0" y="237.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="217" y="252" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="275.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.315;0.335;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="252" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="275.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">5</text>
-        </g>
-        <rect x="255" y="252" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="273.0" y="275.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="293" y="252" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="311.0" y="275.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="331" y="252" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="349.0" y="275.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.631;0.651;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="331" y="252" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="349.0" y="275.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">10</text>
-        </g>
-        <rect x="369" y="252" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="387.0" y="275.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="407" y="252" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="275.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.631;0.651;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="252" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="275.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">10</text>
-        </g>
-        <rect x="445" y="252" width="36" height="36" rx="4" fill="#33302a" stroke="#4a453a"/>
-        <text x="463.0" y="275.0" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="217" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="235.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.378;0.398;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="217" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="235.0" y="313.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">6</text>
-        </g>
-        <rect x="255" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="273.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.442;0.462;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="255" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="273.0" y="313.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">7</text>
-        </g>
-        <rect x="293" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="311.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.505;0.525;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="293" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="311.0" y="313.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">8</text>
-        </g>
-        <rect x="331" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="349.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.568;0.588;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="331" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="349.0" y="313.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">9</text>
-        </g>
-        <rect x="369" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="387.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.631;0.651;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="369" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="387.0" y="313.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">10</text>
-        </g>
-        <rect x="407" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="425.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.694;0.714;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="407" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="425.0" y="313.0" text-anchor="middle" fill="#93D500" font-size="12" font-weight="400">11</text>
-        </g>
-        <rect x="445" y="290" width="36" height="36" rx="4" fill="#141414" stroke="#333"/>
-        <text x="463.0" y="313.0" text-anchor="middle" fill="#4a4a4a" font-size="13">.</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.757;0.777;1" dur="15s" repeatCount="indefinite"/>
-          <rect x="445" y="290" width="36" height="36" rx="4" fill="#1a2e0a" stroke="#76B900" stroke-width="1.2"/>
-          <text x="463.0" y="313.0" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">G</text>
-        </g>
-        <polyline points="235.0,80.0 235.0,118.0 235.0,156.0 235.0,194.0 235.0,232.0 235.0,270.0 235.0,308.0 273.0,308.0 311.0,308.0 349.0,308.0 387.0,308.0 425.0,308.0 463.0,308.0" fill="none" stroke="#FFB800" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.86;0.90;1" dur="15s" repeatCount="indefinite"/></polyline>
-        <text x="350" y="354" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">ゴールは12歩。同じ歩数のマスがすべて出そろってから、次の歩数へ進む</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a01_ex3_result.png" alt="AL2-01-ex3.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 最短経路の歩数: 12 歩 / 通った場所の数: 13 マス /  / 最短経路（* が通り道） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G" width="380" height="448" loading="lazy">
-      </div>
-      <p class="run-note">スタートからゴールまで<strong>12歩</strong>で着く道が見つかりました。2つ目の迷路図で <code>*</code> が付いているマスが通り道です。左端の列をまっすぐ下り、いちばん下の行を右へ進む道になっています。幅優先探索は「歩数が少ない順」に調べるので、最初に届いた道がそのまま最短経路になります。</p>
-
-    <div class="note-warn">
-      <strong>後期につながる注意点:</strong> 幅優先探索が求めるのは<strong>歩数が最も少ない道</strong>です。
-      1歩の重さがマスによって違う場合、たとえば砂地は3秒、舗装路は1秒という迷路では、幅優先探索は最短時間の道を求められません。
-      重さの違いをあつかう方法が、第5回から学ぶダイクストラ法です。
-    </div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
         <h3>全部の順番を試して、いちばん短いものを選ぶ（後期の予告）</h3>
       </div>
       <p>後期のテーマである最適化を、いちばん小さな形で体験します。
@@ -1204,7 +649,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       どの家から回るかで、かかる時間が変わります。時間を最も短くする回り方を見つける問題が、第8回から学ぶ巡回セールスマン問題です。
     </div>
 
-<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex2.py</span>
 <span class="cmt"># 後期のテーマ「最適化」の入口</span>
 <span class="cmt"># 学校を出発して3か所を回り、学校へ戻る。いちばん短い順番はどれか。</span>
 <span class="cmt"># 「考えられる順番を全部試して、いちばん良いものを選ぶ」やり方を</span>
@@ -1301,8 +746,8 @@ best_time = <span class="kw">None</span>                    <span class="cmt"># 
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
         <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いま計算した合計時間が、これまでの最短より短いときだけ更新する</td><td style="white-space:nowrap">A. <code>minutes &lt; best_time</code><br>B. <code>minutes == best_time</code><br>C. <code>minutes &gt; best_time</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の場所から学校へ戻る時間を足す</td><td style="white-space:nowrap">A. <code>minutes_between(place, &quot;学校&quot;)</code><br>B. <code>0</code><br>C. <code>minutes_between(&quot;学校&quot;, route[0])</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いま計算した合計時間が、これまでの最短より短いときだけ更新する</td><td style="white-space:nowrap">A. <code>minutes == best_time</code><br>B. <code>minutes &gt; best_time</code><br>C. <code>minutes &lt; best_time</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の場所から学校へ戻る時間を足す</td><td style="white-space:nowrap">A. <code>0</code><br>B. <code>minutes_between(place, &quot;学校&quot;)</code><br>C. <code>minutes_between(&quot;学校&quot;, route[0])</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
@@ -1362,7 +807,7 @@ best_time = <span class="kw">None</span>                    <span class="cmt"># 
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex4_result.png" alt="AL2-01-ex4.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 26 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 36 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 32 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 36 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 32 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 26 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 郵便局 → 図書館 → カフェ → 学校 / そのときの合計時間: 26 分" width="419" height="288" loading="lazy">
+        <img src="images/a01_ex2_result.png" alt="AL2-01-ex2.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 26 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 36 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 32 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 36 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 32 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 26 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 郵便局 → 図書館 → カフェ → 学校 / そのときの合計時間: 26 分" width="419" height="288" loading="lazy">
       </div>
       <p class="run-note">6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。「学校 → 郵便局 → 図書館 → カフェ → 学校」と「学校 → カフェ → 図書館 → 郵便局 → 学校」の2つが同じ26分になっています。2つは進む向きが逆なだけで、通る道は同じだからです。すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。</p>
 
@@ -1372,7 +817,7 @@ best_time = <span class="kw">None</span>                    <span class="cmt"># 
       全探索が使えなくなる大きさの問題をどう解くかが、第9回・第10回のテーマになります。
     </div>
 
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の実行結果から、6通りの合計時間をすべて書き出す。そのうえで、最短の順番が2つある理由を自分の言葉で説明する。</span></div>
+      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、6通りの合計時間をすべて書き出す。そのうえで、最短の順番が2つある理由を自分の言葉で説明する。</span></div>
     </div>
   </div>
 </section>
@@ -1406,7 +851,7 @@ best_time = <span class="kw">None</span>                    <span class="cmt"># 
       </div>
       <div class="setup-step">
         <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-01-ex4.py</code> を開き、<code>travel_time</code> の時間（分）を、自分の通学路や行きつけの店を思い浮かべて<strong>3か所以上</strong>書き換える。
+        <p style="font-size:0.95rem"><code>AL2-01-ex2.py</code> を開き、<code>travel_time</code> の時間（分）を、自分の通学路や行きつけの店を思い浮かべて<strong>3か所以上</strong>書き換える。
         保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
@@ -1616,7 +1061,7 @@ app.launch(inbrowser=<span class="kw">True</span>)                             <
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

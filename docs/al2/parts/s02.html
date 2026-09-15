@@ -146,8 +146,7 @@
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    第1回と同じように、まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -189,15 +188,15 @@
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-02-ex1.py</code>, <code>AL2-02-ex2.py</code>, <code>AL2-02-ex3.py</code>, <code>AL2-02-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-02-ex1.py</code>, <code>AL2-02-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -218,7 +217,7 @@
         <span class="tag tag-example">例題 1</span>
         <h3>深さ優先探索で迷路を解く</h3>
       </div>
-      <p>第1回の例題3で使った迷路を、深さ優先探索で解きます。
+      <p>前期に幅優先探索で解いたのと同じ形の迷路を、深さ優先探索で解きます。
       幅優先探索のコードと見比べると、変わっているのは<strong>メモから取り出す行</strong>だけです。</p>
 
       <table>
@@ -308,7 +307,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <div class="run-capture">
         <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="448" loading="lazy">
       </div>
-      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。第1回の例題3で幅優先探索が見つけた道は12歩だったので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
+      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
     </div>
 
     <div class="card example">
@@ -780,462 +779,6 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、幅優先探索と深さ優先探索の「歩数」と「調べたマス数」を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどう違うかを言葉で説明する。</span></div>
     </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>障害物を増やした大きい迷路で比べる</h3>
-      </div>
-      <p>迷路を15マス×15マスに大きくし、壁（障害物）を増やして同じ比較をします。
-      迷路が大きくなると、2つの探索の差はどう変わるかを観察してください。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex3.py</span>
-<span class="cmt"># 障害物を増やした大きい迷路（15マス×15マス）で、2つの探索を比べる</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-maze = [
-    <span class="str">&quot;S.............#&quot;</span>,
-    <span class="str">&quot;.####.#####.#..&quot;</span>,
-    <span class="str">&quot;.#....#...#.#.#&quot;</span>,
-    <span class="str">&quot;.#.##.#.#.#.#.#&quot;</span>,
-    <span class="str">&quot;.#.#..#.#...#..&quot;</span>,
-    <span class="str">&quot;.#.#.##.####.#.&quot;</span>,
-    <span class="str">&quot;...#....#....#.&quot;</span>,
-    <span class="str">&quot;.###.####.####.&quot;</span>,
-    <span class="str">&quot;.#...#....#...#&quot;</span>,
-    <span class="str">&quot;.#.###.####.##.&quot;</span>,
-    <span class="str">&quot;.#.....#......#&quot;</span>,
-    <span class="str">&quot;.#####.#.####.#&quot;</span>,
-    <span class="str">&quot;.....#.#.#....#&quot;</span>,
-    <span class="str">&quot;####.#.#.#.####&quot;</span>,
-    <span class="str">&quot;.....#...#....G&quot;</span>,
-]
-
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
-
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
-            start = (r, c)
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
-            goal = (r, c)
-
-
-<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
-    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではないマスを返す&quot;&quot;&quot;</span>
-    result = []
-    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-        nr = r + dr
-        nc = c + dc
-        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
-            <span class="kw">continue</span>
-        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
-            <span class="kw">continue</span>
-        result.append((nr, nc))
-    <span class="kw">return</span> result
-
-
-<span class="kw">def</span> <span class="fn">search</span>(mode):
-    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
-    memo = <span class="fn">deque</span>([start])
-    came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>
-    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
-        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
-            current = memo.popleft()
-        <span class="kw">else</span>:
-            current = memo.pop()
-        checked = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
-            <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[next_cell] = current
-            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    path = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        path.append(node)
-        node = came_from[node]
-    path.reverse()
-    <span class="kw">return</span> path, checked
-
-
-<span class="kw">def</span> <span class="fn">draw</span>(path, title):
-    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
-    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-            picture[r][c] = <span class="str">&quot;*&quot;</span>
-    <span class="fn">print</span>(title)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
-    <span class="fn">print</span>()
-
-
-bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
-dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;15マス×15マスの迷路（通れるマスは全部で&quot;</span>, rows * cols - <span class="fn">sum</span>(line.count(<span class="str">&quot;#&quot;</span>) <span class="kw">for</span> line <span class="kw">in</span> maze), <span class="str">&quot;マス）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>()
-
-<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路&quot;</span>)
-<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1マス調べるたびに数を1つ増やす</td><td style="white-space:nowrap">A. <code>checked</code><br>B. <code>checked * 2</code><br>C. <code>checked + 1</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>見つけたとなりのマスをメモの最後に書き足す（2つの探索で同じ）</td><td style="white-space:nowrap">A. <code>memo.appendleft(next_cell)</code><br>B. <code>memo.append(next_cell)</code><br>C. <code>memo.popleft()</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 298" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">一長一短: 幅優先探索は道が短く、深さ優先探索は手間が軽い</text>
-        <text x="30" y="58" fill="#E0E0E0" font-size="12" font-weight="700">経路の歩数（小さいほど良い）</text>
-        <text x="30" y="92" fill="#888888" font-size="11">幅優先探索</text>
-        <rect x="140" y="76" width="168" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="318" y="93" fill="#76B900" font-size="12" font-weight="700">12</text>
-        <text x="30" y="126" fill="#888888" font-size="11">深さ優先探索</text>
-        <rect x="140" y="110" width="252" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="402" y="127" fill="#FFB800" font-size="12" font-weight="700">18</text>
-        <text x="30" y="166" fill="#E0E0E0" font-size="12" font-weight="700">調べたマス数（小さいほど手間が軽い）</text>
-        <text x="30" y="200" fill="#888888" font-size="11">幅優先探索</text>
-        <rect x="140" y="184" width="434" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="584" y="201" fill="#76B900" font-size="12" font-weight="700">31</text>
-        <text x="30" y="234" fill="#888888" font-size="11">深さ優先探索</text>
-        <rect x="140" y="218" width="266" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="416" y="235" fill="#FFB800" font-size="12" font-weight="700">19</text>
-        <text x="350" y="280" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">最短の道がほしいなら幅優先探索。ゴールへ行けるかだけ知りたいなら深さ優先探索でも足りる</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a02_ex3_result.png" alt="AL2-02-ex3.py の実行結果。15マス×15マスの迷路（通れるマスは全部で 128 マス） / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         48歩        127マス / 深さ優先探索       64歩         76マス / ---------------------------------------------- /  / 幅優先探索の経路 / S*****........# / .####*#####.#.. / .#...*#...#.#.# / .#.##*#.#.#.#.# / .#.#**#.#...#.. / .#.#*##.####.#. / ...#*...#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G /  / 深さ優先探索の経路 / S***********..# / .####.#####*#.. / .#....#***#*#.# / .#.##.#*#*#*#.# / .#.#..#*#***#.. / .#.#.##*####.#. / ...#****#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G" width="380" height="848" loading="lazy">
-      </div>
-      <p class="run-note">幅優先探索は<strong>48歩・127マス調査</strong>、深さ優先探索は<strong>64歩・76マス調査</strong>でした。通れるマスは全部で128マスなので、幅優先探索はほぼ全部のマスを調べています。迷路が大きくなっても、「幅優先探索は道が短いが手間が重い」「深さ優先探索は手間が軽いが道が長い」という関係は変わりません。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>壁のない広場で比べる</h3>
-      </div>
-      <p>壁がまったくない広場で、2つの探索がどんな道を選ぶかを見ます。
-      広場は10マス×10マス、20マス×20マス、40マス×40マスの3種類を試します。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex4.py</span>
-<span class="cmt"># 壁のない広場で、2つの探索がどれだけ違う道を選ぶかを見る</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-
-<span class="kw">def</span> <span class="fn">search</span>(size, mode):
-    <span class="str">&quot;&quot;&quot;size × size の壁のない広場を、左上から右下まで探索する&quot;&quot;&quot;</span>
-    start = (<span class="num">0</span>, <span class="num">0</span>)
-    goal = (size - <span class="num">1</span>, size - <span class="num">1</span>)
-
-    memo = <span class="fn">deque</span>([start])
-    came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>
-
-    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
-        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
-            current = memo.popleft()
-        <span class="kw">else</span>:
-            current = memo.pop()
-        checked = checked + <span class="num">1</span>
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        r, c = current
-        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-            nr = r + dr
-            nc = c + dc
-            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-                <span class="kw">continue</span>
-            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[(nr, nc)] = current
-            memo.append((nr, nc))
-
-    path = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        path.append(node)
-        node = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    path.reverse()
-    <span class="kw">return</span> path, checked
-
-
-<span class="fn">print</span>(<span class="str">&quot;壁のない広場（左上から右下まで）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数&quot;</span>)
-<span class="kw">for</span> size <span class="kw">in</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>]:
-    bfs_path, bfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;bfs&quot;</span>)
-    dfs_path, dfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;dfs&quot;</span>)
-    <span class="fn">print</span>(<span class="str">f&quot;{size:&gt;2}×{size:&lt;2}     {len(bfs_path)-1:&gt;8}歩 {bfs_checked:&gt;12}マス&quot;</span>
-          <span class="str">f&quot; {len(dfs_path)-1:&gt;12}歩 {dfs_checked:&gt;12}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># 10×10 の広場で、それぞれの経路を絵にして比べる</span>
-<span class="kw">for</span> mode, title <span class="kw">in</span> [(<span class="str">&quot;bfs&quot;</span>, <span class="str">&quot;幅優先探索の経路（最短）&quot;</span>), (<span class="str">&quot;dfs&quot;</span>, <span class="str">&quot;深さ優先探索の経路（遠回り）&quot;</span>)]:
-    path, checked = <span class="fn">search</span>(<span class="num">10</span>, mode)
-    picture = [[<span class="str">&quot;.&quot;</span> <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)] <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
-    picture[<span class="num">0</span>][<span class="num">0</span>] = <span class="str">&quot;S&quot;</span>
-    picture[<span class="num">9</span>][<span class="num">9</span>] = <span class="str">&quot;G&quot;</span>
-    <span class="fn">print</span>(title, <span class="str">&quot;／&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
-    <span class="fn">print</span>()</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>広場の外に出るマスを飛ばす条件（上下左右の4方向すべて）</td><td style="white-space:nowrap">A. <code>nr &lt; 0 and nc &lt; 0</code><br>B. <code>nr &lt; 0 or nr &gt;= size or nc &lt; 0 or nc &gt;= size</code><br>C. <code>nr &gt; size or nc &gt; size</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>ゴールから「どこから来たか」を1つずつ逆にたどる</td><td style="white-space:nowrap">A. <code>came_from[start]</code><br>B. <code>came_from[node]</code><br>C. <code>node - 1</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">壁のない10マス×10マスの広場を、左上から右下まで進んだ道</text>
-        <text x="180" y="52" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">幅優先探索: 18歩</text>
-        <rect x="60" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="86" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="134" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="182" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="230" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="108" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="132" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="156" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="180" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="204" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="228" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="252" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="276" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <text x="71" y="77" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">S</text>
-        <text x="287" y="293" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">G</text>
-        <polyline points="71.0,73.0 71.0,97.0 71.0,121.0 71.0,145.0 71.0,169.0 71.0,193.0 71.0,217.0 71.0,241.0 71.0,265.0 71.0,289.0 95.0,289.0 119.0,289.0 143.0,289.0 167.0,289.0 191.0,289.0 215.0,289.0 239.0,289.0 263.0,289.0 287.0,289.0" fill="none" stroke="#76B900" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="10s" repeatCount="indefinite"/></polyline>
-        <text x="520" y="52" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">深さ優先探索: 54歩</text>
-        <rect x="400" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="424" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="86" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="134" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="400" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="424" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="182" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="230" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="400" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="424" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <text x="411" y="77" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">S</text>
-        <text x="627" y="293" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">G</text>
-        <polyline points="411.0,73.0 435.0,73.0 459.0,73.0 483.0,73.0 507.0,73.0 531.0,73.0 555.0,73.0 579.0,73.0 603.0,73.0 627.0,73.0 627.0,97.0 627.0,121.0 603.0,121.0 579.0,121.0 555.0,121.0 531.0,121.0 507.0,121.0 483.0,121.0 459.0,121.0 435.0,121.0 411.0,121.0 411.0,145.0 411.0,169.0 435.0,169.0 459.0,169.0 483.0,169.0 507.0,169.0 531.0,169.0 555.0,169.0 579.0,169.0 603.0,169.0 627.0,169.0 627.0,193.0 627.0,217.0 603.0,217.0 579.0,217.0 555.0,217.0 531.0,217.0 507.0,217.0 483.0,217.0 459.0,217.0 435.0,217.0 411.0,217.0 411.0,241.0 411.0,265.0 435.0,265.0 459.0,265.0 483.0,265.0 507.0,265.0 531.0,265.0 555.0,265.0 579.0,265.0 603.0,265.0 627.0,265.0 627.0,289.0" fill="none" stroke="#FFB800" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="10s" repeatCount="indefinite"/></polyline>
-        <text x="350" y="328" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">深さ優先探索は行き止まりに当たるまで進み続けるため、広場では大きく蛇行する</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a02_ex4_result.png" alt="AL2-02-ex4.py の実行結果。壁のない広場（左上から右下まで） / -------------------------------------------------------------- / 広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数 / 10×10           18歩          100マス           54歩           55マス / 20×20           38歩          400マス          190歩          229マス / 40×40           78歩         1600マス          780歩          859マス / -------------------------------------------------------------- /  / 幅優先探索の経路（最短） ／ 18 歩 / S......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *********G /  / 深さ優先探索の経路（遠回り） ／ 54 歩 / S********* / .........* / ********** / *......... / ********** / .........* / ********** / *......... / ********** / .........G" width="531" height="668" loading="lazy">
-      </div>
-      <p class="run-note">40マス×40マスの広場では、幅優先探索が<strong>78歩</strong>なのに対し、深さ優先探索は<strong>780歩</strong>でした。10倍の差です。一方で調べたマスの数は、幅優先探索が1600マス（広場のすべて）、深さ優先探索は859マスと約半分です。10マス×10マスの経路の絵を見ると、深さ優先探索が行をまたいで蛇のように往復していることが分かります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の表から、40マス×40マスのときの「歩数の差」と「調べたマス数の差」を書く。あわせて、深さ優先探索の経路が蛇のようになる理由を、メモの読み方（pop）と結びつけて説明する。</span></div>
-    </div>
   </div>
 </section>
 
@@ -1554,10 +1097,6 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
           <tr><td><code>AL2-02-ex2.py</code></td><td>穴1</td><td><code>memo.popleft()</code></td></tr>
           <tr><td><code>AL2-02-ex2.py</code></td><td>穴2</td><td><code>memo.pop()</code></td></tr>
           <tr><td><code>AL2-02-ex2.py</code></td><td>穴3</td><td><code>next_cell in came_from</code></td></tr>
-          <tr><td><code>AL2-02-ex3.py</code></td><td>穴1</td><td><code>checked + 1</code></td></tr>
-          <tr><td><code>AL2-02-ex3.py</code></td><td>穴2</td><td><code>memo.append(next_cell)</code></td></tr>
-          <tr><td><code>AL2-02-ex4.py</code></td><td>穴1</td><td><code>nr &lt; 0 or nr &gt;= size or nc &lt; 0 or nc &gt;= size</code></td></tr>
-          <tr><td><code>AL2-02-ex4.py</code></td><td>穴2</td><td><code>came_from[node]</code></td></tr>
         </table>
       </div>
       <div class="ans-item">

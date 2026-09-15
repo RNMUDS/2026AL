@@ -344,8 +344,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    第1回と同じように、まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -387,15 +386,15 @@ a.sub-item:hover { border-color: #4A7A00; }
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-02-ex1.py</code>, <code>AL2-02-ex2.py</code>, <code>AL2-02-ex3.py</code>, <code>AL2-02-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-02-ex1.py</code>, <code>AL2-02-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -416,7 +415,7 @@ a.sub-item:hover { border-color: #4A7A00; }
         <span class="tag tag-example">例題 1</span>
         <h3>深さ優先探索で迷路を解く</h3>
       </div>
-      <p>第1回の例題3で使った迷路を、深さ優先探索で解きます。
+      <p>前期に幅優先探索で解いたのと同じ形の迷路を、深さ優先探索で解きます。
       幅優先探索のコードと見比べると、変わっているのは<strong>メモから取り出す行</strong>だけです。</p>
 
       <table>
@@ -506,7 +505,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <div class="run-capture">
         <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="448" loading="lazy">
       </div>
-      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。第1回の例題3で幅優先探索が見つけた道は12歩だったので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
+      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
     </div>
 
     <div class="card example">
@@ -978,462 +977,6 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、幅優先探索と深さ優先探索の「歩数」と「調べたマス数」を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどう違うかを言葉で説明する。</span></div>
     </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>障害物を増やした大きい迷路で比べる</h3>
-      </div>
-      <p>迷路を15マス×15マスに大きくし、壁（障害物）を増やして同じ比較をします。
-      迷路が大きくなると、2つの探索の差はどう変わるかを観察してください。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex3.py</span>
-<span class="cmt"># 障害物を増やした大きい迷路（15マス×15マス）で、2つの探索を比べる</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-maze = [
-    <span class="str">&quot;S.............#&quot;</span>,
-    <span class="str">&quot;.####.#####.#..&quot;</span>,
-    <span class="str">&quot;.#....#...#.#.#&quot;</span>,
-    <span class="str">&quot;.#.##.#.#.#.#.#&quot;</span>,
-    <span class="str">&quot;.#.#..#.#...#..&quot;</span>,
-    <span class="str">&quot;.#.#.##.####.#.&quot;</span>,
-    <span class="str">&quot;...#....#....#.&quot;</span>,
-    <span class="str">&quot;.###.####.####.&quot;</span>,
-    <span class="str">&quot;.#...#....#...#&quot;</span>,
-    <span class="str">&quot;.#.###.####.##.&quot;</span>,
-    <span class="str">&quot;.#.....#......#&quot;</span>,
-    <span class="str">&quot;.#####.#.####.#&quot;</span>,
-    <span class="str">&quot;.....#.#.#....#&quot;</span>,
-    <span class="str">&quot;####.#.#.#.####&quot;</span>,
-    <span class="str">&quot;.....#...#....G&quot;</span>,
-]
-
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
-
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
-            start = (r, c)
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
-            goal = (r, c)
-
-
-<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
-    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではないマスを返す&quot;&quot;&quot;</span>
-    result = []
-    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-        nr = r + dr
-        nc = c + dc
-        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
-            <span class="kw">continue</span>
-        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
-            <span class="kw">continue</span>
-        result.append((nr, nc))
-    <span class="kw">return</span> result
-
-
-<span class="kw">def</span> <span class="fn">search</span>(mode):
-    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
-    memo = <span class="fn">deque</span>([start])
-    came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>
-    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
-        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
-            current = memo.popleft()
-        <span class="kw">else</span>:
-            current = memo.pop()
-        checked = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
-            <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[next_cell] = current
-            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    path = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        path.append(node)
-        node = came_from[node]
-    path.reverse()
-    <span class="kw">return</span> path, checked
-
-
-<span class="kw">def</span> <span class="fn">draw</span>(path, title):
-    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
-    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-            picture[r][c] = <span class="str">&quot;*&quot;</span>
-    <span class="fn">print</span>(title)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
-    <span class="fn">print</span>()
-
-
-bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
-dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;15マス×15マスの迷路（通れるマスは全部で&quot;</span>, rows * cols - <span class="fn">sum</span>(line.count(<span class="str">&quot;#&quot;</span>) <span class="kw">for</span> line <span class="kw">in</span> maze), <span class="str">&quot;マス）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
-<span class="fn">print</span>()
-
-<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路&quot;</span>)
-<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1マス調べるたびに数を1つ増やす</td><td style="white-space:nowrap">A. <code>checked</code><br>B. <code>checked * 2</code><br>C. <code>checked + 1</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>見つけたとなりのマスをメモの最後に書き足す（2つの探索で同じ）</td><td style="white-space:nowrap">A. <code>memo.appendleft(next_cell)</code><br>B. <code>memo.append(next_cell)</code><br>C. <code>memo.popleft()</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 298" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">一長一短: 幅優先探索は道が短く、深さ優先探索は手間が軽い</text>
-        <text x="30" y="58" fill="#E0E0E0" font-size="12" font-weight="700">経路の歩数（小さいほど良い）</text>
-        <text x="30" y="92" fill="#888888" font-size="11">幅優先探索</text>
-        <rect x="140" y="76" width="168" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="318" y="93" fill="#76B900" font-size="12" font-weight="700">12</text>
-        <text x="30" y="126" fill="#888888" font-size="11">深さ優先探索</text>
-        <rect x="140" y="110" width="252" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="402" y="127" fill="#FFB800" font-size="12" font-weight="700">18</text>
-        <text x="30" y="166" fill="#E0E0E0" font-size="12" font-weight="700">調べたマス数（小さいほど手間が軽い）</text>
-        <text x="30" y="200" fill="#888888" font-size="11">幅優先探索</text>
-        <rect x="140" y="184" width="434" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="584" y="201" fill="#76B900" font-size="12" font-weight="700">31</text>
-        <text x="30" y="234" fill="#888888" font-size="11">深さ優先探索</text>
-        <rect x="140" y="218" width="266" height="22" rx="5" fill="#FFB800" opacity="0.85"/>
-        <text x="416" y="235" fill="#FFB800" font-size="12" font-weight="700">19</text>
-        <text x="350" y="280" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">最短の道がほしいなら幅優先探索。ゴールへ行けるかだけ知りたいなら深さ優先探索でも足りる</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a02_ex3_result.png" alt="AL2-02-ex3.py の実行結果。15マス×15マスの迷路（通れるマスは全部で 128 マス） / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         48歩        127マス / 深さ優先探索       64歩         76マス / ---------------------------------------------- /  / 幅優先探索の経路 / S*****........# / .####*#####.#.. / .#...*#...#.#.# / .#.##*#.#.#.#.# / .#.#**#.#...#.. / .#.#*##.####.#. / ...#*...#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G /  / 深さ優先探索の経路 / S***********..# / .####.#####*#.. / .#....#***#*#.# / .#.##.#*#*#*#.# / .#.#..#*#***#.. / .#.#.##*####.#. / ...#****#....#. / .###*####.####. / .#***#....#...# / .#*###.####.##. / .#*****#******# / .#####*#*####*# / .....#*#*#****# / ####.#*#*#*#### / .....#***#****G" width="380" height="848" loading="lazy">
-      </div>
-      <p class="run-note">幅優先探索は<strong>48歩・127マス調査</strong>、深さ優先探索は<strong>64歩・76マス調査</strong>でした。通れるマスは全部で128マスなので、幅優先探索はほぼ全部のマスを調べています。迷路が大きくなっても、「幅優先探索は道が短いが手間が重い」「深さ優先探索は手間が軽いが道が長い」という関係は変わりません。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>壁のない広場で比べる</h3>
-      </div>
-      <p>壁がまったくない広場で、2つの探索がどんな道を選ぶかを見ます。
-      広場は10マス×10マス、20マス×20マス、40マス×40マスの3種類を試します。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex4.py</span>
-<span class="cmt"># 壁のない広場で、2つの探索がどれだけ違う道を選ぶかを見る</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-
-<span class="kw">def</span> <span class="fn">search</span>(size, mode):
-    <span class="str">&quot;&quot;&quot;size × size の壁のない広場を、左上から右下まで探索する&quot;&quot;&quot;</span>
-    start = (<span class="num">0</span>, <span class="num">0</span>)
-    goal = (size - <span class="num">1</span>, size - <span class="num">1</span>)
-
-    memo = <span class="fn">deque</span>([start])
-    came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>
-
-    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
-        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
-            current = memo.popleft()
-        <span class="kw">else</span>:
-            current = memo.pop()
-        checked = checked + <span class="num">1</span>
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        r, c = current
-        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-            nr = r + dr
-            nc = c + dc
-            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-                <span class="kw">continue</span>
-            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[(nr, nc)] = current
-            memo.append((nr, nc))
-
-    path = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        path.append(node)
-        node = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    path.reverse()
-    <span class="kw">return</span> path, checked
-
-
-<span class="fn">print</span>(<span class="str">&quot;壁のない広場（左上から右下まで）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>(<span class="str">&quot;広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数&quot;</span>)
-<span class="kw">for</span> size <span class="kw">in</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>]:
-    bfs_path, bfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;bfs&quot;</span>)
-    dfs_path, dfs_checked = <span class="fn">search</span>(size, <span class="str">&quot;dfs&quot;</span>)
-    <span class="fn">print</span>(<span class="str">f&quot;{size:&gt;2}×{size:&lt;2}     {len(bfs_path)-1:&gt;8}歩 {bfs_checked:&gt;12}マス&quot;</span>
-          <span class="str">f&quot; {len(dfs_path)-1:&gt;12}歩 {dfs_checked:&gt;12}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># 10×10 の広場で、それぞれの経路を絵にして比べる</span>
-<span class="kw">for</span> mode, title <span class="kw">in</span> [(<span class="str">&quot;bfs&quot;</span>, <span class="str">&quot;幅優先探索の経路（最短）&quot;</span>), (<span class="str">&quot;dfs&quot;</span>, <span class="str">&quot;深さ優先探索の経路（遠回り）&quot;</span>)]:
-    path, checked = <span class="fn">search</span>(<span class="num">10</span>, mode)
-    picture = [[<span class="str">&quot;.&quot;</span> <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)] <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
-    picture[<span class="num">0</span>][<span class="num">0</span>] = <span class="str">&quot;S&quot;</span>
-    picture[<span class="num">9</span>][<span class="num">9</span>] = <span class="str">&quot;G&quot;</span>
-    <span class="fn">print</span>(title, <span class="str">&quot;／&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
-    <span class="fn">print</span>()</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>広場の外に出るマスを飛ばす条件（上下左右の4方向すべて）</td><td style="white-space:nowrap">A. <code>nr &lt; 0 and nc &lt; 0</code><br>B. <code>nr &lt; 0 or nr &gt;= size or nc &lt; 0 or nc &gt;= size</code><br>C. <code>nr &gt; size or nc &gt; size</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>ゴールから「どこから来たか」を1つずつ逆にたどる</td><td style="white-space:nowrap">A. <code>came_from[start]</code><br>B. <code>came_from[node]</code><br>C. <code>node - 1</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">壁のない10マス×10マスの広場を、左上から右下まで進んだ道</text>
-        <text x="180" y="52" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">幅優先探索: 18歩</text>
-        <rect x="60" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="62" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="86" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="110" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="134" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="158" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="182" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="206" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="230" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="108" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="132" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="156" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="180" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="204" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="228" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="252" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="276" y="254" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="60" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="84" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="108" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="132" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="156" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="180" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="204" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="228" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="252" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <rect x="276" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#76B900"/>
-        <text x="71" y="77" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">S</text>
-        <text x="287" y="293" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">G</text>
-        <polyline points="71.0,73.0 71.0,97.0 71.0,121.0 71.0,145.0 71.0,169.0 71.0,193.0 71.0,217.0 71.0,241.0 71.0,265.0 71.0,289.0 95.0,289.0 119.0,289.0 143.0,289.0 167.0,289.0 191.0,289.0 215.0,289.0 239.0,289.0 263.0,289.0 287.0,289.0" fill="none" stroke="#76B900" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="10s" repeatCount="indefinite"/></polyline>
-        <text x="520" y="52" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">深さ優先探索: 54歩</text>
-        <rect x="400" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="62" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="424" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="86" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="86" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="110" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="134" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="134" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="400" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="158" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="424" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="182" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="182" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="206" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="230" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="230" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="400" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="424" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="448" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="472" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="496" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="520" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="544" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="568" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="592" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="616" y="254" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <rect x="400" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="424" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="448" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="472" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="496" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="520" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="544" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="568" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="592" y="278" width="22" height="22" rx="3" fill="#141414" stroke="#2e2e2e"/>
-        <rect x="616" y="278" width="22" height="22" rx="3" fill="#1a2e0a" stroke="#FFB800"/>
-        <text x="411" y="77" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">S</text>
-        <text x="627" y="293" text-anchor="middle" fill="#FFB800" font-size="11" font-weight="700">G</text>
-        <polyline points="411.0,73.0 435.0,73.0 459.0,73.0 483.0,73.0 507.0,73.0 531.0,73.0 555.0,73.0 579.0,73.0 603.0,73.0 627.0,73.0 627.0,97.0 627.0,121.0 603.0,121.0 579.0,121.0 555.0,121.0 531.0,121.0 507.0,121.0 483.0,121.0 459.0,121.0 435.0,121.0 411.0,121.0 411.0,145.0 411.0,169.0 435.0,169.0 459.0,169.0 483.0,169.0 507.0,169.0 531.0,169.0 555.0,169.0 579.0,169.0 603.0,169.0 627.0,169.0 627.0,193.0 627.0,217.0 603.0,217.0 579.0,217.0 555.0,217.0 531.0,217.0 507.0,217.0 483.0,217.0 459.0,217.0 435.0,217.0 411.0,217.0 411.0,241.0 411.0,265.0 435.0,265.0 459.0,265.0 483.0,265.0 507.0,265.0 531.0,265.0 555.0,265.0 579.0,265.0 603.0,265.0 627.0,265.0 627.0,289.0" fill="none" stroke="#FFB800" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="1600" stroke-dashoffset="1600"><animate attributeName="stroke-dashoffset" values="1600;0;0" keyTimes="0;0.75;1" dur="10s" repeatCount="indefinite"/></polyline>
-        <text x="350" y="328" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">深さ優先探索は行き止まりに当たるまで進み続けるため、広場では大きく蛇行する</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a02_ex4_result.png" alt="AL2-02-ex4.py の実行結果。壁のない広場（左上から右下まで） / -------------------------------------------------------------- / 広さ     幅優先の歩数   幅優先の調査数 深さ優先の歩数 深さ優先の調査数 / 10×10           18歩          100マス           54歩           55マス / 20×20           38歩          400マス          190歩          229マス / 40×40           78歩         1600マス          780歩          859マス / -------------------------------------------------------------- /  / 幅優先探索の経路（最短） ／ 18 歩 / S......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *......... / *********G /  / 深さ優先探索の経路（遠回り） ／ 54 歩 / S********* / .........* / ********** / *......... / ********** / .........* / ********** / *......... / ********** / .........G" width="531" height="668" loading="lazy">
-      </div>
-      <p class="run-note">40マス×40マスの広場では、幅優先探索が<strong>78歩</strong>なのに対し、深さ優先探索は<strong>780歩</strong>でした。10倍の差です。一方で調べたマスの数は、幅優先探索が1600マス（広場のすべて）、深さ優先探索は859マスと約半分です。10マス×10マスの経路の絵を見ると、深さ優先探索が行をまたいで蛇のように往復していることが分かります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の表から、40マス×40マスのときの「歩数の差」と「調べたマス数の差」を書く。あわせて、深さ優先探索の経路が蛇のようになる理由を、メモの読み方（pop）と結びつけて説明する。</span></div>
-    </div>
   </div>
 </section>
 
@@ -1638,7 +1181,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

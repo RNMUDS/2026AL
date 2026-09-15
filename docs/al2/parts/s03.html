@@ -104,7 +104,7 @@
       <p style="font-size:0.95rem;margin-top:0.8rem">
         見た目はまるで違いますが、どれも「頂点」と「辺」だけで書き直せます。
         書き直してしまえば、<strong>同じ1つのプログラムで4つとも解ける</strong>ようになります。
-        例題4では、迷路をグラフに書き直して、例題3とまったく同じ幅優先探索で解きます。
+        第2回の迷路も、マスを頂点、となり合うマスの間を辺にすれば、同じグラフとして扱えます。
       </p>
     </div>
 
@@ -254,7 +254,7 @@
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -296,15 +296,15 @@
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code>, <code>AL2-03-ex3.py</code>, <code>AL2-03-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -515,371 +515,6 @@ list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</
       <p class="run-note">同じ路線図が、6×6＝36マスの表になりました。表のななめの線（自分自身との交点）はすべて0で、表は左上から右下の線を軸にして<strong>対称</strong>になっています。「新宿と東京はつながっているか」は <code>matrix[0][3]</code> を見るだけで分かります。一方で、駅の数が5000個になると、隣接行列は2500万マス、隣接リストは3万マスで、約800倍の差が出ています。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の最後の表から、駅の数が6個・50個・500個・5000個のときの「隣接行列のマス数」と「隣接リストのマス数」を書き写す。あわせて、駅の数が10倍になったとき、それぞれのマス数が何倍になるかを書く。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>グラフの上を幅優先探索する</h3>
-      </div>
-      <p>迷路で使った幅優先探索を、そのままグラフに使います。
-      「新宿から各駅まで、何本の路線に乗ればたどり着けるか」を求めます。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex3.py</span>
-<span class="cmt"># グラフの上を幅優先探索する</span>
-<span class="cmt"># 迷路と同じ考え方で、「新宿から各駅まで何本の路線に乗ればよいか」を求める</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-railway = {
-    <span class="str">&quot;新宿&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;渋谷&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
-    <span class="str">&quot;池袋&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;東京&quot;</span>: [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>],
-    <span class="str">&quot;品川&quot;</span>: [<span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-    <span class="str">&quot;上野&quot;</span>: [<span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;東京&quot;</span>],
-}
-
-start = <span class="str">&quot;新宿&quot;</span>
-
-<span class="cmt"># rides = 「その駅まで何本の路線に乗ればよいか」を記録する辞書</span>
-rides = {start: <span class="num">0</span>}
-came_from = {start: <span class="kw">None</span>}
-
-queue = <span class="fn">deque</span>([start])
-
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索の進み方&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-
-<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = queue.popleft()
-    <span class="fn">print</span>(<span class="str">f&quot;{current} を調べる（乗る路線の数: {rides[current]}本）&quot;</span>)
-    <span class="kw">for</span> next_station <span class="kw">in</span> railway[current]:
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-            <span class="kw">continue</span>                     <span class="cmt"># すでに調べた駅</span>
-        rides[next_station] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        came_from[next_station] = current
-        queue.append(next_station)
-        <span class="fn">print</span>(<span class="str">f&quot;    → {next_station} は {rides[next_station]}本でたどり着ける&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>()
-
-<span class="fn">print</span>(<span class="str">f&quot;{start} から各駅までに乗る路線の数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="kw">for</span> station <span class="kw">in</span> railway:
-    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {rides[station]}本&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>()
-
-<span class="cmt"># 経路を復元して表示する</span>
-<span class="kw">for</span> goal <span class="kw">in</span> [<span class="str">&quot;品川&quot;</span>, <span class="str">&quot;上野&quot;</span>]:
-    route = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        route.append(node)
-        node = came_from[node]
-    route.reverse()
-    <span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} への行き方:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>すでに乗車回数が決まっている駅は飛ばす</td><td style="white-space:nowrap">A. <code>next_station in railway</code><br>B. <code>next_station == start</code><br>C. <code>next_station in rides</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりの駅の乗車回数は、いまの駅の回数に1を足したもの</td><td style="white-space:nowrap">A. <code>rides[current] + 1</code><br>B. <code>1</code><br>C. <code>rides[current]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 322" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">新宿から出発して、乗る路線の数が少ない駅から順に広がる</text>
-        <line x1="176" y1="146" x2="206" y2="252" stroke="#555" stroke-width="2"/>
-        <line x1="176" y1="146" x2="260" y2="62" stroke="#555" stroke-width="2"/>
-        <line x1="176" y1="146" x2="408" y2="152" stroke="#555" stroke-width="2"/>
-        <line x1="206" y1="252" x2="356" y2="252" stroke="#555" stroke-width="2"/>
-        <line x1="408" y1="152" x2="356" y2="252" stroke="#555" stroke-width="2"/>
-        <line x1="408" y1="152" x2="470" y2="62" stroke="#555" stroke-width="2"/>
-        <line x1="260" y1="62" x2="470" y2="62" stroke="#555" stroke-width="2"/>
-        <circle cx="260" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
-        <circle cx="176" cy="146" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
-        <circle cx="470" cy="62" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
-        <circle cx="408" cy="152" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
-        <circle cx="206" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
-        <circle cx="356" cy="252" r="26" fill="#1A1A1A" stroke="#555" stroke-width="2"/>
-        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="260" cy="62" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="260" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">池袋</text>
-          <text x="260" y="28" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.000;0.030;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="176" cy="146" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="176" y="151" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿</text>
-          <text x="176" y="112" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">0本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.563;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="470" cy="62" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="470" y="67" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">上野</text>
-          <text x="470" y="28" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">2本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="408" cy="152" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="408" y="157" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">東京</text>
-          <text x="408" y="118" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.267;0.297;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="206" cy="252" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="206" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">渋谷</text>
-          <text x="206" y="218" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">1本</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.533;0.563;1" dur="10s" repeatCount="indefinite"/>
-        <circle cx="356" cy="252" r="26" fill="#1a2e0a" stroke="#76B900" stroke-width="2"/>
-        <text x="356" y="257" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">品川</text>
-          <text x="356" y="218" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">2本</text>
-        </g>
-        <text x="350" y="306" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">0本（新宿）→ 1本（渋谷・池袋・東京）→ 2本（品川・上野）の順に決まっていく</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a03_ex3_result.png" alt="AL2-03-ex3.py の実行結果。幅優先探索の進み方 / -------------------------------------------- / 新宿 を調べる（乗る路線の数: 0本） / → 渋谷 は 1本でたどり着ける / → 池袋 は 1本でたどり着ける / → 東京 は 1本でたどり着ける / 渋谷 を調べる（乗る路線の数: 1本） / → 品川 は 2本でたどり着ける / 池袋 を調べる（乗る路線の数: 1本） / → 上野 は 2本でたどり着ける / 東京 を調べる（乗る路線の数: 1本） / 品川 を調べる（乗る路線の数: 2本） / 上野 を調べる（乗る路線の数: 2本） / -------------------------------------------- /  / 新宿 から各駅までに乗る路線の数 / -------------------------------------------- / 新宿: 0本 / 渋谷: 1本 / 池袋: 1本 / 東京: 1本 / 品川: 2本 / 上野: 2本 / -------------------------------------------- /  / 新宿 から 品川 への行き方: 新宿 → 渋谷 → 品川 / 新宿 から 上野 への行き方: 新宿 → 池袋 → 上野" width="380" height="588" loading="lazy">
-      </div>
-      <p class="run-note">新宿から見て、渋谷・池袋・東京は<strong>1本</strong>、品川・上野は<strong>2本</strong>という結果になりました。実行結果の上半分を見ると、幅優先探索が「新宿 → 渋谷・池袋・東京 → 品川・上野」の順に調べていることが分かります。1本で行ける駅をすべて調べ終えてから、2本で行ける駅に進んでいます。迷路のときとまったく同じ進み方です。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>迷路をグラフに書き直して解く</h3>
-      </div>
-      <p>迷路をグラフ（隣接リスト）に書き直してから、例題3と同じ幅優先探索で解きます。
-      迷路の1マスを1つの頂点とし、頂点の名前を <code>"(行,列)"</code> という文字列にします。</p>
-
-<pre data-blanks="3"><span class="code-label">Python ── AL2-03-ex4.py</span>
-<span class="cmt"># 迷路もグラフである</span>
-<span class="cmt"># 迷路の1マスを頂点、となり合うマスどうしのつながりを辺と考えると、</span>
-<span class="cmt"># 迷路は「頂点がたくさんあるグラフ」になる。</span>
-<span class="cmt"># 迷路をグラフ（隣接リスト）に変換してから、例題3と同じ幅優先探索で解く。</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-maze = [
-    <span class="str">&quot;S.#..&quot;</span>,
-    <span class="str">&quot;..#..&quot;</span>,
-    <span class="str">&quot;....#&quot;</span>,
-    <span class="str">&quot;#.#..&quot;</span>,
-    <span class="str">&quot;...#G&quot;</span>,
-]
-
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
-
-<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> maze:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
-<span class="fn">print</span>()
-
-<span class="cmt"># --- 手順1: 迷路を隣接リストに変換する ---</span>
-graph = {}
-
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-            <span class="kw">continue</span>                      <span class="cmt"># 壁は頂点にしない</span>
-        name = <span class="str">f&quot;({r},{c})&quot;</span>               <span class="cmt"># 頂点の名前は「(行,列)」にする</span>
-        graph[name] = []
-        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-            nr = r + dr
-            nc = c + dc
-            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
-                <span class="kw">continue</span>
-            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-
-<span class="fn">print</span>(<span class="str">&quot;迷路を隣接リストに変換した結果（最初の6個だけ表示）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-count = <span class="num">0</span>
-<span class="kw">for</span> name <span class="kw">in</span> graph:
-    <span class="fn">print</span>(<span class="str">f&quot;  {name}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(graph[name]))
-    count = count + <span class="num">1</span>
-    <span class="kw">if</span> count == <span class="num">6</span>:
-        <span class="kw">break</span>
-<span class="fn">print</span>(<span class="str">&quot;  ...&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>(<span class="str">&quot;頂点（通れるマス）の数:&quot;</span>, <span class="fn">len</span>(graph))
-<span class="fn">print</span>()
-
-<span class="cmt"># --- 手順2: 例題3とまったく同じ幅優先探索で解く ---</span>
-start = <span class="str">&quot;(0,0)&quot;</span>
-goal = <span class="str">f&quot;({rows-1},{cols-1})&quot;</span>
-
-steps = {start: <span class="num">0</span>}
-came_from = {start: <span class="kw">None</span>}
-queue = <span class="fn">deque</span>([start])
-
-<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = queue.popleft()
-    <span class="kw">if</span> current == goal:
-        <span class="kw">break</span>
-    <span class="kw">for</span> next_node <span class="kw">in</span> graph[current]:
-        <span class="kw">if</span> next_node <span class="kw">in</span> steps:
-            <span class="kw">continue</span>
-        steps[next_node] = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
-        came_from[next_node] = current
-        queue.append(next_node)
-
-route = []
-node = goal
-<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-    route.append(node)
-    node = came_from[node]
-route.reverse()
-
-<span class="fn">print</span>(<span class="str">&quot;スタートからゴールまでの歩数:&quot;</span>, steps[goal], <span class="str">&quot;歩&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;通る順番:&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot; → &quot;</span>.join(route))
-<span class="fn">print</span>()
-
-picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-<span class="kw">for</span> name <span class="kw">in</span> route:
-    r, c = name.strip(<span class="str">&quot;()&quot;</span>).split(<span class="str">&quot;,&quot;</span>)
-    r = <span class="fn">int</span>(r)
-    c = <span class="fn">int</span>(c)
-    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
-
-<span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> picture:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>壁のマスは頂点にしない</td><td style="white-space:nowrap">A. <code>maze[r][c] == &quot;#&quot;</code><br>B. <code>maze[r][c] == &quot;.&quot;</code><br>C. <code>maze[r][c] == &quot;S&quot;</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>通れるとなりのマスを、この頂点の隣接リストに足す</td><td style="white-space:nowrap">A. <code>graph[name] = [f&quot;({nr},{nc})&quot;]</code><br>B. <code>graph[name].append(f&quot;({nr},{nc})&quot;)</code><br>C. <code>graph[name].append(name)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>となりの頂点までの歩数は、いまの頂点の歩数に1を足したもの</td><td style="white-space:nowrap">A. <code>steps[current] + 1</code><br>B. <code>steps[current]</code><br>C. <code>steps[start] + 1</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">迷路もグラフ: 1マスが頂点、となり合うマスのつながりが辺</text>
-        <rect x="60" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <text x="78.5" y="83.5" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">S</text>
-        <rect x="100" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="60" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="158.5" y="83.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="180" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="60" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="60" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="100" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="100" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="158.5" y="123.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="180" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="100" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="60" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="100" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="180" y="140" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="140" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="238.5" y="163.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="60" y="180" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="78.5" y="203.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="100" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="180" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="158.5" y="203.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="180" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="220" y="180" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="60" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="100" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="140" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <rect x="180" y="220" width="37" height="37" rx="5" fill="#33302a" stroke="#4a453a"/>
-        <text x="198.5" y="243.5" text-anchor="middle" fill="#7a7060" font-size="14" font-weight="700">#</text>
-        <rect x="220" y="220" width="37" height="37" rx="5" fill="#141414" stroke="#333"/>
-        <text x="238.5" y="243.5" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">G</text>
-        <text x="160.0" y="284" text-anchor="middle" fill="#888888" font-size="12">迷路として見た形</text>
-        <line x1="398" y1="78" x2="398" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="78" x2="438" y2="78" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="78" x2="438" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="78" x2="518" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="78" x2="558" y2="78" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="558" y1="78" x2="558" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="118" x2="398" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="118" x2="438" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="118" x2="438" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="118" x2="518" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="118" x2="558" y2="118" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="158" x2="438" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="158" x2="438" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="158" x2="478" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="478" y1="158" x2="518" y2="158" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="158" x2="518" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="198" x2="438" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="518" y1="198" x2="558" y2="198" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="558" y1="198" x2="558" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="398" y1="238" x2="438" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <line x1="438" y1="238" x2="478" y2="238" stroke="#76B900" stroke-width="2" opacity="0.7"/>
-        <circle cx="398" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,0</text>
-        <circle cx="438" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,1</text>
-        <circle cx="518" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,3</text>
-        <circle cx="558" cy="78" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="82" text-anchor="middle" fill="#bbb" font-size="9">0,4</text>
-        <circle cx="398" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,0</text>
-        <circle cx="438" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,1</text>
-        <circle cx="518" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,3</text>
-        <circle cx="558" cy="118" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="122" text-anchor="middle" fill="#bbb" font-size="9">1,4</text>
-        <circle cx="398" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,0</text>
-        <circle cx="438" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,1</text>
-        <circle cx="478" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="478" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,2</text>
-        <circle cx="518" cy="158" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="162" text-anchor="middle" fill="#bbb" font-size="9">2,3</text>
-        <circle cx="438" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,1</text>
-        <circle cx="518" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="518" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,3</text>
-        <circle cx="558" cy="198" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="202" text-anchor="middle" fill="#bbb" font-size="9">3,4</text>
-        <circle cx="398" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="398" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,0</text>
-        <circle cx="438" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="438" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,1</text>
-        <circle cx="478" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="478" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,2</text>
-        <circle cx="558" cy="238" r="13" fill="#1A1A1A" stroke="#76B900" stroke-width="1.6"/>
-        <text x="558" y="242" text-anchor="middle" fill="#bbb" font-size="9">4,4</text>
-        <text x="480.0" y="284" text-anchor="middle" fill="#888888" font-size="12">グラフとして見た形</text>
-        <text x="350" y="312" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">壁のマスは頂点にしない。通れるマスどうしだけを辺でつなぐ</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a03_ex4_result.png" alt="AL2-03-ex4.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.#.. / ..#.. / ....# / #.#.. / ...#G /  / 迷路を隣接リストに変換した結果（最初の6個だけ表示） / -------------------------------------------- / (0,0): (1,0)、(0,1) / (0,1): (1,1)、(0,0) / (0,3): (1,3)、(0,4) / (0,4): (1,4)、(0,3) / (1,0): (0,0)、(2,0)、(1,1) / (1,1): (0,1)、(2,1)、(1,0) / ... / -------------------------------------------- / 頂点（通れるマス）の数: 19 /  / スタートからゴールまでの歩数: 8 歩 / 通る順番: / (0,0) → (1,0) → (2,0) → (2,1) → (2,2) → (2,3) → (3,3) → (3,4) → (4,4) /  / 最短経路（* が通り道） / S.#.. / *.#.. / ****# / #.#** / ...#G" width="601" height="628" loading="lazy">
-      </div>
-      <p class="run-note">5マス×5マスの迷路のうち、壁ではないマスは<strong>19個</strong>ありました。19個の頂点と、となり合うマスどうしの辺からなるグラフに書き直せています。書き直したあとは、例題3の路線図とまったく同じコードで最短経路（8歩）が求まりました。見た目がまったく違う迷路と路線図が、グラフという同じ形に書き直すことで、同じプログラムで解けるようになります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の実行結果から、迷路の頂点の数と、(0,0) の頂点につながっている頂点を書き写す。あわせて、迷路をグラフに書き直したことで何が便利になったかを、自分の言葉で説明する。</span></div>
     </div>
   </div>
 </section>
@@ -1153,11 +788,6 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
           <tr><td><code>AL2-03-ex2.py</code></td><td>穴1</td><td><code>matrix[j][i] = 1</code></td></tr>
           <tr><td><code>AL2-03-ex2.py</code></td><td>穴2</td><td><code>len(lines) * 2</code></td></tr>
-          <tr><td><code>AL2-03-ex3.py</code></td><td>穴1</td><td><code>next_station in rides</code></td></tr>
-          <tr><td><code>AL2-03-ex3.py</code></td><td>穴2</td><td><code>rides[current] + 1</code></td></tr>
-          <tr><td><code>AL2-03-ex4.py</code></td><td>穴1</td><td><code>maze[r][c] == &quot;#&quot;</code></td></tr>
-          <tr><td><code>AL2-03-ex4.py</code></td><td>穴2</td><td><code>graph[name].append(f&quot;({nr},{nc})&quot;)</code></td></tr>
-          <tr><td><code>AL2-03-ex4.py</code></td><td>穴3</td><td><code>steps[current] + 1</code></td></tr>
         </table>
       </div>
       <div class="ans-item">

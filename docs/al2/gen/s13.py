@@ -42,20 +42,19 @@ def fig_cycle():
 
 
 # ────────────────────────────────────────────────────────────
-# 図2: 3つのテンプレート
+# 図2: 2つのテンプレート
 # ────────────────────────────────────────────────────────────
 def fig_templates():
     items = [
         ("テンプレートA", "コスト付き迷路ゲーム", ["プレイヤーが道を選ぶ", "最短の道と比べて採点", "ダイクストラ法を使う"], GREEN),
         ("テンプレートB", "配達ルート最適化", ["配達先を並べる", "貪欲法と全探索で比べる", "巡回セールスマン問題"], AMBER),
-        ("テンプレートC", "アイテム収集パズル", ["迷路のアイテムを集める", "拾う順番を決める", "幅優先探索＋全探索"], BLUE),
     ]
     s = [f'        <text x="350" y="26" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
-         '作品の出発点にできる3つのテンプレート</text>',
+         '作品の出発点にできる2つのテンプレート</text>',
          f'        <text x="350" y="46" text-anchor="middle" fill="{GRAY}" font-size="11">'
          'どれか1つを選んで書き換えれば、自分の作品になる</text>']
     for i, (label, title, lines, color) in enumerate(items):
-        x = 20 + i * 224
+        x = 130 + i * 230
         s.append(f'        <rect x="{x}" y="62" width="212" height="152" rx="12" fill="#141414" stroke="{color}" stroke-width="1.8"/>')
         s.append(f'        <text x="{x+106}" y="86" text-anchor="middle" fill="{color}" font-size="11">{label}</text>')
         s.append(f'        <text x="{x+106}" y="110" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">{title}</text>')
@@ -213,11 +212,11 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 {fig_templates()}
 
     <div class="concept-box">
-      <h4>標準課題では、3つのテンプレートのどれか1つを使う</h4>
+      <h4>標準課題では、2つのテンプレートのどちらか1つを使う</h4>
       <p style="font-size:0.95rem">
-        3つとも、後期に学んだアルゴリズムを1つのプログラムにまとめたものです。
+        2つとも、後期に学んだアルゴリズムを1つのプログラムにまとめたものです。
         自分の迷路や配達先に書き換えて動かし、その流れをフローチャートにします。
-        テンプレートAがいちばん短く、Cがいちばん長いです。
+        テンプレートA（例題1）は完成したコード、テンプレートB（例題2）は穴埋めです。
       </p>
     </div>
 
@@ -262,7 +261,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       </ol>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         大きな作品である必要はありません。<strong>小さくても、動いて、アルゴリズムが役に立っていること</strong>が大切です。
-        3つのテンプレートのどれかを Gradio の画面に載せ替えるだけでも、作品4になります。
+        2つのテンプレートのどちらかを Gradio の画面に載せ替えるだけでも、作品4になります。
       </p>
     </div>
 
@@ -289,41 +288,11 @@ ex2_body = f"""      <p>配達先を並べると、貪欲法と全探索の両�
      '6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。'
      '<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。')}"""
 
-ex3_body = f"""      <p>迷路の中のアイテムを全部拾ってゴールへ向かうパズルです。
-      幅優先探索で歩数の表を作ってから、貪欲法と全探索で拾う順番を決めます。
-      <code>maze</code> と <code>items</code> を書き換えれば、自分のステージが作れます。</p>
-
-{code('AL2-13-ex3.py')}
-
-{run('a13_ex3_result.png', '貪欲法は<strong>60歩</strong>、全探索は<strong>30歩</strong>で、貪欲法はちょうど2倍かかっています。'
-     '歩数の表を見ると、SからAが3歩、SからCも3歩と、どちらも近い場所にあります。'
-     '貪欲法はAを先に選びましたが、最短ルートはCを先に拾っています。'
-     'アイテムの位置を1つ動かすだけで差が大きく変わるので、'
-     '<strong>「貪欲法でも十分なステージ」と「全探索が必要なステージ」を作り分けられます</strong>。'
-     'なお、迷路を書き換えたときにゴールへ行けなくなると、エラーメッセージが出るようにしてあります。')}"""
-
-ex4_body = f"""      <p>作品に組み込むための小さな道具を4つ集めました。
-      必要な部分だけをコピーして使ってください。</p>
-
-      <div class="note-warn">
-        <strong>入力について:</strong> 授業ページに実行結果を載せるため、<code>USE_INPUT</code> を <code>False</code> にしてあります。
-        自分の作品では <code>USE_INPUT = True</code> に書き換えると、キーボードから入力できるようになります。
-      </div>
-
-{code('AL2-13-ex4.py')}
-
-{run('a13_ex4_result.png', '4つの部品が順に動きました。'
-     '部品2では、用意した答え「DDRR」が数字でないため<strong>「数字を入力してください」と表示され、はじかれて</strong>います。'
-     'まちがった入力をそのまま受け取ると、あとでプログラムが止まる原因になります。'
-     '部品3では100万回の足し算が0.05秒ほどで終わりました。'
-     '部品4では、スコアに応じて <code>#</code> の棒グラフと星の評価が表示されています。'
-     '文字だけでも、見せ方をくふうすれば作品らしくなります。')}"""
-
-examples = f"""    <p style="margin-bottom:1.5rem">3つのテンプレートと部品集を実行してください。
-    標準課題では、どれか1つを自分の数値に書き換えて動かし、その流れをフローチャートにします。
+examples = f"""    <p style="margin-bottom:1.5rem">2つのテンプレートを実行してください。
+    標準課題では、どちらか1つを自分の数値に書き換えて動かし、その流れをフローチャートにします。
     発展課題の自由テーマの出発点にも使えます。</p>
 
-{setup_guide('13', ['AL2-13-ex1.py', 'AL2-13-ex2.py', 'AL2-13-ex3.py', 'AL2-13-ex4.py'])}
+{setup_guide('13', ['AL2-13-ex1.py', 'AL2-13-ex2.py'])}
 
 {keywords([
     ('動く最小版', 'うごくさいしょうばん / MVP', 'やりたいことの中心だけができている状態。まず最小版を動かしてから、少しずつ足していく。'),
@@ -334,11 +303,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">3つのテンプレートと�
 
 {example(1, 'テンプレートA: コスト付き迷路ゲーム', ex1_body)}
 
-{example(2, 'テンプレートB: 配達ルート最適化アプリ', ex2_body)}
-
-{example(3, 'テンプレートC: アイテム収集パズル', ex3_body)}
-
-{example(4, '作品に使える部品集', ex4_body)}"""
+{example(2, 'テンプレートB: 配達ルート最適化アプリ', ex2_body)}"""
 
 ans = answers([slide_example("13"), blank_answers("13"),
     ("つまずいたときの調べ方", """        <p>テンプレートを自分の数値に書き換えたときに、よくあるつまずきと、その調べ方を挙げます。</p>
@@ -356,7 +321,7 @@ ans = answers([slide_example("13"), blank_answers("13"),
 body = "\n".join([
     sub,
     section("sec-explanation", "1", "プログラムをフローチャートで読む", explanation),
-    section("sec-examples", "2", "テンプレートと部品", examples),
+    section("sec-examples", "2", "テンプレート", examples),
     slides_for("13", SLIDES),
     advanced_section("13"),
     rubric_section("13"),

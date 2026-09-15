@@ -248,8 +248,7 @@
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    例題4は実行に10秒ほどかかります。止まっているように見えても、終わるまで待ってください。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -291,15 +290,15 @@
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-04-ex1.py</code>, <code>AL2-04-ex2.py</code>, <code>AL2-04-ex3.py</code>, <code>AL2-04-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-04-ex1.py</code>, <code>AL2-04-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -502,299 +501,6 @@ best_route = every_route[<span class="num">0</span>]
       <p class="run-note">幅優先探索が選んだのは<strong>直通の30分</strong>の経路でした。一方、合計時間がいちばん短いのは<strong>渋谷で乗りかえる16分</strong>の経路で、その差は14分もあります。幅優先探索は「路線の本数」を最小にするアルゴリズムなので、本数が1本の直通を選びます。重みの合計を最小にしたい場合、幅優先探索は使えません。</p>
 
       <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、幅優先探索が選んだ経路と合計時間、いちばん短い経路と合計時間、その差を書く。あわせて、幅優先探索が16分の経路を選べない理由を、幅優先探索の進め方と結びつけて説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
-        <h3>床にコストがある迷路</h3>
-      </div>
-      <p>迷路のマスごとに「通り抜けるのにかかる秒数」を決めた迷路を作り、3通りの行き方の合計時間を比べます。
-      1 は舗装された道（1秒）、9 はぬかるみ（9秒）です。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex3.py</span>
-<span class="cmt"># 床にコストがある迷路</span>
-<span class="cmt"># マスごとに「通り抜けるのにかかる時間」が決まっている迷路を考える。</span>
-<span class="cmt">#   1 = 舗装された道（1秒）</span>
-<span class="cmt">#   9 = ぬかるみ（9秒）</span>
-
-cost_map = [
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
-    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
-]
-
-rows = <span class="fn">len</span>(cost_map)
-cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
-
-<span class="fn">print</span>(<span class="str">&quot;床コスト付き迷路（数字はそのマスを通るのにかかる秒数）&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;  S = スタート(0,0)   G = ゴール(4,4)&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
-<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-    line = <span class="str">&quot;  &quot;</span>
-    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        mark = <span class="str">&quot; &quot;</span>
-        <span class="kw">if</span> (r, c) == (<span class="num">0</span>, <span class="num">0</span>):
-            mark = <span class="str">&quot;S&quot;</span>
-        <span class="kw">if</span> (r, c) == (rows - <span class="num">1</span>, cols - <span class="num">1</span>):
-            mark = <span class="str">&quot;G&quot;</span>
-        line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;4}{mark}&quot;</span>
-    <span class="fn">print</span>(line)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
-<span class="fn">print</span>()
-
-
-<span class="kw">def</span> <span class="fn">route_cost</span>(route):
-    <span class="str">&quot;&quot;&quot;通る順番が route のとき、合計で何秒かかるかを求める。
-    スタートのマスは「入る」わけではないので数えない。&quot;&quot;&quot;</span>
-    total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-        r, c = route[i]
-        total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-    <span class="kw">return</span> total
-
-
-<span class="kw">def</span> <span class="fn">draw</span>(route, title):
-    <span class="str">&quot;&quot;&quot;通り道のマスに * を付けて迷路を表示する&quot;&quot;&quot;</span>
-    picture = []
-    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
-        line = []
-        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-            <span class="kw">if</span> (r, c) <span class="kw">in</span> route:
-                line.append(<span class="str">f&quot;{cost_map[r][c]:&gt;4}*&quot;</span>)
-            <span class="kw">else</span>:
-                line.append(<span class="str">f&quot;{cost_map[r][c]:&gt;4} &quot;</span>)
-        picture.append(<span class="str">&quot;&quot;</span>.join(line))
-    <span class="fn">print</span>(title)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
-    <span class="fn">print</span>()
-
-
-<span class="cmt"># 3通りの行き方を比べる（* が通り道）</span>
-route_a = [(<span class="num">0</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">2</span>, <span class="num">0</span>), (<span class="num">3</span>, <span class="num">0</span>), (<span class="num">4</span>, <span class="num">0</span>),
-           (<span class="num">4</span>, <span class="num">1</span>), (<span class="num">4</span>, <span class="num">2</span>), (<span class="num">4</span>, <span class="num">3</span>), (<span class="num">4</span>, <span class="num">4</span>)]
-
-route_b = [(<span class="num">0</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">1</span>), (<span class="num">0</span>, <span class="num">2</span>), (<span class="num">0</span>, <span class="num">3</span>), (<span class="num">0</span>, <span class="num">4</span>),
-           (<span class="num">1</span>, <span class="num">4</span>), (<span class="num">2</span>, <span class="num">4</span>), (<span class="num">3</span>, <span class="num">4</span>), (<span class="num">4</span>, <span class="num">4</span>)]
-
-route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span class="num">0</span>, <span class="num">1</span>), (<span class="num">0</span>, <span class="num">2</span>), (<span class="num">1</span>, <span class="num">2</span>), (<span class="num">2</span>, <span class="num">2</span>),
-           (<span class="num">2</span>, <span class="num">1</span>), (<span class="num">2</span>, <span class="num">0</span>), (<span class="num">3</span>, <span class="num">0</span>), (<span class="num">4</span>, <span class="num">0</span>),
-           (<span class="num">4</span>, <span class="num">1</span>), (<span class="num">4</span>, <span class="num">2</span>), (<span class="num">4</span>, <span class="num">3</span>), (<span class="num">4</span>, <span class="num">4</span>)]
-
-<span class="fn">print</span>(<span class="str">&quot;行き方A: 左の列を下りて、下の行を右へ進む&quot;</span>)
-<span class="fn">draw</span>(route_a, <span class="str">f&quot;  歩数 {len(route_a)-1}歩 ／ 合計 {route_cost(route_a)}秒&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;行き方B: 上の行を右へ進んで、右の列を下りる&quot;</span>)
-<span class="fn">draw</span>(route_b, <span class="str">f&quot;  歩数 {len(route_b)-1}歩 ／ 合計 {route_cost(route_b)}秒&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;行き方C: いったん右へ出てから左へもどり、下の行を右へ進む&quot;</span>)
-<span class="fn">draw</span>(route_c, <span class="str">f&quot;  歩数 {len(route_c)-1}歩 ／ 合計 {route_cost(route_c)}秒&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>(<span class="str">f&quot;行き方A: {len(route_a)-1}歩 ／ {route_cost(route_a)}秒&quot;</span>)
-<span class="fn">print</span>(<span class="str">f&quot;行き方B: {len(route_b)-1}歩 ／ {route_cost(route_b)}秒&quot;</span>)
-<span class="fn">print</span>(<span class="str">f&quot;行き方C: {len(route_c)-1}歩 ／ {route_cost(route_c)}秒&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
-<span class="fn">print</span>(<span class="str">&quot;歩数がいちばん多い行き方Cが、合計時間ではいちばん短い&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>スタートのマスは数えないので、1番目のマスから</td><td style="white-space:nowrap">A. <code>range(1, len(route))</code><br>B. <code>range(len(route))</code><br>C. <code>range(0, len(route) - 1)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>入るマスのコスト（秒）を足す</td><td style="white-space:nowrap">A. <code>cost_map[r][c]</code><br>B. <code>1</code><br>C. <code>cost_map[c][r]</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 362" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">床コスト付き迷路: 歩数が多くても合計時間は短いことがある</text>
-        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">マスの数字は、そのマスを通り抜けるのにかかる秒数</text>
-        <rect x="246" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="267.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="292" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="313.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="338" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="359.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="384" y="62" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="405.5" y="89.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="430" y="62" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="451.5" y="89.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="246" y="108" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="267.5" y="135.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="292" y="108" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="313.5" y="135.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="338" y="108" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="359.5" y="135.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="384" y="108" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="405.5" y="135.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="430" y="108" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="451.5" y="135.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="246" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="267.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="292" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="313.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="338" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="359.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="384" y="154" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="405.5" y="181.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="430" y="154" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="451.5" y="181.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="246" y="200" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="267.5" y="227.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="292" y="200" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="313.5" y="227.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="338" y="200" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="359.5" y="227.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="384" y="200" width="43" height="43" rx="6" fill="#2b1a00" stroke="#5a3d00"/>
-        <text x="405.5" y="227.5" text-anchor="middle" fill="#FFB800" font-size="15" font-weight="700">9</text>
-        <rect x="430" y="200" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="451.5" y="227.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="246" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="267.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="292" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="313.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="338" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="359.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="384" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="405.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <rect x="430" y="246" width="43" height="43" rx="6" fill="#141414" stroke="#333"/>
-        <text x="451.5" y="273.5" text-anchor="middle" fill="#bbb" font-size="15" font-weight="400">1</text>
-        <text x="254" y="76" fill="#76B900" font-size="11" font-weight="700">S</text>
-        <text x="460" y="284" fill="#76B900" font-size="11" font-weight="700">G</text>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.300;0.320;1" dur="15s" repeatCount="indefinite"/>
-          <polyline points="267.5,83.5 267.5,129.5 267.5,175.5 267.5,221.5 267.5,267.5 313.5,267.5 359.5,267.5 405.5,267.5 451.5,267.5" fill="none" stroke="#FFB800" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
-          <text x="350" y="320" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">行き方A: 8歩 ／ 合計 16秒</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.340;0.360;0.620;0.640;1" dur="15s" repeatCount="indefinite"/>
-          <polyline points="267.5,83.5 313.5,83.5 359.5,83.5 405.5,83.5 451.5,83.5 451.5,129.5 451.5,175.5 451.5,221.5 451.5,267.5" fill="none" stroke="#FFB800" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
-          <text x="350" y="320" text-anchor="middle" fill="#FFB800" font-size="14" font-weight="700">行き方B: 8歩 ／ 合計 16秒</text>
-        </g>
-        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.660;0.680;0.960;0.980;1" dur="15s" repeatCount="indefinite"/>
-          <polyline points="267.5,83.5 313.5,83.5 359.5,83.5 359.5,129.5 359.5,175.5 313.5,175.5 267.5,175.5 267.5,221.5 267.5,267.5 313.5,267.5 359.5,267.5 405.5,267.5 451.5,267.5" fill="none" stroke="#76B900" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
-          <text x="350" y="320" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">行き方C: 12歩 ／ 合計 12秒（いちばん短い）</text>
-        </g>
-        <text x="350" y="346" text-anchor="middle" fill="#888888" font-size="11">9のマス（ぬかるみ）を1つ通るだけで、1のマスを8回通るより時間がかかる</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a04_ex3_result.png" alt="AL2-04-ex3.py の実行結果。床コスト付き迷路（数字はそのマスを通るのにかかる秒数） / S = スタート(0,0)   G = ゴール(4,4) / ------------------------------ / 1S   1    1    9    1 / 9    9    1    9    1 / 1    1    1    9    1 / 1    9    9    9    1 / 1    1    1    1    1G / ------------------------------ /  / 行き方A: 左の列を下りて、下の行を右へ進む / 歩数 8歩 ／ 合計 16秒 / 1*   1    1    9    1 / 9*   9    1    9    1 / 1*   1    1    9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / 行き方B: 上の行を右へ進んで、右の列を下りる / 歩数 8歩 ／ 合計 16秒 / 1*   1*   1*   9*   1* / 9    9    1    9    1* / 1    1    1    9    1* / 1    9    9    9    1* / 1    1    1    1    1* /  / 行き方C: いったん右へ出てから左へもどり、下の行を右へ進む / 歩数 12歩 ／ 合計 12秒 / 1*   1*   1*   9    1 / 9    9    1*   9    1 / 1*   1*   1*   9    1 / 1*   9    9    9    1 / 1*   1*   1*   1*   1* /  / -------------------------------------------- / 行き方A: 8歩 ／ 16秒 / 行き方B: 8歩 ／ 16秒 / 行き方C: 12歩 ／ 12秒 / -------------------------------------------- / 歩数がいちばん多い行き方Cが、合計時間ではいちばん短い" width="388" height="848" loading="lazy">
-      </div>
-      <p class="run-note">行き方Aと行き方Bはどちらも<strong>8歩・16秒</strong>、行き方Cは<strong>12歩・12秒</strong>でした。歩数がいちばん多い行き方Cが、合計時間ではいちばん短くなっています。行き方Aと行き方Bは、途中で 9 のマス（ぬかるみ）を1回通っているためです。ぬかるみを1マス通るだけで9秒かかるので、舗装路を4マスよけいに歩いたほうが早く着きます。</p>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>全探索が使えなくなる大きさ</h3>
-      </div>
-      <p>「すべての行き方を書き出して、いちばん安いものを選ぶ」という全探索が、
-      迷路の大きさによってどれくらい時間がかかるようになるかを測ります。</p>
-
-<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex4.py</span>
-<span class="cmt"># すべての行き方を書き出して最小コストを求める方法（全探索）は、</span>
-<span class="cmt"># 迷路が少し大きくなるだけで使えなくなることを確かめる</span>
-<span class="kw">import</span> time
-
-<span class="kw">def</span> <span class="fn">count_all_routes</span>(size):
-    <span class="str">&quot;&quot;&quot;size × size の迷路で、同じマスを2度通らない行き方をすべて数え、
-    いちばん安い合計コストも求める。すべてのマスのコストは1とする。&quot;&quot;&quot;</span>
-    goal = (size - <span class="num">1</span>, size - <span class="num">1</span>)
-    visited = <span class="fn">set</span>()
-    result = {<span class="str">&quot;count&quot;</span>: <span class="num">0</span>, <span class="str">&quot;best&quot;</span>: <span class="kw">None</span>}
-
-    <span class="kw">def</span> <span class="fn">walk</span>(r, c, total):
-        <span class="str">&quot;&quot;&quot;ここから先の行き方を、同じ場所を2度通らないようにすべてたどる&quot;&quot;&quot;</span>
-        <span class="kw">if</span> (r, c) == goal:
-            result[<span class="str">&quot;count&quot;</span>] = result[<span class="str">&quot;count&quot;</span>] + <span class="num">1</span>
-            <span class="kw">if</span> result[<span class="str">&quot;best&quot;</span>] <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; result[<span class="str">&quot;best&quot;</span>]:
-                result[<span class="str">&quot;best&quot;</span>] = total
-            <span class="kw">return</span>
-        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
-            nr = r + dr
-            nc = c + dc
-            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= size <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= size:
-                <span class="kw">continue</span>
-            <span class="kw">if</span> (nr, nc) <span class="kw">in</span> visited:
-                <span class="kw">continue</span>
-            visited.add((nr, nc))
-            <span class="fn">walk</span>(nr, nc, <span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
-            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-
-    visited.add((<span class="num">0</span>, <span class="num">0</span>))
-    <span class="fn">walk</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>)
-    <span class="kw">return</span> result[<span class="str">&quot;count&quot;</span>], result[<span class="str">&quot;best&quot;</span>]
-
-
-<span class="fn">print</span>(<span class="str">&quot;全探索で「すべての行き方」を数えたときの通り数と時間&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>(<span class="str">&quot;迷路の大きさ             行き方の数   かかった時間&quot;</span>)
-
-<span class="kw">for</span> size <span class="kw">in</span> [<span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]:
-    started = time.time()
-    count, best = <span class="fn">count_all_routes</span>(size)
-    elapsed = time.time() - started
-    <span class="fn">print</span>(<span class="str">f&quot;{size}マス×{size}マス   {count:&gt;16,}通り   {elapsed:&gt;10.3f}秒&quot;</span>)
-
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;7マス×7マスの行き方は 575,780,564 通りある。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1マス進むごとにコスト1を足して、先へ進む</td><td style="white-space:nowrap">A. <code>total * 2</code><br>B. <code>total</code><br>C. <code>total + 1</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>調べ終わったら、そのマスを「通っていない」状態に戻す（別の行き方で使えるように）</td><td style="white-space:nowrap">A. <code>visited.discard((nr, nc))</code><br>B. <code>visited.clear()</code><br>C. <code>visited.add((nr, nc))</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <div class="diagram-container">
-        <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
-        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">迷路が1マス大きくなるだけで、行き方の数は数百倍に増える</text>
-        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">棒の長さは10倍ごとの目もり</text>
-        <text x="24" y="86" fill="#E0E0E0" font-size="12" font-weight="700">3×3</text>
-        <rect x="86" y="70" width="48" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="144" y="87" fill="#76B900" font-size="12" font-weight="700">12通り</text>
-        <text x="676" y="87" text-anchor="end" fill="#888888" font-size="11">すぐ終わる</text>
-        <text x="24" y="130" fill="#E0E0E0" font-size="12" font-weight="700">4×4</text>
-        <rect x="86" y="114" width="101" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="197" y="131" fill="#76B900" font-size="12" font-weight="700">184通り</text>
-        <text x="676" y="131" text-anchor="end" fill="#888888" font-size="11">すぐ終わる</text>
-        <text x="24" y="174" fill="#E0E0E0" font-size="12" font-weight="700">5×5</text>
-        <rect x="86" y="158" width="175" height="22" rx="5" fill="#76B900" opacity="0.85"/>
-        <text x="271" y="175" fill="#76B900" font-size="12" font-weight="700">8,512通り</text>
-        <text x="676" y="175" text-anchor="end" fill="#888888" font-size="11">0.03秒</text>
-        <text x="24" y="218" fill="#E0E0E0" font-size="12" font-weight="700">6×6</text>
-        <rect x="86" y="202" width="271" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
-        <text x="367" y="219" fill="#FF5252" font-size="12" font-weight="700">1,262,816通り</text>
-        <text x="676" y="219" text-anchor="end" fill="#888888" font-size="11">約7秒</text>
-        <text x="24" y="262" fill="#E0E0E0" font-size="12" font-weight="700">7×7</text>
-        <rect x="86" y="246" width="389" height="22" rx="5" fill="#FF5252" opacity="0.85"/>
-        <text x="485" y="263" fill="#FF5252" font-size="12" font-weight="700">575,780,564通り</text>
-        <text x="676" y="263" text-anchor="end" fill="#888888" font-size="11">約1時間</text>
-        <text x="350" y="302" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">全探索では現実的な時間で終わらない。第5回から学ぶダイクストラ法が必要になる</text>
-        </svg>
-      </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ             行き方の数   かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.030秒 / 6マス×6マス          1,262,816通り        6.344秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
-      </div>
-      <p class="run-note">3マス四方は12通り、4マス四方は184通り、5マス四方は8,512通り、6マス四方は1,262,816通りでした。たった1マス大きくなるだけで、行き方の数は<strong>およそ150倍</strong>に増えています。6マス四方で約7秒かかったので、7マス四方（5億7千万通り）では1時間近くかかる計算になります。カーナビが数万の交差点をあつかうことを考えると、全探索はまったく使えません。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題4の表から、迷路の大きさごとの「行き方の数」と「かかった時間」を書き写す。あわせて、5マス四方から6マス四方に大きくしたとき、行き方の数が何倍になったかを計算して書く。</span></div>
     </div>
   </div>
 </section>
@@ -1062,10 +768,6 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
           <tr><td><code>AL2-04-ex2.py</code></td><td>穴1</td><td><code>total + minutes</code></td></tr>
           <tr><td><code>AL2-04-ex2.py</code></td><td>穴2</td><td><code>route_minutes(route) &lt; route_minutes(best_route)</code></td></tr>
-          <tr><td><code>AL2-04-ex3.py</code></td><td>穴1</td><td><code>range(1, len(route))</code></td></tr>
-          <tr><td><code>AL2-04-ex3.py</code></td><td>穴2</td><td><code>cost_map[r][c]</code></td></tr>
-          <tr><td><code>AL2-04-ex4.py</code></td><td>穴1</td><td><code>total + 1</code></td></tr>
-          <tr><td><code>AL2-04-ex4.py</code></td><td>穴2</td><td><code>visited.discard((nr, nc))</code></td></tr>
         </table>
       </div>
       <div class="ans-item">

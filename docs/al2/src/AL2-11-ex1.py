@@ -1,101 +1,27 @@
-# 同じグラフを、3つの探索アルゴリズムで解いて比べる
-import heapq
-from collections import deque
+# 巡回セールスマン問題を4つの方法で解いて比べる
+import math
+import time
+from itertools import permutations
 
-# 重み付きグラフ（数字は乗車時間・分）
-railway = {
-    "新宿": [("渋谷", 7), ("池袋", 9), ("品川", 30)],
-    "渋谷": [("新宿", 7), ("品川", 9)],
-    "池袋": [("新宿", 9), ("上野", 12)],
-    "上野": [("池袋", 12), ("東京", 6)],
-    "東京": [("上野", 6), ("品川", 11)],
-    "品川": [("新宿", 30), ("渋谷", 9), ("東京", 11)],
-}
+cities = [
+    ("学校", 2, 2), ("郵便局", 10, 3), ("図書館", 14, 9), ("カフェ", 6, 12),
+    ("公園", 3, 8), ("駅", 17, 4), ("病院", 12, 13), ("書店", 8, 7),
+]
 
-start = "新宿"
-goal = "東京"
+n = len(cities)
 INF = float("inf")
 
-
-def route_minutes(route):
-    """駅を順に通ったときの合計時間"""
-    total = 0
-    for i in range(len(route) - 1):
-        for name, minutes in railway[route[i]]:
-            if name == route[i + 1]:
-                total = total + minutes
-                break
-    return total
-
-
-def build(came_from, goal):
-    """ゴールからスタートへ逆にたどって道順を組み立てる"""
-    route = []
-    node = goal
-    while node is not None:
-        route.append(node)
-        node = came_from[node]
-    route.reverse()
-    return route
-
-
-def bfs():
-    """幅優先探索: 乗る路線の本数がいちばん少ない道"""
-    came_from = {start: None}
-    queue = deque([start])
-    while len(queue) > 0:
-        current = queue.popleft()
-        if current == goal:
-            break
-        for name, minutes in railway[current]:
-            if name in came_from:
-                continue
-            came_from[name] = current
-            queue.append(name)
-    return build(came_from, goal)
-
-
-def dfs():
-    """深さ優先探索: 行けるところまで進む道"""
-    came_from = {start: None}
-    stack = [start]
-    while len(stack) > 0:
-        current = stack.pop()
-        if current == goal:
-            break
-        for name, minutes in railway[current]:
-            if name in came_from:
-                continue
-            came_from[name] = current
-            stack.append(name)
-    return build(came_from, goal)
-
-
-def dijkstra():
-    """ダイクストラ法: 合計時間がいちばん短い道"""
-    distance = {}
-    came_from = {}
-    for station in railway:
-        distance[station] = INF
-        came_from[station] = None
-    distance[start] = 0
-    queue = [(0, start)]
-    settled = set()
-    while len(queue) > 0:
-        minutes, current = heapq.heappop(queue)
-        if current in settled:
-            continue
-        settled.add(current)
-        for name, weight in railway[current]:
-            if minutes + weight < distance[name]:
-                distance[name] = minutes + weight
-                came_from[name] = current
-                heapq.heappush(queue, (distance[name], name))
-    return build(came_from, goal)
+distance = []
+for i in range(n):
+    row = []
+    for j in range(n):
+        d = math.sqrt((cities[i][1] - cities[j][1]) ** 2 + (cities[i][2] - cities[j][2]) ** 2)
+        row.append(d)
+    distance.append(row)
 
 
 def pad(text, width):
-    """全角文字を2文字ぶんとして数え、表示の幅をそろえる"""
+    """全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる"""
     length = 0
     for ch in text:
         if ord(ch) > 0x2000:
@@ -105,16 +31,107 @@ def pad(text, width):
     return text + " " * (width - length)
 
 
-print(f"{start} から {goal} まで、3つの方法で経路を求める")
-print("-" * 66)
-print("方法            路線の本数   合計時間   経路")
-for name, function in [("幅優先探索", bfs), ("深さ優先探索", dfs), ("ダイクストラ法", dijkstra)]:
-    route = function()
-    print(pad(name, 16)
-          + f"{len(route)-1:>8}本"
-          + f"{route_minutes(route):>9}分   "
-          + " → ".join(route))
-print("-" * 66)
+def brute_force():
+    """全探索: すべての順番を試して、いちばん短いものを返す"""
+    best = None
+    for order in permutations(range(1, n)):
+        total = 0.0
+        here = 0
+        for city in order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][0]
+        if best is None or total < best:
+            best = total
+    return best
+
+
+def greedy_from(start):
+    """start を出発点にして、貪欲法でルートを作る"""
+    visited = [start]
+    total = 0.0
+    here = start
+    while len(visited) < n:
+        nearest = None
+        for j in range(n):
+            if j in visited:
+                continue
+            if nearest is None or distance[here][j] < distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    return total + distance[here][start]
+
+
+def greedy():
+    """貪欲法（出発点は0番の都市に固定）"""
+    return greedy_from(0)
+
+
+def greedy_all_starts():
+    """すべての都市を出発点にして貪欲法を試し、いちばん良い答えを選ぶ"""
+    best = None
+    for start in range(n):
+        value = greedy_from(start)
+        if best is None or value < best:
+            best = value
+    return best
+
+
+def bit_dp():
+    """動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める"""
+    full = (1 << n) - 1
+    best = []
+    for visited in range(1 << n):
+        best.append([INF] * n)
+    best[1][0] = 0.0
+    for visited in range(1 << n):
+        for here in range(n):
+            if best[visited][here] == INF:
+                continue
+            for nxt in range(n):
+                if visited & (1 << nxt):
+                    continue
+                new_length = best[visited][here] + distance[here][nxt]
+                if new_length < best[visited | (1 << nxt)][nxt]:
+                    best[visited | (1 << nxt)][nxt] = new_length
+    answer = INF
+    for here in range(n):
+        if best[full][here] == INF:
+            continue
+        answer = min(answer, best[full][here] + distance[here][0])
+    return answer
+
+
+methods = [
+    ("全探索", brute_force, "必ず最適"),
+    ("貪欲法", greedy, "最適とはかぎらない"),
+    ("貪欲法(全出発点)", greedy_all_starts, "最適とはかぎらない"),
+    ("bitDP", bit_dp, "必ず最適"),
+]
+
+results = []
+for name, function, note in methods:
+    began = time.time()
+    value = function()
+    elapsed = time.time() - began
+    results.append((name, value, elapsed, note))
+
+best_value = None
+for name, value, elapsed, note in results:
+    if best_value is None or value < best_value:
+        best_value = value
+
+print(f"{n}都市の巡回セールスマン問題を4つの方法で解く")
+print("-" * 72)
+print("方法                    答え  最適との差          時間   性質")
+for name, value, elapsed, note in results:
+    print(pad(name, 20)
+          + f"{round(value, 1):>8}"
+          + f"{round(value - best_value, 1):>12}"
+          + f"{elapsed:>12.6f}秒   " + note)
+print("-" * 72)
 print()
-print("幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。")
-print("深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。")
+print("貪欲法は出発点を全部試すだけで、答えが最適に近づく。")
+print("それでも全探索や bitDP より圧倒的に速い。")

@@ -152,7 +152,7 @@
       </ol>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         3つの問いに答えれば、使うべきアルゴリズムはほぼ1つに決まります。
-        例題4では、3つの問いをそのままプログラムにしたものを動かします。
+        迷ったときは、この3つの問いを上から順に自分に投げかけてください。
       </p>
     </div>
 
@@ -223,8 +223,7 @@
       <div class="section-num" style="background:#76B900">2</div>
       <h2>例題</h2>
     </div>
-    <p style="margin-bottom:1.5rem">例題1から例題4までのコードを実行してください。
-    例題3は実行に10秒ほどかかります。まず作業フォルダを用意します。</p>
+    <p style="margin-bottom:1.5rem">例題1と例題2のコードを実行してください。まず作業フォルダを用意します。</p>
 
     <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
@@ -266,15 +265,15 @@
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-11-ex1.py</code>, <code>AL2-11-ex2.py</code>, <code>AL2-11-ex3.py</code>, <code>AL2-11-ex4.py</code></p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-11-ex1.py</code>, <code>AL2-11-ex2.py</code></p>
       </div>
 
       <div class="note-warn">
-        <strong>例題2〜4は穴埋めです。</strong>
+        <strong>例題2は穴埋めです。</strong>
         コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
         コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードなので、読んで実行するだけで構いません。
+        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
       </div>
     </div>
 
@@ -293,151 +292,12 @@
     <div class="card example">
       <div class="card-header">
         <span class="tag tag-example">例題 1</span>
-        <h3>3つの探索を同じグラフで比べる</h3>
-      </div>
-      <p>同じ路線図・同じ出発点・同じ目的地に対して、幅優先探索・深さ優先探索・ダイクストラ法の3つを走らせ、
-      出てくる経路を比べます。</p>
-
-<pre data-blanks="0"><span class="code-label">Python ── AL2-11-ex1.py</span>
-<span class="cmt"># 同じグラフを、3つの探索アルゴリズムで解いて比べる</span>
-<span class="kw">import</span> heapq
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-
-<span class="cmt"># 重み付きグラフ（数字は乗車時間・分）</span>
-railway = {
-    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
-    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
-    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
-    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
-    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
-    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
-}
-
-start = <span class="str">&quot;新宿&quot;</span>
-goal = <span class="str">&quot;東京&quot;</span>
-INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
-
-
-<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
-    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間&quot;&quot;&quot;</span>
-    total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
-            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
-                total = total + minutes
-                <span class="kw">break</span>
-    <span class="kw">return</span> total
-
-
-<span class="kw">def</span> <span class="fn">build</span>(came_from, goal):
-    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
-    route = []
-    node = goal
-    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
-        route.append(node)
-        node = came_from[node]
-    route.reverse()
-    <span class="kw">return</span> route
-
-
-<span class="kw">def</span> <span class="fn">bfs</span>():
-    <span class="str">&quot;&quot;&quot;幅優先探索: 乗る路線の本数がいちばん少ない道&quot;&quot;&quot;</span>
-    came_from = {start: <span class="kw">None</span>}
-    queue = <span class="fn">deque</span>([start])
-    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-        current = queue.popleft()
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[name] = current
-            queue.append(name)
-    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
-
-
-<span class="kw">def</span> <span class="fn">dfs</span>():
-    <span class="str">&quot;&quot;&quot;深さ優先探索: 行けるところまで進む道&quot;&quot;&quot;</span>
-    came_from = {start: <span class="kw">None</span>}
-    stack = [start]
-    <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
-        current = stack.pop()
-        <span class="kw">if</span> current == goal:
-            <span class="kw">break</span>
-        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> name <span class="kw">in</span> came_from:
-                <span class="kw">continue</span>
-            came_from[name] = current
-            stack.append(name)
-    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
-
-
-<span class="kw">def</span> <span class="fn">dijkstra</span>():
-    <span class="str">&quot;&quot;&quot;ダイクストラ法: 合計時間がいちばん短い道&quot;&quot;&quot;</span>
-    distance = {}
-    came_from = {}
-    <span class="kw">for</span> station <span class="kw">in</span> railway:
-        distance[station] = INF
-        came_from[station] = <span class="kw">None</span>
-    distance[start] = <span class="num">0</span>
-    queue = [(<span class="num">0</span>, start)]
-    settled = <span class="fn">set</span>()
-    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-        minutes, current = heapq.heappop(queue)
-        <span class="kw">if</span> current <span class="kw">in</span> settled:
-            <span class="kw">continue</span>
-        settled.add(current)
-        <span class="kw">for</span> name, weight <span class="kw">in</span> railway[current]:
-            <span class="kw">if</span> minutes + weight &lt; distance[name]:
-                distance[name] = minutes + weight
-                came_from[name] = current
-                heapq.heappush(queue, (distance[name], name))
-    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
-
-
-<span class="kw">def</span> <span class="fn">pad</span>(text, width):
-    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、表示の幅をそろえる&quot;&quot;&quot;</span>
-    length = <span class="num">0</span>
-    <span class="kw">for</span> ch <span class="kw">in</span> text:
-        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
-            length = length + <span class="num">2</span>
-        <span class="kw">else</span>:
-            length = length + <span class="num">1</span>
-    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
-
-
-<span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} まで、3つの方法で経路を求める&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>(<span class="str">&quot;方法            路線の本数   合計時間   経路&quot;</span>)
-<span class="kw">for</span> name, function <span class="kw">in</span> [(<span class="str">&quot;幅優先探索&quot;</span>, bfs), (<span class="str">&quot;深さ優先探索&quot;</span>, dfs), (<span class="str">&quot;ダイクストラ法&quot;</span>, dijkstra)]:
-    route = <span class="fn">function</span>()
-    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">16</span>)
-          + <span class="str">f&quot;{len(route)-1:&gt;8}本&quot;</span>
-          + <span class="str">f&quot;{route_minutes(route):&gt;9}分   &quot;</span>
-          + <span class="str">&quot; → &quot;</span>.join(route))
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">66</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。&quot;</span>)</pre>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a11_ex1_result.png" alt="AL2-11-ex1.py の実行結果。新宿 から 東京 まで、3つの方法で経路を求める / ------------------------------------------------------------------ / 方法            路線の本数   合計時間   経路 / 幅優先探索             2本       41分   新宿 → 品川 → 東京 / 深さ優先探索           2本       41分   新宿 → 品川 → 東京 / ダイクストラ法         3本       27分   新宿 → 渋谷 → 品川 → 東京 / ------------------------------------------------------------------ /  / 幅優先探索は「本数」を、ダイクストラ法は「時間」を最小にしている。 / 深さ優先探索はどちらも最小にしない。ゴールへ行けることだけを確かめる方法。" width="524" height="248" loading="lazy">
-      </div>
-      <p class="run-note">幅優先探索とダイクストラ法は、はっきり違う経路を返しました。幅優先探索は<strong>2本・41分</strong>の「新宿 → 品川 → 東京」を選び、ダイクストラ法は<strong>3本・27分</strong>の「新宿 → 渋谷 → 品川 → 東京」を選んでいます。乗りかえが1回増えるかわりに、14分も早く着くということです。深さ優先探索は、たまたま幅優先探索と同じ経路になりました。深さ優先探索は「本数」も「時間」も最小にしないので、同じになるかどうかは、たまたま調べた順番で決まります。</p>
-
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題1の実行結果から、3つの方法それぞれの「路線の本数」「合計時間」「経路」を表にまとめる。あわせて、幅優先探索とダイクストラ法の答えが違う理由を説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 2</span>
         <h3>巡回セールスマン問題を4つの方法で解く</h3>
       </div>
       <p>巡回セールスマン問題を4つの方法で解きます。
       第9回の貪欲法に「すべての都市を出発点にして試す」やり方を足した4つ目も加えます。</p>
 
-<pre data-blanks="2"><span class="code-label">Python ── AL2-11-ex2.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-11-ex1.py</span>
 <span class="cmt"># 巡回セールスマン問題を4つの方法で解いて比べる</span>
 <span class="kw">import</span> math
 <span class="kw">import</span> time
@@ -506,7 +366,7 @@ distance = []
 
 <span class="kw">def</span> <span class="fn">greedy</span>():
     <span class="str">&quot;&quot;&quot;貪欲法（出発点は0番の都市に固定）&quot;&quot;&quot;</span>
-    <span class="kw">return</span> <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+    <span class="kw">return</span> <span class="fn">greedy_from</span>(<span class="num">0</span>)
 
 
 <span class="kw">def</span> <span class="fn">greedy_all_starts</span>():
@@ -514,7 +374,7 @@ distance = []
     best = <span class="kw">None</span>
     <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
         value = <span class="fn">greedy_from</span>(start)
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best:
             best = value
     <span class="kw">return</span> best
 
@@ -575,34 +435,23 @@ best_value = <span class="kw">None</span>
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は出発点を全部試すだけで、答えが最適に近づく。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;それでも全探索や bitDP より圧倒的に速い。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>ふつうの貪欲法は0番（学校）から出発する</td><td style="white-space:nowrap">A. <code>greedy_from(0)</code><br>B. <code>greedy_all_starts()</code><br>C. <code>greedy_from(n)</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>出発点を変えた貪欲法のうち、いちばん短いものを残す</td><td style="white-space:nowrap">A. <code>best is None</code><br>B. <code>value &gt; best</code><br>C. <code>best is None or value &lt; best</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex2_result.png" alt="AL2-11-ex2.py の実行結果。8都市の巡回セールスマン問題を4つの方法で解く / ------------------------------------------------------------------------ / 方法                    答え  最適との差          時間   性質 / 全探索                  46.8         0.0    0.000739秒   必ず最適 / 貪欲法                  53.2         6.4    0.000005秒   最適とはかぎらない / 貪欲法(全出発点)        46.8         0.0    0.000021秒   最適とはかぎらない / bitDP                   46.8         0.0    0.000229秒   必ず最適 / ------------------------------------------------------------------------ /  / 貪欲法は出発点を全部試すだけで、答えが最適に近づく。 / それでも全探索や bitDP より圧倒的に速い。" width="569" height="268" loading="lazy">
+        <img src="images/a11_ex1_result.png" alt="AL2-11-ex1.py の実行結果。8都市の巡回セールスマン問題を4つの方法で解く / ------------------------------------------------------------------------ / 方法                    答え  最適との差          時間   性質 / 全探索                  46.8         0.0    0.000738秒   必ず最適 / 貪欲法                  53.2         6.4    0.000005秒   最適とはかぎらない / 貪欲法(全出発点)        46.8         0.0    0.000021秒   最適とはかぎらない / bitDP                   46.8         0.0    0.000231秒   必ず最適 / ------------------------------------------------------------------------ /  / 貪欲法は出発点を全部試すだけで、答えが最適に近づく。 / それでも全探索や bitDP より圧倒的に速い。" width="569" height="268" loading="lazy">
       </div>
       <p class="run-note">全探索・bitDP・貪欲法(全出発点) の3つが、いずれも<strong>46.8</strong>という同じ答えを出しました。出発点を1つに固定した貪欲法だけが53.2で、6.4長くなっています。注目すべきは<strong>貪欲法(全出発点)</strong>で、8回ぶん計算しても0.000022秒しかかからず、全探索の約40分の1の時間で同じ答えにたどり着いています。ただし、たまたま最適に当たっただけで、いつでも当たる保証はありません。「必ず最適」と書けるのは全探索と bitDP だけです。</p>
     </div>
 
     <div class="card example">
       <div class="card-header">
-        <span class="tag tag-example">例題 3</span>
+        <span class="tag tag-example">例題 2</span>
         <h3>大きさを変えて一括で測る</h3>
       </div>
       <p>都市の数を6個から16個まで変えて、3つの方法の答えと時間を一度に測ります。
       全探索は12都市までで打ち切ります。実行に10秒ほどかかります。</p>
 
-<pre data-blanks="2"><span class="code-label">Python ── AL2-11-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-11-ex2.py</span>
 <span class="cmt"># 問題の大きさを変えて、3つの方法の時間を一括で測る</span>
 <span class="kw">import</span> math
 <span class="kw">import</span> time
@@ -730,7 +579,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
         <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>全探索は12都市までにする（それ以上は長すぎる）</td><td style="white-space:nowrap">A. <code>count &lt; 6</code><br>B. <code>count &gt;= 12</code><br>C. <code>count &lt;= 12</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>全探索は12都市までにする（それ以上は長すぎる）</td><td style="white-space:nowrap">A. <code>count &lt;= 12</code><br>B. <code>count &lt; 6</code><br>C. <code>count &gt;= 12</code></td></tr>
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>全部回って here にいる状態から、0番へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>best[full][here]</code><br>C. <code>best[full][here] + distance[here][0]</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
@@ -740,102 +589,11 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a11_ex3_result.png" alt="AL2-11-ex3.py の実行結果。都市の数を変えて、3つの方法の答えと時間を測る / （全探索は12都市までで打ち切る。時間がかかりすぎるため） / ---------------------------------------------------------------------------- / 都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間 / 6都市     57.8 /   0.000秒     57.8 /0.000003秒     57.8 /   0.000秒 / 8都市     58.0 /   0.001秒     58.7 /0.000003秒     58.0 /   0.000秒 / 10都市     59.5 /   0.064秒     60.2 /0.000005秒     59.5 /   0.001秒 / 12都市     73.1 /   8.133秒     80.5 /0.000021秒     73.1 /   0.009秒 / 14都市        （長すぎるため省略）     83.3 /0.000010秒     75.9 /   0.044秒 / 16都市        （長すぎるため省略）     87.1 /0.000012秒     79.7 /   0.225秒 / ---------------------------------------------------------------------------- /  / 全探索と bitDP の答えは、どの大きさでも完全に一致している。 / 貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。" width="599" height="328" loading="lazy">
+        <img src="images/a11_ex2_result.png" alt="AL2-11-ex2.py の実行結果。都市の数を変えて、3つの方法の答えと時間を測る / （全探索は12都市までで打ち切る。時間がかかりすぎるため） / ---------------------------------------------------------------------------- / 都市数     全探索の答え/時間        貪欲法の答え/時間        bitDPの答え/時間 / 6都市     57.8 /   0.000秒     57.8 /0.000004秒     57.8 /   0.000秒 / 8都市     58.0 /   0.001秒     58.7 /0.000003秒     58.0 /   0.000秒 / 10都市     59.5 /   0.069秒     60.2 /0.000010秒     59.5 /   0.002秒 / 12都市     73.1 /   8.319秒     80.5 /0.000012秒     73.1 /   0.008秒 / 14都市        （長すぎるため省略）     83.3 /0.000009秒     75.9 /   0.045秒 / 16都市        （長すぎるため省略）     87.1 /0.000014秒     79.7 /   0.230秒 / ---------------------------------------------------------------------------- /  / 全探索と bitDP の答えは、どの大きさでも完全に一致している。 / 貪欲法の答えだけが少し長い。そのかわり時間はほとんどかかっていない。" width="599" height="328" loading="lazy">
       </div>
       <p class="run-note">全探索と bitDP の答えは、どの大きさでも<strong>完全に一致</strong>しています。12都市では、全探索に<strong>約8秒</strong>かかったのに対し、bitDP は0.01秒ほどで、<strong>数百倍</strong>の差がつきました。14都市と16都市では、全探索は終わらないため省略しています。貪欲法の答えは、12都市で80.5（最適は73.1）と約10%長くなっていますが、時間はほとんどゼロです。「必ず最適・遅い」「必ず最適・速い」「近似・非常に速い」の3種類がそろっていることを確かめてください。</p>
 
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題3の表から、都市の数ごとの3つの答えと時間を書き写す。あわせて、12都市のときに全探索と bitDP の時間が何倍違うかを計算し、答えが同じである理由を説明する。</span></div>
-    </div>
-
-    <div class="card example">
-      <div class="card-header">
-        <span class="tag tag-example">例題 4</span>
-        <h3>条件からアルゴリズムを選ぶ</h3>
-      </div>
-      <p>3つの問い（どんな問題か／重みがあるか／最適解が必要か）を、そのままプログラムにします。
-      条件を渡すと、使うべきアルゴリズムと理由が返ってきます。</p>
-
-<pre data-blanks="3"><span class="code-label">Python ── AL2-11-ex4.py</span>
-<span class="cmt"># 条件から「どのアルゴリズムを使うべきか」を判定するプログラム</span>
-<span class="cmt"># 後期に学んだ5つのアルゴリズムを、条件で選び分ける。</span>
-
-
-<span class="kw">def</span> <span class="fn">pad</span>(text, width):
-    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
-    length = <span class="num">0</span>
-    <span class="kw">for</span> ch <span class="kw">in</span> text:
-        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
-            length = length + <span class="num">2</span>
-        <span class="kw">else</span>:
-            length = length + <span class="num">1</span>
-    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
-
-
-<span class="kw">def</span> <span class="fn">choose</span>(kind, weighted, size, need_best):
-    <span class="str">&quot;&quot;&quot;条件から使うべきアルゴリズムを1つ選んで、名前と理由を返す
-
-    kind      : &quot;経路&quot; なら2地点間の最短経路、&quot;巡回&quot; なら全部回って戻る問題
-    weighted  : 辺に重み（時間や距離の差）があるなら True
-    size      : 頂点や都市の数
-    need_best : 必ず最適解が必要なら True
-    &quot;&quot;&quot;</span>
-    <span class="kw">if</span> kind == <span class="str">&quot;経路&quot;</span>:
-        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
-            <span class="kw">if</span> need_best:
-                <span class="kw">return</span> <span class="str">&quot;幅優先探索&quot;</span>, <span class="str">&quot;重みがないので、歩数の少ない順に広げれば必ず最短になる&quot;</span>
-            <span class="kw">return</span> <span class="str">&quot;深さ優先探索&quot;</span>, <span class="str">&quot;最短でなくてよいなら、調べるマスが少ない深さ優先探索で足りる&quot;</span>
-        <span class="kw">return</span> <span class="str">&quot;ダイクストラ法&quot;</span>, <span class="str">&quot;重みがあるので、コストの小さい順に確定していく必要がある&quot;</span>
-
-    <span class="cmt"># kind == &quot;巡回&quot;</span>
-    <span class="kw">if</span> <span class="kw">not</span> need_best:
-        <span class="kw">return</span> <span class="str">&quot;貪欲法&quot;</span>, <span class="str">&quot;最適でなくてよいので、いちばん近い都市へ進むだけで一瞬で終わる&quot;</span>
-    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
-        <span class="kw">return</span> <span class="str">&quot;全探索&quot;</span>, <span class="str">f&quot;{size}都市なら順番の数が少なく、全部試しても一瞬で終わる&quot;</span>
-    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
-        <span class="kw">return</span> <span class="str">&quot;bitDP&quot;</span>, <span class="str">f&quot;{size}都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる&quot;</span>
-    <span class="kw">return</span> <span class="str">&quot;貪欲法&quot;</span>, <span class="str">f&quot;{size}都市では bitDP でも表が大きすぎる。近似解を使うしかない&quot;</span>
-
-
-cases = [
-    (<span class="str">&quot;駅の乗りかえ回数を最小にする&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">False</span>, <span class="num">9000</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;迷路のゴールに行けるかだけ判定する&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">False</span>, <span class="num">400</span>, <span class="kw">False</span>),
-    (<span class="str">&quot;カーナビで最も早く着く道を案内する&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">True</span>, <span class="num">100000</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;床コストのある迷路を最小コストで抜ける&quot;</span>, <span class="str">&quot;経路&quot;</span>, <span class="kw">True</span>, <span class="num">10000</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;修学旅行で6か所を回る順番を決める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">6</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;工場のドリルが18か所をあける順番を決める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">18</span>, <span class="kw">True</span>),
-    (<span class="str">&quot;宅配便が100軒を回る順番を5秒で決める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">100</span>, <span class="kw">False</span>),
-    (<span class="str">&quot;配送センターが30軒の最適な順番を1晩かけて求める&quot;</span>, <span class="str">&quot;巡回&quot;</span>, <span class="kw">True</span>, <span class="num">30</span>, <span class="kw">True</span>),
-]
-
-<span class="fn">print</span>(<span class="str">&quot;条件から使うべきアルゴリズムを選ぶ&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
-<span class="kw">for</span> description, kind, weighted, size, need_best <span class="kw">in</span> cases:
-    name, reason = <span class="fn">choose</span>(kind, weighted, size, need_best)
-    <span class="fn">print</span>(<span class="fn">pad</span>(description, <span class="num">48</span>) + <span class="str">&quot;→ &quot;</span> + name)
-    <span class="fn">print</span>(<span class="str">&quot;    理由: &quot;</span> + reason)
-    <span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
-<span class="fn">print</span>()
-<span class="fn">print</span>(<span class="str">&quot;同じ「巡回」の問題でも、都市の数と「最適解が必要か」で答えが変わる。&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;アルゴリズムは1つを覚えるのではなく、使い分けられることが大切。&quot;</span>)</pre>
-      <div class="concept-box" style="margin-top:0.8rem">
-      <h4>穴埋め（____ を埋めてから実行する）</h4>
-      <table>
-        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>重みがなければ、幅優先探索か深さ優先探索で足りる</td><td style="white-space:nowrap">A. <code>need_best</code><br>B. <code>not weighted</code><br>C. <code>weighted</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>全探索が一瞬で終わる都市数の上限</td><td style="white-space:nowrap">A. <code>size &lt;= 20</code><br>B. <code>size &lt;= 10</code><br>C. <code>size &gt; 10</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>bitDP の表が現実的な大きさに収まる都市数の上限</td><td style="white-space:nowrap">A. <code>size &lt;= 10</code><br>B. <code>size &lt;= 20</code><br>C. <code>size &lt;= 100</code></td></tr>
-      </table>
-      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
-        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
-    </div>
-
-      <p class="run-label">▶ 実行結果</p>
-      <div class="run-capture">
-        <img src="images/a11_ex4_result.png" alt="AL2-11-ex4.py の実行結果。条件から使うべきアルゴリズムを選ぶ / ============================================================================ / 駅の乗りかえ回数を最小にする                    → 幅優先探索 / 理由: 重みがないので、歩数の少ない順に広げれば必ず最短になる /  / 迷路のゴールに行けるかだけ判定する              → 深さ優先探索 / 理由: 最短でなくてよいなら、調べるマスが少ない深さ優先探索で足りる /  / カーナビで最も早く着く道を案内する              → ダイクストラ法 / 理由: 重みがあるので、コストの小さい順に確定していく必要がある /  / 床コストのある迷路を最小コストで抜ける          → ダイクストラ法 / 理由: 重みがあるので、コストの小さい順に確定していく必要がある /  / 修学旅行で6か所を回る順番を決める               → 全探索 / 理由: 6都市なら順番の数が少なく、全部試しても一瞬で終わる /  / 工場のドリルが18か所をあける順番を決める        → bitDP / 理由: 18都市では全探索は終わらないが、bitDP なら表が現実的な大きさに収まる /  / 宅配便が100軒を回る順番を5秒で決める            → 貪欲法 / 理由: 最適でなくてよいので、いちばん近い都市へ進むだけで一瞬で終わる /  / 配送センターが30軒の最適な順番を1晩かけて求める → 貪欲法 / 理由: 30都市では bitDP でも表が大きすぎる。近似解を使うしかない /  / ============================================================================ /  / 同じ「巡回」の問題でも、都市の数と「最適解が必要か」で答えが変わる。 / アルゴリズムは1つを覚えるのではなく、使い分けられることが大切。" width="599" height="648" loading="lazy">
-      </div>
-      <p class="run-note">8つの場面について、それぞれ使うべきアルゴリズムと理由が表示されました。同じ「巡回」の問題でも、6都市なら全探索、18都市なら bitDP、100軒なら貪欲法と、答えが変わっています。注目すべきは最後の<strong>「30軒の最適な順番を1晩かけて求める」</strong>で、最適解がほしくても、30都市では bitDP の表が大きすぎるため、貪欲法を選ぶしかありません。<code>choose</code> 関数の中身を読むと、条件がそのまま <code>if</code> 文になっていることが分かります。</p>
+      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の表から、都市の数ごとの3つの答えと時間を書き写す。あわせて、12都市のときに全探索と bitDP の時間が何倍違うかを計算し、答えが同じである理由を説明する。</span></div>
     </div>
   </div>
 </section>
@@ -869,7 +627,7 @@ cases = [
       </div>
       <div class="setup-step">
         <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-11-ex3.py</code> を開き、<code>for count in [6, 8, 10, 12, 14, 16]</code> の都市数の一覧を、自分で決めた<strong>4つ</strong>に書き換える（12以下を2つ以上入れる）。
+        <p style="font-size:0.95rem"><code>AL2-11-ex2.py</code> を開き、<code>for count in [6, 8, 10, 12, 14, 16]</code> の都市数の一覧を、自分で決めた<strong>4つ</strong>に書き換える（12以下を2つ以上入れる）。
         保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
@@ -1080,13 +838,8 @@ cases = [
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
-          <tr><td><code>AL2-11-ex2.py</code></td><td>穴1</td><td><code>greedy_from(0)</code></td></tr>
-          <tr><td><code>AL2-11-ex2.py</code></td><td>穴2</td><td><code>best is None or value &lt; best</code></td></tr>
-          <tr><td><code>AL2-11-ex3.py</code></td><td>穴1</td><td><code>count &lt;= 12</code></td></tr>
-          <tr><td><code>AL2-11-ex3.py</code></td><td>穴2</td><td><code>best[full][here] + distance[here][0]</code></td></tr>
-          <tr><td><code>AL2-11-ex4.py</code></td><td>穴1</td><td><code>not weighted</code></td></tr>
-          <tr><td><code>AL2-11-ex4.py</code></td><td>穴2</td><td><code>size &lt;= 10</code></td></tr>
-          <tr><td><code>AL2-11-ex4.py</code></td><td>穴3</td><td><code>size &lt;= 20</code></td></tr>
+          <tr><td><code>AL2-11-ex2.py</code></td><td>穴1</td><td><code>count &lt;= 12</code></td></tr>
+          <tr><td><code>AL2-11-ex2.py</code></td><td>穴2</td><td><code>best[full][here] + distance[here][0]</code></td></tr>
         </table>
       </div>
       <div class="ans-item">
@@ -1094,7 +847,7 @@ cases = [
         <p><strong>問い1</strong>: <strong>すべての辺の重みが同じとき</strong>に一致します。
         重みがすべて1なら、合計コストはそのまま辺の数と同じ値になるためです。
         幅優先探索は、ダイクストラ法の特別な場合だと言えます。</p>
-        <p style="margin-top:0.8rem"><strong>例題3の数値（図に書き込むもの）</strong></p>
+        <p style="margin-top:0.8rem"><strong>例題2の数値（図に書き込むもの）</strong></p>
         <table>
           <tr><th>都市数</th><th>全探索</th><th>貪欲法</th><th>bitDP</th></tr>
           <tr><td>10都市</td><td>59.5</td><td>60.2</td><td>59.5</td></tr>
