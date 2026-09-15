@@ -139,14 +139,13 @@ def setup_guide(no, files):
 
 def keywords(rows):
     body = "\n".join(
-        f'        <tr><td><strong style="color:#76B900">{term}</strong>'
-        f'<br><span style="color:#888;font-size:0.8rem">{reading}</span></td>'
+        f'        <tr><td><strong style="color:#76B900">{term}</strong></td>'
         f'<td>{desc}</td></tr>'
-        for term, reading, desc in rows)
+        for term, _reading, desc in rows)
     return f"""    <div class="concept-box" style="margin-bottom:1.5rem">
       <h4>今回のキーワード</h4>
       <table>
-        <tr><th>用語（読み方）</th><th>説明</th></tr>
+        <tr><th>用語</th><th>説明</th></tr>
 {body}
       </table>
     </div>"""
