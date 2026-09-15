@@ -352,6 +352,7 @@ def slides_section(week, d):
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">{d["draw"]}</p>
+{d.get("help", "")}
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
 {el_items}
