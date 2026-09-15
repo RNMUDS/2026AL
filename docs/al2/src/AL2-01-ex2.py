@@ -25,7 +25,7 @@ def linear_search_count(data, target):
 
 # --- 二分探索 ---
 def binary_search_count(data, target):
-    """まん中と比べて半分ずつ捨てる（二分探索）。調べた回数を返す
+    """中央と比べて半分ずつ捨てる（二分探索）。調べた回数を返す
 
     data   = 小さい順に並んだリスト（並んでいないと正しく動かない）
     target = 探したい値
@@ -39,17 +39,17 @@ def binary_search_count(data, target):
     # while は「条件が正しいあいだ、中の処理をくり返す」文
     # 探す範囲が残っている（low が high を追いこしていない）あいだ続ける
     while low <= high:
-        count = count + 1           # まん中を 1 回見るたびに回数を 1 増やす
+        count = count + 1           # 中央を 1 回見るたびに回数を 1 増やす
         # // は小数を切り捨てる割り算。例 9 // 2 は 4
-        middle = (low + high) // 2  # 範囲のまん中の位置
+        middle = (low + high) // 2  # 範囲の中央の位置
         # data[middle] は「リストの middle 番目の要素」を取り出す書き方
         if data[middle] == target:
             return count            # 見つかったので、調べた回数を返す
         elif data[middle] < target:
-            # まん中の値が小さすぎる → 答えは右側にある。左半分を捨てる
+            # 中央の値が小さすぎる → 答えは右側にある。左半分を捨てる
             low = middle + 1
         else:
-            # まん中の値が大きすぎる → 答えは左側にある。右半分を捨てる
+            # 中央の値が大きすぎる → 答えは左側にある。右半分を捨てる
             high = middle - 1
     return count                    # 見つからなかったときも回数を返す
 

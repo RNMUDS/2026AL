@@ -59,11 +59,11 @@ def fig_narrowing():
         s.append(f'        <text x="86" y="{y+14}" fill="{RED}" font-size="10">1から順</text>')
         s.append(f'        <rect x="150" y="{y+2}" width="{a[i]*4.4:.0f}" height="15" rx="4" fill="{RED}" opacity="0.85"/>')
         s.append(f'        <text x="{150+a[i]*4.4+8:.0f}" y="{y+14}" fill="{RED}" font-size="10">{a[i]}個</text>')
-        s.append(f'        <text x="86" y="{y+32}" fill="{GREEN}" font-size="10">まん中</text>')
+        s.append(f'        <text x="86" y="{y+32}" fill="{GREEN}" font-size="10">中央</text>')
         s.append(f'        <rect x="150" y="{y+20}" width="{max(b[i]*4.4,3):.0f}" height="15" rx="4" fill="{GREEN}" opacity="0.85"/>')
         s.append(f'        <text x="{150+max(b[i]*4.4,3)+8:.0f}" y="{y+32}" fill="{GREEN}" font-size="10">{b[i]}個</text>')
     s.append(f'        <text x="350" y="{66+7*40+18}" text-anchor="middle" fill="{AMBER}" font-size="12" font-weight="700">'
-             '「1回でいちばん多く候補を減らす」選び方をすると、まん中を聞くことになる</text>')
+             '「1回でいちばん多く候補を減らす」選び方をすると、中央を聞くことになる</text>')
     return fig(700, 66 + 7 * 40 + 36, "\n".join(s))
 
 
@@ -192,12 +192,12 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
     <div class="concept-box">
       <h4>数当てゲームを最適化の目で見直す</h4>
       <p style="font-size:0.95rem">
-        前期の数当てゲームでは「まん中を聞く」作戦を使いました。
-        なぜまん中がよいのかを、後期の言葉で説明できます。
+        前期の数当てゲームでは「中央を聞く」作戦を使いました。
+        なぜ中央がよいのかを、後期の言葉で説明できます。
         <strong>1回の質問で、残る候補をいちばん多く減らせる選び方</strong>だからです。
       </p>
       <p style="font-size:0.95rem;margin-top:0.6rem">
-        「その時点でいちばん得な選択をする」という点で、まん中を聞く作戦は<strong>貪欲法</strong>です。
+        「その時点でいちばん得な選択をする」という点で、中央を聞く作戦は<strong>貪欲法</strong>です。
         ただし第9回の貪欲法と違い、数当てゲームでは<strong>貪欲な選び方がそのまま最適</strong>になります。
         貪欲法がいつも損をするわけではない、という良い例です。
       </p>
@@ -249,9 +249,9 @@ ex1_body = f"""      <p>前期の数当てゲームを、「1回の質問で候�
 {code('AL2-12-ex1.py')}
 
 {run('a12_ex1_result.png', '1から順に聞く作戦は、最悪で<strong>100回</strong>、平均で<strong>50.50回</strong>かかります。'
-     'まん中を聞く作戦は、最悪でも<strong>7回</strong>、平均<strong>5.80回</strong>で終わります。'
+     '中央を聞く作戦は、最悪でも<strong>7回</strong>、平均<strong>5.80回</strong>で終わります。'
      '下の表を見ると、1から順に聞く作戦は候補が 100個 → 99個 → 98個 と1個ずつしか減らないのに対し、'
-     'まん中を聞く作戦は 100個 → 50個 → 24個 → 12個 と半分ずつ減っています。'
+     '中央を聞く作戦は 100個 → 50個 → 24個 → 12個 と半分ずつ減っています。'
      '「1回の質問でいちばん多く候補を減らす」という貪欲な選び方が、そのままいちばん良い作戦になっています。')}
 
 {notion('例題1の実行結果から、2つの作戦の「最悪の回数」と「平均の回数」を書く。'

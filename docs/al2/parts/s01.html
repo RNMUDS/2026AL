@@ -295,7 +295,7 @@
         <tr><th>用語</th><th>説明</th></tr>
         <tr><td><strong style="color:#76B900">最適化</strong></td><td>考えられる選び方の中から、ある基準でいちばん良いものを1つ選ぶこと。後期の授業全体のテーマ。</td></tr>
         <tr><td><strong style="color:#76B900">全探索</strong></td><td>考えられる候補をすべて書き出して1つずつ調べる方法。必ず正しい答えが出るが、候補が増えると時間がかかる。</td></tr>
-        <tr><td><strong style="color:#76B900">二分探索</strong></td><td>並んでいるデータのまん中と比べ、外れた半分を捨てることをくり返す探し方。</td></tr>
+        <tr><td><strong style="color:#76B900">二分探索</strong></td><td>並んでいるデータの中央と比べ、外れた半分を捨てることをくり返す探し方。</td></tr>
         <tr><td><strong style="color:#76B900">幅優先探索</strong></td><td>スタートから1歩で行ける場所、2歩で行ける場所、と近い順に調べる探し方。最短の歩数が求まる。</td></tr>
         <tr><td><strong style="color:#76B900">計算量</strong></td><td>データが増えたときに手数がどれくらい増えるかを表す目安。O(n) や O(log n) のように書く。</td></tr>
       </table>
@@ -307,13 +307,13 @@
         <h3>数当てゲームをコンピュータに解かせる（二分探索の復習）</h3>
       </div>
       <p>前期に学んだ二分探索を、数当てゲームの形で思い出します。
-      1から100までの中に「秘密の数」が1つあり、コンピュータが<strong>まん中を聞く</strong>作戦で当てにいきます。</p>
+      1から100までの中に「秘密の数」が1つあり、コンピュータが<strong>中央を聞く</strong>作戦で当てにいきます。</p>
 
 <pre data-blanks="0"><span class="code-label">Python ── AL2-01-ex1.py</span>
 <span class="cmt"># 数当てゲーム: コンピュータが「秘密の数」を当てる</span>
 <span class="cmt"># 1 から 100 までの中に秘密の数が1つある。</span>
-<span class="cmt"># コンピュータは「まん中を聞く」作戦で当てにいく。</span>
-<span class="cmt"># 「まん中を聞いて、答えによって範囲を半分に減らす」をくり返す方法を</span>
+<span class="cmt"># コンピュータは「中央を聞く」作戦で当てにいく。</span>
+<span class="cmt"># 「中央を聞いて、答えによって範囲を半分に減らす」をくり返す方法を</span>
 <span class="cmt"># 二分探索（にぶんたんさく）という。前期に習った探索の復習。</span>
 
 <span class="cmt"># --- 準備: 変数を用意する ---</span>
@@ -336,13 +336,13 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 <span class="kw">while</span> low &lt;= high:
     count = count + <span class="num">1</span>               <span class="cmt"># 質問の回数を 1 増やす</span>
     <span class="cmt"># // は「小数を切り捨てる割り算」。例 7 // 2 は 3（3.5 の小数を捨てる）</span>
-    <span class="cmt"># (low + high) // 2 で、範囲のまん中の整数が求まる</span>
-    middle = (low + high) // <span class="num">2</span>      <span class="cmt"># 範囲のまん中の整数</span>
+    <span class="cmt"># (low + high) // 2 で、範囲の中央の整数が求まる</span>
+    middle = (low + high) // <span class="num">2</span>      <span class="cmt"># 範囲の中央の整数</span>
 
     <span class="cmt"># print では , で区切ると、値のあいだに空白を入れて並べて表示できる</span>
     <span class="cmt"># end=&quot;  &quot; は「最後に改行せず、空白 2 つを付ける」という指定。</span>
     <span class="cmt"># こうすると、次の print の内容が同じ行の続きに表示される</span>
-    <span class="fn">print</span>(<span class="str">&quot;質問&quot;</span>, count, <span class="str">&quot;回目: 範囲&quot;</span>, low, <span class="str">&quot;〜&quot;</span>, high, <span class="str">&quot;／まん中は&quot;</span>, middle, end=<span class="str">&quot;  &quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;質問&quot;</span>, count, <span class="str">&quot;回目: 範囲&quot;</span>, low, <span class="str">&quot;〜&quot;</span>, high, <span class="str">&quot;／中央は&quot;</span>, middle, end=<span class="str">&quot;  &quot;</span>)
 
     <span class="cmt"># if / elif / else は「条件によって処理を分ける」文</span>
     <span class="cmt"># == は「等しいか」を調べる。= （代入）とは別物なので注意</span>
@@ -353,14 +353,14 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
     <span class="cmt"># elif は「上の条件が違ったとき、次にこの条件を調べる」</span>
     <span class="kw">elif</span> middle &lt; secret:
         <span class="fn">print</span>(<span class="str">&quot;→ もっと大きい&quot;</span>)
-        <span class="cmt"># 答えはまん中より大きいので、まん中より左（小さい側）はもう不要。</span>
-        <span class="cmt"># 例 範囲 1〜100 でまん中 50 が「もっと大きい」なら、次は 51〜100</span>
+        <span class="cmt"># 答えは中央より大きいので、中央より左（小さい側）はもう不要。</span>
+        <span class="cmt"># 例 範囲 1〜100 で中央 50 が「もっと大きい」なら、次は 51〜100</span>
         low = middle + <span class="num">1</span>            <span class="cmt"># 下限を上げて、右半分だけを残す</span>
     <span class="cmt"># else は「どの条件にも当てはまらなかったとき」</span>
     <span class="kw">else</span>:
         <span class="fn">print</span>(<span class="str">&quot;→ もっと小さい&quot;</span>)
-        <span class="cmt"># 答えはまん中より小さいので、まん中より右（大きい側）はもう不要。</span>
-        <span class="cmt"># 例 範囲 51〜100 でまん中 75 が「もっと小さい」なら、次は 51〜74</span>
+        <span class="cmt"># 答えは中央より小さいので、中央より右（大きい側）はもう不要。</span>
+        <span class="cmt"># 例 範囲 51〜100 で中央 75 が「もっと小さい」なら、次は 51〜74</span>
         high = middle - <span class="num">1</span>           <span class="cmt"># 上限を下げて、左半分だけを残す</span>
 
 <span class="cmt"># --- 結果の表示 ---</span>
@@ -433,9 +433,9 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex1_result.png">
+        <img src="images/a01_ex1_result.png" alt="AL2-01-ex1.py の実行結果。秘密の数を 1〜100 の中から当てます / -------------------------------------------- / 質問 1 回目: 範囲 1 〜 100 ／中央は 50  → もっと大きい / 質問 2 回目: 範囲 51 〜 100 ／中央は 75  → もっと小さい / 質問 3 回目: 範囲 51 〜 74 ／中央は 62  → もっと大きい / 質問 4 回目: 範囲 63 〜 74 ／中央は 68  → もっと大きい / 質問 5 回目: 範囲 69 〜 74 ／中央は 71  → もっと大きい / 質問 6 回目: 範囲 72 〜 74 ／中央は 73  → 正解！ / -------------------------------------------- / 秘密の数 73 を 6 回の質問で当てました" width="403" height="248" loading="lazy">
       </div>
-      <p class="run-note">質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。1から100までの100個の中から、たった<strong>6回</strong>の質問で73を当てられました。「まん中を聞いて、外れた半分を捨てる」という作戦が二分探索です。</p>
+      <p class="run-note">質問のたびに、探す範囲が 100個 → 50個 → 24個 → 12個 → 6個 → 3個 と、およそ半分ずつ減っています。1から100までの100個の中から、たった<strong>6回</strong>の質問で73を当てられました。「中央を聞いて、外れた半分を捨てる」という作戦が二分探索です。</p>
     </div>
 
     <div class="card example">
@@ -444,7 +444,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
         <h3>逐次探索と二分探索の手数を比べる（計算量の復習）</h3>
       </div>
       <p>二分探索がどれくらい得なのかを、逐次探索と比べて数で確かめます。
-      逐次探索は先頭から1つずつ調べる方法、二分探索はまん中と比べて半分を捨てる方法です。</p>
+      逐次探索は先頭から1つずつ調べる方法、二分探索は中央と比べて半分を捨てる方法です。</p>
 
 <pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex2.py</span>
 <span class="cmt"># 同じ「探す」でも、やり方によって手数がどれだけ違うかを数える</span>
@@ -474,7 +474,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
 <span class="cmt"># --- 二分探索 ---</span>
 <span class="kw">def</span> <span class="fn">binary_search_count</span>(data, target):
-    <span class="str">&quot;&quot;&quot;まん中と比べて半分ずつ捨てる（二分探索）。調べた回数を返す
+    <span class="str">&quot;&quot;&quot;中央と比べて半分ずつ捨てる（二分探索）。調べた回数を返す
 
     data   = 小さい順に並んだリスト（並んでいないと正しく動かない）
     target = 探したい値
@@ -488,17 +488,17 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
     <span class="cmt"># while は「条件が正しいあいだ、中の処理をくり返す」文</span>
     <span class="cmt"># 探す範囲が残っている（low が high を追いこしていない）あいだ続ける</span>
     <span class="kw">while</span> low &lt;= high:
-        count = count + <span class="num">1</span>           <span class="cmt"># まん中を 1 回見るたびに回数を 1 増やす</span>
+        count = count + <span class="num">1</span>           <span class="cmt"># 中央を 1 回見るたびに回数を 1 増やす</span>
         <span class="cmt"># // は小数を切り捨てる割り算。例 9 // 2 は 4</span>
         middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="cmt"># data[middle] は「リストの middle 番目の要素」を取り出す書き方</span>
         <span class="kw">if</span> data[middle] == target:
             <span class="kw">return</span> count            <span class="cmt"># 見つかったので、調べた回数を返す</span>
         <span class="kw">elif</span> data[middle] &lt; target:
-            <span class="cmt"># まん中の値が小さすぎる → 答えは右側にある。左半分を捨てる</span>
+            <span class="cmt"># 中央の値が小さすぎる → 答えは右側にある。左半分を捨てる</span>
             <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">else</span>:
-            <span class="cmt"># まん中の値が大きすぎる → 答えは左側にある。右半分を捨てる</span>
+            <span class="cmt"># 中央の値が大きすぎる → 答えは左側にある。右半分を捨てる</span>
             high = middle - <span class="num">1</span>
     <span class="kw">return</span> count                    <span class="cmt"># 見つからなかったときも回数を返す</span>
 
@@ -530,8 +530,8 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
         <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
-        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>low と high のまん中の位置。整数になる割り算を使う</td><td style="white-space:nowrap">A. <code>low + high // 2</code><br>B. <code>(low + high) / 2</code><br>C. <code>(low + high) // 2</code></td></tr>
-        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>まん中より大きい側に答えがあるので、調べる範囲の下側を1つ上に動かす</td><td style="white-space:nowrap">A. <code>low = middle</code><br>B. <code>low = middle + 1</code><br>C. <code>high = middle - 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>low と high の中央の位置。整数になる割り算を使う</td><td style="white-space:nowrap">A. <code>low + high // 2</code><br>B. <code>(low + high) / 2</code><br>C. <code>(low + high) // 2</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>中央より大きい側に答えがあるので、調べる範囲の下側を1つ上に動かす</td><td style="white-space:nowrap">A. <code>low = middle</code><br>B. <code>low = middle + 1</code><br>C. <code>high = middle - 1</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
@@ -592,7 +592,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex2_result.png">
+        <img src="images/a01_ex2_result.png" alt="AL2-01-ex2.py の実行結果。データの個数     逐次探索の回数     二分探索の回数 / -------------------------------------------------- / 10               10                4 / 100              100                7 / 1000             1000               10 / 10000            10000               14 / 100000           100000               17 / -------------------------------------------------- / データが10倍になっても、二分探索の回数はほとんど増えない" width="404" height="228" loading="lazy">
       </div>
       <p class="run-note">データの個数が10倍になるたびに、逐次探索の回数も<strong>10倍</strong>に増えています（10 → 100 → 1000 → 10000 → 100000）。一方の二分探索は 4 → 7 → 10 → 14 → 17 と、<strong>3〜4回ずつしか増えません</strong>。データが10万個あっても17回で見つかります。同じ答えにたどり着くのに、手数がまったく違うという点が重要です。</p>
 
@@ -981,7 +981,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex3_result.png">
+        <img src="images/a01_ex3_result.png" alt="AL2-01-ex3.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 最短経路の歩数: 12 歩 / 通った場所の数: 13 マス /  / 最短経路（* が通り道） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G" width="380" height="448" loading="lazy">
       </div>
       <p class="run-note">スタートからゴールまで<strong>12歩</strong>で着く道が見つかりました。2つ目の迷路図で <code>*</code> が付いているマスが通り道です。左端の列をまっすぐ下り、いちばん下の行を右へ進む道になっています。幅優先探索は「歩数が少ない順」に調べるので、最初に届いた道がそのまま最短経路になります。</p>
 
@@ -1164,7 +1164,7 @@ best_time = <span class="kw">None</span>                    <span class="cmt"># 
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a01_ex4_result.png">
+        <img src="images/a01_ex4_result.png" alt="AL2-01-ex4.py の実行結果。学校 → 3か所 → 学校 の合計時間をすべて調べる / ---------------------------------------------------- / 学校 → 郵便局 → 図書館 → カフェ → 学校 : 26 分 / 学校 → 郵便局 → カフェ → 図書館 → 学校 : 36 分 / 学校 → 図書館 → 郵便局 → カフェ → 学校 : 32 分 / 学校 → 図書館 → カフェ → 郵便局 → 学校 : 36 分 / 学校 → カフェ → 郵便局 → 図書館 → 学校 : 32 分 / 学校 → カフェ → 図書館 → 郵便局 → 学校 : 26 分 / ---------------------------------------------------- / 試した順番の数: 6 通り / いちばん短い順番: 学校 → 郵便局 → 図書館 → カフェ → 学校 / そのときの合計時間: 26 分" width="419" height="288" loading="lazy">
       </div>
       <p class="run-note">6通りすべての合計時間が表示され、最短は<strong>26分</strong>でした。「学校 → 郵便局 → 図書館 → カフェ → 学校」と「学校 → カフェ → 図書館 → 郵便局 → 学校」の2つが同じ26分になっています。2つは進む向きが逆なだけで、通る道は同じだからです。すべての候補を書き出して比べる方法を<strong>全探索</strong>と呼びます。</p>
 

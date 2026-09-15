@@ -100,7 +100,7 @@ print("-" * 44)
 print()
 
 show(flat_land, "地形A 平地だけ")
-show(river, "地形B まん中に川がある（4行目だけ橋がかかっている）")
+show(river, "地形B 中央に川がある（4行目だけ橋がかかっている）")
 show(forest, "地形C ななめに森が広がっている")
 
 print("-" * 44)
