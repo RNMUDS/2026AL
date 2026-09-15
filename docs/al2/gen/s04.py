@@ -3,7 +3,7 @@
 import math
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -244,7 +244,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>6つの駅からなる路線図に、区間ごとの乗車時間を重みとして書き込みます。
       重み付きの隣接リストでは、となりの駅を <code>("駅の名前", 時間)</code> という<strong>2つ組</strong>で並べます。</p>
 
-{code('AL2-04-ex1.py')}
+{code_pair('AL2-04-ex1.py')}
 
 {run('a04_ex1_result.png', '新宿から品川へは3通りの行き方があり、乗りかえ0回の直通が<strong>30分</strong>、'
      '渋谷で1回乗りかえる行き方が<strong>16分</strong>、大回りの行き方が<strong>38分</strong>でした。'
@@ -253,7 +253,7 @@ ex1_body = f"""      <p>6つの駅からなる路線図に、区間ごとの乗�
 
 ex2_body = f"""      <p>幅優先探索で新宿から品川への経路を求め、すべての行き方の中でいちばん時間が短い経路と比べます。</p>
 
-{code('AL2-04-ex2.py')}
+{code_pair('AL2-04-ex2.py')}
 
 {run('a04_ex2_result.png', '幅優先探索が選んだのは<strong>直通の30分</strong>の経路でした。'
      '一方、合計時間がいちばん短いのは<strong>渋谷で乗りかえる16分</strong>の経路で、その差は14分もあります。'

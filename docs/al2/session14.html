@@ -216,8 +216,8 @@ a.sub-item:hover { border-color: #4A7A00; }
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品4 自由テーマ ─ 今回の到達点: 変な入力で落ちず、例題と同じ答えになる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第14回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第14回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -435,11 +435,15 @@ a.sub-item:hover { border-color: #4A7A00; }
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -462,7 +466,95 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>第13回のテンプレートAで「プレイヤーの道を受け取る部分」に対し、
       6種類の入力を与えてテストします。バグのある関数と修正版を並べて比べます。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-14-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-14-ex1.py（参考）</span>
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+]
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+
+<span class="kw">def</span> <span class="fn">move_to_route_buggy</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR&quot; を通るマスの並びに変える（バグあり）&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        route.append((r, c))
+    <span class="kw">return</span> route
+
+<span class="kw">def</span> <span class="fn">move_to_route_fixed</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR&quot; を通るマスの並びに変える（修正版）&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;U&quot;</span>:
+            r = r - <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;L&quot;</span>:
+            c = c - <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">f&quot;「{move}」は使えない文字です（D/U/R/L だけ使えます）&quot;</span>
+        <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
+            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;迷路の外に出てしまいました&quot;</span>
+        route.append((r, c))
+    <span class="kw">if</span> route[-<span class="num">1</span>] != goal:
+        <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;ゴールに着いていません&quot;</span>
+    <span class="kw">return</span> route, <span class="str">&quot;OK&quot;</span>
+
+tests = [
+    (<span class="str">&quot;ふつうの道&quot;</span>, <span class="str">&quot;DDRR&quot;</span>),
+    (<span class="str">&quot;空の道&quot;</span>, <span class="str">&quot;&quot;</span>),
+    (<span class="str">&quot;迷路の外に出る道&quot;</span>, <span class="str">&quot;DDDDDD&quot;</span>),
+    (<span class="str">&quot;ゴールに着かない道&quot;</span>, <span class="str">&quot;DR&quot;</span>),
+    (<span class="str">&quot;使えない文字が入った道&quot;</span>, <span class="str">&quot;DDXR&quot;</span>),
+    (<span class="str">&quot;行ったり戻ったりする道&quot;</span>, <span class="str">&quot;DRLDRR&quot;</span>),
+]
+
+<span class="fn">print</span>(<span class="str">&quot;バグのある関数に、6種類の入力を与えてみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="kw">for</span> name, moves <span class="kw">in</span> tests:
+    <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+    route = <span class="fn">move_to_route_buggy</span>(moves)
+    last = route[-<span class="num">1</span>]
+    inside = <span class="num">0</span> &lt;= last[<span class="num">0</span>] &lt; rows <span class="kw">and</span> <span class="num">0</span> &lt;= last[<span class="num">1</span>] &lt; cols
+    <span class="fn">print</span>(<span class="str">f&quot;  最後にいるマス: {last}   迷路の中か: {inside}&quot;</span>)
+    <span class="kw">if</span> <span class="kw">not</span> inside:
+        <span class="fn">print</span>(<span class="str">&quot;  → 迷路の外を指している。このあと cost_map[r][c] でエラーになる&quot;</span>)
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="str">&quot;修正版に、同じ6種類の入力を与えてみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="kw">for</span> name, moves <span class="kw">in</span> tests:
+    route, message = <span class="fn">move_to_route_fixed</span>(moves)
+    <span class="kw">if</span> route <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  → 受けつけない: {message}&quot;</span>)
+    <span class="kw">else</span>:
+        total = <span class="num">0</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+            r, c = route[i]
+            total = total + cost_map[r][c]
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  → OK: {len(route)-1}歩 ／ {total}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-14-ex1.py</span>
 <span class="cmt"># 境界値テスト: わざと「特別な入力」を与えて、プログラムが正しく動くか確かめる</span>
 <span class="cmt"># テンプレートAの「プレイヤーの道」を受け取る部分をテストする。</span>
 
@@ -507,9 +599,9 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
         <span class="kw">else</span>:
             <span class="kw">return</span> <span class="kw">None</span>, <span class="str">f&quot;「{move}」は使えない文字です（D/U/R/L だけ使えます）&quot;</span>
         <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
-            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;迷路の外に出てしまいました&quot;</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         route.append((r, c))
-    <span class="kw">if</span> route[-<span class="num">1</span>] != goal:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;ゴールに着いていません&quot;</span>
     <span class="kw">return</span> route, <span class="str">&quot;OK&quot;</span>
 
@@ -554,6 +646,17 @@ tests = [
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>外に出たら、道の代わりに None と理由を返して止める</td><td style="white-space:nowrap">A. <code>continue</code><br>B. <code>return route, &quot;OK&quot;</code><br>C. <code>return None, &quot;迷路の外に出てしまいました&quot;</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後のマスがゴールでなければ受けつけない</td><td style="white-space:nowrap">A. <code>route[-1] != goal</code><br>B. <code>route[0] != start</code><br>C. <code>len(route) == 0</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -572,6 +675,109 @@ tests = [
       <p>バグをしこんだ貪欲法の関数を、<code>print</code> を入れて追いかけます。
       どの行で判断がおかしくなっているかを、目で見て確かめます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-14-ex2.py（参考）</span>
+<span class="kw">import</span> math
+
+places = [
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">0</span>, <span class="num">0</span>),
+    (<span class="str">&quot;A宅&quot;</span>, <span class="num">3</span>, <span class="num">1</span>),
+    (<span class="str">&quot;B宅&quot;</span>, <span class="num">1</span>, <span class="num">4</span>),
+    (<span class="str">&quot;C宅&quot;</span>, <span class="num">6</span>, <span class="num">2</span>),
+]
+
+n = <span class="fn">len</span>(places)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((places[i][<span class="num">1</span>] - places[j][<span class="num">1</span>]) ** <span class="num">2</span> + (places[i][<span class="num">2</span>] - places[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">2</span>))
+    distance.append(row)
+
+<span class="fn">print</span>(<span class="str">&quot;距離の表&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;8}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i}   &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{distance[i][j]:&gt;8}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="fn">print</span>()
+
+<span class="kw">def</span> <span class="fn">greedy_buggy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法でルートを作る（バグあり）&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="num">0</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+<span class="kw">def</span> <span class="fn">greedy_with_print</span>():
+    <span class="str">&quot;&quot;&quot;同じ関数に print を入れて、中で何が起きているかを見る&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="num">0</span>
+        <span class="fn">print</span>(<span class="str">f&quot;  [ここまで] visited={visited}  here={here}  nearest の初期値={nearest}&quot;</span>)
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="fn">print</span>(<span class="str">f&quot;      j={j} はすでに訪問済み → とばす&quot;</span>)
+                <span class="kw">continue</span>
+            <span class="fn">print</span>(<span class="str">f&quot;      j={j}: distance[{here}][{j}]={distance[here][j]}&quot;</span>
+                  <span class="str">f&quot;  vs  distance[{here}][{nearest}]={distance[here][nearest]}&quot;</span>)
+            <span class="kw">if</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+                <span class="fn">print</span>(<span class="str">f&quot;        → nearest を {j} に更新&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  [結果] nearest={nearest} を訪問する&quot;</span>)
+        <span class="fn">print</span>()
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+<span class="kw">def</span> <span class="fn">greedy_fixed</span>():
+    <span class="str">&quot;&quot;&quot;修正版: nearest の初期値を None にして、最初の1件で必ず更新されるようにする&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;バグのある関数の結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+result = <span class="fn">greedy_buggy</span>()
+<span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+
+<span class="fn">print</span>(<span class="str">&quot;  同じ場所が2回入っていないか:&quot;</span>, <span class="fn">len</span>(result) != <span class="fn">len</span>(<span class="fn">set</span>(result)))
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;print を入れて、中で何が起きているかを見る&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">greedy_with_print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;修正版の結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+result = <span class="fn">greedy_fixed</span>()
+<span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> result]
+<span class="fn">print</span>(<span class="str">&quot;  ルート:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(names) + <span class="str">&quot; → &quot;</span> + places[<span class="num">0</span>][<span class="num">0</span>])
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;print を入れると、どの行で判断がおかしくなったかが目で見える。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;バグが直ったら、入れた print は消す。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-14-ex2.py</span>
 <span class="cmt"># print デバッグ: プログラムの途中に print を入れて、変数の中身を目で見る</span>
 <span class="cmt"># ここでは「貪欲法で配達ルートを作る関数」にバグを1つしこんである。</span>
@@ -687,7 +893,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>候補がまだ無いか、より近いときに更新する</td><td style="white-space:nowrap">A. <code>distance[here][j] &lt; distance[here][nearest]</code><br>B. <code>nearest is None or distance[here][j] &lt; distance[here][nearest]</code><br>C. <code>nearest is None</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -735,6 +941,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">自分の4つの入力と、<strong>バグあり</strong>・<strong>直したあと</strong>それぞれの結果を表か箱で描く。エラーや変な動きになったものに印を付ける。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>自分で決めた4種類の入力</li>
@@ -850,19 +1057,14 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
           <li>第14回のGoogleスライドを新しく作る（ファイル名は「AL2 第14回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -901,7 +1103,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

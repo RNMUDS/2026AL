@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品2 路線図の最短経路アプリ ─ 今回の到達点: 変な入力で落ちず、例題と同じ合計時間になる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第7回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第7回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -475,11 +475,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -502,7 +506,119 @@
       <p>床にコストがある迷路（マスごとに通る秒数がちがう）を、幅優先探索とダイクストラ法の両方で解いて比べます。
       迷路も経路も同じプログラムの中であつかい、結果を並べて表示します。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-07-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-07-ex1.py（参考）</span>
+<span class="kw">import</span> heapq
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+]
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
+    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあるマスを返す&quot;&quot;&quot;</span>
+    result = []
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> <span class="num">0</span> &lt;= nr &lt; rows <span class="kw">and</span> <span class="num">0</span> &lt;= nc &lt; cols:
+            result.append((nr, nc))
+    <span class="kw">return</span> result
+
+<span class="kw">def</span> <span class="fn">route_cost</span>(route):
+    <span class="str">&quot;&quot;&quot;通った順番 route の合計コストを求める（スタートのマスは数えない）&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+        r, c = route[i]
+        total = total + cost_map[r][c]
+    <span class="kw">return</span> total
+
+<span class="kw">def</span> <span class="fn">build_route</span>(came_from, goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+came_from_bfs = {start: <span class="kw">None</span>}
+queue = <span class="fn">deque</span>([start])
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    current = queue.popleft()
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+    <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+        <span class="kw">if</span> nxt <span class="kw">in</span> came_from_bfs:
+            <span class="kw">continue</span>
+        came_from_bfs[nxt] = current
+        queue.append(nxt)
+bfs_route = <span class="fn">build_route</span>(came_from_bfs, goal)
+
+distance = {}
+came_from_dij = {}
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        distance[(r, c)] = INF
+        came_from_dij[(r, c)] = <span class="kw">None</span>
+distance[start] = <span class="num">0</span>
+
+pq = [(<span class="num">0</span>, start)]
+settled = <span class="fn">set</span>()
+<span class="kw">while</span> <span class="fn">len</span>(pq) &gt; <span class="num">0</span>:
+    total, current = heapq.heappop(pq)
+    <span class="kw">if</span> current <span class="kw">in</span> settled:
+        <span class="kw">continue</span>
+    settled.add(current)
+    <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+        new_total = total + cost_map[nxt[<span class="num">0</span>]][nxt[<span class="num">1</span>]]
+        <span class="kw">if</span> new_total &lt; distance[nxt]:
+            distance[nxt] = new_total
+            came_from_dij[nxt] = current
+            heapq.heappush(pq, (new_total, nxt))
+dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
+
+<span class="kw">def</span> <span class="fn">draw</span>(route, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        line = <span class="str">&quot;&quot;</span>
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> route:
+                line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;4}*&quot;</span>
+            <span class="kw">else</span>:
+                line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;4} &quot;</span>
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;床コスト付き迷路（数字はそのマスを通るのにかかる秒数）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{cost_map[r][c]:&gt;5}&quot;</span> <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="fn">print</span>()
+
+<span class="fn">draw</span>(bfs_route, <span class="str">f&quot;幅優先探索の経路: {len(bfs_route)-1}歩 ／ 合計 {route_cost(bfs_route)}秒&quot;</span>)
+<span class="fn">draw</span>(dij_route, <span class="str">f&quot;ダイクストラ法の経路: {len(dij_route)-1}歩 ／ 合計 {route_cost(dij_route)}秒&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>(<span class="str">f&quot;幅優先探索      {len(bfs_route)-1:&gt;3}歩  {route_cost(bfs_route):&gt;3}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;ダイクストラ法  {len(dij_route)-1:&gt;3}歩  {route_cost(dij_route):&gt;3}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索は歩数を、ダイクストラ法は合計コストを、それぞれ最小にしている&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-07-ex1.py</span>
 <span class="cmt"># 床コスト付き迷路を、幅優先探索とダイクストラ法の両方で解いて比べる</span>
 <span class="kw">import</span> heapq
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -558,7 +674,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
 came_from_bfs = {start: <span class="kw">None</span>}
 queue = <span class="fn">deque</span>([start])
 <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = queue.popleft()
+    current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     <span class="kw">if</span> current == goal:
         <span class="kw">break</span>
     <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
@@ -581,12 +697,12 @@ distance[start] = <span class="num">0</span>
 pq = [(<span class="num">0</span>, start)]
 settled = <span class="fn">set</span>()
 <span class="kw">while</span> <span class="fn">len</span>(pq) &gt; <span class="num">0</span>:
-    total, current = heapq.heappop(pq)
+    total, current = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">if</span> current <span class="kw">in</span> settled:
         <span class="kw">continue</span>
     settled.add(current)
     <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
-        new_total = total + cost_map[nxt[<span class="num">0</span>]][nxt[<span class="num">1</span>]]
+        new_total = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
         <span class="kw">if</span> new_total &lt; distance[nxt]:
             distance[nxt] = new_total
             came_from_dij[nxt] = current
@@ -623,6 +739,18 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
 <span class="fn">print</span>(<span class="str">f&quot;ダイクストラ法  {len(dij_route)-1:&gt;3}歩  {route_cost(dij_route):&gt;3}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索は歩数を、ダイクストラ法は合計コストを、それぞれ最小にしている&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>幅優先探索: メモのいちばん古い行を読む</td><td style="white-space:nowrap">A. <code>queue.pop()</code><br>B. <code>queue[-1]</code><br>C. <code>queue.popleft()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>ダイクストラ法: 合計コストがいちばん小さいマスを取り出す</td><td style="white-space:nowrap">A. <code>pq.pop()</code><br>B. <code>heapq.heappop(pq)</code><br>C. <code>pq.popleft()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>取り出したマスまでの合計に、となりのマスのコストを足す</td><td style="white-space:nowrap">A. <code>cost_map[nxt[0]][nxt[1]]</code><br>B. <code>total + cost_map[nxt[0]][nxt[1]]</code><br>C. <code>total + 1</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -641,6 +769,78 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
       <p>ダイクストラ法は、ゴールの最小コストだけを求めているわけではありません。
       止めずに最後まで動かすと、<strong>すべてのマスへの最小コスト</strong>が同時に求まります。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-07-ex2.py（参考）</span>
+<span class="kw">import</span> heapq
+
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+]
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = {}
+order = []
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        distance[(r, c)] = INF
+distance[start] = <span class="num">0</span>
+
+pq = [(<span class="num">0</span>, start)]
+settled = <span class="fn">set</span>()
+
+<span class="kw">while</span> <span class="fn">len</span>(pq) &gt; <span class="num">0</span>:
+    total, current = heapq.heappop(pq)
+    <span class="kw">if</span> current <span class="kw">in</span> settled:
+        <span class="kw">continue</span>
+    settled.add(current)
+    order.append((current, total))
+    r, c = current
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        new_total = total + cost_map[nr][nc]
+        <span class="kw">if</span> new_total &lt; distance[(nr, nc)]:
+            distance[(nr, nc)] = new_total
+            heapq.heappush(pq, (new_total, (nr, nc)))
+
+<span class="fn">print</span>(<span class="str">&quot;確定した順番（コストが小さいマスから順に決まっていく）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+line = <span class="str">&quot;&quot;</span>
+<span class="kw">for</span> i, (cell, total) <span class="kw">in</span> <span class="fn">enumerate</span>(order):
+    line = line + <span class="str">f&quot;{str(cell) + &#x27;=&#x27; + str(total) + &#x27;秒&#x27;:&lt;14}&quot;</span>
+    <span class="kw">if</span> (i + <span class="num">1</span>) % <span class="num">4</span> == <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+        line = <span class="str">&quot;&quot;</span>
+<span class="kw">if</span> line != <span class="str">&quot;&quot;</span>:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;スタート(0,0)から各マスまでの最小コスト&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{distance[(r, c)]:&gt;5}&quot;</span> <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;もとの迷路（そのマスを通るのにかかる秒数）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{cost_map[r][c]:&gt;5}&quot;</span> <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-07-ex2.py</span>
 <span class="cmt"># ダイクストラ法が「どのマスにいくらでたどり着けるか」を全部求めていることを見る</span>
 <span class="kw">import</span> heapq
@@ -720,7 +920,7 @@ line = <span class="str">&quot;&quot;</span>
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>（合計秒数, マス）の組を入れる。秒数で並ぶようにする</td><td style="white-space:nowrap">A. <code>(new_total, (nr, nc))</code><br>B. <code>new_total</code><br>C. <code>((nr, nc), new_total)</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -884,19 +1084,14 @@ line = <span class="str">&quot;&quot;</span>
           <li>第7回のGoogleスライドを新しく作る（ファイル名は「AL2 第7回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -1061,6 +1256,9 @@ line = <span class="str">&quot;&quot;</span>
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-07-ex1.py</code></td><td>穴1</td><td><code>queue.popleft()</code></td></tr>
+          <tr><td><code>AL2-07-ex1.py</code></td><td>穴2</td><td><code>heapq.heappop(pq)</code></td></tr>
+          <tr><td><code>AL2-07-ex1.py</code></td><td>穴3</td><td><code>total + cost_map[nxt[0]][nxt[1]]</code></td></tr>
           <tr><td><code>AL2-07-ex2.py</code></td><td>穴1</td><td><code>order.append((current, total))</code></td></tr>
           <tr><td><code>AL2-07-ex2.py</code></td><td>穴2</td><td><code>(new_total, (nr, nc))</code></td></tr>
         </table>

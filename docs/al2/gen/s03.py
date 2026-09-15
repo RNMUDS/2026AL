@@ -3,7 +3,7 @@
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, answers, code, example, fig, keywords,
                     notion, reveal, run, section, setup_guide, standard,
                     write)
@@ -45,7 +45,7 @@ def fig_graph_terms():
                  f'keyTimes="0;{0.04+i*0.02:.3f};{0.06+i*0.02:.3f};0.30;0.34;1" dur="{dur}s" repeatCount="indefinite"/></circle>')
     s.append(f'        <text x="350" y="306" text-anchor="middle" fill="{GREEN}" font-size="13" font-weight="700" opacity="0">'
              f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.04;0.08;0.30;0.34;1" dur="{dur}s" repeatCount="indefinite"/>'
-             '① 頂点（ちょうてん）＝ 駅。全部で6個</text>')
+             '① 頂点＝ 駅。全部で6個</text>')
     # ② 辺を光らせる
     for i, (a, b) in enumerate(LINES):
         (x1, y1), (x2, y2) = POS[a], POS[b]
@@ -54,7 +54,7 @@ def fig_graph_terms():
                  f'keyTimes="0;{0.36+i*0.02:.3f};{0.38+i*0.02:.3f};0.62;0.66;1" dur="{dur}s" repeatCount="indefinite"/></line>')
     s.append(f'        <text x="350" y="306" text-anchor="middle" fill="{AMBER}" font-size="13" font-weight="700" opacity="0">'
              f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.36;0.40;0.62;0.66;1" dur="{dur}s" repeatCount="indefinite"/>'
-             '② 辺（へん）＝ 路線。全部で7本</text>')
+             '② 辺＝ 路線。全部で7本</text>')
     # ③ 重みの予告
     weights = {("新宿", "渋谷"): 7, ("新宿", "池袋"): 9, ("新宿", "東京"): 14,
                ("渋谷", "品川"): 15, ("東京", "品川"): 11, ("東京", "上野"): 6, ("池袋", "上野"): 12}
@@ -67,7 +67,7 @@ def fig_graph_terms():
                  f'<text x="{mx}" y="{my+5}" text-anchor="middle" fill="#ccc" font-size="12">{w}</text></g>')
     s.append(f'        <text x="350" y="306" text-anchor="middle" fill="{GRAY}" font-size="13" font-weight="700" opacity="0">'
              f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.68;0.72;0.94;0.97;1" dur="{dur}s" repeatCount="indefinite"/>'
-             '③ 重み（おもみ）＝ 辺ごとの数値。第4回であつかう</text>')
+             '③ 重み＝ 辺ごとの数値。第4回であつかう</text>')
     return fig(700, 322, "\n".join(s))
 
 
@@ -284,7 +284,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       </p>
       <ul class="point-list" style="margin-top:0.6rem">
         <li><strong style="color:#76B900">隣接リスト</strong>（りんせつリスト）: 頂点ごとに「となりの頂点」を並べる。辞書とリストで書ける。</li>
-        <li><strong style="color:#FFB800">隣接行列</strong>（りんせつぎょうれつ）: たてよこの表を作り、つながっていれば1、つながっていなければ0を書く。</li>
+        <li><strong style="color:#FFB800">隣接行列</strong>: たてよこの表を作り、つながっていれば1、つながっていなければ0を書く。</li>
       </ul>
     </div>
 
@@ -293,7 +293,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>6つの駅と7本の路線からなる路線図を、隣接リストの形でPythonに書き写します。
       隣接リストは<strong>辞書</strong>を使い、「駅の名前」を鍵、「となりの駅を並べたリスト」を値にします。</p>
 
-{code('AL2-03-ex1.py')}
+{code_pair('AL2-03-ex1.py')}
 
 {run('a03_ex1_result.png', '6つの駅それぞれについて、となりの駅が一覧で表示されました。'
      '<code>railway["新宿"]</code> と書くだけで、新宿のとなりの駅3つがすぐ取り出せています。'
@@ -303,7 +303,7 @@ ex1_body = f"""      <p>6つの駅と7本の路線からなる路線図を、隣
 ex2_body = f"""      <p>例題1とまったく同じ路線図を、今度は隣接行列の形で書き写します。
       6つの駅があるので、たて6マス・よこ6マスの表を作ります。</p>
 
-{code('AL2-03-ex2.py')}
+{code_pair('AL2-03-ex2.py')}
 
 {fig_size_compare()}
 

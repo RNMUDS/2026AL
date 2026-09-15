@@ -43,6 +43,38 @@ def code(filename, label=None):
     return pre + "\n" + blank_hints(filename, items)
 
 
+def strip_comments(src):
+    """# コメントを取り除いた「参考」用のコード。docstring は残す。空行が続く場合は1行にする。"""
+    import io
+    import tokenize
+    cuts = {}   # 行番号 → コメントが始まる桁
+    for tok in tokenize.generate_tokens(io.StringIO(src).readline):
+        if tok.type == tokenize.COMMENT:
+            cuts[tok.start[0]] = tok.start[1]
+    out = []
+    for i, line in enumerate(src.split("\n"), 1):
+        if i in cuts:
+            line = line[:cuts[i]].rstrip()
+        out.append(line)
+    text = "\n".join(out)
+    while "\n\n\n" in text:
+        text = text.replace("\n\n\n", "\n\n")
+    return text.strip("\n")
+
+
+def code_pair(filename):
+    """例題を「参考」（コメントなしの完成コード）と「実践」（穴埋め・丁寧なコメント）の2つで載せる。"""
+    import re
+    n = re.search(r"ex(\d)", filename).group(1)
+    src = (HERE / "src" / filename).read_text(encoding="utf-8").rstrip("\n")
+    ref = highlight(strip_comments(src))
+    ref_pre = (f'<p class="run-label">例題{n}（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>\n'
+               f'<pre data-blanks="0"><span class="code-label">Python ── {filename}（参考）</span>\n{ref}</pre>')
+    prac = code(filename)
+    return (ref_pre + f'\n<p class="run-label" style="margin-top:1.4rem">例題{n}（実践）── 要の行が ____ になっている。'
+            f'コメントを読みながら埋めて、保存して実行する</p>\n' + prac)
+
+
 def _choices(filename, i, b):
     """答えとまちがい2つを、ファイル名と穴番号で決まる順に並べる（毎回同じ順になる）。"""
     import random
@@ -65,7 +97,7 @@ def blank_hints(filename, items):
 {chr(10).join(rows)}
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>"""
 
@@ -211,11 +243,15 @@ def setup_guide(no, files):
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>"""
 
@@ -318,8 +354,8 @@ def slide_submission(week):
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>{label} ─ 今回の到達点: {goal}</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第{n}回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第{n}回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -523,19 +559,14 @@ def rubric_section(week):
           <li>第{n}回のGoogleスライドを新しく作る（ファイル名は「AL2 第{n}回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 

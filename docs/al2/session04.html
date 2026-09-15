@@ -216,8 +216,8 @@ a.sub-item:hover { border-color: #4A7A00; }
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品1 迷路の探索アプリ ─ 今回の到達点: 変な入力で落ちず、例題と同じ歩数になる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第4回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第4回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -492,11 +492,15 @@ a.sub-item:hover { border-color: #4A7A00; }
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -520,9 +524,62 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>6つの駅からなる路線図に、区間ごとの乗車時間を重みとして書き込みます。
       重み付きの隣接リストでは、となりの駅を <code>("駅の名前", 時間)</code> という<strong>2つ組</strong>で並べます。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex1.py（参考）</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+<span class="fn">print</span>(<span class="str">&quot;重み付きグラフ（数字は乗車時間・分）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    parts = []
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[station]:
+        parts.append(<span class="str">f&quot;{name}({minutes}分)&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;{station}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(parts))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を求める。つながっていない駅があれば None を返す。&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        here = route[i]
+        next_station = route[i + <span class="num">1</span>]
+        found = <span class="kw">False</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+            <span class="kw">if</span> name == next_station:
+                total = total + minutes
+                found = <span class="kw">True</span>
+                <span class="kw">break</span>
+        <span class="kw">if</span> <span class="kw">not</span> found:
+            <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">return</span> total
+
+routes = [
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+]
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方を比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="kw">for</span> route <span class="kw">in</span> routes:
+    minutes = <span class="fn">route_minutes</span>(route)
+    <span class="fn">print</span>(<span class="str">f&quot;{&#x27; → &#x27;.join(route)}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;    乗りかえの回数: {len(route)-2}回 ／ 合計時間: {minutes}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;直通（乗りかえ0回）がいちばん時間がかかっている&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex1.py</span>
 <span class="cmt"># 重み付きグラフを隣接リストで表す</span>
-<span class="cmt"># 重み（おもみ）= 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
+<span class="cmt"># 重み = 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
 
 <span class="cmt"># となりの駅を (駅名, かかる時間) の形で並べる</span>
 railway = {
@@ -553,8 +610,8 @@ railway = {
         next_station = route[i + <span class="num">1</span>]
         found = <span class="kw">False</span>
         <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
-            <span class="kw">if</span> name == next_station:
-                total = total + minutes
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
+                total = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
                 found = <span class="kw">True</span>
                 <span class="kw">break</span>
         <span class="kw">if</span> <span class="kw">not</span> found:
@@ -578,6 +635,17 @@ routes = [
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;直通（乗りかえ0回）がいちばん時間がかかっている&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いまの駅のとなりの一覧から、次に行く駅を探す</td><td style="white-space:nowrap">A. <code>minutes == 0</code><br>B. <code>name == next_station</code><br>C. <code>name == here</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>見つかった路線の時間を合計に足す</td><td style="white-space:nowrap">A. <code>minutes</code><br>B. <code>total + 1</code><br>C. <code>total + minutes</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -593,6 +661,88 @@ routes = [
       </div>
       <p>幅優先探索で新宿から品川への経路を求め、すべての行き方の中でいちばん時間が短い経路と比べます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex2.py（参考）</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+goal = <span class="str">&quot;品川&quot;</span>
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を求める&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
+            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
+                total = total + minutes
+                <span class="kw">break</span>
+    <span class="kw">return</span> total
+
+came_from = {start: <span class="kw">None</span>}
+queue = <span class="fn">deque</span>([start])
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    current = queue.popleft()
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> came_from:
+            <span class="kw">continue</span>
+        came_from[name] = current
+        queue.append(name)
+
+bfs_route = []
+node = goal
+<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+    bfs_route.append(node)
+    node = came_from[node]
+bfs_route.reverse()
+
+<span class="kw">def</span> <span class="fn">all_routes</span>(here, goal, visited):
+    <span class="str">&quot;&quot;&quot;here から goal までの、同じ駅を2度通らない行き方をすべて返す&quot;&quot;&quot;</span>
+    <span class="kw">if</span> here == goal:
+        <span class="kw">return</span> [[goal]]
+    result = []
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+        <span class="kw">if</span> name <span class="kw">in</span> visited:
+            <span class="kw">continue</span>
+        <span class="kw">for</span> rest <span class="kw">in</span> <span class="fn">all_routes</span>(name, goal, visited + [name]):
+            result.append([here] + rest)
+    <span class="kw">return</span> result
+
+every_route = <span class="fn">all_routes</span>(start, goal, [start])
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方をすべて書き出す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="kw">for</span> route <span class="kw">in</span> every_route:
+    <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: 路線{len(route)-1}本 ／ {route_minutes(route)}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;行き方の数:&quot;</span>, <span class="fn">len</span>(every_route), <span class="str">&quot;通り&quot;</span>)
+<span class="fn">print</span>()
+
+best_route = every_route[<span class="num">0</span>]
+<span class="kw">for</span> route <span class="kw">in</span> every_route:
+    <span class="kw">if</span> <span class="fn">route_minutes</span>(route) &lt; <span class="fn">route_minutes</span>(best_route):
+        best_route = route
+
+<span class="fn">print</span>(<span class="str">&quot;方法1: 幅優先探索が選んだ道&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(bfs_route)}: 路線{len(bfs_route)-1}本 ／ {route_minutes(bfs_route)}分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;方法2: 合計時間がいちばん短い道&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(best_route)}: 路線{len(best_route)-1}本 ／ {route_minutes(best_route)}分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_minutes</span>(bfs_route) - <span class="fn">route_minutes</span>(best_route), <span class="str">&quot;分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex2.py</span>
 <span class="cmt"># 幅優先探索は「重みの合計」を最小にできないことを確かめる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -688,7 +838,7 @@ best_route = every_route[<span class="num">0</span>]
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）</td><td style="white-space:nowrap">A. <code>route_minutes(route) &lt; route_minutes(best_route)</code><br>B. <code>route_minutes(route) &gt; route_minutes(best_route)</code><br>C. <code>len(route) &lt; len(best_route)</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -854,19 +1004,14 @@ best_route = every_route[<span class="num">0</span>]
           <li>第4回のGoogleスライドを新しく作る（ファイル名は「AL2 第4回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -905,7 +1050,7 @@ best_route = every_route[<span class="num">0</span>]
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="alQ5Xhb2VspmHLjRoGyYWsQM0GOYyjtUjRR1hy53FN96IaatkXdnhK6/cVrOmQ8+TtjtVeQooQesIWNomb9OGHYRATqPQzOvukI2IA9MK72YRPynrkYZ4yILtSJBkKx3IFzuAmCm9cDnj/Tj0c6aKlk8LZZqwZLJSRcz3cOtY+ZSGCu4YOF7sSWhEBTJhbhJo976b3HLyU+iKqxfLm+JOmC9baQMyJSUE8SWdzcfyam4X7nAHQJvJzqv0FgiWD4lsL5cBKLDLocD2gO9vurAvywMwyMXsDVr3lA7ZlYD6UKr6hiREZPfBj7+b3P98WSuag5e3ZyPNdN1qJ+kDV/z7W4cFBSU7MkTI3pL6nRaUr31hOP8A0ptZ51nNd4LiXZxVGDxyvtvRxrcUEVFij8jJjttud80ibIhIeDZY5/4OWcJzkCSfFsU/v6GQXlIXslypWxkAFYopoTzuVs3weBJnPjlCnXlyVrc2WQl5WnNcurKylp4Oe/2Vhk8Pz477cGQlxlxFbbxm+mMlJAQeN0eOMv+qsnPo4OmUCVTg1ZmQUaLaOCnLthcugwv7BifuqHVcJsQn85+Z3jpMU6v5KtbrIjKpVzFECyIKHNxigvWWRPF1ZxdhUhipQnXbcFO0skcErt1VHVTl5tknEHqBbQ3YRXrYqJPu99CwUSr/TEpQPLWTAd6DFbsxhNPEd/4d91HjRSWqesCjYBd7/UEMroigAOY+H4oTNF9vJADR6nKV5NFS5aDWDK77WOXL4P7aKbH/e+u6m63HxyYXbMJmanFXSY6F9tilLmid5BLmbSfXcZkdWG1vZ9Rrfe9dGjRD9hS7Q3PWocbQEtDmBFMBndKpaPABVCswFSsuSR8dTTxoVsAZ4IL3GAiFfMy4gqP9QbLxT3MlzTC8Ve1rC3bb+Qc8m3AiC0wHYj2LVGGTu0d5ZO22xcMDkfLMPO00p+Qv09GZ2dcMLe+m4WsQUEdVND1f8AFNQX9dRMogy1moOTTyg8ozMnFdFNMef3Wbh92K815HbzGBrMMY4bplB4JFc7TLxTa/GvbqHq7GObxb5LJepyTVCib4KGO8BSDnEg7zt0qlyr5e2mcBpDi3ylMRtnn4pl/u/hjsWcH7sJdy6dbFTyaphM2UFeqUGt97bRQ7i7KNC344u5l2doxF6ABRpifih5LAhcLm7+dGoAa9ojVWwhGNUS7+nXhsocT+gWuEp5Nol6n5I9kTbRMvPm9SOKS9z8uyoyXUUSLBk9CO4hDgg3+fdcyDeBwN+RLjl1ec0B5O06gafQVs8KnsosUj4lDUmoGtMqlAHT1KJLYBs/YmigWMTyWwZGjS4UHT2QZJYuB1XpYald5VI5PGoH+Xz5O6jFh8wGcdwvD6K/VfyfVCMQQPna1Q9fkNJPmoAwbH1Uhxe8IOdGeTnPhO7s2HY43UBbWLKexSIVXsVcz7aYfC4X/4n5NItPUtvwQVe7YCqBtzQ+OMjJbIwrvw4R10iCiPO7OCN83oBiaFO9icBzzbAX1bZeEeBcVer9v4nzeRofgoeo38rw8K89hMIuXAIGKF5y8VhViAlkMZdsAjzQ22N0b1Y4ISxCbQqTSDaNN94tb07G6tCRMtrfUZ4MWefHWv7G0+cVKiSAP2BvNpPgnWVWboz9/1pXCek0NcV8adQwpYEI8wiGmZgcQtaxcJQF2Ery3MQHu8NXRqDpuo0rIl6AIJACNL8iVYFYVXdVN7uraDLxjNHJqfUKQTzigR2lI5Su0q6ydLeX6GEXmh4UIyvI2P+owp/sj/sziRrI/MRXJU09+ODQigpzlKe5b8Osr+GmWvni3T+SMTZenaV2uRH0rIDhYpIk9OTNVzzD8DZ0ucY3PamI8KsxiOtb/Yse89ebV5qzGRp3etvs29Ic+OMT/qoF+tCZ/iTSMdpYLWcxHya+JXCHXGxcI+7LE7sWz0Lhg7WxGbmJhfPaG/NTA9bTJt3oyETyGO2Zt9bjXkqyorcLsZ6TgrcjPNGCrcFULM6g0eFbfYmT2G26ltwSxMnTy3x2n2nbRtJ02BKPRpxnLXg1AEB/u+BW4JLQWYwveQ9C0edUSgCSgQeUv1v8L/uHKPoNHAB5EloqgpoifNMQTDZIpoebbOhTCEzsiinyrVHx5KwDWCpQ2a6tzAe5tUuZ76zjokTyue00d5e5XyqZD+OiDuixqg+GnJkVVdDtDoPKSxIxzEzqHNCYENz59OVfQkgZknztmMUYFbrM1k4ykN4ZZ482iT05kS7gQTevXOHiXqm1UnO58GSF2ck1PrJm2X/4HFUzAAaY7l3EBq5NbB/4Ko1qqJ+3EgHfJZsPyUFDex92VGGBsktlWW91Hr/XR6F+/efp7vEi1BShMjVGIefm4G0mF1nY0UKM879E59wIf69bGw86Td9rUhxb3fit1MDgMtIe1WM+0d2V7pP2P/g0H1pCGm5Ub4hXhdmLNveaBcfL6TJCEXR/n2mhT+ARNsqwuVidahMhDpemHy44yj42xF5Y2XaJjHJY8wVga5DOyRhf0nlrQMjiCz92fUiGvbfcZwD2K+ViYMIe6YLhtUxaFAcIbrNbNjdZqtnowQI8aZ8bhebyrRF6bIpYcAgR3EpEBomTXwKHJUep4bDe8IG1SC6AKUcMNcT/YvyOeeyHqpRia08HUfVjGA7VLoQkghyzwEWi6gHXNgnqWDzIQYjBcK672OcnQCPzqMb8uQD2TAKOhBi9HFffDv72lzOaWqGkGQEoUK5uCMzWuu7qzEqMdNh1kWSIIZE/3SZN3GNazTl0rKSqm+hYXLwT38J1qAyfzq2PHaDJYpqtAJm+WYRn4g1LlxM+EPxFxmuOk9Eom2o/pI5qUjLTA4SMoNFCoYD6e+UNgG8UyaSrNMW7uBAWywIXLlaHz/PJuZwxNHlKHt5lcfO07SGBxwaUm08Bc2+F960c1qmdglpBBZ9UW2t+k20AkCxA2mz2U/OnA6fPN+zdxAnmnXTkWqyg5E2fsFpsyGqvIQuCD2jPW80cdPb8WE4NgHw0mnFN8gcDjO4kwXo6EmeQVGN4fobjRZ2Av0Eb9FfOwTPxKBqeT75PrvgMR8K76+WMFkglHENYxsxNkoBCT9u+TO15T3wjaiJurob3Kw9kiET2+E4uHh6yjF/Vc6P+oooLFcoX7x9TO+F2EwlO0IwvkLuecC37iV9TJPwGU5F6gK9yLwoVVEzt6eZnjmT8i50lePtut754+RCcuMRT8U584DQM98YLDCAu/xxKcGwK+OLjg7aUnP1Kg474eZMf4SosST1tGZMq1ZISszfi6KquRNRByWO87xpGZe6novnKXFS8UJEgknPZwu6OPJp/L4PQj+GkItcRtlAVRHdnaUTUiQRQBkku327YLRRansmbAFm5theVUShOj0T9f8AB5FdSVMUIVSpAShhVZXnIqdz4WvnHXvyGSKJ4Wha1idG03a6qQBkykCxiFEDG/YCyqWMRvq12TCPayrWD5vBC1lUxWpTvYpH5UAkjPgEDrrVDc+hd4oxUPomtrUokfNBJ6NZYQHE9qMG572jxP0NsqWoY7NxzKgP50ZYosj1WB7XPV5iY+XXbyYKNLn072RtTFMY/GO8Vrve9Q3wnnDsevNhANDDAVyClTrCd31UpJKO4eMsxtTPWHHDqa+keXNdTX3HwH8/kQwKd91+aLEtfeTtPsJsoQwNM4I2ZeRcOyqauaT+cSMWcMWOoIfPLR5PjQeJCRHK1vs+WL8akfqrMiEVD0mtrXW5bziaSn9KEbEQMHy9A7lNekakhADj726JFw9Y8W4hIzDSM/7Br1lmwEjec+tkTOxWIByGfKxbkQgE0WkEThzubmAMZBDlm4VxHBJjlXDE/8CEOXBwoFGmikKzkzq4EUHZ1fwBV+1sRAvmt/9/GMHNl12uE4R2D7XwwQ02asp8gPnisBSC3miI5aqQJj8CL7eQHiXSHvLRJ++dhKEkcZmXJSSieI7qcnIB4Mj4EdhstF2P7krExhii8vMRZ+gNwLar80vwNMp0GlUoW1QmjE02CiLvnORaOhir38eOcHo6KFbSITo4dXFAzNENyGmYvBIZlGqAP8WjiAaRhn4Bxl+g9eMlcEAlKCqLLuOC/WrBxXOhBT4h/XJ1o4vCqg0l2cfPKfzr82eVy2r/o3za5axhFW1P6jGt9Cez9SZ/fqFC/mCrPmuc+Hnls6bFP7TWDWe2HPwoqN1b8p3qPDMm6eTkOQ8KE9fVhQlCu5XIIT/RQ+fnG7oWRs/O/ikdd9nxsEaWCEtlW79U51VcsSrabSkwLuJeA2N+PXJjUhwmkpyQOeyOTsgP905/ma9MYDY4I12WjyfvJhaBtz98yAzuB1fuaPoytRzHa1CIdkO/xd5rcf7kGhdFijLL97cvSxjol4JwD9J4gQb7bHMWHUVYqTEnIIgxZBsxSPR7+hOzZOKgNRCQ1UPSRzd6eUjAIEnIGuXQqBau/DjtAr8Ablqh5Be5gq18yliQZTVgL89ROpQUcBvdumkkn4xRnVYZ2agXlZEke9AIm3BP2xT/ph/4kM0QlAxkPiP/nz4CfN/qJBVcf02fNL0935lqUFtcpexspmBmvgLJa1/EBQQI85NHlwddVrF1sJYe1BbcrHlguJFFDpesf5JUwwBaZQtSqhjvnj45HX701wwqgk41OGRkkhCo1CQG+5cHNWBL5KfAEmG1LBnkuZxUlxyNjxrNjQ5sOKlA5synOdjrMi7dF34ncF+ot1yJsZkR70kdI2M2TWWJJc9Q7X1spQqyuoWBjFvTN3pbp8U96PhGbrU1LAfaC2NpLeozgLwZuY9U6+jOVaxlDE6wrokXqvHQkuW7/pZZim3pSbDS0M9NgmUFFgCdy/veEBwAwCiLsEqXedzMjCW947BvM8Mv+sLvrig5zmo04L7X60wgsZx7jBs6U4fiqQYWEZEEcRgp6JnBnKceTLS31FwuaxfebCFGWSyeaRn1m34HGkKzO1h97Skkp5hbNGEuN7zixfOoHjrImYCbpdeNJrp1Xt+Dd7I2gEkUVuuQXwb5xhcXcVNrHsogI75Wfe6er3xeHbfNhOjAvcraa88J8ZmFzNijOBwvH44ZEj2+mGJNLUvgWncLWVUMtEo3VAsxP/z4GxbkgTAVRn/pr/LIUXoVd+uyurmCdVz9jMpLSLAUa4Tq3uLJ5p5xekX8Dtb0blmQ+ZmX2yG3SgEPREABaSQqQpqpzFh2NXh7zCwDn2QTw4y2QpuebPBGki+yCv4G7mNiqzY9eETD7Ykvsi3KdKLs2/Gl/nmDD8rsLBoAZjnRbg77Cd+cNlmZxXKW2ya+LCO1ERAt9bfzfcPbDtmZ8r12sQoeHpki7gCoOMSgCTAfkX6e+9HV4BMf7aSYRbprXX5X2YyDY+4+SzDg9E5T2MWouNGmbkq/xyoRBeNaz6/e5qEdfdPciTb3Ww2LGi9nOl5JVq9g6A9hk1/eMavnozyJq0joVKdmtMvUnBB6ufm3GJlcUL60OhiDWCY/GoIN/DxRJxnkOGz0e/Sd0ZErvtcbFsjlMWBdYv7jU+WFdkm4l3fzrixY1rneG+I6Bv7aPsVPpEbgyd1W29mb4JRV8Ip+721IRVmHlb+DAU9NtCCkGUQSUFLdYMygibJDlkMYyHn3/Lh/I148PsLw4uQN2X3M6E4p0C3SWzfgqK+MEO47fedkxEspKTspWG1E8vNUUo9LiEUgif/5kVgVtZrq2xeoATyUIHKwrVQdK2E7w66zgwGIfN6VDV0oksiIaO29Jdun4UIvIZQ6XO+vLeXGV4ED0nCwTEQ0c3Cbmz2OVlh3pTbw+j6/3QHIpTr56jkf0UrexuSiqeu/O3YGXRXQgzmJHN7AcDiqRhZQl6hROFHcIB3/IVv6bI9hCOWjtH2bjqQuOh402BfV8kjSkcUvqHIX6z9LYxYalUHEFgu16bOJ1Dp+4zsQeYcuvEhEE4bS84kpWXbG5xUAMIsYDuqluDm1b5d5LUo0k1eZrWqMIU6hlFkAd3GUBx81Mp1+SlR2i7vFN+pf/rOQ0n5HYm1FElp2X45eozLkm01KokTWpO38vPC224SCB1+w/nqp5aaO/wETrZq3F7nwPjvzPa1iErGRSFQfYeSKnxRqGKwPdoW33XERfgkeQh/CffQiOfJ3QKo2ywCn+eaz9WVRXmWlOH18ZojUDvaZZMrY+Z4TfUU72A8x0BLmq9DkLpL4InprFxhVZUsO6YRITUejsxYBG6ZOeSE+1/TSJwUPc7Hu4qo0NqZlTi1MBaaAG/x6msSrsD/bY5te7EfnPSQWBgRkMXhFisaxNwlzx/GvtCXJWiKwYOE4MU0+76Zq0Ub8x7ixXJ+ew/4kX0ZjmDC961LmfiJHfggayeK83W4rrepmqJTnkS193KS9zsFsv4mmiZM0tcb+VdNuJo5n0Z6yQ8K+ha4swldsLxVHZB5/7ReLWRavNKH1H2a3dJIwHNXcijsVESdFtZSs8ekbT9eM28IOkDE+FCCjExmnudCxADUPGcdC64ehhPkqFW6U5MGcXcOvrfhgXkdfisirFdrq0SfwEWVGHYsLpaWdSZLLjNrO3HQ6iGHil/qSLCLnziNGRvdvlGX6Z2w/sZKsLXWcW6ysO6kMdQWyyZxxyXlq8t3b+k8BszDAssQzfXFXRENV1flY8Z2C+o1YSXHVTQw9J2VtQy2q70cYYqEzawomCTO7STe404HjREzMlw5d/zxo2CVsW4FAMdnlJMILoyMp5ZDhA/yC07f0TVi9ds94ixSVKKx94+yby5+ezp2VVgxA+fpmZEHd0K5PCt9C6qJfMp4C2qXDHGelsKNLP1KnYzao+CS1BR9mUyKOT+0UHyXyGX7sjOBltb1ghpTpNvcYj/j0zBNC/4s3L2EkAFccwYJwnztneyzecbdcSMmKkLUYVv0snuXkWnOgzN4DIL2HaYoZxfcvtOcc0THWdsJk1tBQEnUPd8zC8Up7eAITY7OEpcEAwUmYNq0Q4qBo+rp3HLk9wf8/pbL0RnG3ltx8rRHqQx7eDNkNFiuKkZ44I8IJT5gVpKiwhO8Skhqfk2kvPEwQEvRRmcO/jxKbl3dkjpEaQp7F8WdohG6ZIDf7NdGZCX+fcx7fT09GMe0mjQ8CgIGH9OJPgKg60MOTZW15/5f10VyYVN6g8rIliSKR8Morz4RxR3bhYR08yuSKTJakcI+5HayLn0TjmaBe4YENStQSeOUbmWc/oYataD4j3JSiRBq4aItZSQ/oAFAoMxBYqn6jZ6vfuIwUSY2KxYoXwQL/ON0NNUW38VMaFRmKaCLNnP2dY+dlnBZ3I8fqbJ7U+ETJunhGL4Y8WR3a+b5xQ62JO/At72dpLiNnvSjR2qhpRaAmod6A1qI+PBplQdNpHiPRmGX5j7o9L/Jy9PYfG2GcpO/oakocYslCWpQm3g/zdAYbxebtFgoNUPpnrYtykt+4vjmKg5eK/ee+l7k4v2FcjY2nastd0R0Z91IXhd8fKcmI4DkbM5NZDy61yT8mN3v3YwWeC2eDm9lgrVaN2ioMAxdsN9YxY7W8UGxPnGRSTPTokrUJElJWHPE1mFV01FT2DHWylKHRVBRXj62E+JdMSz7ejG3XUiGE5urL54Q5BeX+DIDGfFdUrcNBVCcoFy1gdXKY42+dA10sBOm3SSaU/JHWSO4k5Fm4pYxxakjYncE3CXDbeKt+KRQbCPmbVAQ9oQsx5m0O1+1avEkvpxCNZ+b33LjZ4Og1cijOoQ5YnIVSnRkJqqkCtMf0E1/yYmIwZBfd93KpFahTzmUrWpBZFheGDeJFJ+68f4HH37ipX+zPd7Z02PFaGSYHkaTAXmZoNU8/NOEA0Mae1OB2//nx08fKvG/xn2fyavLUxY/hYxV/6NhawilVmuH/pQtVOhSMDWWuDXkPJzIKBFZrjPJMSdMKrKSlZrjVZggHtkXyiEQHsm/gYK+xYVYptGtBiHUgfWKM7WHKd5cMpQ/qXWp/r1lmC2CUW2RQbrAwxywiyOSt+pz3VdVgO+UA+eWNDMMZB3zFudE4N4BpqpoeOi7WSh8USm8JE95Sbb1Vd3hUyf/cFgJWXKHdL8ApHxEN22tawVJlBTrf3azk+4ZYhu94hAnKfPWsjTiZpe4vHJVNtFNEWt/4yu03urUL50XBWGt3EsxZZOPzmmhi+8qbcKddPQw3JHZ9FQ/EW5S2QsK7YbORjI7WyeQcR1TH626cNq2QW/GR5q1FQck3K8xM47a/igNeTTvgHzYvC0iaDpQGX8x8UvjVke089dAVw83pt5mDATaaKReBeOXZxQSVX+uRsIVMFTG8NZXQNNYLMBVo3Egj186EcdrTbkuyyew8H29tI3iRmJUlaXoldT35xbC67xiFKa5ZzLUyef+PuPoWS0T/PE4vKNjf+ClCLSMGRz1Tpymvo0AOC3vz7JMwMYR5VXv3aAHN9PagJDtZZgB8aPmntju0TbeQ8apeZlMkmanPYJiav8kJzoVSHk3KHFzZNbCzmaymox5qXmeJrDOfuFEdrfX8iiFrieK4QORSIvo3/6R+AxCsTak628cFYesxeF7uqcRmI2NOLnxn94s4qS82GCfgZaJBBnu+nUb4KDgQsWfEHQTElWkPaSG7BuaX17hR5umodFe5rjl67qKxXFMuzN7dgjH6zhsOKoDCUS0SA/Wm2Xm8GLhSmkHguPUr6jlIwWu3cTu3FoHCW26IHkyUSGrviVUT8/WP4HWgf9vLUm2h2TsWA/jgSgfqE8ulgdU5T4F/wQhYVquB6YkccevxLlzLhp3rEHCO27ZpNWgeSd6M9RN1NPt5H5wwT9KwnSQLB/ZduRHLB9bVmiEAOUdANLRU91V+UNCYK5mL0A/LqRRP6U+yGlV2sPCtPPRU+AsXI5ep7exIzUMvVLfXKfEJnahxif0LUuRW18y46KG30TV/IgzOV2EpyPb37rYQh609I8SoEmmHxjjNrgeFHmeAww1UNg21R8JNt2U1X0lja+LuiSfIh466ts8LxUtV0c/EtNXSorNBTyRm3TAsfKDSyvisQc62rUfc6dku33hhjF/4tcQMwnBcpG+zGnVzGR3J/F/VKaMHxATpkQJ6czZrCtWy1/BIYNoOzJ9Ax9XA=="></div>
 
   </div>
 </section>

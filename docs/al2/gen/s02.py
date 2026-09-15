@@ -3,7 +3,7 @@
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -262,7 +262,7 @@ ex1_body = f"""      <p>前期に幅優先探索で解いたのと同じ形の�
         <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>stack.pop()</code></td><td>いちばん新しい行</td></tr>
       </table>
 
-{code('AL2-02-ex1.py')}
+{code_pair('AL2-02-ex1.py')}
 
 {run('a02_ex1_result.png', '深さ優先探索が見つけた道は<strong>18歩</strong>でした。'
      '同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。'
@@ -272,7 +272,7 @@ ex1_body = f"""      <p>前期に幅優先探索で解いたのと同じ形の�
 ex2_body = f"""      <p>幅優先探索と深さ優先探索を1つのプログラムにまとめ、同じ迷路で走らせて比べます。
       <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。</p>
 
-{code('AL2-02-ex2.py')}
+{code_pair('AL2-02-ex2.py')}
 
 {fig_visit_order()}
 

@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品4 自由テーマ ─ 今回の到達点: 入力を変えられて、結果が図で出る</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第13回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第13回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -153,7 +153,7 @@
       <p style="font-size:0.95rem">
         2つとも、後期に学んだアルゴリズムを1つのプログラムにまとめたものです。
         自分の迷路や配達先に書き換えて動かし、その流れをフローチャートにします。
-        テンプレートA（例題1）は完成したコード、テンプレートB（例題2）は穴埋めです。
+        どちらも「参考」（完成したコード）と「実践」（穴埋め）の2つで載せてあります。
       </p>
     </div>
 
@@ -319,11 +319,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -346,7 +350,135 @@
       <p>プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付けるゲームです。
       <code>cost_map</code> と <code>player_moves</code> を書き換えれば、自分のステージが作れます。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-13-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-13-ex1.py（参考）</span>
+<span class="kw">import</span> heapq
+
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">5</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">5</span>, <span class="num">1</span>],
+]
+
+player_moves = <span class="str">&quot;DDRRDDRRDDRRDR&quot;</span>
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+<span class="kw">def</span> <span class="fn">move_to_route</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR...&quot; のような文字列を、通るマスの並びに変える&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;U&quot;</span>:
+            r = r - <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;L&quot;</span>:
+            c = c - <span class="num">1</span>
+        <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
+            <span class="kw">return</span> <span class="kw">None</span>
+        route.append((r, c))
+    <span class="kw">return</span> route
+
+<span class="kw">def</span> <span class="fn">route_cost</span>(route):
+    <span class="str">&quot;&quot;&quot;通った順番 route の合計コストを返す（スタートのマスは数えない）&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+        r, c = route[i]
+        total = total + cost_map[r][c]
+    <span class="kw">return</span> total
+
+<span class="kw">def</span> <span class="fn">solve</span>():
+    <span class="str">&quot;&quot;&quot;ダイクストラ法で最小コスト経路を求める&quot;&quot;&quot;</span>
+    distance = {}
+    came_from = {}
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            distance[(r, c)] = INF
+            came_from[(r, c)] = <span class="kw">None</span>
+    distance[start] = <span class="num">0</span>
+    queue = [(<span class="num">0</span>, start)]
+    settled = <span class="fn">set</span>()
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        total, current = heapq.heappop(queue)
+        <span class="kw">if</span> current <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        settled.add(current)
+        r, c = current
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+            nr = r + dr
+            nc = c + dc
+            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> total + cost_map[nr][nc] &lt; distance[(nr, nc)]:
+                distance[(nr, nc)] = total + cost_map[nr][nc]
+                came_from[(nr, nc)] = current
+                heapq.heappush(queue, (distance[(nr, nc)], (nr, nc)))
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route, distance[goal]
+
+<span class="kw">def</span> <span class="fn">draw</span>(route, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        line = <span class="str">&quot;&quot;</span>
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> route:
+                line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;3}*&quot;</span>
+            <span class="kw">else</span>:
+                line = line + <span class="str">f&quot;{cost_map[r][c]:&gt;3} &quot;</span>
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;  コスト迷路ゲーム  ステージ1&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;  1 = 舗装路(1秒)  5 = 砂地(5秒)  9 = 沼(9秒)&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  左上(S)から右下(G)まで、できるだけ短い時間で行こう&quot;</span>)
+<span class="fn">print</span>()
+
+best_route, best_cost = <span class="fn">solve</span>()
+player_route = <span class="fn">move_to_route</span>(player_moves)
+
+<span class="kw">if</span> player_route <span class="kw">is</span> <span class="kw">None</span>:
+    <span class="fn">print</span>(<span class="str">&quot;プレイヤーの道は迷路の外に出てしまった&quot;</span>)
+<span class="kw">elif</span> player_route[-<span class="num">1</span>] != goal:
+    <span class="fn">print</span>(<span class="str">&quot;プレイヤーの道はゴールに着いていない&quot;</span>)
+<span class="kw">else</span>:
+    player_cost = <span class="fn">route_cost</span>(player_route)
+    <span class="fn">draw</span>(player_route, <span class="str">f&quot;プレイヤーの道: {len(player_route)-1}歩 ／ {player_cost}秒&quot;</span>)
+    <span class="fn">draw</span>(best_route, <span class="str">f&quot;最短の道: {len(best_route)-1}歩 ／ {best_cost}秒&quot;</span>)
+
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  プレイヤー: {player_cost}秒&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  最短:       {best_cost}秒&quot;</span>)
+    score = <span class="fn">int</span>(best_cost / player_cost * <span class="num">100</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;  スコア: {score}点（最短と同じなら100点）&quot;</span>)
+    <span class="kw">if</span> score == <span class="num">100</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: 完璧！ 最短の道を見つけた&quot;</span>)
+    <span class="kw">elif</span> score &gt;= <span class="num">80</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: あと少し。もっと短い道がある&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  評価: 沼をよけると、ぐっと短くなる&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-13-ex1.py</span>
 <span class="cmt"># 作品テンプレートA: コスト付き迷路ゲーム</span>
 <span class="cmt"># プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付ける。</span>
 <span class="kw">import</span> heapq
@@ -386,7 +518,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
             c = c + <span class="num">1</span>
         <span class="kw">elif</span> move == <span class="str">&quot;L&quot;</span>:
             c = c - <span class="num">1</span>
-        <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             <span class="kw">return</span> <span class="kw">None</span>                    <span class="cmt"># 迷路の外に出た</span>
         route.append((r, c))
     <span class="kw">return</span> route
@@ -423,10 +555,10 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
             nc = c + dc
             <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
                 <span class="kw">continue</span>
-            <span class="kw">if</span> total + cost_map[nr][nc] &lt; distance[(nr, nc)]:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
                 distance[(nr, nc)] = total + cost_map[nr][nc]
                 came_from[(nr, nc)] = current
-                heapq.heappush(queue, (distance[(nr, nc)], (nr, nc)))
+                heapq.heappush(queue, <span class="blank">____</span>)      <span class="cmt"># ← 穴3</span>
     route = []
     node = goal
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
@@ -481,6 +613,18 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
     <span class="kw">else</span>:
         <span class="fn">print</span>(<span class="str">&quot;  評価: 沼をよけると、ぐっと短くなる&quot;</span>)
     <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>迷路の外に出たかどうかを調べる</td><td style="white-space:nowrap">A. <code>r == 0 and c == 0</code><br>B. <code>r &lt; 0 or r &gt;= rows or c &lt; 0 or c &gt;= cols</code><br>C. <code>r &gt; rows or c &gt; cols</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりのマスへ行く合計が、表の値より短いときだけ書き直す</td><td style="white-space:nowrap">A. <code>total &lt; distance[(nr, nc)]</code><br>B. <code>cost_map[nr][nc] &lt; distance[(nr, nc)]</code><br>C. <code>total + cost_map[nr][nc] &lt; distance[(nr, nc)]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>（合計秒数, マス）の組を入れる。秒数で並ぶようにする</td><td style="white-space:nowrap">A. <code>((nr, nc), distance[(nr, nc)])</code><br>B. <code>(distance[(nr, nc)], (nr, nc))</code><br>C. <code>distance[(nr, nc)]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -497,6 +641,135 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
       <p>配達先を並べると、貪欲法と全探索の両方でルートを作って比べるアプリです。
       <code>places</code> を書き換えれば、自分の配達先が作れます（8件までなら全探索が使えます）。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-13-ex2.py（参考）</span>
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+places = [
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
+    (<span class="str">&quot;田中宅&quot;</span>, <span class="num">12</span>, <span class="num">3</span>),
+    (<span class="str">&quot;鈴木宅&quot;</span>, <span class="num">2</span>, <span class="num">11</span>),
+    (<span class="str">&quot;佐藤宅&quot;</span>, <span class="num">15</span>, <span class="num">12</span>),
+    (<span class="str">&quot;高橋宅&quot;</span>, <span class="num">8</span>, <span class="num">14</span>),
+    (<span class="str">&quot;伊藤宅&quot;</span>, <span class="num">19</span>, <span class="num">1</span>),
+    (<span class="str">&quot;渡辺宅&quot;</span>, <span class="num">1</span>, <span class="num">2</span>),
+]
+
+n = <span class="fn">len</span>(places)
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((places[i][<span class="num">1</span>] - places[j][<span class="num">1</span>]) ** <span class="num">2</span> + (places[i][<span class="num">2</span>] - places[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+<span class="kw">def</span> <span class="fn">route_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す&quot;&quot;&quot;</span>
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> <span class="fn">tuple</span>(visited[<span class="num">1</span>:])
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
+    best = <span class="kw">None</span>
+    best_order = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        value = <span class="fn">route_length</span>(order)
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best:
+            best = value
+            best_order = order
+    <span class="kw">return</span> best_order
+
+<span class="kw">def</span> <span class="fn">show</span>(order, title):
+    <span class="str">&quot;&quot;&quot;ルートと合計距離を表示する&quot;&quot;&quot;</span>
+    <span class="fn">print</span>(title)
+    names = [places[<span class="num">0</span>][<span class="num">0</span>]]
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        names.append(places[city][<span class="num">0</span>])
+    names.append(places[<span class="num">0</span>][<span class="num">0</span>])
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot; → &quot;</span>.join(names))
+    <span class="fn">print</span>(<span class="str">f&quot;  合計距離: {round(route_length(order), 1)}&quot;</span>)
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">54</span>)
+<span class="fn">print</span>(<span class="str">&quot;  配達ルート最適化アプリ&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">54</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  配達先: {n - 1}件&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;配達先の位置&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">34</span>)
+<span class="kw">for</span> name, x, y <span class="kw">in</span> places:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="fn">pad</span>(name, <span class="num">14</span>) + <span class="str">f&quot;(x={x:&gt;2}, y={y:&gt;2})&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">34</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;地図（左上が (0,0)。E = 営業所）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">16</span>):
+    line = <span class="str">&quot;&quot;</span>
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+        mark = <span class="str">&quot; .&quot;</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> places[i][<span class="num">1</span>] == x <span class="kw">and</span> places[i][<span class="num">2</span>] == y:
+                mark = <span class="str">&quot; E&quot;</span> <span class="kw">if</span> i == <span class="num">0</span> <span class="kw">else</span> <span class="str">f&quot; {i}&quot;</span>
+        line = line + mark
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
+<span class="fn">print</span>()
+
+began = time.time()
+greedy_order = <span class="fn">greedy</span>()
+greedy_time = time.time() - began
+
+began = time.time()
+best_order = <span class="fn">brute_force</span>()
+brute_time = time.time() - began
+
+<span class="fn">show</span>(greedy_order, <span class="str">f&quot;貪欲法のルート（{greedy_time:.6f}秒で作成）&quot;</span>)
+<span class="fn">show</span>(best_order, <span class="str">f&quot;全探索のルート（{brute_time:.6f}秒で作成）&quot;</span>)
+
+greedy_value = <span class="fn">route_length</span>(greedy_order)
+best_value = <span class="fn">route_length</span>(best_order)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">54</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  貪欲法: {round(greedy_value, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  最　適: {round(best_value, 1)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  むだになった距離: {round(greedy_value - best_value, 1)}&quot;</span>
+      <span class="str">f&quot;（{round((greedy_value / best_value - 1) * 100, 1)}% 長い）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">54</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-13-ex2.py</span>
 <span class="cmt"># 作品テンプレートB: 配達ルート最適化アプリ</span>
 <span class="cmt"># 配達先を並べると、貪欲法と全探索でルートを作り、比べて表示する。</span>
@@ -642,13 +915,13 @@ best_value = <span class="fn">route_length</span>(best_order)
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>営業所（0番）を除いた、回る順番を返す</td><td style="white-space:nowrap">A. <code>tuple(visited[1:])</code><br>B. <code>tuple(visited)</code><br>C. <code>visited[0]</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000127秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
+        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000114秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。</p>
     </div>
@@ -690,6 +963,7 @@ best_value = <span class="fn">route_length</span>(best_order)
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">選んだプログラムの流れを<strong>フローチャート</strong>で描く。処理は四角、判断はひし形、くり返しは戻る矢印。アルゴリズムが働く箱に印を付け、自分の入力と出力を書く。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>開始から終了までの流れ（四角・ひし形・矢印）</li>
@@ -805,19 +1079,14 @@ best_value = <span class="fn">route_length</span>(best_order)
           <li>第13回のGoogleスライドを新しく作る（ファイル名は「AL2 第13回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -915,6 +1184,9 @@ best_value = <span class="fn">route_length</span>(best_order)
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-13-ex1.py</code></td><td>穴1</td><td><code>r &lt; 0 or r &gt;= rows or c &lt; 0 or c &gt;= cols</code></td></tr>
+          <tr><td><code>AL2-13-ex1.py</code></td><td>穴2</td><td><code>total + cost_map[nr][nc] &lt; distance[(nr, nc)]</code></td></tr>
+          <tr><td><code>AL2-13-ex1.py</code></td><td>穴3</td><td><code>(distance[(nr, nc)], (nr, nc))</code></td></tr>
           <tr><td><code>AL2-13-ex2.py</code></td><td>穴1</td><td><code>distance[here][j] &lt; distance[here][nearest]</code></td></tr>
           <tr><td><code>AL2-13-ex2.py</code></td><td>穴2</td><td><code>tuple(visited[1:])</code></td></tr>
         </table>

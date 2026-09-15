@@ -18,8 +18,8 @@ heapqとは #sec-explanation
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品2 路線図の最短経路アプリ ─ 今回の到達点: 駅を選ぶと、ダイクストラ法の最短の行き方が色で出る</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第6回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第6回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -279,11 +279,15 @@ heapqとは #sec-explanation
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -307,16 +311,14 @@ heapqとは #sec-explanation
       <p>ダイクストラ法に使う前に、<code>heapq</code> がどう動くかだけを確かめます。
       数を入れる例と、<code>(時間, 駅名)</code> の組を入れる例の2つを実行します。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex1.py</span>
-<span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
-<span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex1.py（参考）</span>
 <span class="kw">import</span> heapq
 
-<span class="cmt"># --- その1: 数を入れて取り出す ---</span>
-numbers = []                    <span class="cmt"># ふつうのリストを用意する</span>
+numbers = []
 
 <span class="kw">for</span> value <span class="kw">in</span> [<span class="num">8</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>]:
-    heapq.heappush(numbers, value)      <span class="cmt"># heappush で1つずつ入れる</span>
+    heapq.heappush(numbers, value)
     <span class="fn">print</span>(<span class="str">f&quot;{value} を入れた → 中身: {numbers}&quot;</span>)
 
 <span class="fn">print</span>()
@@ -326,7 +328,7 @@ numbers = []                    <span class="cmt"># ふつうのリストを用�
 
 <span class="fn">print</span>(<span class="str">&quot;取り出す順番&quot;</span>)
 <span class="kw">while</span> <span class="fn">len</span>(numbers) &gt; <span class="num">0</span>:
-    smallest = heapq.heappop(numbers)   <span class="cmt"># heappop でいちばん小さいものを取り出す</span>
+    smallest = heapq.heappop(numbers)
     <span class="fn">print</span>(<span class="str">f&quot;  取り出した: {smallest}   残り: {numbers}&quot;</span>)
 
 <span class="fn">print</span>()
@@ -334,9 +336,6 @@ numbers = []                    <span class="cmt"># ふつうのリストを用�
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
 <span class="fn">print</span>()
 
-<span class="cmt"># --- その2: (数, 名前) の組を入れる ---</span>
-<span class="cmt"># タプルを入れると、1番目の要素で比べてくれる。</span>
-<span class="cmt"># ダイクストラ法では (今わかっている時間, 駅の名前) の組を入れる。</span>
 tasks = []
 heapq.heappush(tasks, (<span class="num">16</span>, <span class="str">&quot;品川&quot;</span>))
 heapq.heappush(tasks, (<span class="num">7</span>, <span class="str">&quot;渋谷&quot;</span>))
@@ -350,6 +349,62 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
 
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;1番目の要素（時間）が小さい順に出てくる&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex1.py</span>
+<span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
+<span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
+<span class="kw">import</span> heapq
+
+<span class="cmt"># --- その1: 数を入れて取り出す ---</span>
+numbers = []                    <span class="cmt"># ふつうのリストを用意する</span>
+
+<span class="kw">for</span> value <span class="kw">in</span> [<span class="num">8</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>]:
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+    <span class="fn">print</span>(<span class="str">f&quot;{value} を入れた → 中身: {numbers}&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;中身の並びはバラバラに見えるが、先頭は必ずいちばん小さい数になっている&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;いまの先頭:&quot;</span>, numbers[<span class="num">0</span>])
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;取り出す順番&quot;</span>)
+<span class="kw">while</span> <span class="fn">len</span>(numbers) &gt; <span class="num">0</span>:
+    smallest = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  取り出した: {smallest}   残り: {numbers}&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;入れた順番は 8, 3, 5, 1, 9, 2 だが、取り出す順番は小さい順になる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- その2: (数, 名前) の組を入れる ---</span>
+<span class="cmt"># タプルを入れると、1番目の要素で比べてくれる。</span>
+<span class="cmt"># ダイクストラ法では (今わかっている時間, 駅の名前) の組を入れる。</span>
+tasks = []
+heapq.heappush(tasks, (<span class="num">16</span>, <span class="str">&quot;品川&quot;</span>))
+heapq.heappush(tasks, <span class="blank">____</span>)      <span class="cmt"># ← 穴3</span>
+heapq.heappush(tasks, (<span class="num">21</span>, <span class="str">&quot;上野&quot;</span>))
+heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池袋&quot;</span>))
+
+<span class="fn">print</span>(<span class="str">&quot;(時間, 駅名) の組を入れて取り出す&quot;</span>)
+<span class="kw">while</span> <span class="fn">len</span>(tasks) &gt; <span class="num">0</span>:
+    minutes, station = heapq.heappop(tasks)
+    <span class="fn">print</span>(<span class="str">f&quot;  {minutes}分の {station} を取り出した&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;1番目の要素（時間）が小さい順に出てくる&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>heapq に1つ入れる（入れたあとも「先頭がいちばん小さい」が保たれる）</td><td style="white-space:nowrap">A. <code>heapq.heappop(numbers)</code><br>B. <code>numbers.append(value)</code><br>C. <code>heapq.heappush(numbers, value)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いちばん小さいものを取り出す</td><td style="white-space:nowrap">A. <code>numbers[0]</code><br>B. <code>numbers.pop()</code><br>C. <code>heapq.heappop(numbers)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>（時間, 駅名）の順の組にすると、時間の小さい順に並ぶ</td><td style="white-space:nowrap">A. <code>(&quot;渋谷&quot;, 7)</code><br>B. <code>(7, &quot;渋谷&quot;)</code><br>C. <code>7</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -366,6 +421,77 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
       <p>第5回のダイクストラ法を、<code>heapq</code> を使う形に書き直します。
       「まだ決まっていない駅を全部見る」ループがなくなり、<code>heappop</code> の1行に置きかわります。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex2.py（参考）</span>
+<span class="kw">import</span> heapq
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = {}
+came_from = {}
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    distance[station] = INF
+    came_from[station] = <span class="kw">None</span>
+distance[start] = <span class="num">0</span>
+
+queue = [(<span class="num">0</span>, start)]
+settled = <span class="fn">set</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;heapq から取り出した順番&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    minutes, current = heapq.heappop(queue)
+
+    <span class="kw">if</span> current <span class="kw">in</span> settled:
+
+        <span class="fn">print</span>(<span class="str">f&quot;  ({minutes}分, {current}) → すでに確定済みなので読み飛ばす&quot;</span>)
+        <span class="kw">continue</span>
+
+    settled.add(current)
+    <span class="fn">print</span>(<span class="str">f&quot;  ({minutes}分, {current}) → {current} を {minutes}分で確定&quot;</span>)
+
+    <span class="kw">for</span> name, weight <span class="kw">in</span> railway[current]:
+        new_distance = minutes + weight
+        <span class="kw">if</span> new_distance &lt; distance[name]:
+            distance[name] = new_distance
+            came_from[name] = current
+            heapq.heappush(queue, (new_distance, name))
+            <span class="fn">print</span>(<span class="str">f&quot;        {name} を {new_distance}分として queue に入れた&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+<span class="kw">def</span> <span class="fn">build_route</span>(goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から各駅への最短の行き方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="kw">if</span> station == start:
+        <span class="kw">continue</span>
+    <span class="fn">print</span>(<span class="str">f&quot;{station:&lt;4} {distance[station]:&gt;3}分   &quot;</span> + <span class="str">&quot; → &quot;</span>.join(<span class="fn">build_route</span>(station)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;第5回の例題1・例題2と、まったく同じ答えになっている&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex2.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法</span>
 <span class="cmt"># 第5回では「まだ決まっていない駅を全部見て、いちばん小さい駅をさがす」ことをしていた。</span>
@@ -450,7 +576,7 @@ settled = <span class="fn">set</span>()
         <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>heapq に入れる組は（時間, 駅名）の順。時間で並ぶようにする</td><td style="white-space:nowrap">A. <code>new_distance</code><br>B. <code>(new_distance, name)</code><br>C. <code>(name, new_distance)</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -500,6 +626,7 @@ settled = <span class="fn">set</span>()
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">6つ入れ終わったときの <code>heapq</code> の中身を<strong>木の形（親が上、子が下）</strong>で描き、取り出される順番を書く。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>木の形で描いた中身（いちばん上が先頭）</li>
@@ -615,19 +742,14 @@ settled = <span class="fn">set</span>()
           <li>第6回のGoogleスライドを新しく作る（ファイル名は「AL2 第6回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -713,6 +835,9 @@ settled = <span class="fn">set</span>()
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-06-ex1.py</code></td><td>穴1</td><td><code>heapq.heappush(numbers, value)</code></td></tr>
+          <tr><td><code>AL2-06-ex1.py</code></td><td>穴2</td><td><code>heapq.heappop(numbers)</code></td></tr>
+          <tr><td><code>AL2-06-ex1.py</code></td><td>穴3</td><td><code>(7, &quot;渋谷&quot;)</code></td></tr>
           <tr><td><code>AL2-06-ex2.py</code></td><td>穴1</td><td><code>heapq.heappop(queue)</code></td></tr>
           <tr><td><code>AL2-06-ex2.py</code></td><td>穴2</td><td><code>current in settled</code></td></tr>
           <tr><td><code>AL2-06-ex2.py</code></td><td>穴3</td><td><code>(new_distance, name)</code></td></tr>

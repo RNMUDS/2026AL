@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品1 迷路の探索アプリ ─ 今回の到達点: 変な入力で落ちず、例題と同じ歩数になる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第4回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第4回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -294,11 +294,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -322,9 +326,62 @@
       <p>6つの駅からなる路線図に、区間ごとの乗車時間を重みとして書き込みます。
       重み付きの隣接リストでは、となりの駅を <code>("駅の名前", 時間)</code> という<strong>2つ組</strong>で並べます。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex1.py（参考）</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+<span class="fn">print</span>(<span class="str">&quot;重み付きグラフ（数字は乗車時間・分）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    parts = []
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[station]:
+        parts.append(<span class="str">f&quot;{name}({minutes}分)&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;{station}: &quot;</span> + <span class="str">&quot;、&quot;</span>.join(parts))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を求める。つながっていない駅があれば None を返す。&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        here = route[i]
+        next_station = route[i + <span class="num">1</span>]
+        found = <span class="kw">False</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+            <span class="kw">if</span> name == next_station:
+                total = total + minutes
+                found = <span class="kw">True</span>
+                <span class="kw">break</span>
+        <span class="kw">if</span> <span class="kw">not</span> found:
+            <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">return</span> total
+
+routes = [
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;渋谷&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+    [<span class="str">&quot;新宿&quot;</span>, <span class="str">&quot;池袋&quot;</span>, <span class="str">&quot;上野&quot;</span>, <span class="str">&quot;東京&quot;</span>, <span class="str">&quot;品川&quot;</span>],
+]
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方を比べる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="kw">for</span> route <span class="kw">in</span> routes:
+    minutes = <span class="fn">route_minutes</span>(route)
+    <span class="fn">print</span>(<span class="str">f&quot;{&#x27; → &#x27;.join(route)}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;    乗りかえの回数: {len(route)-2}回 ／ 合計時間: {minutes}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;直通（乗りかえ0回）がいちばん時間がかかっている&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex1.py</span>
 <span class="cmt"># 重み付きグラフを隣接リストで表す</span>
-<span class="cmt"># 重み（おもみ）= 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
+<span class="cmt"># 重み = 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
 
 <span class="cmt"># となりの駅を (駅名, かかる時間) の形で並べる</span>
 railway = {
@@ -355,8 +412,8 @@ railway = {
         next_station = route[i + <span class="num">1</span>]
         found = <span class="kw">False</span>
         <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
-            <span class="kw">if</span> name == next_station:
-                total = total + minutes
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
+                total = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
                 found = <span class="kw">True</span>
                 <span class="kw">break</span>
         <span class="kw">if</span> <span class="kw">not</span> found:
@@ -380,6 +437,17 @@ routes = [
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;直通（乗りかえ0回）がいちばん時間がかかっている&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いまの駅のとなりの一覧から、次に行く駅を探す</td><td style="white-space:nowrap">A. <code>minutes == 0</code><br>B. <code>name == next_station</code><br>C. <code>name == here</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>見つかった路線の時間を合計に足す</td><td style="white-space:nowrap">A. <code>minutes</code><br>B. <code>total + 1</code><br>C. <code>total + minutes</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -395,6 +463,88 @@ routes = [
       </div>
       <p>幅優先探索で新宿から品川への経路を求め、すべての行き方の中でいちばん時間が短い経路と比べます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex2.py（参考）</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+goal = <span class="str">&quot;品川&quot;</span>
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を求める&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
+            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
+                total = total + minutes
+                <span class="kw">break</span>
+    <span class="kw">return</span> total
+
+came_from = {start: <span class="kw">None</span>}
+queue = <span class="fn">deque</span>([start])
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    current = queue.popleft()
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> came_from:
+            <span class="kw">continue</span>
+        came_from[name] = current
+        queue.append(name)
+
+bfs_route = []
+node = goal
+<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+    bfs_route.append(node)
+    node = came_from[node]
+bfs_route.reverse()
+
+<span class="kw">def</span> <span class="fn">all_routes</span>(here, goal, visited):
+    <span class="str">&quot;&quot;&quot;here から goal までの、同じ駅を2度通らない行き方をすべて返す&quot;&quot;&quot;</span>
+    <span class="kw">if</span> here == goal:
+        <span class="kw">return</span> [[goal]]
+    result = []
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[here]:
+        <span class="kw">if</span> name <span class="kw">in</span> visited:
+            <span class="kw">continue</span>
+        <span class="kw">for</span> rest <span class="kw">in</span> <span class="fn">all_routes</span>(name, goal, visited + [name]):
+            result.append([here] + rest)
+    <span class="kw">return</span> result
+
+every_route = <span class="fn">all_routes</span>(start, goal, [start])
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から品川までの行き方をすべて書き出す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="kw">for</span> route <span class="kw">in</span> every_route:
+    <span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(route)}: 路線{len(route)-1}本 ／ {route_minutes(route)}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>(<span class="str">&quot;行き方の数:&quot;</span>, <span class="fn">len</span>(every_route), <span class="str">&quot;通り&quot;</span>)
+<span class="fn">print</span>()
+
+best_route = every_route[<span class="num">0</span>]
+<span class="kw">for</span> route <span class="kw">in</span> every_route:
+    <span class="kw">if</span> <span class="fn">route_minutes</span>(route) &lt; <span class="fn">route_minutes</span>(best_route):
+        best_route = route
+
+<span class="fn">print</span>(<span class="str">&quot;方法1: 幅優先探索が選んだ道&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(bfs_route)}: 路線{len(bfs_route)-1}本 ／ {route_minutes(bfs_route)}分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;方法2: 合計時間がいちばん短い道&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  {&#x27; → &#x27;.join(best_route)}: 路線{len(best_route)-1}本 ／ {route_minutes(best_route)}分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_minutes</span>(bfs_route) - <span class="fn">route_minutes</span>(best_route), <span class="str">&quot;分&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex2.py</span>
 <span class="cmt"># 幅優先探索は「重みの合計」を最小にできないことを確かめる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -490,7 +640,7 @@ best_route = every_route[<span class="num">0</span>]
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）</td><td style="white-space:nowrap">A. <code>route_minutes(route) &lt; route_minutes(best_route)</code><br>B. <code>route_minutes(route) &gt; route_minutes(best_route)</code><br>C. <code>len(route) &lt; len(best_route)</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -656,19 +806,14 @@ best_route = every_route[<span class="num">0</span>]
           <li>第4回のGoogleスライドを新しく作る（ファイル名は「AL2 第4回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -767,6 +912,8 @@ best_route = every_route[<span class="num">0</span>]
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-04-ex1.py</code></td><td>穴1</td><td><code>name == next_station</code></td></tr>
+          <tr><td><code>AL2-04-ex1.py</code></td><td>穴2</td><td><code>total + minutes</code></td></tr>
           <tr><td><code>AL2-04-ex2.py</code></td><td>穴1</td><td><code>total + minutes</code></td></tr>
           <tr><td><code>AL2-04-ex2.py</code></td><td>穴2</td><td><code>route_minutes(route) &lt; route_minutes(best_route)</code></td></tr>
         </table>

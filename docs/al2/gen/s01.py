@@ -4,7 +4,7 @@ import math
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     answers, code, example, keywords, notion, run, section,
                     setup_guide, standard, write)
 
@@ -351,7 +351,7 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 {fig_roadmap()}
 
     <div class="concept-box">
-      <h4>最適化（さいてきか / optimization）とは</h4>
+      <h4>最適化とは</h4>
       <p style="font-size:0.95rem">
         考えられる選び方をすべて「候補」とみなし、その中から<strong>ある基準でいちばん良いものを1つ選ぶ</strong>ことを最適化と呼びます。
         基準は問題によって変わります。移動時間なら「短いほど良い」、売上なら「大きいほど良い」です。
@@ -381,7 +381,7 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       <table>
         <tr><th>課題</th><th>やること</th><th>点（毎回）</th></tr>
         <tr><td><strong>標準課題</strong>（必須）</td><td>例題を自分の数値で動かし、アルゴリズムの仕組みを<strong>コード上の変数や数値を用いて図で説明</strong>したスライド</td><td>70点（遅れ・要件不足は減点）</td></tr>
-        <tr><td><strong>発展課題</strong>（任意）</td><td>学んだアルゴリズムを使った<strong>画面のあるアプリ</strong>を、毎回の到達点に分けて育てる（4作品）</td><td>到達点を満たせば 30点。部分点なし</td></tr>
+        <tr><td><strong>発展課題</strong>（任意）</td><td>学んだアルゴリズムを使った<strong>Webアプリ</strong>を作成する</td><td>到達点を満たせば 30点。部分点なし</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
         毎回100点満点で、成績は<strong>15回の平均</strong>です。
@@ -413,26 +413,15 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">Step 2: 共有の設定をする</p>
-        <ol>
-          <li>右上の<strong>「共有」</strong>をクリック</li>
-          <li>「一般的なアクセス」を <strong>「リンクを知っている全員」</strong>に変える</li>
-          <li>権限は <strong>「閲覧者」</strong>のままでよい</li>
-          <li><strong>「リンクをコピー」</strong>を押して、URLを控えておく</li>
-        </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">
-          共有URLは、図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。</p>
-      </div>
-      <div class="setup-step">
-        <p class="step-title">Step 3: 提出する</p>
+        <p class="step-title">Step 2: 提出する</p>
         <ol>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
-          <li>ManabaにPDFを提出し、<strong>コメント欄に共有URLを貼る</strong></li>
+          <li>ManabaにPDFを提出する</li>
         </ol>
       </div>
       <div class="note-warn">
         <strong>毎回、新しいファイルを作ります。</strong>前の回のファイルに足さないでください。
-        発展課題をやった回は、その回の同じファイルに発展課題のスライドも入れます。
+        発展課題に取り組んだ場合は、標準課題とは別ファイルとしてスライドを作成してください。
       </div>
     </div>
 
@@ -444,7 +433,7 @@ overview = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>前期に学んだ二分探索を、数当てゲームの形で思い出します。
       1から100までの中に「秘密の数」が1つあり、コンピュータが<strong>中央を聞く</strong>作戦で当てにいきます。</p>
 
-{code('AL2-01-ex1.py')}
+{code_pair('AL2-01-ex1.py')}
 
 {fig_binary_steps()}
 
@@ -461,7 +450,7 @@ ex2_body = f"""      <p>後期のテーマである最適化を、いちばん�
       どの家から回るかで、かかる時間が変わります。時間を最も短くする回り方を見つける問題が、第8回から学ぶ巡回セールスマン問題です。
     </div>
 
-{code('AL2-01-ex2.py')}
+{code_pair('AL2-01-ex2.py')}
 
 {fig_all_routes()}
 
@@ -487,8 +476,8 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1と例題2のコード
     ('最適化', 'さいてきか / optimization', '考えられる選び方の中から、ある基準でいちばん良いものを1つ選ぶこと。後期の授業全体のテーマ。'),
     ('全探索', 'ぜんたんさく / brute force', '考えられる候補をすべて書き出して1つずつ調べる方法。必ず正しい答えが出るが、候補が増えると時間がかかる。'),
     ('二分探索', 'にぶんたんさく / binary search', '並んでいるデータの中央と比べ、外れた半分を捨てることをくり返す探し方。'),
-    ('幅優先探索', 'はばゆうせんたんさく / BFS', 'スタートから1歩で行ける場所、2歩で行ける場所、と近い順に調べる探し方。最短の歩数が求まる。'),
-    ('計算量', 'けいさんりょう / complexity', 'データが増えたときに手数がどれくらい増えるかを表す目安。O(n) や O(log n) のように書く。'),
+    ('幅優先探索', 'はばゆうせんたんさく / BFS', 'スタートに近いマスから順に、しらみつぶしに調べていく探し方。まずスタートから1歩で行けるマスを全部調べ、次に2歩で行けるマスを全部調べ、次に3歩…と、同じ歩数のマスをまとめて調べ終えてから次の歩数へ進む。水面に石を落としたときの波紋のように、スタートを中心に輪が広がっていくイメージ。近い順に調べるので、ゴールに初めてたどり着いたときの歩数が、必ず最短の歩数になる。「これから調べる場所」を書き足したメモ（キュー）を、古いものから順に読んでいくことで実現する。'),
+    ('計算量', 'けいさんりょう / complexity', 'データが増えたときに手数がどれくらい増えるかを表す目安。O(n) や O(log n) のように書く。この O は「オー」と読み、Order（オーダー: 規模・程度）の頭文字。O(n) は「データ数 n に比例する程度の手数」、O(log n) は「n が10倍になっても手数は少ししか増えない程度」を表す。細かい回数ではなく「n が増えたときの増え方の種類」だけを見るための書き方で、逐次探索は O(n)、二分探索は O(log n) になる。'),
 ])}
 
 {example(1, '数当てゲームをコンピュータに解かせる（二分探索の復習）', ex1_body)}

@@ -2,7 +2,7 @@
 """第13回: 実践的課題（1）設計と実装 の本文を組み立てる。"""
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -216,7 +216,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       <p style="font-size:0.95rem">
         2つとも、後期に学んだアルゴリズムを1つのプログラムにまとめたものです。
         自分の迷路や配達先に書き換えて動かし、その流れをフローチャートにします。
-        テンプレートA（例題1）は完成したコード、テンプレートB（例題2）は穴埋めです。
+        どちらも「参考」（完成したコード）と「実践」（穴埋め）の2つで載せてあります。
       </p>
     </div>
 
@@ -270,7 +270,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付けるゲームです。
       <code>cost_map</code> と <code>player_moves</code> を書き換えれば、自分のステージが作れます。</p>
 
-{code('AL2-13-ex1.py')}
+{code_pair('AL2-13-ex1.py')}
 
 {run('a13_ex1_result.png', 'プレイヤーの道は14歩で<strong>42秒</strong>、最短の道は18歩で<strong>18秒</strong>でした。'
      'プレイヤーは歩数こそ少ないものの、9（沼）のマスを何度も通っているため時間がかかっています。'
@@ -281,7 +281,7 @@ ex1_body = f"""      <p>プレイヤーが選んだ道と、ダイクストラ�
 ex2_body = f"""      <p>配達先を並べると、貪欲法と全探索の両方でルートを作って比べるアプリです。
       <code>places</code> を書き換えれば、自分の配達先が作れます（8件までなら全探索が使えます）。</p>
 
-{code('AL2-13-ex2.py')}
+{code_pair('AL2-13-ex2.py')}
 
 {run('a13_ex2_result.png', '貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。'
      '作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。'

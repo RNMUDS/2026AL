@@ -4,7 +4,7 @@ import math
 from itertools import permutations
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -206,7 +206,7 @@ sub = slide_submission("09")
 explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第8回で確かめたとおり、巡回セールスマン問題は都市が増えると全探索が使えなくなります。
       そこで発想を変えます。<strong>「必ず最短」をあきらめて、「そこそこ短いルートを一瞬で作る」</strong>方法を考えます。
-      いちばん単純な作戦が<strong>貪欲法</strong>（どんよくほう）です。
+      いちばん単純な作戦が<strong>貪欲法</strong>です。
     </p>
 
     <div class="analogy">
@@ -225,7 +225,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         <li>全部回り終えたら出発点へ戻る</li>
       </ol>
       <p style="font-size:0.95rem;margin-top:0.8rem">
-        「いちばん近い都市へ進む」という選び方から、<strong>最近傍法</strong>（さいきんぼうほう）とも呼ばれます。
+        「いちばん近い都市へ進む」という選び方から、<strong>最近傍法</strong>とも呼ばれます。
         都市が n 個なら、比べる回数は n×n 程度です。8都市なら数十回、1000都市でも100万回程度で終わります。
       </p>
     </div>
@@ -240,7 +240,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         取り残された都市へ行くには長い移動が必要になり、その1回で、それまでに節約した分をすべて失ってしまいます。
       </p>
       <p style="font-size:0.95rem;margin-top:0.6rem">
-        目の前だけを見て決めた結果、全体としては良くならないことを<strong>局所最適</strong>（きょくしょさいてき）と呼びます。
+        目の前だけを見て決めた結果、全体としては良くならないことを<strong>局所最適</strong>と呼びます。
         「部分的にはいちばん良い」けれど「全体でいちばん良いとはかぎらない」という意味です。
       </p>
     </div>
@@ -257,7 +257,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         <tr><td>1000都市</td><td>終わらない</td><td>一瞬で終わる</td></tr>
       </table>
       <p style="font-size:0.95rem;margin-top:0.8rem">
-        最短ではないけれど実用的な答えを<strong>近似解</strong>（きんじかい）と呼びます。
+        最短ではないけれど実用的な答えを<strong>近似解</strong>と呼びます。
         配送計画では「1%短いルートを1週間かけて計算する」より
         「10%長くても1秒で出す」ほうが役に立つ場面がほとんどです。
       </p>
@@ -267,7 +267,7 @@ ex1_body = f"""      <p>第8回と同じ5つの都市に、貪欲法を使いま
       「いまいる都市から、まだ行っていない都市のうちいちばん近いところへ進む」をくり返すだけです。
       全探索の答えと比べます。</p>
 
-{code('AL2-09-ex1.py')}
+{code_pair('AL2-09-ex1.py')}
 
 {run('a09_ex1_result.png', '貪欲法は「学校 → 公園 → カフェ → 図書館 → 郵便局 → 学校」というルートを作り、合計は<strong>34.9</strong>でした。'
      '全探索で求めた最短も34.9なので、<strong>差は0</strong>です。'
@@ -277,7 +277,7 @@ ex1_body = f"""      <p>第8回と同じ5つの都市に、貪欲法を使いま
 
 ex2_body = f"""      <p>都市を8個に増やして、同じ比較をします。都市が増えると結果はどう変わるでしょうか。</p>
 
-{code('AL2-09-ex2.py')}
+{code_pair('AL2-09-ex2.py')}
 
 {run('a09_ex2_result.png', '貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。'
      '貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。'

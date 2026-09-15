@@ -216,8 +216,8 @@ a.sub-item:hover { border-color: #4A7A00; }
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品2 路線図の最短経路アプリ ─ 今回の到達点: 駅を選ぶと、ダイクストラ法の最短の行き方が色で出る</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第6回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第6回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -477,11 +477,15 @@ a.sub-item:hover { border-color: #4A7A00; }
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -505,16 +509,14 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>ダイクストラ法に使う前に、<code>heapq</code> がどう動くかだけを確かめます。
       数を入れる例と、<code>(時間, 駅名)</code> の組を入れる例の2つを実行します。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex1.py</span>
-<span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
-<span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex1.py（参考）</span>
 <span class="kw">import</span> heapq
 
-<span class="cmt"># --- その1: 数を入れて取り出す ---</span>
-numbers = []                    <span class="cmt"># ふつうのリストを用意する</span>
+numbers = []
 
 <span class="kw">for</span> value <span class="kw">in</span> [<span class="num">8</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>]:
-    heapq.heappush(numbers, value)      <span class="cmt"># heappush で1つずつ入れる</span>
+    heapq.heappush(numbers, value)
     <span class="fn">print</span>(<span class="str">f&quot;{value} を入れた → 中身: {numbers}&quot;</span>)
 
 <span class="fn">print</span>()
@@ -524,7 +526,7 @@ numbers = []                    <span class="cmt"># ふつうのリストを用�
 
 <span class="fn">print</span>(<span class="str">&quot;取り出す順番&quot;</span>)
 <span class="kw">while</span> <span class="fn">len</span>(numbers) &gt; <span class="num">0</span>:
-    smallest = heapq.heappop(numbers)   <span class="cmt"># heappop でいちばん小さいものを取り出す</span>
+    smallest = heapq.heappop(numbers)
     <span class="fn">print</span>(<span class="str">f&quot;  取り出した: {smallest}   残り: {numbers}&quot;</span>)
 
 <span class="fn">print</span>()
@@ -532,9 +534,6 @@ numbers = []                    <span class="cmt"># ふつうのリストを用�
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
 <span class="fn">print</span>()
 
-<span class="cmt"># --- その2: (数, 名前) の組を入れる ---</span>
-<span class="cmt"># タプルを入れると、1番目の要素で比べてくれる。</span>
-<span class="cmt"># ダイクストラ法では (今わかっている時間, 駅の名前) の組を入れる。</span>
 tasks = []
 heapq.heappush(tasks, (<span class="num">16</span>, <span class="str">&quot;品川&quot;</span>))
 heapq.heappush(tasks, (<span class="num">7</span>, <span class="str">&quot;渋谷&quot;</span>))
@@ -548,6 +547,62 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
 
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;1番目の要素（時間）が小さい順に出てくる&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex1.py</span>
+<span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
+<span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
+<span class="kw">import</span> heapq
+
+<span class="cmt"># --- その1: 数を入れて取り出す ---</span>
+numbers = []                    <span class="cmt"># ふつうのリストを用意する</span>
+
+<span class="kw">for</span> value <span class="kw">in</span> [<span class="num">8</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>]:
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+    <span class="fn">print</span>(<span class="str">f&quot;{value} を入れた → 中身: {numbers}&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;中身の並びはバラバラに見えるが、先頭は必ずいちばん小さい数になっている&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;いまの先頭:&quot;</span>, numbers[<span class="num">0</span>])
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;取り出す順番&quot;</span>)
+<span class="kw">while</span> <span class="fn">len</span>(numbers) &gt; <span class="num">0</span>:
+    smallest = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+    <span class="fn">print</span>(<span class="str">f&quot;  取り出した: {smallest}   残り: {numbers}&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;入れた順番は 8, 3, 5, 1, 9, 2 だが、取り出す順番は小さい順になる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="cmt"># --- その2: (数, 名前) の組を入れる ---</span>
+<span class="cmt"># タプルを入れると、1番目の要素で比べてくれる。</span>
+<span class="cmt"># ダイクストラ法では (今わかっている時間, 駅の名前) の組を入れる。</span>
+tasks = []
+heapq.heappush(tasks, (<span class="num">16</span>, <span class="str">&quot;品川&quot;</span>))
+heapq.heappush(tasks, <span class="blank">____</span>)      <span class="cmt"># ← 穴3</span>
+heapq.heappush(tasks, (<span class="num">21</span>, <span class="str">&quot;上野&quot;</span>))
+heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池袋&quot;</span>))
+
+<span class="fn">print</span>(<span class="str">&quot;(時間, 駅名) の組を入れて取り出す&quot;</span>)
+<span class="kw">while</span> <span class="fn">len</span>(tasks) &gt; <span class="num">0</span>:
+    minutes, station = heapq.heappop(tasks)
+    <span class="fn">print</span>(<span class="str">f&quot;  {minutes}分の {station} を取り出した&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;1番目の要素（時間）が小さい順に出てくる&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>heapq に1つ入れる（入れたあとも「先頭がいちばん小さい」が保たれる）</td><td style="white-space:nowrap">A. <code>heapq.heappop(numbers)</code><br>B. <code>numbers.append(value)</code><br>C. <code>heapq.heappush(numbers, value)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いちばん小さいものを取り出す</td><td style="white-space:nowrap">A. <code>numbers[0]</code><br>B. <code>numbers.pop()</code><br>C. <code>heapq.heappop(numbers)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>（時間, 駅名）の順の組にすると、時間の小さい順に並ぶ</td><td style="white-space:nowrap">A. <code>(&quot;渋谷&quot;, 7)</code><br>B. <code>(7, &quot;渋谷&quot;)</code><br>C. <code>7</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -564,6 +619,77 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
       <p>第5回のダイクストラ法を、<code>heapq</code> を使う形に書き直します。
       「まだ決まっていない駅を全部見る」ループがなくなり、<code>heappop</code> の1行に置きかわります。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex2.py（参考）</span>
+<span class="kw">import</span> heapq
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = {}
+came_from = {}
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    distance[station] = INF
+    came_from[station] = <span class="kw">None</span>
+distance[start] = <span class="num">0</span>
+
+queue = [(<span class="num">0</span>, start)]
+settled = <span class="fn">set</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;heapq から取り出した順番&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+
+<span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+    minutes, current = heapq.heappop(queue)
+
+    <span class="kw">if</span> current <span class="kw">in</span> settled:
+
+        <span class="fn">print</span>(<span class="str">f&quot;  ({minutes}分, {current}) → すでに確定済みなので読み飛ばす&quot;</span>)
+        <span class="kw">continue</span>
+
+    settled.add(current)
+    <span class="fn">print</span>(<span class="str">f&quot;  ({minutes}分, {current}) → {current} を {minutes}分で確定&quot;</span>)
+
+    <span class="kw">for</span> name, weight <span class="kw">in</span> railway[current]:
+        new_distance = minutes + weight
+        <span class="kw">if</span> new_distance &lt; distance[name]:
+            distance[name] = new_distance
+            came_from[name] = current
+            heapq.heappush(queue, (new_distance, name))
+            <span class="fn">print</span>(<span class="str">f&quot;        {name} を {new_distance}分として queue に入れた&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+<span class="kw">def</span> <span class="fn">build_route</span>(goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から各駅への最短の行き方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="kw">if</span> station == start:
+        <span class="kw">continue</span>
+    <span class="fn">print</span>(<span class="str">f&quot;{station:&lt;4} {distance[station]:&gt;3}分   &quot;</span> + <span class="str">&quot; → &quot;</span>.join(<span class="fn">build_route</span>(station)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;第5回の例題1・例題2と、まったく同じ答えになっている&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex2.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法</span>
 <span class="cmt"># 第5回では「まだ決まっていない駅を全部見て、いちばん小さい駅をさがす」ことをしていた。</span>
@@ -648,7 +774,7 @@ settled = <span class="fn">set</span>()
         <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>heapq に入れる組は（時間, 駅名）の順。時間で並ぶようにする</td><td style="white-space:nowrap">A. <code>new_distance</code><br>B. <code>(new_distance, name)</code><br>C. <code>(name, new_distance)</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -698,6 +824,7 @@ settled = <span class="fn">set</span>()
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">6つ入れ終わったときの <code>heapq</code> の中身を<strong>木の形（親が上、子が下）</strong>で描き、取り出される順番を書く。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>木の形で描いた中身（いちばん上が先頭）</li>
@@ -813,19 +940,14 @@ settled = <span class="fn">set</span>()
           <li>第6回のGoogleスライドを新しく作る（ファイル名は「AL2 第6回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -864,7 +986,7 @@ settled = <span class="fn">set</span>()
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

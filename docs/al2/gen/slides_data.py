@@ -232,7 +232,7 @@ ADVANCED = {
     match="",
     milestones={
         "01": dict(
-            goal="Gradio を入れて、いちばん小さいアプリを自分のパソコンで動かす",
+            goal="Pythonで簡易的なWebアプリを開発できるGradioを入れて、WebアプリをPC上で動かす",
             must=[
                 "VS Code の ▷ で実行すると、ブラウザに画面が出る",
                 "タイトルに<strong>自分の名前</strong>が入っている（<code>title=</code> を書き換える）",

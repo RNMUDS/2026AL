@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品1 迷路の探索アプリ ─ 今回の到達点: 自分の迷路が画面にマス目で出る（最小版）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第2回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第2回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -192,11 +192,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -226,8 +230,78 @@
         <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>stack.pop()</code></td><td>いちばん新しい行</td></tr>
       </table>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-02-ex1.py</span>
-<span class="cmt"># 深さ優先探索（ふかさゆうせんたんさく）で迷路を解く</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-02-ex1.py（参考）</span>
+maze = [
+    <span class="str">&quot;S.....#&quot;</span>,
+    <span class="str">&quot;.####.#&quot;</span>,
+    <span class="str">&quot;.#....#&quot;</span>,
+    <span class="str">&quot;.#.##..&quot;</span>,
+    <span class="str">&quot;.#..#.#&quot;</span>,
+    <span class="str">&quot;.##.#.#&quot;</span>,
+    <span class="str">&quot;......G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            start = (r, c)
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
+            goal = (r, c)
+
+<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
+<span class="kw">for</span> line <span class="kw">in</span> maze:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
+<span class="fn">print</span>()
+
+stack = [start]
+came_from = {start: <span class="kw">None</span>}
+visited_order = []
+
+<span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
+    current = stack.pop()
+    visited_order.append(current)
+    <span class="kw">if</span> current == goal:
+        <span class="kw">break</span>
+
+    r, c = current
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
+            <span class="kw">continue</span>
+        came_from[(nr, nc)] = current
+        stack.append((nr, nc))
+
+path = []
+node = goal
+<span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+    path.append(node)
+    node = came_from[node]
+path.reverse()
+
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路の歩数:&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;調べたマスの数:&quot;</span>, <span class="fn">len</span>(visited_order), <span class="str">&quot;マス&quot;</span>)
+<span class="fn">print</span>()
+
+picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+<span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+        picture[r][c] = <span class="str">&quot;*&quot;</span>
+
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路（* が通り道）&quot;</span>)
+<span class="kw">for</span> line <span class="kw">in</span> picture:
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex1.py</span>
+<span class="cmt"># 深さ優先探索で迷路を解く</span>
 <span class="cmt"># 幅優先探索との違いは「メモのどこを読むか」だけ。</span>
 <span class="cmt">#   幅優先探索: いちばん古い行を読む → popleft()</span>
 <span class="cmt">#   深さ優先探索: いちばん新しい行を読む → pop()</span>
@@ -264,7 +338,7 @@ came_from = {start: <span class="kw">None</span>}       <span class="cmt"># 「�
 visited_order = []              <span class="cmt"># 調べた順番を記録する</span>
 
 <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
-    current = stack.pop()       <span class="cmt"># メモのいちばん新しい行を読んで消す</span>
+    current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     visited_order.append(current)
     <span class="kw">if</span> current == goal:
         <span class="kw">break</span>
@@ -280,7 +354,7 @@ visited_order = []              <span class="cmt"># 調べた順番を記録す�
         <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
             <span class="kw">continue</span>
         came_from[(nr, nc)] = current
-        stack.append((nr, nc))
+        <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
 <span class="cmt"># --- ゴールからスタートへ逆にたどって経路を復元する ---</span>
 path = []
@@ -302,6 +376,17 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 <span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路（* が通り道）&quot;</span>)
 <span class="kw">for</span> line <span class="kw">in</span> picture:
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>深さ優先探索: メモのいちばん新しい行を読んで消す</td><td style="white-space:nowrap">A. <code>stack.pop()</code><br>B. <code>stack.pop(0)</code><br>C. <code>stack[0]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>見つけたとなりのマスをメモの最後に書き足す</td><td style="white-space:nowrap">A. <code>stack.append((nr, nc))</code><br>B. <code>stack.insert(0, (nr, nc))</code><br>C. <code>stack.pop()</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -318,6 +403,96 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <p>幅優先探索と深さ優先探索を1つのプログラムにまとめ、同じ迷路で走らせて比べます。
       <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-02-ex2.py（参考）</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+maze = [
+    <span class="str">&quot;S.....#&quot;</span>,
+    <span class="str">&quot;.####.#&quot;</span>,
+    <span class="str">&quot;.#....#&quot;</span>,
+    <span class="str">&quot;.#.##..&quot;</span>,
+    <span class="str">&quot;.#..#.#&quot;</span>,
+    <span class="str">&quot;.##.#.#&quot;</span>,
+    <span class="str">&quot;......G&quot;</span>,
+]
+
+rows = <span class="fn">len</span>(maze)
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
+            start = (r, c)
+        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
+            goal = (r, c)
+
+<span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
+    <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではない場所を返す&quot;&quot;&quot;</span>
+    result = []
+    <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
+        nr = r + dr
+        nc = c + dc
+        <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+            <span class="kw">continue</span>
+        result.append((nr, nc))
+    <span class="kw">return</span> result
+
+<span class="kw">def</span> <span class="fn">search</span>(mode):
+    <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
+    memo = <span class="fn">deque</span>([start])
+    came_from = {start: <span class="kw">None</span>}
+    checked = <span class="num">0</span>
+
+    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
+        <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
+            current = memo.popleft()
+        <span class="kw">else</span>:
+            current = memo.pop()
+        checked = checked + <span class="num">1</span>
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+            <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[next_cell] = current
+            memo.append(next_cell)
+
+    path = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        path.append(node)
+        node = came_from[node]
+    path.reverse()
+    <span class="kw">return</span> path, checked
+
+bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
+dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+
+<span class="kw">def</span> <span class="fn">draw</span>(path, title):
+    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
+    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
+    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
+        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
+            picture[r][c] = <span class="str">&quot;*&quot;</span>
+    <span class="fn">print</span>(title)
+    <span class="kw">for</span> line <span class="kw">in</span> picture:
+        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>()
+<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路（12歩・最短）&quot;</span>)
+<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路（18歩・最短ではない）&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-02-ex2.py</span>
 <span class="cmt"># 幅優先探索と深さ優先探索を、同じ迷路で走らせて比べる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -421,7 +596,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>すでに来たことがある場所は飛ばす</td><td style="white-space:nowrap">A. <code>next_cell in came_from</code><br>B. <code>next_cell in memo</code><br>C. <code>next_cell == goal</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -817,6 +992,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">自分の迷路をマス目で描き、幅優先探索が各マスに着いたときの<strong>スタートからの歩数</strong>を書き込む。ゴールまでの通り道を矢印で示す。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>自分の迷路（壁は塗りつぶし、S と G を書く）</li>
@@ -932,19 +1108,14 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
           <li>第2回のGoogleスライドを新しく作る（ファイル名は「AL2 第2回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -1094,6 +1265,8 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-02-ex1.py</code></td><td>穴1</td><td><code>stack.pop()</code></td></tr>
+          <tr><td><code>AL2-02-ex1.py</code></td><td>穴2</td><td><code>stack.append((nr, nc))</code></td></tr>
           <tr><td><code>AL2-02-ex2.py</code></td><td>穴1</td><td><code>memo.popleft()</code></td></tr>
           <tr><td><code>AL2-02-ex2.py</code></td><td>穴2</td><td><code>memo.pop()</code></td></tr>
           <tr><td><code>AL2-02-ex2.py</code></td><td>穴3</td><td><code>next_cell in came_from</code></td></tr>

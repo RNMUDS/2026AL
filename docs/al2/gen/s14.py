@@ -2,7 +2,7 @@
 """第14回: 実践的課題（2）仕上げとレポート作成 の本文を組み立てる。"""
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -162,7 +162,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>第13回のテンプレートAで「プレイヤーの道を受け取る部分」に対し、
       6種類の入力を与えてテストします。バグのある関数と修正版を並べて比べます。</p>
 
-{code('AL2-14-ex1.py')}
+{code_pair('AL2-14-ex1.py')}
 
 {run('a14_ex1_result.png', 'バグのある関数では、「迷路の外に出る道」と「行ったり戻ったりする道」が'
      '<strong>迷路の外のマスを指したまま</strong>返ってきています。'
@@ -178,7 +178,7 @@ ex1_body = f"""      <p>第13回のテンプレートAで「プレイヤーの�
 ex2_body = f"""      <p>バグをしこんだ貪欲法の関数を、<code>print</code> を入れて追いかけます。
       どの行で判断がおかしくなっているかを、目で見て確かめます。</p>
 
-{code('AL2-14-ex2.py')}
+{code_pair('AL2-14-ex2.py')}
 
 {run('a14_ex2_result.png', 'バグのある関数は <code>[0, 0, 0, 0]</code> という結果を返し、同じ場所を4回訪れています。'
      '<code>print</code> を入れた結果を見ると、原因がはっきり分かります。'

@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品4 自由テーマ ─ 今回の到達点: 自分のデータが画面に出る（最小版）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第12回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第12回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -491,11 +491,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -518,7 +522,86 @@
       <p>前期の数当てゲームを、「1回の質問で候補がどれだけ減るか」という目で見直します。
       1から100までのすべての数について、2つの作戦の質問回数を数えます。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-12-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-12-ex1.py（参考）</span>
+<span class="kw">def</span> <span class="fn">count_linear</span>(secret, low, high):
+    <span class="str">&quot;&quot;&quot;1から順に聞いたときの質問回数&quot;&quot;&quot;</span>
+    count = <span class="num">0</span>
+    <span class="kw">for</span> guess <span class="kw">in</span> <span class="fn">range</span>(low, high + <span class="num">1</span>):
+        count = count + <span class="num">1</span>
+        <span class="kw">if</span> guess == secret:
+            <span class="kw">return</span> count
+    <span class="kw">return</span> count
+
+<span class="kw">def</span> <span class="fn">count_binary</span>(secret, low, high):
+    <span class="str">&quot;&quot;&quot;中央を聞いたときの質問回数&quot;&quot;&quot;</span>
+    count = <span class="num">0</span>
+    <span class="kw">while</span> low &lt;= high:
+        count = count + <span class="num">1</span>
+        middle = (low + high) // <span class="num">2</span>
+        <span class="kw">if</span> middle == secret:
+            <span class="kw">return</span> count
+        <span class="kw">elif</span> middle &lt; secret:
+            low = middle + <span class="num">1</span>
+        <span class="kw">else</span>:
+            high = middle - <span class="num">1</span>
+    <span class="kw">return</span> count
+
+low = <span class="num">1</span>
+high = <span class="num">100</span>
+
+linear_counts = []
+binary_counts = []
+<span class="kw">for</span> secret <span class="kw">in</span> <span class="fn">range</span>(low, high + <span class="num">1</span>):
+    linear_counts.append(<span class="fn">count_linear</span>(secret, low, high))
+    binary_counts.append(<span class="fn">count_binary</span>(secret, low, high))
+
+<span class="fn">print</span>(<span class="str">&quot;1から100までの100個の数すべてを、2つの作戦で当ててみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>(<span class="str">&quot;作戦                  最悪の回数    平均の回数&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;A: 1から順に聞く    {max(linear_counts):&gt;10}回 {sum(linear_counts)/len(linear_counts):&gt;11.2f}回&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;B: 中央を聞く       {max(binary_counts):&gt;10}回 {sum(binary_counts)/len(binary_counts):&gt;11.2f}回&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>(<span class="str">&quot;質問  作戦A: 1から順に聞く      作戦B: 中央を聞く&quot;</span>)
+
+low_a = <span class="num">1</span>
+high_a = <span class="num">100</span>
+low_b = <span class="num">1</span>
+high_b = <span class="num">100</span>
+secret = <span class="num">73</span>
+
+<span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">8</span>):
+
+    remain_a = high_a - low_a + <span class="num">1</span>
+    <span class="kw">if</span> low_a &lt;= secret &lt;= high_a:
+        low_a = low_a + <span class="num">1</span>
+    after_a = high_a - low_a + <span class="num">1</span>
+
+    remain_b = high_b - low_b + <span class="num">1</span>
+    <span class="kw">if</span> low_b &lt;= high_b:
+        middle = (low_b + high_b) // <span class="num">2</span>
+        <span class="kw">if</span> middle &lt; secret:
+            low_b = middle + <span class="num">1</span>
+        <span class="kw">elif</span> middle &gt; secret:
+            high_b = middle - <span class="num">1</span>
+        <span class="kw">else</span>:
+            low_b = middle
+            high_b = middle
+    after_b = high_b - low_b + <span class="num">1</span>
+
+    <span class="fn">print</span>(<span class="str">f&quot;{step:&gt;3}回目  {remain_a:&gt;4}個 → {after_a:&gt;4}個&quot;</span>
+          <span class="str">f&quot;            {remain_b:&gt;4}個 → {after_b:&gt;4}個&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;「1回の質問でいちばん多く候補を減らす」選び方が、中央を聞く作戦になっている。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-12-ex1.py</span>
 <span class="cmt"># 数当てゲームを「1回の質問でどれだけ候補を減らせるか」という目で見直す</span>
 <span class="cmt"># 作戦A: 1から順に「1ですか」「2ですか」…と聞く（逐次探索）</span>
 <span class="cmt"># 作戦B: いつも残っている範囲の中央を聞く（二分探索）</span>
@@ -539,7 +622,7 @@
     count = <span class="num">0</span>
     <span class="kw">while</span> low &lt;= high:
         count = count + <span class="num">1</span>
-        middle = (low + high) // <span class="num">2</span>
+        middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">if</span> middle == secret:
             <span class="kw">return</span> count
         <span class="kw">elif</span> middle &lt; secret:
@@ -581,7 +664,7 @@ secret = <span class="num">73</span>
     <span class="cmt"># 作戦A: step 番目の数を聞く</span>
     remain_a = high_a - low_a + <span class="num">1</span>
     <span class="kw">if</span> low_a &lt;= secret &lt;= high_a:
-        low_a = low_a + <span class="num">1</span>              <span class="cmt"># 外れたので候補が1つ減るだけ</span>
+        low_a = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     after_a = high_a - low_a + <span class="num">1</span>
 
     <span class="cmt"># 作戦B: 中央を聞く</span>
@@ -591,7 +674,7 @@ secret = <span class="num">73</span>
         <span class="kw">if</span> middle &lt; secret:
             low_b = middle + <span class="num">1</span>
         <span class="kw">elif</span> middle &gt; secret:
-            high_b = middle - <span class="num">1</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
         <span class="kw">else</span>:
             low_b = middle
             high_b = middle
@@ -604,6 +687,18 @@ secret = <span class="num">73</span>
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;「1回の質問でいちばん多く候補を減らす」選び方が、中央を聞く作戦になっている。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>作戦B: 残っている範囲の中央を聞く</td><td style="white-space:nowrap">A. <code>low + 1</code><br>B. <code>(low + high) / 2</code><br>C. <code>(low + high) // 2</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>作戦A: 外れたら候補が1つ減るだけ</td><td style="white-space:nowrap">A. <code>low_a * 2</code><br>B. <code>high_a - 1</code><br>C. <code>low_a + 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>中央より小さい側に答えがあるので、上限を中央の1つ下にする</td><td style="white-space:nowrap">A. <code>high_b = middle - 1</code><br>B. <code>low_b = middle + 1</code><br>C. <code>high_b = middle</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -622,6 +717,93 @@ secret = <span class="num">73</span>
       <p>限られた時間の中で、得点がいちばん高くなる組み合わせを選ぶナップサック問題を、
       貪欲法と動的計画法の両方で解いて比べます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-12-ex2.py（参考）</span>
+quests = [
+    (<span class="str">&quot;村人を助ける&quot;</span>, <span class="num">6</span>, <span class="num">10</span>),
+    (<span class="str">&quot;宝箱をあける&quot;</span>, <span class="num">5</span>, <span class="num">8</span>),
+    (<span class="str">&quot;鉱石を掘る&quot;</span>, <span class="num">5</span>, <span class="num">8</span>),
+    (<span class="str">&quot;釣りをする&quot;</span>, <span class="num">9</span>, <span class="num">12</span>),
+]
+
+limit = <span class="num">10</span>
+n = <span class="fn">len</span>(quests)
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+<span class="fn">print</span>(<span class="str">f&quot;使える時間: {limit}分&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;できること&quot;</span>, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">&quot;かかる分&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="str">&quot;得点&quot;</span>, <span class="num">8</span>) + <span class="str">&quot; 1分あたり&quot;</span>)
+<span class="kw">for</span> name, minutes, score <span class="kw">in</span> quests:
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{minutes}分&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{score}点&quot;</span>, <span class="num">8</span>)
+          + <span class="str">f&quot;{score / minutes:&gt;10.2f}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
+
+order = <span class="fn">sorted</span>(<span class="fn">range</span>(n), key=<span class="kw">lambda</span> i: quests[i][<span class="num">2</span>] / quests[i][<span class="num">1</span>], reverse=<span class="kw">True</span>)
+used = <span class="num">0</span>
+greedy_score = <span class="num">0</span>
+greedy_names = []
+<span class="kw">for</span> i <span class="kw">in</span> order:
+    name, minutes, score = quests[i]
+    <span class="kw">if</span> used + minutes &lt;= limit:
+        used = used + minutes
+        greedy_score = greedy_score + score
+        greedy_names.append(name)
+
+<span class="fn">print</span>(<span class="str">&quot;方法1: 貪欲法（1分あたりの得点が高い順に、入るだけ入れる）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  選んだもの:&quot;</span>, <span class="str">&quot;、&quot;</span>.join(greedy_names))
+<span class="fn">print</span>(<span class="str">f&quot;  使った時間: {used}分 ／ 合計得点: {greedy_score}点&quot;</span>)
+<span class="fn">print</span>()
+
+best = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n + <span class="num">1</span>):
+    best.append([<span class="num">0</span>] * (limit + <span class="num">1</span>))
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n + <span class="num">1</span>):
+    name, minutes, score = quests[i - <span class="num">1</span>]
+    <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(limit + <span class="num">1</span>):
+
+        best[i][t] = best[i - <span class="num">1</span>][t]
+
+        <span class="kw">if</span> t &gt;= minutes:
+            <span class="kw">if</span> best[i - <span class="num">1</span>][t - minutes] + score &gt; best[i][t]:
+                best[i][t] = best[i - <span class="num">1</span>][t - minutes] + score
+
+<span class="fn">print</span>(<span class="str">&quot;動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{t:&gt;4}&quot;</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(limit + <span class="num">1</span>)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n + <span class="num">1</span>):
+    label = <span class="str">&quot;なし&quot;</span> <span class="kw">if</span> i == <span class="num">0</span> <span class="kw">else</span> <span class="str">f&quot;{i}個目&quot;</span>
+    <span class="fn">print</span>(<span class="fn">pad</span>(label, <span class="num">6</span>) + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{best[i][t]:&gt;4}&quot;</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(limit + <span class="num">1</span>)))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>()
+
+chosen = []
+t = limit
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n, <span class="num">0</span>, -<span class="num">1</span>):
+    <span class="kw">if</span> best[i][t] != best[i - <span class="num">1</span>][t]:
+        name, minutes, score = quests[i - <span class="num">1</span>]
+        chosen.append(name)
+        t = t - minutes
+chosen.reverse()
+
+<span class="fn">print</span>(<span class="str">&quot;方法2: 動的計画法（すべての組み合わせを表で調べる）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;  選んだもの:&quot;</span>, <span class="str">&quot;、&quot;</span>.join(chosen))
+<span class="fn">print</span>(<span class="str">f&quot;  合計得点: {best[n][limit]}点&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, best[n][limit] - greedy_score, <span class="str">&quot;点&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;貪欲法は「1分あたりの得点」だけを見るので、&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;時間がぴったり収まる組み合わせを見のがしてしまう。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-12-ex2.py</span>
 <span class="cmt"># ナップサック問題: 決められた時間の中で、得点がいちばん高くなる組み合わせを選ぶ</span>
 <span class="cmt"># ゲームの「制限時間内にどのイベントをこなすか」という場面にあたる。</span>
@@ -728,7 +910,7 @@ chosen.reverse()
         <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>このクエストを「受ける」ほうが得点が高いなら、表を書き直す</td><td style="white-space:nowrap">A. <code>best[i - 1][t - minutes] + score &gt; best[i][t]</code><br>B. <code>best[i - 1][t] &gt; best[i][t]</code><br>C. <code>score &gt; best[i][t]</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -892,19 +1074,14 @@ chosen.reverse()
           <li>第12回のGoogleスライドを新しく作る（ファイル名は「AL2 第12回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -1098,6 +1275,9 @@ chosen.reverse()
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-12-ex1.py</code></td><td>穴1</td><td><code>(low + high) // 2</code></td></tr>
+          <tr><td><code>AL2-12-ex1.py</code></td><td>穴2</td><td><code>low_a + 1</code></td></tr>
+          <tr><td><code>AL2-12-ex1.py</code></td><td>穴3</td><td><code>high_b = middle - 1</code></td></tr>
           <tr><td><code>AL2-12-ex2.py</code></td><td>穴1</td><td><code>used + minutes &lt;= limit</code></td></tr>
           <tr><td><code>AL2-12-ex2.py</code></td><td>穴2</td><td><code>t &gt;= minutes</code></td></tr>
           <tr><td><code>AL2-12-ex2.py</code></td><td>穴3</td><td><code>best[i - 1][t - minutes] + score &gt; best[i][t]</code></td></tr>

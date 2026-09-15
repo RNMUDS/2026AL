@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品4 自由テーマ ─ 今回の到達点: 変な入力で落ちず、例題と同じ答えになる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第14回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第14回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -237,11 +237,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -264,7 +268,95 @@
       <p>第13回のテンプレートAで「プレイヤーの道を受け取る部分」に対し、
       6種類の入力を与えてテストします。バグのある関数と修正版を並べて比べます。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-14-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-14-ex1.py（参考）</span>
+cost_map = [
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">5</span>],
+    [<span class="num">9</span>, <span class="num">1</span>, <span class="num">1</span>],
+    [<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>],
+]
+
+rows = <span class="fn">len</span>(cost_map)
+cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
+start = (<span class="num">0</span>, <span class="num">0</span>)
+goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
+
+<span class="kw">def</span> <span class="fn">move_to_route_buggy</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR&quot; を通るマスの並びに変える（バグあり）&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        route.append((r, c))
+    <span class="kw">return</span> route
+
+<span class="kw">def</span> <span class="fn">move_to_route_fixed</span>(moves):
+    <span class="str">&quot;&quot;&quot;&quot;DDRR&quot; を通るマスの並びに変える（修正版）&quot;&quot;&quot;</span>
+    route = [start]
+    r, c = start
+    <span class="kw">for</span> move <span class="kw">in</span> moves:
+        <span class="kw">if</span> move == <span class="str">&quot;D&quot;</span>:
+            r = r + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;U&quot;</span>:
+            r = r - <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;R&quot;</span>:
+            c = c + <span class="num">1</span>
+        <span class="kw">elif</span> move == <span class="str">&quot;L&quot;</span>:
+            c = c - <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">f&quot;「{move}」は使えない文字です（D/U/R/L だけ使えます）&quot;</span>
+        <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
+            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;迷路の外に出てしまいました&quot;</span>
+        route.append((r, c))
+    <span class="kw">if</span> route[-<span class="num">1</span>] != goal:
+        <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;ゴールに着いていません&quot;</span>
+    <span class="kw">return</span> route, <span class="str">&quot;OK&quot;</span>
+
+tests = [
+    (<span class="str">&quot;ふつうの道&quot;</span>, <span class="str">&quot;DDRR&quot;</span>),
+    (<span class="str">&quot;空の道&quot;</span>, <span class="str">&quot;&quot;</span>),
+    (<span class="str">&quot;迷路の外に出る道&quot;</span>, <span class="str">&quot;DDDDDD&quot;</span>),
+    (<span class="str">&quot;ゴールに着かない道&quot;</span>, <span class="str">&quot;DR&quot;</span>),
+    (<span class="str">&quot;使えない文字が入った道&quot;</span>, <span class="str">&quot;DDXR&quot;</span>),
+    (<span class="str">&quot;行ったり戻ったりする道&quot;</span>, <span class="str">&quot;DRLDRR&quot;</span>),
+]
+
+<span class="fn">print</span>(<span class="str">&quot;バグのある関数に、6種類の入力を与えてみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="kw">for</span> name, moves <span class="kw">in</span> tests:
+    <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+    route = <span class="fn">move_to_route_buggy</span>(moves)
+    last = route[-<span class="num">1</span>]
+    inside = <span class="num">0</span> &lt;= last[<span class="num">0</span>] &lt; rows <span class="kw">and</span> <span class="num">0</span> &lt;= last[<span class="num">1</span>] &lt; cols
+    <span class="fn">print</span>(<span class="str">f&quot;  最後にいるマス: {last}   迷路の中か: {inside}&quot;</span>)
+    <span class="kw">if</span> <span class="kw">not</span> inside:
+        <span class="fn">print</span>(<span class="str">&quot;  → 迷路の外を指している。このあと cost_map[r][c] でエラーになる&quot;</span>)
+    <span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>(<span class="str">&quot;修正版に、同じ6種類の入力を与えてみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="kw">for</span> name, moves <span class="kw">in</span> tests:
+    route, message = <span class="fn">move_to_route_fixed</span>(moves)
+    <span class="kw">if</span> route <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  → 受けつけない: {message}&quot;</span>)
+    <span class="kw">else</span>:
+        total = <span class="num">0</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+            r, c = route[i]
+            total = total + cost_map[r][c]
+        <span class="fn">print</span>(<span class="str">f&quot;入力: {name}（\&quot;{moves}\&quot;）&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  → OK: {len(route)-1}歩 ／ {total}秒&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">58</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-14-ex1.py</span>
 <span class="cmt"># 境界値テスト: わざと「特別な入力」を与えて、プログラムが正しく動くか確かめる</span>
 <span class="cmt"># テンプレートAの「プレイヤーの道」を受け取る部分をテストする。</span>
 
@@ -309,9 +401,9 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
         <span class="kw">else</span>:
             <span class="kw">return</span> <span class="kw">None</span>, <span class="str">f&quot;「{move}」は使えない文字です（D/U/R/L だけ使えます）&quot;</span>
         <span class="kw">if</span> r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols:
-            <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;迷路の外に出てしまいました&quot;</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         route.append((r, c))
-    <span class="kw">if</span> route[-<span class="num">1</span>] != goal:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         <span class="kw">return</span> <span class="kw">None</span>, <span class="str">&quot;ゴールに着いていません&quot;</span>
     <span class="kw">return</span> route, <span class="str">&quot;OK&quot;</span>
 
@@ -356,6 +448,17 @@ tests = [
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;修正版は、どの入力でもエラーで止まらず、理由を教えてくれる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;「わざと変な入力を試す」ことをテストと呼ぶ。作品を提出する前に必ず行う。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>外に出たら、道の代わりに None と理由を返して止める</td><td style="white-space:nowrap">A. <code>continue</code><br>B. <code>return route, &quot;OK&quot;</code><br>C. <code>return None, &quot;迷路の外に出てしまいました&quot;</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後のマスがゴールでなければ受けつけない</td><td style="white-space:nowrap">A. <code>route[-1] != goal</code><br>B. <code>route[0] != start</code><br>C. <code>len(route) == 0</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -374,6 +477,109 @@ tests = [
       <p>バグをしこんだ貪欲法の関数を、<code>print</code> を入れて追いかけます。
       どの行で判断がおかしくなっているかを、目で見て確かめます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-14-ex2.py（参考）</span>
+<span class="kw">import</span> math
+
+places = [
+    (<span class="str">&quot;営業所&quot;</span>, <span class="num">0</span>, <span class="num">0</span>),
+    (<span class="str">&quot;A宅&quot;</span>, <span class="num">3</span>, <span class="num">1</span>),
+    (<span class="str">&quot;B宅&quot;</span>, <span class="num">1</span>, <span class="num">4</span>),
+    (<span class="str">&quot;C宅&quot;</span>, <span class="num">6</span>, <span class="num">2</span>),
+]
+
+n = <span class="fn">len</span>(places)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((places[i][<span class="num">1</span>] - places[j][<span class="num">1</span>]) ** <span class="num">2</span> + (places[i][<span class="num">2</span>] - places[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(<span class="fn">round</span>(d, <span class="num">2</span>))
+    distance.append(row)
+
+<span class="fn">print</span>(<span class="str">&quot;距離の表&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;      &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{j:&gt;8}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">f&quot;  {i}   &quot;</span> + <span class="str">&quot;&quot;</span>.join(<span class="str">f&quot;{distance[i][j]:&gt;8}&quot;</span> <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n)))
+<span class="fn">print</span>()
+
+<span class="kw">def</span> <span class="fn">greedy_buggy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法でルートを作る（バグあり）&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="num">0</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+<span class="kw">def</span> <span class="fn">greedy_with_print</span>():
+    <span class="str">&quot;&quot;&quot;同じ関数に print を入れて、中で何が起きているかを見る&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="num">0</span>
+        <span class="fn">print</span>(<span class="str">f&quot;  [ここまで] visited={visited}  here={here}  nearest の初期値={nearest}&quot;</span>)
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="fn">print</span>(<span class="str">f&quot;      j={j} はすでに訪問済み → とばす&quot;</span>)
+                <span class="kw">continue</span>
+            <span class="fn">print</span>(<span class="str">f&quot;      j={j}: distance[{here}][{j}]={distance[here][j]}&quot;</span>
+                  <span class="str">f&quot;  vs  distance[{here}][{nearest}]={distance[here][nearest]}&quot;</span>)
+            <span class="kw">if</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+                <span class="fn">print</span>(<span class="str">f&quot;        → nearest を {j} に更新&quot;</span>)
+        <span class="fn">print</span>(<span class="str">f&quot;  [結果] nearest={nearest} を訪問する&quot;</span>)
+        <span class="fn">print</span>()
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+<span class="kw">def</span> <span class="fn">greedy_fixed</span>():
+    <span class="str">&quot;&quot;&quot;修正版: nearest の初期値を None にして、最初の1件で必ず更新されるようにする&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> visited
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;バグのある関数の結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+result = <span class="fn">greedy_buggy</span>()
+<span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+
+<span class="fn">print</span>(<span class="str">&quot;  同じ場所が2回入っていないか:&quot;</span>, <span class="fn">len</span>(result) != <span class="fn">len</span>(<span class="fn">set</span>(result)))
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;print を入れて、中で何が起きているかを見る&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">greedy_with_print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;修正版の結果&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">62</span>)
+result = <span class="fn">greedy_fixed</span>()
+<span class="fn">print</span>(<span class="str">&quot;  訪問した順番:&quot;</span>, result)
+names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <span class="kw">in</span> result]
+<span class="fn">print</span>(<span class="str">&quot;  ルート:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(names) + <span class="str">&quot; → &quot;</span> + places[<span class="num">0</span>][<span class="num">0</span>])
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;print を入れると、どの行で判断がおかしくなったかが目で見える。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;バグが直ったら、入れた print は消す。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-14-ex2.py</span>
 <span class="cmt"># print デバッグ: プログラムの途中に print を入れて、変数の中身を目で見る</span>
 <span class="cmt"># ここでは「貪欲法で配達ルートを作る関数」にバグを1つしこんである。</span>
@@ -489,7 +695,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>候補がまだ無いか、より近いときに更新する</td><td style="white-space:nowrap">A. <code>distance[here][j] &lt; distance[here][nearest]</code><br>B. <code>nearest is None or distance[here][j] &lt; distance[here][nearest]</code><br>C. <code>nearest is None</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -537,6 +743,7 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">自分の4つの入力と、<strong>バグあり</strong>・<strong>直したあと</strong>それぞれの結果を表か箱で描く。エラーや変な動きになったものに印を付ける。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>自分で決めた4種類の入力</li>
@@ -652,19 +859,14 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
           <li>第14回のGoogleスライドを新しく作る（ファイル名は「AL2 第14回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -755,6 +957,8 @@ names = [places[i][<span class="num">0</span>] <span class="kw">for</span> i <sp
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-14-ex1.py</code></td><td>穴1</td><td><code>return None, &quot;迷路の外に出てしまいました&quot;</code></td></tr>
+          <tr><td><code>AL2-14-ex1.py</code></td><td>穴2</td><td><code>route[-1] != goal</code></td></tr>
           <tr><td><code>AL2-14-ex2.py</code></td><td>穴1</td><td><code>nearest = None</code></td></tr>
           <tr><td><code>AL2-14-ex2.py</code></td><td>穴2</td><td><code>nearest is None or distance[here][j] &lt; distance[here][nearest]</code></td></tr>
         </table>

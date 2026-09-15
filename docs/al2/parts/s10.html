@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品3 配達ルートアプリ ─ 今回の到達点: bitDP のルートも描いて比べ、例題と同じ距離になる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第10回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第10回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -35,7 +35,7 @@
     <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第8回の全探索は必ず最適解を出しますが、12都市で終わらなくなりました。
       第9回の貪欲法は一瞬で終わりますが、最適解とはかぎりませんでした。
-      第10回で学ぶ<strong>動的計画法</strong>（どうてきけいかくほう）は、
+      第10回で学ぶ<strong>動的計画法</strong>は、
       <strong>必ず最適解を出しながら、全探索よりずっと速い</strong>方法です。
     </p>
 
@@ -354,11 +354,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -382,7 +386,75 @@
       <p>bitDP を書く前に、ビットで集合を表す練習をします。
       <code>&lt;&lt;</code>、<code>|</code>、<code>&amp;</code> の3つの記号だけ覚えれば足ります。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-10-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-10-ex1.py（参考）</span>
+city_names = [<span class="str">&quot;学校&quot;</span>, <span class="str">&quot;郵便局&quot;</span>, <span class="str">&quot;図書館&quot;</span>, <span class="str">&quot;カフェ&quot;</span>, <span class="str">&quot;公園&quot;</span>]
+n = <span class="fn">len</span>(city_names)
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+<span class="kw">def</span> <span class="fn">show</span>(bits):
+    <span class="str">&quot;&quot;&quot;bits を2進数と、回った都市の名前で表示する&quot;&quot;&quot;</span>
+    binary = <span class="fn">format</span>(bits, <span class="str">&quot;05b&quot;</span>)
+    visited = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):
+            visited.append(city_names[i])
+    <span class="kw">if</span> <span class="fn">len</span>(visited) == <span class="num">0</span>:
+        names = <span class="str">&quot;（まだどこにも行っていない）&quot;</span>
+    <span class="kw">else</span>:
+        names = <span class="str">&quot;、&quot;</span>.join(visited)
+    <span class="fn">print</span>(<span class="str">f&quot;  {bits:&gt;2} = 2進数 {binary}  →  {names}&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">&quot;2進数1つで「回った都市の集合」を表す&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">show</span>(<span class="num">0</span>)
+<span class="fn">show</span>(<span class="num">1</span>)
+<span class="fn">show</span>(<span class="num">3</span>)
+<span class="fn">show</span>(<span class="num">5</span>)
+<span class="fn">show</span>(<span class="num">31</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;1つの都市を表す数（1 &lt;&lt; i は「1を左へ i けたずらす」という意味）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="fn">pad</span>(city_names[i], <span class="num">8</span>) + <span class="str">f&quot;→ 1 &lt;&lt; {i} = {1 &lt;&lt; i:&gt;2} = 2進数 {format(1 &lt;&lt; i, &#x27;05b&#x27;)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;集合に都市を1つ足す（| は「または」。けたごとに 1 があれば 1 にする）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+bits = <span class="num">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    before = bits
+    bits = bits | (<span class="num">1</span> &lt;&lt; i)
+    <span class="fn">print</span>(<span class="str">f&quot;  {format(before, &#x27;05b&#x27;)} に {city_names[i]} を足す → {format(bits, &#x27;05b&#x27;)}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;集合に都市が入っているか調べる（&amp; は「かつ」。両方 1 のけただけ 1 にする）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+bits = <span class="num">5</span>
+<span class="fn">print</span>(<span class="str">f&quot;  いまの集合: {format(bits, &#x27;05b&#x27;)}&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):
+        <span class="fn">print</span>(<span class="str">f&quot;    {city_names[i]}: 入っている&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f&quot;    {city_names[i]}: 入っていない&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;5個の都市なら、集合の種類は 2の5乗 = 32 通り（0 から 31 まで）&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-10-ex1.py</span>
 <span class="cmt"># 「どの都市を回ったか」を2進数1つで表す練習</span>
 <span class="cmt"># 都市が5個あるとき、「回った・回っていない」を5けたの0と1で表す。</span>
 <span class="cmt">#   いちばん右のけたが 0番の都市、その左が 1番の都市、…</span>
@@ -438,7 +510,7 @@ n = <span class="fn">len</span>(city_names)
 bits = <span class="num">0</span>
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
     before = bits
-    bits = bits | (<span class="num">1</span> &lt;&lt; i)                <span class="cmt"># i番の都市を「回った」ことにする</span>
+    bits = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     <span class="fn">print</span>(<span class="str">f&quot;  {format(before, &#x27;05b&#x27;)} に {city_names[i]} を足す → {format(bits, &#x27;05b&#x27;)}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
 <span class="fn">print</span>()
@@ -448,13 +520,24 @@ bits = <span class="num">0</span>
 bits = <span class="num">5</span>                                   <span class="cmt"># 2進数 00101 = 学校 と 図書館</span>
 <span class="fn">print</span>(<span class="str">f&quot;  いまの集合: {format(bits, &#x27;05b&#x27;)}&quot;</span>)
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-    <span class="kw">if</span> bits &amp; (<span class="num">1</span> &lt;&lt; i):
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         <span class="fn">print</span>(<span class="str">f&quot;    {city_names[i]}: 入っている&quot;</span>)
     <span class="kw">else</span>:
         <span class="fn">print</span>(<span class="str">f&quot;    {city_names[i]}: 入っていない&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">52</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;5個の都市なら、集合の種類は 2の5乗 = 32 通り（0 から 31 まで）&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>i番の都市のけたを1にして「回った」ことにする（| は「または」）</td><td style="white-space:nowrap">A. <code>bits | (1 &lt;&lt; i)</code><br>B. <code>bits &amp; (1 &lt;&lt; i)</code><br>C. <code>bits + i</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>i番のけたが1かどうかを調べる（& は「かつ」）</td><td style="white-space:nowrap">A. <code>bits == i</code><br>B. <code>bits | (1 &lt;&lt; i)</code><br>C. <code>bits &amp; (1 &lt;&lt; i)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -472,6 +555,100 @@ bits = <span class="num">5</span>                                   <span class=
       <code>best[visited][here]</code> という表を作り、
       「<code>visited</code> の都市を回り終えて、いま <code>here</code> にいる」ときの最小距離を記録していきます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-10-ex2.py（参考）</span>
+<span class="kw">import</span> math
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>),
+    (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>),
+    (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>),
+    (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>),
+]
+
+n = <span class="fn">len</span>(cities)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        d = math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span> + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>)
+        row.append(d)
+    distance.append(row)
+
+full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+
+best = []
+<span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+    best.append([INF] * n)
+
+best[<span class="num">1</span> &lt;&lt; <span class="num">0</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+
+<span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[visited][here] == INF:
+            <span class="kw">continue</span>
+        <span class="kw">for</span> next_city <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; next_city):
+                <span class="kw">continue</span>
+            new_visited = visited | (<span class="num">1</span> &lt;&lt; next_city)
+            new_length = best[visited][here] + distance[here][next_city]
+            <span class="kw">if</span> new_length &lt; best[new_visited][next_city]:
+                best[new_visited][next_city] = new_length
+
+answer = INF
+last_city = <span class="kw">None</span>
+<span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+    <span class="kw">if</span> best[full][here] == INF:
+        <span class="kw">continue</span>
+    total = best[full][here] + distance[here][<span class="num">0</span>]
+    <span class="kw">if</span> total &lt; answer:
+        answer = total
+        last_city = here
+
+<span class="fn">print</span>(<span class="str">&quot;動的計画法（bitDP）の表の一部&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（visited = 回った都市の集合を2進数で表したもの、here = いまいる都市）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;visited           here=0 here=1   here=2   here=3   here=4&quot;</span>)
+<span class="kw">for</span> visited <span class="kw">in</span> [<span class="num">1</span>, <span class="num">3</span>, <span class="num">7</span>, <span class="num">15</span>, <span class="num">31</span>]:
+    line = <span class="str">f&quot;   {format(visited, &#x27;05b&#x27;)}        &quot;</span>
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        value = best[visited][here]
+        <span class="kw">if</span> value == INF:
+            line = line + <span class="str">&quot;     -   &quot;</span>
+        <span class="kw">else</span>:
+            line = line + <span class="str">f&quot;{round(value, 1):&gt;8} &quot;</span>
+    <span class="fn">print</span>(line)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
+<span class="fn">print</span>(<span class="str">&quot;「-」は「その状態にはたどり着けない」ことを表す&quot;</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;bitDP の答え:&quot;</span>, <span class="fn">round</span>(answer, <span class="num">1</span>))
+<span class="fn">print</span>(<span class="str">&quot;最後に立ち寄った都市:&quot;</span>, cities[last_city][<span class="num">0</span>])
+<span class="fn">print</span>()
+
+brute_best = <span class="kw">None</span>
+<span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    total = total + distance[here][<span class="num">0</span>]
+    <span class="kw">if</span> brute_best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; brute_best:
+        brute_best = total
+
+<span class="fn">print</span>(<span class="str">&quot;全探索の答え:&quot;</span>, <span class="fn">round</span>(brute_best, <span class="num">1</span>))
+<span class="kw">if</span> <span class="fn">abs</span>(answer - brute_best) &lt; <span class="num">0.0001</span>:
+    <span class="fn">print</span>(<span class="str">&quot;2つの答えは一致した。bitDP は必ず最適解を出す。&quot;</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;表のマスの数:&quot;</span>, (<span class="num">1</span> &lt;&lt; n) * n, <span class="str">&quot;個（2の5乗 × 5）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;全探索が試した順番の数: 24 通り&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-10-ex2.py</span>
 <span class="cmt"># 動的計画法（bitDP）で巡回セールスマン問題を解く</span>
 <span class="cmt"># 考え方: 「どの都市を回ったか」と「いまどこにいるか」が同じなら、</span>
@@ -581,7 +758,7 @@ brute_best = <span class="kw">None</span>
         <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>表の値より短いときだけ書き直す</td><td style="white-space:nowrap">A. <code>new_length &lt; INF</code><br>B. <code>new_length &gt; best[new_visited][next_city]</code><br>C. <code>new_length &lt; best[new_visited][next_city]</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -747,19 +924,14 @@ brute_best = <span class="kw">None</span>
           <li>第10回のGoogleスライドを新しく作る（ファイル名は「AL2 第10回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -857,6 +1029,8 @@ brute_best = <span class="kw">None</span>
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-10-ex1.py</code></td><td>穴1</td><td><code>bits | (1 &lt;&lt; i)</code></td></tr>
+          <tr><td><code>AL2-10-ex1.py</code></td><td>穴2</td><td><code>bits &amp; (1 &lt;&lt; i)</code></td></tr>
           <tr><td><code>AL2-10-ex2.py</code></td><td>穴1</td><td><code>visited &amp; (1 &lt;&lt; next_city)</code></td></tr>
           <tr><td><code>AL2-10-ex2.py</code></td><td>穴2</td><td><code>visited | (1 &lt;&lt; next_city)</code></td></tr>
           <tr><td><code>AL2-10-ex2.py</code></td><td>穴3</td><td><code>new_length &lt; best[new_visited][next_city]</code></td></tr>

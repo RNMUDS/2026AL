@@ -3,7 +3,7 @@
 import math
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -215,7 +215,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>後期に学んだ6つのアルゴリズムを、1つのプログラムでまとめて動かします。
       前半は2地点間の経路、後半は全部回って戻る最短ルートです。</p>
 
-{code('AL2-15-ex1.py')}
+{code_pair('AL2-15-ex1.py')}
 
 {run('a15_ex1_result.png', '前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。'
      '幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。'
@@ -227,7 +227,7 @@ ex1_body = f"""      <p>後期に学んだ6つのアルゴリズムを、1つの
 ex2_body = f"""      <p>20都市の問題を、後期に学んだ方法と発展手法を合わせて5つで解き、まとめて比べます。
       実行に10秒ほどかかります。</p>
 
-{code('AL2-15-ex2.py')}
+{code_pair('AL2-15-ex2.py')}
 
 {fig_five()}
 

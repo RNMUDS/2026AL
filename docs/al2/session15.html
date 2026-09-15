@@ -216,8 +216,8 @@ a.sub-item:hover { border-color: #4A7A00; }
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品4 自由テーマ ─ 今回の到達点: 仕上げ: アルゴリズムを使わない場合と比べる</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第15回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第15回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -442,11 +442,15 @@ a.sub-item:hover { border-color: #4A7A00; }
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -470,7 +474,206 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>後期に学んだ6つのアルゴリズムを、1つのプログラムでまとめて動かします。
       前半は2地点間の経路、後半は全部回って戻る最短ルートです。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-15-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-15-ex1.py（参考）</span>
+<span class="kw">import</span> heapq
+<span class="kw">import</span> math
+<span class="kw">import</span> time
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">from</span> itertools <span class="kw">import</span> permutations
+
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+start = <span class="str">&quot;新宿&quot;</span>
+goal = <span class="str">&quot;東京&quot;</span>
+
+<span class="kw">def</span> <span class="fn">build</span>(came_from, goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+<span class="kw">def</span> <span class="fn">route_minutes</span>(route):
+    <span class="str">&quot;&quot;&quot;駅を順に通ったときの合計時間を返す&quot;&quot;&quot;</span>
+    total = <span class="num">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
+            <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
+                total = total + minutes
+                <span class="kw">break</span>
+    <span class="kw">return</span> total
+
+<span class="kw">def</span> <span class="fn">bfs</span>():
+    <span class="str">&quot;&quot;&quot;幅優先探索: 乗る路線の本数がいちばん少ない道をさがす&quot;&quot;&quot;</span>
+    came_from = {start: <span class="kw">None</span>}
+    queue = <span class="fn">deque</span>([start])
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        current = queue.popleft()
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> name <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[name] = current
+            queue.append(name)
+    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
+
+<span class="kw">def</span> <span class="fn">dfs</span>():
+    <span class="str">&quot;&quot;&quot;深さ優先探索: 行けるところまで進む道をさがす&quot;&quot;&quot;</span>
+    came_from = {start: <span class="kw">None</span>}
+    stack = [start]
+    <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
+        current = stack.pop()
+        <span class="kw">if</span> current == goal:
+            <span class="kw">break</span>
+        <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> name <span class="kw">in</span> came_from:
+                <span class="kw">continue</span>
+            came_from[name] = current
+            stack.append(name)
+    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
+
+<span class="kw">def</span> <span class="fn">dijkstra</span>():
+    <span class="str">&quot;&quot;&quot;ダイクストラ法: 合計時間がいちばん短い道をさがす&quot;&quot;&quot;</span>
+    distance = {}
+    came_from = {}
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        distance[station] = INF
+        came_from[station] = <span class="kw">None</span>
+    distance[start] = <span class="num">0</span>
+    queue = [(<span class="num">0</span>, start)]
+    settled = <span class="fn">set</span>()
+    <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
+        minutes, current = heapq.heappop(queue)
+        <span class="kw">if</span> current <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        settled.add(current)
+        <span class="kw">for</span> name, weight <span class="kw">in</span> railway[current]:
+            <span class="kw">if</span> minutes + weight &lt; distance[name]:
+                distance[name] = minutes + weight
+                came_from[name] = current
+                heapq.heappush(queue, (distance[name], name))
+    <span class="kw">return</span> <span class="fn">build</span>(came_from, goal)
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="str">&quot;  前半: 新宿から東京までの経路をさがす&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">&quot;路線の本数&quot;</span>, <span class="num">14</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計時間&quot;</span>, <span class="num">12</span>) + <span class="str">&quot;経路&quot;</span>)
+<span class="kw">for</span> name, function, learned <span class="kw">in</span> [(<span class="str">&quot;幅優先探索&quot;</span>, bfs, <span class="str">&quot;第1〜3回&quot;</span>),
+                                (<span class="str">&quot;深さ優先探索&quot;</span>, dfs, <span class="str">&quot;第2回&quot;</span>),
+                                (<span class="str">&quot;ダイクストラ法&quot;</span>, dijkstra, <span class="str">&quot;第5〜7回&quot;</span>)]:
+    route = <span class="fn">function</span>()
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{len(route)-1}本&quot;</span>, <span class="num">14</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{route_minutes(route)}分&quot;</span>, <span class="num">12</span>) + <span class="str">&quot; → &quot;</span>.join(route))
+<span class="fn">print</span>()
+
+cities = [
+    (<span class="str">&quot;学校&quot;</span>, <span class="num">2</span>, <span class="num">2</span>), (<span class="str">&quot;郵便局&quot;</span>, <span class="num">10</span>, <span class="num">3</span>), (<span class="str">&quot;図書館&quot;</span>, <span class="num">14</span>, <span class="num">9</span>), (<span class="str">&quot;カフェ&quot;</span>, <span class="num">6</span>, <span class="num">12</span>),
+    (<span class="str">&quot;公園&quot;</span>, <span class="num">3</span>, <span class="num">8</span>), (<span class="str">&quot;駅&quot;</span>, <span class="num">17</span>, <span class="num">4</span>), (<span class="str">&quot;病院&quot;</span>, <span class="num">12</span>, <span class="num">13</span>), (<span class="str">&quot;書店&quot;</span>, <span class="num">8</span>, <span class="num">7</span>),
+    (<span class="str">&quot;銀行&quot;</span>, <span class="num">16</span>, <span class="num">12</span>), (<span class="str">&quot;市役所&quot;</span>, <span class="num">5</span>, <span class="num">5</span>),
+]
+n = <span class="fn">len</span>(cities)
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        row.append(math.sqrt((cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>
+                             + (cities[i][<span class="num">2</span>] - cities[j][<span class="num">2</span>]) ** <span class="num">2</span>))
+    distance.append(row)
+
+<span class="kw">def</span> <span class="fn">brute_force</span>():
+    <span class="str">&quot;&quot;&quot;全探索: すべての順番を試して、いちばん短いものを返す&quot;&quot;&quot;</span>
+    best = <span class="kw">None</span>
+    <span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="fn">range</span>(<span class="num">1</span>, n)):
+        total = <span class="num">0.0</span>
+        here = <span class="num">0</span>
+        <span class="kw">for</span> city <span class="kw">in</span> order:
+            total = total + distance[here][city]
+            here = city
+        total = total + distance[here][<span class="num">0</span>]
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best:
+            best = total
+    <span class="kw">return</span> best
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法: いまいる場所からいちばん近いところへ進むことをくり返す&quot;&quot;&quot;</span>
+    visited = [<span class="num">0</span>]
+    here = <span class="num">0</span>
+    total = <span class="num">0.0</span>
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        total = total + distance[here][nearest]
+        visited.append(nearest)
+        here = nearest
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+<span class="kw">def</span> <span class="fn">bit_dp</span>():
+    <span class="str">&quot;&quot;&quot;動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める&quot;&quot;&quot;</span>
+    full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+    best = []
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        best.append([INF] * n)
+    best[<span class="num">1</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        row = best[visited]
+        <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> row[here] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; nxt):
+                    <span class="kw">continue</span>
+                <span class="kw">if</span> row[here] + distance[here][nxt] &lt; best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt]:
+                    best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt] = row[here] + distance[here][nxt]
+    answer = INF
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[full][here] &lt; INF:
+            answer = <span class="fn">min</span>(answer, best[full][here] + distance[here][<span class="num">0</span>])
+    <span class="kw">return</span> answer
+
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  後半: {n}都市を全部回って戻る最短ルートをさがす&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">&quot;合計距離&quot;</span>, <span class="num">14</span>) + <span class="fn">pad</span>(<span class="str">&quot;かかった時間&quot;</span>, <span class="num">16</span>) + <span class="str">&quot;性質&quot;</span>)
+<span class="kw">for</span> name, function, note <span class="kw">in</span> [(<span class="str">&quot;全探索&quot;</span>, brute_force, <span class="str">&quot;必ず最適（第8回）&quot;</span>),
+                             (<span class="str">&quot;貪欲法&quot;</span>, greedy, <span class="str">&quot;近似解（第9回）&quot;</span>),
+                             (<span class="str">&quot;bitDP&quot;</span>, bit_dp, <span class="str">&quot;必ず最適（第10回）&quot;</span>)]:
+    began = time.time()
+    value = <span class="fn">function</span>()
+    elapsed = time.time() - began
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">20</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{round(value, 1)}&quot;</span>, <span class="num">14</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{elapsed:.4f}秒&quot;</span>, <span class="num">16</span>) + note)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-15-ex1.py</span>
 <span class="cmt"># 後期のまとめ: 学んだ6つのアルゴリズムを、一度にすべて動かす</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> math
@@ -534,7 +737,7 @@ goal = <span class="str">&quot;東京&quot;</span>
     came_from = {start: <span class="kw">None</span>}
     queue = <span class="fn">deque</span>([start])
     <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-        current = queue.popleft()
+        current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">if</span> current == goal:
             <span class="kw">break</span>
         <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
@@ -550,7 +753,7 @@ goal = <span class="str">&quot;東京&quot;</span>
     came_from = {start: <span class="kw">None</span>}
     stack = [start]
     <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
-        current = stack.pop()
+        current = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">if</span> current == goal:
             <span class="kw">break</span>
         <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
@@ -572,7 +775,7 @@ goal = <span class="str">&quot;東京&quot;</span>
     queue = [(<span class="num">0</span>, start)]
     settled = <span class="fn">set</span>()
     <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-        minutes, current = heapq.heappop(queue)
+        minutes, current = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
         <span class="kw">if</span> current <span class="kw">in</span> settled:
             <span class="kw">continue</span>
         settled.add(current)
@@ -687,10 +890,22 @@ distance = []
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">68</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>幅優先探索: メモのいちばん古い行を読む</td><td style="white-space:nowrap">A. <code>queue[-1]</code><br>B. <code>queue.popleft()</code><br>C. <code>queue.pop()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>深さ優先探索: メモのいちばん新しい行を読む</td><td style="white-space:nowrap">A. <code>stack.pop()</code><br>B. <code>stack.pop(0)</code><br>C. <code>stack[0]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>ダイクストラ法: 時間がいちばん小さい組を取り出す</td><td style="white-space:nowrap">A. <code>queue.popleft()</code><br>B. <code>queue.pop()</code><br>C. <code>heapq.heappop(queue)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0682秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
+        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0665秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
       </div>
       <p class="run-note">前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。後半では、全探索と bitDP がどちらも<strong>50.1</strong>という同じ答えを出し、貪欲法だけが58.2と長くなっています。かかった時間は、全探索が0.08秒ほどに対し bitDP は0.002秒ほどで、数十倍の差がつきました。後期の授業で1行ずつ書いてきたコードが、すべてここに集まっています。</p>
     </div>
@@ -703,6 +918,217 @@ distance = []
       <p>20都市の問題を、後期に学んだ方法と発展手法を合わせて5つで解き、まとめて比べます。
       実行に10秒ほどかかります。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-15-ex2.py（参考）</span>
+<span class="kw">import</span> heapq
+<span class="kw">import</span> math
+<span class="kw">import</span> random
+<span class="kw">import</span> time
+
+random.seed(<span class="num">2026</span>)
+
+cities = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>):
+    cities.append(((i * <span class="num">7</span>) % <span class="num">23</span>, (i * <span class="num">11</span>) % <span class="num">19</span>))
+
+n = <span class="fn">len</span>(cities)
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+    row = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+        row.append(math.sqrt((cities[i][<span class="num">0</span>] - cities[j][<span class="num">0</span>]) ** <span class="num">2</span>
+                             + (cities[i][<span class="num">1</span>] - cities[j][<span class="num">1</span>]) ** <span class="num">2</span>))
+    distance.append(row)
+
+<span class="kw">def</span> <span class="fn">pad</span>(text, width):
+    <span class="str">&quot;&quot;&quot;全角文字を2文字ぶんとして数え、右側に空白を足して表示の幅をそろえる&quot;&quot;&quot;</span>
+    length = <span class="num">0</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> text:
+        <span class="kw">if</span> <span class="fn">ord</span>(ch) &gt; 0x2000:
+            length = length + <span class="num">2</span>
+        <span class="kw">else</span>:
+            length = length + <span class="num">1</span>
+    <span class="kw">return</span> text + <span class="str">&quot; &quot;</span> * (width - length)
+
+<span class="kw">def</span> <span class="fn">tour_length</span>(order):
+    <span class="str">&quot;&quot;&quot;0番から出発し、order の順に回って0番へ戻るまでの合計距離を返す&quot;&quot;&quot;</span>
+    total = <span class="num">0.0</span>
+    here = <span class="num">0</span>
+    <span class="kw">for</span> city <span class="kw">in</span> order:
+        total = total + distance[here][city]
+        here = city
+    <span class="kw">return</span> total + distance[here][<span class="num">0</span>]
+
+<span class="kw">def</span> <span class="fn">greedy_from</span>(start):
+    <span class="str">&quot;&quot;&quot;start を出発点にして、貪欲法でルートを作る&quot;&quot;&quot;</span>
+    visited = [start]
+    here = start
+    <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
+        nearest = <span class="kw">None</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> j <span class="kw">in</span> visited:
+                <span class="kw">continue</span>
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+                nearest = j
+        visited.append(nearest)
+        here = nearest
+
+    total = <span class="num">0.0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(visited)):
+        total = total + distance[visited[i]][visited[(i + <span class="num">1</span>) % n]]
+    <span class="kw">return</span> total, visited
+
+<span class="kw">def</span> <span class="fn">greedy</span>():
+    <span class="str">&quot;&quot;&quot;貪欲法（出発点は0番の都市に固定）&quot;&quot;&quot;</span>
+    total, visited = <span class="fn">greedy_from</span>(<span class="num">0</span>)
+    <span class="kw">return</span> total
+
+<span class="kw">def</span> <span class="fn">greedy_all_starts</span>():
+    <span class="str">&quot;&quot;&quot;すべての都市を出発点にして貪欲法を試し、いちばん良い答えを選ぶ&quot;&quot;&quot;</span>
+    best = <span class="kw">None</span>
+    <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
+        total, visited = <span class="fn">greedy_from</span>(start)
+        <span class="kw">if</span> best <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best:
+            best = total
+    <span class="kw">return</span> best
+
+<span class="kw">def</span> <span class="fn">annealing</span>():
+    <span class="str">&quot;&quot;&quot;焼きなまし法: 悪くなる変更もときどき受け入れながら、少しずつ短くする&quot;&quot;&quot;</span>
+    total, visited = <span class="fn">greedy_from</span>(<span class="num">0</span>)
+    order = visited[<span class="num">1</span>:]
+    current = <span class="fn">tour_length</span>(order)
+    best = current
+    temperature = <span class="num">10.0</span>
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20000</span>):
+        i = random.randrange(n - <span class="num">1</span>)
+        j = random.randrange(n - <span class="num">1</span>)
+        <span class="kw">if</span> i == j:
+            <span class="kw">continue</span>
+        candidate = <span class="fn">list</span>(order)
+        candidate[i], candidate[j] = candidate[j], candidate[i]
+        new_length = <span class="fn">tour_length</span>(candidate)
+        difference = new_length - current
+        <span class="kw">if</span> difference &lt; <span class="num">0</span> <span class="kw">or</span> random.random() &lt; math.exp(-difference / temperature):
+            order = candidate
+            current = new_length
+            <span class="kw">if</span> current &lt; best:
+                best = current
+        temperature = temperature * <span class="num">0.9995</span>
+    <span class="kw">return</span> best
+
+<span class="kw">def</span> <span class="fn">genetic</span>():
+    <span class="str">&quot;&quot;&quot;遺伝的アルゴリズム: 良いルートどうしを組み合わせて世代を進める&quot;&quot;&quot;</span>
+    population = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">100</span>):
+        order = <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">1</span>, n))
+        random.shuffle(order)
+        population.append(order)
+    best_order = <span class="fn">min</span>(population, key=tour_length)
+    best = <span class="fn">tour_length</span>(best_order)
+
+    <span class="kw">for</span> generation <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1000</span>):
+        next_population = [<span class="fn">list</span>(best_order)]
+        <span class="kw">while</span> <span class="fn">len</span>(next_population) &lt; <span class="num">100</span>:
+            parents = []
+            <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>):
+
+                three = []
+                <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+                    three.append(random.choice(population))
+                best_of_three = three[<span class="num">0</span>]
+                <span class="kw">for</span> candidate <span class="kw">in</span> three:
+                    <span class="kw">if</span> <span class="fn">tour_length</span>(candidate) &lt; <span class="fn">tour_length</span>(best_of_three):
+                        best_of_three = candidate
+                parents.append(best_of_three)
+            size = n - <span class="num">1</span>
+            left = random.randrange(size)
+            right = random.randrange(size)
+            <span class="kw">if</span> left &gt; right:
+                left, right = right, left
+            child = [<span class="kw">None</span>] * size
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(left, right + <span class="num">1</span>):
+                child[i] = parents[<span class="num">0</span>][i]
+            used = <span class="fn">set</span>(child[left:right + <span class="num">1</span>])
+            position = <span class="num">0</span>
+            <span class="kw">for</span> city <span class="kw">in</span> parents[<span class="num">1</span>]:
+                <span class="kw">if</span> city <span class="kw">in</span> used:
+                    <span class="kw">continue</span>
+                <span class="kw">while</span> child[position] <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+                    position = position + <span class="num">1</span>
+                child[position] = city
+            <span class="kw">if</span> random.random() &lt; <span class="num">0.3</span>:
+                i = random.randrange(size)
+                j = random.randrange(size)
+                child[i], child[j] = child[j], child[i]
+            next_population.append(child)
+        population = next_population
+        <span class="kw">for</span> order <span class="kw">in</span> population:
+            length = <span class="fn">tour_length</span>(order)
+            <span class="kw">if</span> length &lt; best:
+                best = length
+                best_order = <span class="fn">list</span>(order)
+    <span class="kw">return</span> best
+
+<span class="kw">def</span> <span class="fn">bit_dp</span>():
+    <span class="str">&quot;&quot;&quot;動的計画法（bitDP）: 「回った集合」と「いまいる都市」で表を作り、最適解を求める&quot;&quot;&quot;</span>
+    full = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>
+    best = []
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        best.append([INF] * n)
+    best[<span class="num">1</span>][<span class="num">0</span>] = <span class="num">0.0</span>
+    <span class="kw">for</span> visited <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span> &lt;&lt; n):
+        row = best[visited]
+        <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+            <span class="kw">if</span> row[here] == INF:
+                <span class="kw">continue</span>
+            <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">if</span> visited &amp; (<span class="num">1</span> &lt;&lt; nxt):
+                    <span class="kw">continue</span>
+                <span class="kw">if</span> row[here] + distance[here][nxt] &lt; best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt]:
+                    best[visited | (<span class="num">1</span> &lt;&lt; nxt)][nxt] = row[here] + distance[here][nxt]
+    answer = INF
+    <span class="kw">for</span> here <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">if</span> best[full][here] &lt; INF:
+            answer = <span class="fn">min</span>(answer, best[full][here] + distance[here][<span class="num">0</span>])
+    <span class="kw">return</span> answer
+
+methods = [
+    (<span class="str">&quot;貪欲法&quot;</span>, greedy, <span class="str">&quot;第9回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;貪欲法(全出発点)&quot;</span>, greedy_all_starts, <span class="str">&quot;第11回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;焼きなまし法&quot;</span>, annealing, <span class="str">&quot;第15回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;遺伝的アルゴリズム&quot;</span>, genetic, <span class="str">&quot;第15回&quot;</span>, <span class="str">&quot;近似解&quot;</span>),
+    (<span class="str">&quot;bitDP&quot;</span>, bit_dp, <span class="str">&quot;第10回&quot;</span>, <span class="str">&quot;必ず最適&quot;</span>),
+]
+
+<span class="fn">print</span>(<span class="str">f&quot;{n}都市の巡回セールスマン問題を5つの方法で解く&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（全探索なら 19! ＝ 約12京通り。まったく終わらない）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
+<span class="fn">print</span>(<span class="fn">pad</span>(<span class="str">&quot;方法&quot;</span>, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">&quot;答え&quot;</span>, <span class="num">10</span>) + <span class="fn">pad</span>(<span class="str">&quot;最適との差&quot;</span>, <span class="num">18</span>)
+      + <span class="fn">pad</span>(<span class="str">&quot;かかった時間&quot;</span>, <span class="num">16</span>) + <span class="str">&quot;学んだ回&quot;</span>)
+
+results = []
+<span class="kw">for</span> name, function, week, note <span class="kw">in</span> methods:
+    began = time.time()
+    value = <span class="fn">function</span>()
+    elapsed = time.time() - began
+    results.append((name, value, elapsed, week, note))
+
+best_value = <span class="kw">None</span>
+<span class="kw">for</span> name, value, elapsed, week, note <span class="kw">in</span> results:
+    <span class="kw">if</span> best_value <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best_value:
+        best_value = value
+<span class="kw">for</span> name, value, elapsed, week, note <span class="kw">in</span> results:
+    gap = value - best_value
+    <span class="fn">print</span>(<span class="fn">pad</span>(name, <span class="num">24</span>) + <span class="fn">pad</span>(<span class="str">f&quot;{round(value, 1)}&quot;</span>, <span class="num">10</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;+{round(gap, 1)}（{round(gap/best_value*100, 1)}%）&quot;</span> <span class="kw">if</span> gap &gt; <span class="num">0</span> <span class="kw">else</span> <span class="str">&quot;最適&quot;</span>, <span class="num">18</span>)
+          + <span class="fn">pad</span>(<span class="str">f&quot;{elapsed:.3f}秒&quot;</span>, <span class="num">16</span>) + week)
+<span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">76</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-15-ex2.py</span>
 <span class="cmt"># 20都市の巡回セールスマン問題を、5つの方法で解いて比べる</span>
 <span class="kw">import</span> heapq
@@ -930,7 +1356,7 @@ best_value = <span class="kw">None</span>
         <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>5つの答えのうち、いちばん短いものを求める</td><td style="white-space:nowrap">A. <code>best_value is None or value &lt; best_value</code><br>B. <code>best_value is None</code><br>C. <code>value &gt; best_value</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -969,7 +1395,7 @@ best_value = <span class="kw">None</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.682秒         第15回 / bitDP                   91.1      最適              5.952秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
+        <img src="images/a15_ex2_result.png" alt="AL2-15-ex2.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.670秒         第15回 / bitDP                   91.1      最適              6.067秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
       </div>
       <p class="run-note"><strong>bitDP だけが最適の91.1</strong>を出し、6秒ほどかかりました。近似解の3つ（貪欲法の全出発点版・焼きなまし法・遺伝的アルゴリズム）は、最適より<strong>わずか4〜6%長いだけ</strong>で、いずれも1秒以内に終わっています。出発点を1つに固定した貪欲法だけが15.9%長く、明らかに劣っています。20都市では bitDP が使えましたが、25都市を超えると表が大きすぎて使えなくなります。そのとき頼りになるのが、この3つの近似解法です。</p>
 
@@ -1013,6 +1439,7 @@ best_value = <span class="kw">None</span>
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">前期の「探す」から後期の「選ぶ」へのつながりを<strong>1枚の地図</strong>に描く。後期の6つの手法を「必ず最適」と「速い」の2グループに分け、自分の実行結果を書き込む。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>前期の手法（線形探索・二分探索・幅優先探索）から後期の手法へのつながりの線</li>
@@ -1128,19 +1555,14 @@ best_value = <span class="kw">None</span>
           <li>第15回のGoogleスライドを新しく作る（ファイル名は「AL2 第15回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -1179,7 +1601,7 @@ best_value = <span class="kw">None</span>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="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"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

@@ -18,8 +18,8 @@
         <a class="sub-item" href="#sec-advanced"><span class="sub-count">30点</span><span class="tag tag-advanced">発展課題</span>作品2 路線図の最短経路アプリ ─ 今回の到達点: 自分の路線図が画面に出る（最小版）</a>
       </div>
       <div style="background:#0a1a0a;border:1px solid #4A7A00;border-radius:8px;padding:0.8rem 1rem;margin-top:1rem;font-size:0.9rem;color:#93D500">
-        <strong>提出方法:</strong> 第5回のGoogleスライドを新しく作る（発展課題をやった人は同じファイルに発展のスライドも入れる） →
-        PDFに書き出してManabaに提出 → コメント欄にスライドの共有URLを貼る（発展課題は <code>app.py</code> も添付）。
+        <strong>提出方法:</strong> 第5回のGoogleスライドを新しく作る（発展課題に取り組んだ人は標準課題とは別ファイルを作成） →
+        PDFに書き出してManabaに提出。
         締切は<strong>次回の授業が始まる時刻</strong>です。
       </div>
     </div>
@@ -306,11 +306,15 @@
       </div>
 
       <div class="note-warn">
-        <strong>例題2は穴埋めです。</strong>
-        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
-        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">VS Code に貼るのは<strong>実践</strong>のほうです。
         実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        例題1は完成したコードです。コメントを読みながら1行ずつ意味を追ってから実行してください。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
       </div>
     </div>
 
@@ -335,7 +339,80 @@
       1つの手順が終わるたびに、距離表の中身をそのまま表示します。
       表の中で <code>*</code> が付いている駅は「もう変わらない」と決まった駅です。</p>
 
-<pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex1.py</span>
+<p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex1.py（参考）</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = {}
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    distance[station] = INF
+distance[start] = <span class="num">0</span>
+
+settled = <span class="fn">set</span>()
+
+<span class="kw">def</span> <span class="fn">show_table</span>(step, chosen):
+    <span class="str">&quot;&quot;&quot;今の距離表を1行で表示する&quot;&quot;&quot;</span>
+    parts = []
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        value = distance[station]
+        text = <span class="str">&quot;-&quot;</span> <span class="kw">if</span> value == INF <span class="kw">else</span> <span class="fn">str</span>(value)
+        <span class="kw">if</span> station <span class="kw">in</span> settled:
+            text = text + <span class="str">&quot;*&quot;</span>
+        parts.append(<span class="str">f&quot;{station}:{text:&gt;3}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;手順{step} {chosen}を選ぶ  &quot;</span> + <span class="str">&quot; &quot;</span>.join(parts))
+
+<span class="fn">print</span>(<span class="str">&quot;ダイクストラ法で、新宿から各駅までの最短時間を求める&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;（* が付いている駅は「もう変わらないと決まった駅」）&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">74</span>)
+<span class="fn">show_table</span>(<span class="num">0</span>, <span class="str">&quot;なし&quot;</span>)
+
+step = <span class="num">0</span>
+<span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
+    step = step + <span class="num">1</span>
+
+    current = <span class="kw">None</span>
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        <span class="kw">if</span> station <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> distance[station] == INF:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+            current = station
+
+    <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="kw">break</span>
+
+    settled.add(current)
+
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        new_distance = distance[current] + minutes
+        <span class="kw">if</span> new_distance &lt; distance[name]:
+            old = <span class="str">&quot;-&quot;</span> <span class="kw">if</span> distance[name] == INF <span class="kw">else</span> distance[name]
+            distance[name] = new_distance
+            <span class="fn">print</span>(<span class="str">f&quot;        {name} の時間を {old} から {new_distance} に書き直した&quot;</span>
+                  <span class="str">f&quot;（{current} 経由: {distance[current]} + {minutes}）&quot;</span>)
+
+    <span class="fn">show_table</span>(step, current)
+
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">74</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;新宿から各駅までの最短時間&quot;</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {distance[station]}分&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題1（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-05-ex1.py</span>
 <span class="cmt"># ダイクストラ法（1）: 距離表が1ステップずつ決まっていく様子を見る</span>
 <span class="cmt"># 出発点から各駅までの「合計時間がいちばん短い行き方」を求める。</span>
 
@@ -389,7 +466,7 @@ step = <span class="num">0</span>
             <span class="kw">continue</span>
         <span class="kw">if</span> distance[station] == INF:
             <span class="kw">continue</span>
-        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             current = station
 
     <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
@@ -402,8 +479,8 @@ step = <span class="num">0</span>
     <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
         <span class="kw">if</span> name <span class="kw">in</span> settled:
             <span class="kw">continue</span>
-        new_distance = distance[current] + minutes
-        <span class="kw">if</span> new_distance &lt; distance[name]:
+        new_distance = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
             old = <span class="str">&quot;-&quot;</span> <span class="kw">if</span> distance[name] == INF <span class="kw">else</span> distance[name]
             distance[name] = new_distance
             <span class="fn">print</span>(<span class="str">f&quot;        {name} の時間を {old} から {new_distance} に書き直した&quot;</span>
@@ -416,6 +493,18 @@ step = <span class="num">0</span>
 <span class="fn">print</span>(<span class="str">&quot;新宿から各駅までの最短時間&quot;</span>)
 <span class="kw">for</span> station <span class="kw">in</span> railway:
     <span class="fn">print</span>(<span class="str">f&quot;  {station}: {distance[station]}分&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>まだ確定していない駅の中で、いちばん時間が小さい駅を選ぶ</td><td style="white-space:nowrap">A. <code>distance[station] &gt; distance[current]</code><br>B. <code>distance[station] &lt; distance[current]</code><br>C. <code>station &lt; current</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>確定した駅までの時間に、その路線の時間を足す</td><td style="white-space:nowrap">A. <code>distance[current] + minutes</code><br>B. <code>minutes</code><br>C. <code>distance[name] + minutes</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>いまの表の値より短いときだけ書き直す</td><td style="white-space:nowrap">A. <code>new_distance == distance[name]</code><br>B. <code>new_distance &lt; distance[name]</code><br>C. <code>new_distance &gt; distance[name]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -434,6 +523,77 @@ step = <span class="num">0</span>
       <p>ダイクストラ法は最短時間を求めますが、そのままでは「どの道を通ったか」が分かりません。
       距離を書き直すときに、<strong>どの駅から来たか</strong>も一緒に記録しておけば、あとで道順を組み立てられます。</p>
 
+<p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ</p>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex2.py（参考）</span>
+railway = {
+    <span class="str">&quot;新宿&quot;</span>: [(<span class="str">&quot;渋谷&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;池袋&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">30</span>)],
+    <span class="str">&quot;渋谷&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">7</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">9</span>)],
+    <span class="str">&quot;池袋&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;上野&quot;</span>, <span class="num">12</span>)],
+    <span class="str">&quot;上野&quot;</span>: [(<span class="str">&quot;池袋&quot;</span>, <span class="num">12</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">6</span>)],
+    <span class="str">&quot;東京&quot;</span>: [(<span class="str">&quot;上野&quot;</span>, <span class="num">6</span>), (<span class="str">&quot;品川&quot;</span>, <span class="num">11</span>)],
+    <span class="str">&quot;品川&quot;</span>: [(<span class="str">&quot;新宿&quot;</span>, <span class="num">30</span>), (<span class="str">&quot;渋谷&quot;</span>, <span class="num">9</span>), (<span class="str">&quot;東京&quot;</span>, <span class="num">11</span>)],
+}
+
+start = <span class="str">&quot;新宿&quot;</span>
+INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
+
+distance = {}
+came_from = {}
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    distance[station] = INF
+    came_from[station] = <span class="kw">None</span>
+distance[start] = <span class="num">0</span>
+
+settled = <span class="fn">set</span>()
+
+<span class="kw">while</span> <span class="fn">len</span>(settled) &lt; <span class="fn">len</span>(railway):
+    current = <span class="kw">None</span>
+    <span class="kw">for</span> station <span class="kw">in</span> railway:
+        <span class="kw">if</span> station <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> distance[station] == INF:
+            <span class="kw">continue</span>
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+            current = station
+    <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="kw">break</span>
+
+    settled.add(current)
+
+    <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
+        <span class="kw">if</span> name <span class="kw">in</span> settled:
+            <span class="kw">continue</span>
+        new_distance = distance[current] + minutes
+        <span class="kw">if</span> new_distance &lt; distance[name]:
+            distance[name] = new_distance
+            came_from[name] = current
+
+<span class="kw">def</span> <span class="fn">build_route</span>(goal):
+    <span class="str">&quot;&quot;&quot;ゴールからスタートへ逆にたどって道順を組み立てる&quot;&quot;&quot;</span>
+    route = []
+    node = goal
+    <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        route.append(node)
+        node = came_from[node]
+    route.reverse()
+    <span class="kw">return</span> route
+
+<span class="fn">print</span>(<span class="str">&quot;新宿から各駅への最短の行き方&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="kw">if</span> station == start:
+        <span class="kw">continue</span>
+    route = <span class="fn">build_route</span>(station)
+    <span class="fn">print</span>(<span class="str">f&quot;{station:&lt;4} {distance[station]:&gt;3}分   &quot;</span> + <span class="str">&quot; → &quot;</span>.join(route))
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+<span class="fn">print</span>()
+
+<span class="fn">print</span>(<span class="str">&quot;came_from の中身（どの駅へは、どこから来るのがいちばん早いか）&quot;</span>)
+<span class="kw">for</span> station <span class="kw">in</span> railway:
+    <span class="fn">print</span>(<span class="str">f&quot;  {station}: {came_from[station]}&quot;</span>)
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">&quot;came_from をゴールから逆にたどると、道順ができあがる&quot;</span>)</pre>
+<p class="run-label" style="margin-top:1.4rem">例題2（実践）── 要の行が ____ になっている。コメントを読みながら埋めて、保存して実行する</p>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-05-ex2.py</span>
 <span class="cmt"># ダイクストラ法（2）: 最短時間だけでなく「どの道を通ったか」も記録する</span>
 <span class="cmt"># 距離を書き直したときに「どこから来たか」も一緒に記録しておけば、あとで道順を復元できる。</span>
@@ -518,7 +678,7 @@ settled = <span class="fn">set</span>()
         <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>いまの表の値より短いときだけ書き直す</td><td style="white-space:nowrap">A. <code>new_distance &gt; distance[name]</code><br>B. <code>new_distance &lt; distance[name]</code><br>C. <code>new_distance == distance[name]</code></td></tr>
       </table>
       <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
-        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
 
@@ -566,6 +726,7 @@ settled = <span class="fn">set</span>()
       <div class="setup-step">
         <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
         <p style="font-size:0.95rem">距離表（6駅ぶん）が<strong>手順1 → 2 → 3 と書き換わる様子</strong>を、3つの表を横に並べて描く。各手順で確定した駅に印を付ける。</p>
+
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
           <li>手順1・手順2・手順3 の距離表（3つ）</li>
@@ -681,19 +842,14 @@ settled = <span class="fn">set</span>()
           <li>第5回のGoogleスライドを新しく作る（ファイル名は「AL2 第5回 学籍番号 名前」）</li>
           <li><strong>ファイル → ダウンロード → PDFドキュメント</strong> でPDFに書き出す</li>
           <li>ManabaにPDFを提出する</li>
-          <li>Manabaのコメント欄に、<strong>スライドの共有URL</strong>を貼る</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">発展課題（やった回）</p>
+        <p class="step-title">発展課題（取り組んだ回）</p>
         <ol>
-          <li>発展課題のスライドを、その回の同じファイルの標準課題の次に入れる（PDFは1つにまとまる）</li>
+          <li>発展課題のスライドは、標準課題とは<strong>別ファイル</strong>として作成し、PDFに書き出す</li>
           <li>PDFといっしょに <code>app.py</code> をManabaに添付する</li>
         </ol>
-      </div>
-      <div class="note-warn">
-        <strong>共有URLも毎回必ず提出してください。</strong>
-        図が図形で描かれているか（画像の貼り付けでないか）を確認するために使います。
       </div>
     </div>
 
@@ -832,6 +988,9 @@ settled = <span class="fn">set</span>()
         <h4>穴埋めの答え</h4>
         <table>
           <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-05-ex1.py</code></td><td>穴1</td><td><code>distance[station] &lt; distance[current]</code></td></tr>
+          <tr><td><code>AL2-05-ex1.py</code></td><td>穴2</td><td><code>distance[current] + minutes</code></td></tr>
+          <tr><td><code>AL2-05-ex1.py</code></td><td>穴3</td><td><code>new_distance &lt; distance[name]</code></td></tr>
           <tr><td><code>AL2-05-ex2.py</code></td><td>穴1</td><td><code>distance[station] &lt; distance[current]</code></td></tr>
           <tr><td><code>AL2-05-ex2.py</code></td><td>穴2</td><td><code>distance[current] + minutes</code></td></tr>
           <tr><td><code>AL2-05-ex2.py</code></td><td>穴3</td><td><code>new_distance &lt; distance[name]</code></td></tr>

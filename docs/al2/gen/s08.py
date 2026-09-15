@@ -4,7 +4,7 @@ import math
 from itertools import permutations
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -254,7 +254,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
         都市が5個あり、そのうち1個を出発点とします。残りの4個を回る順番は
         <strong>4 × 3 × 2 × 1 = 24通り</strong>です。
         最初に選べる都市が4通り、次が3通り、その次が2通り、最後は1通りに決まるためです。
-        1から順にかけ算した値を<strong>階乗</strong>（かいじょう）と呼び、<code>4!</code> と書きます。
+        1から順にかけ算した値を<strong>階乗</strong>と呼び、<code>4!</code> と書きます。
       </p>
       <p style="font-size:0.95rem;margin-top:0.6rem">
         都市が n 個なら <code>(n-1)!</code> 通りです。
@@ -282,7 +282,7 @@ ex1_body = f"""      <p>巡回セールスマン問題を解く準備として�
         <code>**2</code> は2乗、<code>math.sqrt</code> は平方根（ルート）を求める命令です。</p>
       </div>
 
-{code('AL2-08-ex1.py')}
+{code_pair('AL2-08-ex1.py')}
 
 {run('a08_ex1_result.png', '5つの都市について、5行5列の距離の表ができました。'
      'ななめの線（0行0列、1行1列、…）はすべて 0.0 です。自分自身との距離は0だからです。'
@@ -302,7 +302,7 @@ ex2_body = f"""      <p>学校を出発点とし、残りの4つの都市を回�
         </p>
       </div>
 
-{code('AL2-08-ex2.py')}
+{code_pair('AL2-08-ex2.py')}
 
 {fig_bruteforce()}
 

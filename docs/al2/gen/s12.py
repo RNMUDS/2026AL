@@ -4,7 +4,7 @@ import math
 from collections import deque
 from slides_data import SLIDES
 from slide_examples import slide_example
-from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers, code_pair,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -247,7 +247,7 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
 ex1_body = f"""      <p>前期の数当てゲームを、「1回の質問で候補がどれだけ減るか」という目で見直します。
       1から100までのすべての数について、2つの作戦の質問回数を数えます。</p>
 
-{code('AL2-12-ex1.py')}
+{code_pair('AL2-12-ex1.py')}
 
 {run('a12_ex1_result.png', '1から順に聞く作戦は、最悪で<strong>100回</strong>、平均で<strong>50.50回</strong>かかります。'
      '中央を聞く作戦は、最悪でも<strong>7回</strong>、平均<strong>5.80回</strong>で終わります。'
@@ -261,7 +261,7 @@ ex1_body = f"""      <p>前期の数当てゲームを、「1回の質問で候�
 ex2_body = f"""      <p>限られた時間の中で、得点がいちばん高くなる組み合わせを選ぶナップサック問題を、
       貪欲法と動的計画法の両方で解いて比べます。</p>
 
-{code('AL2-12-ex2.py')}
+{code_pair('AL2-12-ex2.py')}
 
 {run('a12_ex2_result.png', '貪欲法は「1分あたりの得点」がいちばん高い「村人を助ける」（6分10点）を選び、'
      '残り4分では何もできず、合計<strong>10点</strong>で終わりました。'
