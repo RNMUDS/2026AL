@@ -211,6 +211,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-08-ex1.py</code>, <code>AL2-08-ex2.py</code>, <code>AL2-08-ex3.py</code>, <code>AL2-08-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -240,7 +248,7 @@
         <code>**2</code> は2乗、<code>math.sqrt</code> は平方根（ルート）を求める命令です。</p>
       </div>
 
-<pre><span class="code-label">Python ── AL2-08-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-08-ex1.py</span>
 <span class="cmt"># 巡回セールスマン問題の準備: 都市の位置から距離の表を作る</span>
 <span class="kw">import</span> math
 
@@ -333,7 +341,7 @@ height = <span class="num">15</span>
         </p>
       </div>
 
-<pre><span class="code-label">Python ── AL2-08-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex2.py</span>
 <span class="cmt"># 巡回セールスマン問題を全探索で解く</span>
 <span class="cmt"># 学校（0番）を出発し、ほかの4つの都市をすべて1回ずつ回って、学校へ戻る。</span>
 <span class="cmt"># 回る順番をすべて書き出し、いちばん短いものをさがす。</span>
@@ -366,7 +374,7 @@ distance = []
     <span class="kw">for</span> city <span class="kw">in</span> order:
         total = total + distance[here][city]
         here = city
-    total = total + distance[here][<span class="num">0</span>]
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> <span class="fn">round</span>(total, <span class="num">1</span>)
 
 
@@ -381,7 +389,7 @@ distance = []
 
 <span class="cmt"># permutations は「並べ方をすべて作る」道具</span>
 <span class="cmt"># 1, 2, 3, 4 の並べ方は 4×3×2×1 = 24通り</span>
-all_orders = <span class="fn">list</span>(<span class="fn">permutations</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>]))
+all_orders = <span class="fn">list</span>(<span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
 
 <span class="fn">print</span>(<span class="str">&quot;学校を出発して4つの都市を回り、学校へ戻る順番をすべて試す&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">62</span>)
@@ -411,6 +419,17 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
 <span class="fn">print</span>(<span class="str">&quot;逆回りのルート&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot; &quot;</span>, <span class="fn">tour_name</span>(reversed_order))
 <span class="fn">print</span>(<span class="str">&quot;  合計距離:&quot;</span>, <span class="fn">tour_length</span>(reversed_order))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1〜4番の都市の並べ方をすべて作る（学校は0番で固定）</td><td style="white-space:nowrap">A. <code>permutations([1, 2, 3, 4])</code><br>B. <code>permutations([0, 1, 2, 3, 4])</code><br>C. <code>[1, 2, 3, 4]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の都市から学校（0番）へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][0]</code><br>B. <code>0</code><br>C. <code>distance[here][1]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 434" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -545,7 +564,7 @@ reversed_order = <span class="fn">tuple</span>(<span class="fn">reversed</span>(
       <p>都市の数を5個から12個まで増やし、全探索にかかる時間を測ります。
       12都市は約4,000万通りを試すので、実行に10秒ほどかかります。</p>
 
-<pre><span class="code-label">Python ── AL2-08-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex3.py</span>
 <span class="cmt"># 都市の数が増えると、試す順番の数がどれくらい増えるかを測る</span>
 <span class="kw">import</span> math
 <span class="kw">import</span> time
@@ -593,7 +612,7 @@ all_cities = [
             total = total + distance[here][city]
             here = city
         total = total + distance[here][<span class="num">0</span>]
-        tried = tried + <span class="num">1</span>
+        tried = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
             best_length = total
             best_order = order
@@ -621,17 +640,28 @@ all_cities = [
 <span class="kw">for</span> city_count <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>, <span class="num">16</span>):
     total_orders = <span class="num">1</span>
     <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, city_count):
-        total_orders = total_orders * k
+        total_orders = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="fn">print</span>(<span class="str">f&quot;{city_count:&gt;6}都市   {total_orders:&gt;22,}通り&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;12都市の 39,916,800 通りに約9秒かかったので、1秒あたり約460万通り調べている。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;同じ速さだとすると、15都市の 87,178,291,200 通りには約5時間かかる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;20都市（121,645,100,408,832,000 通り）なら、約800年かかる計算になる。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>試した順番の数を1つ増やす</td><td style="white-space:nowrap">A. <code>tried + 1</code><br>B. <code>tried * 2</code><br>C. <code>tried</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>(都市数−1) の階乗: 1×2×3×… と順に掛けていく</td><td style="white-space:nowrap">A. <code>total_orders * 2</code><br>B. <code>total_orders * k</code><br>C. <code>total_orders + k</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a08_ex3_result.png" alt="AL2-08-ex3.py の実行結果。都市の数を増やしたときの、試す順番の数とかかる時間 / ------------------------------------------------------------ / 都市の数       試した順番の数     最短距離   かかった時間 / 5都市               24通り         34.9        0.000秒 / 8都市            5,040通り         46.8        0.001秒 / 10都市          362,880通り         50.1        0.069秒 / 11都市        3,628,800通り         52.6        0.755秒 / 12都市       39,916,800通り         56.1        9.140秒 / ------------------------------------------------------------ /  / 実際に試さずに、順番の数だけを計算した結果 / ------------------------------------------------------------ / 都市の数     試す順番の数 / 5都市                       24通り / 6都市                      120通り / 7都市                      720通り / 8都市                    5,040通り / 9都市                   40,320通り / 10都市                  362,880通り / 11都市                3,628,800通り / 12都市               39,916,800通り / 13都市              479,001,600通り / 14都市            6,227,020,800通り / 15都市           87,178,291,200通り / ------------------------------------------------------------ /  / 12都市の 39,916,800 通りに約9秒かかったので、1秒あたり約460万通り調べている。 / 同じ速さだとすると、15都市の 87,178,291,200 通りには約5時間かかる。 / 20都市（121,645,100,408,832,000 通り）なら、約800年かかる計算になる。" width="533" height="628" loading="lazy">
+        <img src="images/a08_ex3_result.png" alt="AL2-08-ex3.py の実行結果。都市の数を増やしたときの、試す順番の数とかかる時間 / ------------------------------------------------------------ / 都市の数       試した順番の数     最短距離   かかった時間 / 5都市               24通り         34.9        0.000秒 / 8都市            5,040通り         46.8        0.001秒 / 10都市          362,880通り         50.1        0.068秒 / 11都市        3,628,800通り         52.6        0.740秒 / 12都市       39,916,800通り         56.1        8.655秒 / ------------------------------------------------------------ /  / 実際に試さずに、順番の数だけを計算した結果 / ------------------------------------------------------------ / 都市の数     試す順番の数 / 5都市                       24通り / 6都市                      120通り / 7都市                      720通り / 8都市                    5,040通り / 9都市                   40,320通り / 10都市                  362,880通り / 11都市                3,628,800通り / 12都市               39,916,800通り / 13都市              479,001,600通り / 14都市            6,227,020,800通り / 15都市           87,178,291,200通り / ------------------------------------------------------------ /  / 12都市の 39,916,800 通りに約9秒かかったので、1秒あたり約460万通り調べている。 / 同じ速さだとすると、15都市の 87,178,291,200 通りには約5時間かかる。 / 20都市（121,645,100,408,832,000 通り）なら、約800年かかる計算になる。" width="533" height="628" loading="lazy">
       </div>
       <p class="run-note">10都市で362,880通り（0.07秒ほど）、11都市で3,628,800通り（0.7秒ほど）、12都市で39,916,800通り（<strong>約9秒</strong>）でした。都市が1つ増えるたびに、時間がおよそ<strong>10倍</strong>になっています。下の表は、実際には試さずに順番の数だけを計算した結果です。12都市の約4000万通りに8.7秒かかったので、1秒あたり約460万通り調べている計算になります。同じ速さだとすると、15都市（871億通り）には約5時間、20都市（約12京通り）には約800年かかります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
 
@@ -646,7 +676,7 @@ all_cities = [
       <p>最短ルートの中身を、区間ごとに分けて表示します。
       5都市のときと8都市のときで、ルートの形がどう変わるかを見比べてください。</p>
 
-<pre><span class="code-label">Python ── AL2-08-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-08-ex4.py</span>
 <span class="cmt"># 最短ルートの中身を、区間ごとに分けて見る</span>
 <span class="kw">import</span> math
 <span class="kw">from</span> itertools <span class="kw">import</span> permutations
@@ -701,7 +731,7 @@ all_cities = [
             total = total + distance[here][city]
             here = city
         total = total + distance[here][<span class="num">0</span>]
-        <span class="kw">if</span> best_length <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> total &lt; best_length:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             best_length = total
             best_order = order
     <span class="kw">return</span> best_order, best_length
@@ -712,7 +742,7 @@ all_cities = [
     visit = {<span class="num">0</span>: <span class="num">0</span>}
     step = <span class="num">1</span>
     <span class="kw">for</span> city <span class="kw">in</span> order:
-        visit[city] = step
+        visit[city] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         step = step + <span class="num">1</span>
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;  訪れる順番を数字で表した地図（S = 出発点の学校）&quot;</span>)
     <span class="kw">for</span> y <span class="kw">in</span> <span class="fn">range</span>(<span class="num">15</span>):
@@ -758,6 +788,17 @@ all_cities = [
 <span class="fn">print</span>(<span class="str">&quot;=&quot;</span> * <span class="num">52</span>)
 <span class="fn">print</span>(<span class="str">&quot;都市が5個から8個に増えると、ルートの形も大きく変わる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;5都市のときの順番をそのまま使って都市を足すことはできない。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>最初の1つ目か、これまでより短いときに更新する</td><td style="white-space:nowrap">A. <code>best_length is None or total &lt; best_length</code><br>B. <code>total &gt; best_length</code><br>C. <code>total &lt; best_length</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>その都市を何番目に訪れるかを記録する</td><td style="white-space:nowrap">A. <code>city</code><br>B. <code>step</code><br>C. <code>0</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 336" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1033,6 +1074,18 @@ all_cities = [
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-08-ex2.py</code></td><td>穴1</td><td><code>permutations([1, 2, 3, 4])</code></td></tr>
+          <tr><td><code>AL2-08-ex2.py</code></td><td>穴2</td><td><code>distance[here][0]</code></td></tr>
+          <tr><td><code>AL2-08-ex3.py</code></td><td>穴1</td><td><code>tried + 1</code></td></tr>
+          <tr><td><code>AL2-08-ex3.py</code></td><td>穴2</td><td><code>total_orders * k</code></td></tr>
+          <tr><td><code>AL2-08-ex4.py</code></td><td>穴1</td><td><code>best_length is None or total &lt; best_length</code></td></tr>
+          <tr><td><code>AL2-08-ex4.py</code></td><td>穴2</td><td><code>step</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <p><strong>問い1（長方形の4すみ・手計算）</strong></p>

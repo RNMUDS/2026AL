@@ -1,0 +1,425 @@
+# -*- coding: utf-8 -*-
+"""例題の「穴埋め」の定義。
+
+例題1は完成したコードを読んで実行する。例題2〜4は、アルゴリズムの要になる行を
+____ にして載せ、学生が埋めてから実行する（実行結果の画像と同じになれば正解）。
+
+  B(find, answer, hint, wrong, nth=0)
+    find   : 例題ファイルの中の1行（の一部）。この文字列をさがす
+    answer : find の中で ____ にする部分（穴の答え）
+    hint   : 穴のとなりに出すヒント
+    wrong  : 候補として並べる「まちがい」2つ（answer と混ぜて表示する）
+    nth    : find が複数回あるとき、何番目（0始まり）を穴にするか
+
+src/ のファイルはそのまま（答え入り）で置き、ページに載せるときだけ穴をあける。
+実行結果の画像は src/ のファイルを実行して作る。
+"""
+
+
+def B(find, answer, hint, wrong, nth=0):
+    assert answer in find, (find, answer)
+    return dict(find=find, answer=answer, hint=hint, wrong=wrong, nth=nth)
+
+
+BLANKS = {
+# ---------------- 第1回 ----------------
+"AL2-01-ex2.py": [
+    B("middle = (low + high) // 2", "(low + high) // 2",
+      "low と high のまん中の位置。整数になる割り算を使う",
+      ["(low + high) / 2", "low + high // 2"]),
+    B("low = middle + 1", "low = middle + 1",
+      "まん中より大きい側に答えがあるので、調べる範囲の下側を1つ上に動かす",
+      ["high = middle - 1", "low = middle"]),
+],
+"AL2-01-ex3.py": [
+    B("current = queue.popleft()", "queue.popleft()",
+      "メモのいちばん古い行を読んで消す（幅優先探索）",
+      ["queue.pop()", "queue[0]"]),
+    B("came_from[(nr, nc)] = current", "current",
+      "となりのマスに「どこから来たか」として、いま調べているマスを記録する",
+      ["start", "(nr, nc)"]),
+],
+"AL2-01-ex4.py": [
+    B("if best_time is None or minutes < best_time:", "minutes < best_time",
+      "いま計算した合計時間が、これまでの最短より短いときだけ更新する",
+      ["minutes > best_time", "minutes == best_time"]),
+    B('total = total + minutes_between(place, "学校")', 'minutes_between(place, "学校")',
+      "最後の場所から学校へ戻る時間を足す",
+      ['minutes_between("学校", route[0])', "0"]),
+],
+# ---------------- 第2回 ----------------
+"AL2-02-ex2.py": [
+    B("current = memo.popleft()", "memo.popleft()",
+      "幅優先探索: メモのいちばん古い行を読む",
+      ["memo.pop()", "memo[-1]"]),
+    B("current = memo.pop()", "memo.pop()",
+      "深さ優先探索: メモのいちばん新しい行を読む",
+      ["memo.popleft()", "memo[0]"]),
+    B("if next_cell in came_from:", "next_cell in came_from",
+      "すでに来たことがある場所は飛ばす",
+      ["next_cell == goal", "next_cell in memo"]),
+],
+"AL2-02-ex3.py": [
+    B("checked = checked + 1", "checked + 1",
+      "1マス調べるたびに数を1つ増やす",
+      ["checked", "checked * 2"]),
+    B("memo.append(next_cell)", "memo.append(next_cell)",
+      "見つけたとなりのマスをメモの最後に書き足す（2つの探索で同じ）",
+      ["memo.appendleft(next_cell)", "memo.popleft()"]),
+],
+"AL2-02-ex4.py": [
+    B("if nr < 0 or nr >= size or nc < 0 or nc >= size:", "nr < 0 or nr >= size or nc < 0 or nc >= size",
+      "広場の外に出るマスを飛ばす条件（上下左右の4方向すべて）",
+      ["nr > size or nc > size", "nr < 0 and nc < 0"]),
+    B("node = came_from[node]", "came_from[node]",
+      "ゴールから「どこから来たか」を1つずつ逆にたどる",
+      ["came_from[start]", "node - 1"]),
+],
+# ---------------- 第3回 ----------------
+"AL2-03-ex2.py": [
+    B("matrix[j][i] = 1", "matrix[j][i] = 1",
+      "路線は両方向に通れるので、行と列を入れかえた場所にも1を書く",
+      ["matrix[i][j] = 1", "matrix[j][i] = 0"]),
+    B("list_cells = len(lines) * 2", "len(lines) * 2",
+      "隣接リストのマスの数。1本の路線は両方の駅に書かれる",
+      ["len(lines)", "n * n"]),
+],
+"AL2-03-ex3.py": [
+    B("if next_station in rides:", "next_station in rides",
+      "すでに乗車回数が決まっている駅は飛ばす",
+      ["next_station == start", "next_station in railway"]),
+    B("rides[next_station] = rides[current] + 1", "rides[current] + 1",
+      "となりの駅の乗車回数は、いまの駅の回数に1を足したもの",
+      ["rides[current]", "1"]),
+],
+"AL2-03-ex4.py": [
+    B('if maze[r][c] == "#":', 'maze[r][c] == "#"',
+      "壁のマスは頂点にしない",
+      ['maze[r][c] == "."', 'maze[r][c] == "S"']),
+    B('graph[name].append(f"({nr},{nc})")', 'graph[name].append(f"({nr},{nc})")',
+      "通れるとなりのマスを、この頂点の隣接リストに足す",
+      ["graph[name].append(name)", 'graph[name] = [f"({nr},{nc})"]']),
+    B("steps[next_node] = steps[current] + 1", "steps[current] + 1",
+      "となりの頂点までの歩数は、いまの頂点の歩数に1を足したもの",
+      ["steps[current]", "steps[start] + 1"]),
+],
+# ---------------- 第4回 ----------------
+"AL2-04-ex2.py": [
+    B("total = total + minutes", "total + minutes",
+      "区間の時間を合計に足す",
+      ["total + 1", "minutes"]),
+    B("if route_minutes(route) < route_minutes(best_route):", "route_minutes(route) < route_minutes(best_route)",
+      "合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）",
+      ["len(route) < len(best_route)", "route_minutes(route) > route_minutes(best_route)"]),
+],
+"AL2-04-ex3.py": [
+    B("for i in range(1, len(route)):", "range(1, len(route))",
+      "スタートのマスは数えないので、1番目のマスから",
+      ["range(len(route))", "range(0, len(route) - 1)"]),
+    B("total = total + cost_map[r][c]", "cost_map[r][c]",
+      "入るマスのコスト（秒）を足す",
+      ["1", "cost_map[c][r]"]),
+],
+"AL2-04-ex4.py": [
+    B("walk(nr, nc, total + 1)", "total + 1",
+      "1マス進むごとにコスト1を足して、先へ進む",
+      ["total", "total * 2"]),
+    B("visited.discard((nr, nc))", "visited.discard((nr, nc))",
+      "調べ終わったら、そのマスを「通っていない」状態に戻す（別の行き方で使えるように）",
+      ["visited.add((nr, nc))", "visited.clear()"]),
+],
+# ---------------- 第5回 ----------------
+"AL2-05-ex2.py": [
+    B("if current is None or distance[station] < distance[current]:", "distance[station] < distance[current]",
+      "まだ確定していない駅の中で、いちばん時間が小さい駅を選ぶ",
+      ["distance[station] > distance[current]", "station < current"]),
+    B("new_distance = distance[current] + minutes", "distance[current] + minutes",
+      "確定した駅までの時間に、その路線の時間を足す",
+      ["minutes", "distance[name] + minutes"]),
+    B("if new_distance < distance[name]:", "new_distance < distance[name]",
+      "いまの表の値より短いときだけ書き直す",
+      ["new_distance > distance[name]", "new_distance == distance[name]"]),
+],
+"AL2-05-ex3.py": [
+    B("settled.add(current)", "settled.add(current)",
+      "いちばん小さい店を「確定」にする（マイナスがあると、ここが間違いのもとになる）",
+      ["settled.remove(current)", "settled.add(start)"]),
+    B("new_price = distance[current] + price", "distance[current] + price",
+      "確定した店までの金額に、その道の金額を足す",
+      ["price", "distance[name] + price"]),
+],
+"AL2-05-ex4.py": [
+    B("if name not in best or new_total < best[name]:", "name not in best or new_total < best[name]",
+      "初めて着いた駅か、これまでより短いときに記録する",
+      ["new_total > best[name]", "name in best"]),
+    B("if fast[goal] != slow[goal]:", "fast[goal] != slow[goal]",
+      "2つの方法の答えがちがっていたら「同じでない」にする",
+      ["fast[goal] == slow[goal]", "fast == slow"]),
+],
+# ---------------- 第6回 ----------------
+"AL2-06-ex2.py": [
+    B("minutes, current = heapq.heappop(queue)", "heapq.heappop(queue)",
+      "いちばん時間が小さい組を取り出す",
+      ["queue.pop()", "queue.popleft()"]),
+    B("if current in settled:", "current in settled",
+      "同じ駅が2回出てきたら、あとの方は読み飛ばす",
+      ["current == start", "current not in settled"]),
+    B("heapq.heappush(queue, (new_distance, name))", "(new_distance, name)",
+      "heapq に入れる組は（時間, 駅名）の順。時間で並ぶようにする",
+      ["(name, new_distance)", "new_distance"]),
+],
+"AL2-06-ex3.py": [
+    B("if d + weight < distance[name]:", "d + weight < distance[name]",
+      "取り出した頂点までの距離に重みを足し、表より短ければ書き直す",
+      ["d + weight > distance[name]", "weight < distance[name]"]),
+    B("heapq.heappush(queue, (distance[name], name))", "(distance[name], name)",
+      "書き直した距離と頂点の組を heapq に入れる",
+      ["(name, distance[name])", "distance[name]"]),
+],
+"AL2-06-ex4.py": [
+    B("if current == goal:", "current == goal",
+      "ゴールが確定したら、もう調べなくてよい",
+      ["current == start", "len(queue) == 0"]),
+    B("new_total = total + cost_map[nr][nc]", "total + cost_map[nr][nc]",
+      "取り出したマスまでの合計に、となりのマスのコストを足す",
+      ["total + 1", "cost_map[nr][nc]"]),
+],
+# ---------------- 第7回 ----------------
+"AL2-07-ex2.py": [
+    B("order.append((current, total))", "order.append((current, total))",
+      "確定した順番に、マスと合計秒数を記録する",
+      ["order.append(current)", "order.insert(0, current)"]),
+    B("heapq.heappush(pq, (new_total, (nr, nc)))", "(new_total, (nr, nc))",
+      "（合計秒数, マス）の組を入れる。秒数で並ぶようにする",
+      ["((nr, nc), new_total)", "new_total"]),
+],
+"AL2-07-ex3.py": [
+    B("if current == goal:", "current == goal",
+      "ゴールが確定した時点でやめる（調べるマスの数が減る）",
+      ["current == start", "len(pq) == 0"]),
+    B("return distance[goal], len(settled)", "distance[goal], len(settled)",
+      "ゴールまでの最小コストと、確定したマスの数を返す",
+      ["distance[start], len(pq)", "len(distance), len(settled)"]),
+],
+"AL2-07-ex4.py": [
+    B("came_from[(nr, nc)] = current", "current",
+      "となりのマスに「どこから来たか」を記録する",
+      ["start", "goal"]),
+    B("route.reverse()", "route.reverse()",
+      "ゴールから逆にたどった道順を、スタートからの順に直す",
+      ["route.sort()", "route.pop()"]),
+],
+# ---------------- 第8回 ----------------
+"AL2-08-ex2.py": [
+    B("all_orders = list(permutations([1, 2, 3, 4]))", "permutations([1, 2, 3, 4])",
+      "1〜4番の都市の並べ方をすべて作る（学校は0番で固定）",
+      ["permutations([0, 1, 2, 3, 4])", "[1, 2, 3, 4]"]),
+    B("total = total + distance[here][0]", "distance[here][0]",
+      "最後の都市から学校（0番）へ戻る距離を足す",
+      ["distance[here][1]", "0"]),
+],
+"AL2-08-ex3.py": [
+    B("tried = tried + 1", "tried + 1",
+      "試した順番の数を1つ増やす",
+      ["tried", "tried * 2"]),
+    B("total_orders = total_orders * k", "total_orders * k",
+      "(都市数−1) の階乗: 1×2×3×… と順に掛けていく",
+      ["total_orders + k", "total_orders * 2"]),
+],
+"AL2-08-ex4.py": [
+    B("if best_length is None or total < best_length:", "best_length is None or total < best_length",
+      "最初の1つ目か、これまでより短いときに更新する",
+      ["total < best_length", "total > best_length"]),
+    B("visit[city] = step", "step",
+      "その都市を何番目に訪れるかを記録する",
+      ["city", "0"]),
+],
+# ---------------- 第9回 ----------------
+"AL2-09-ex2.py": [
+    B("if j in visited:", "j in visited",
+      "すでに行った都市は候補にしない",
+      ["j == here", "j not in visited"]),
+    B("if nearest is None or distance[here][j] < distance[here][nearest]:", "distance[here][j] < distance[here][nearest]",
+      "いまいる場所から、まだ行っていない都市のうちいちばん近いものを選ぶ",
+      ["distance[here][j] > distance[here][nearest]", "distance[j][j] < distance[nearest][nearest]"]),
+    B("ratio = greedy_length / best_length", "greedy_length / best_length",
+      "貪欲法の答えが、最適解の何倍か",
+      ["best_length / greedy_length", "greedy_length - best_length"]),
+],
+"AL2-09-ex3.py": [
+    B("route, total = greedy(start)", "greedy(start)",
+      "出発点を変えて貪欲法を動かす",
+      ["greedy(0)", "brute_force()"]),
+    B("results.sort()", "results.sort()",
+      "タプルの1つ目（合計距離）が小さい順に並べかえる",
+      ["results.reverse()", "results.append(0)"]),
+],
+"AL2-09-ex4.py": [
+    B("nearest = j", "nearest = j",
+      "より近い家が見つかったので、候補を置きかえる",
+      ["nearest = here", "j = nearest"]),
+    B("total = total + distance[here][start]", "distance[here][start]",
+      "最後の家から営業所へ戻る距離を足す",
+      ["distance[start][start]", "0"]),
+],
+# ---------------- 第10回 ----------------
+"AL2-10-ex2.py": [
+    B("if visited & (1 << next_city):", "visited & (1 << next_city)",
+      "next_city のけたが1なら、すでに回った都市",
+      ["visited | (1 << next_city)", "visited == next_city"]),
+    B("new_visited = visited | (1 << next_city)", "visited | (1 << next_city)",
+      "next_city のけたを1にした、新しい「回った集合」",
+      ["visited & (1 << next_city)", "visited + 1"]),
+    B("if new_length < best[new_visited][next_city]:", "new_length < best[new_visited][next_city]",
+      "表の値より短いときだけ書き直す",
+      ["new_length > best[new_visited][next_city]", "new_length < INF"]),
+],
+"AL2-10-ex3.py": [
+    B("best[1 << 0][0] = 0.0", "best[1 << 0][0] = 0.0",
+      "「学校だけを回った状態で学校にいる」が出発点。距離は0",
+      ["best[0][0] = 0.0", "best[full][0] = 0.0"]),
+    B("if visited & (1 << next_city):", "visited & (1 << next_city)",
+      "next_city のけたが1なら、すでに回った都市なので飛ばす",
+      ["visited | (1 << next_city)", "visited == next_city"]),
+],
+"AL2-10-ex4.py": [
+    B("return answer, (1 << n) * n", "(1 << n) * n",
+      "表のマスの数 = 集合の数（2のn乗）× 都市の数",
+      ["n * n", "2 * n"]),
+    B("brute_orders = brute_orders * k", "brute_orders * k",
+      "全探索の順番の数: 1×2×3×… と順に掛けていく",
+      ["brute_orders + k", "brute_orders * 2"]),
+],
+# ---------------- 第11回 ----------------
+"AL2-11-ex2.py": [
+    B("return greedy_from(0)", "greedy_from(0)",
+      "ふつうの貪欲法は0番（学校）から出発する",
+      ["greedy_from(n)", "greedy_all_starts()"]),
+    B("if best is None or value < best:", "best is None or value < best",
+      "出発点を変えた貪欲法のうち、いちばん短いものを残す",
+      ["value > best", "best is None"]),
+],
+"AL2-11-ex3.py": [
+    B("if count <= 12:", "count <= 12",
+      "全探索は12都市までにする（それ以上は長すぎる）",
+      ["count >= 12", "count < 6"]),
+    B("answer = min(answer, best[full][here] + distance[here][0])", "best[full][here] + distance[here][0]",
+      "全部回って here にいる状態から、0番へ戻る距離を足す",
+      ["best[full][here]", "distance[here][0]"]),
+],
+"AL2-11-ex4.py": [
+    B("if not weighted:", "not weighted",
+      "重みがなければ、幅優先探索か深さ優先探索で足りる",
+      ["weighted", "need_best"]),
+    B("if size <= 10:", "size <= 10",
+      "全探索が一瞬で終わる都市数の上限",
+      ["size <= 20", "size > 10"]),
+    B("if size <= 20:", "size <= 20",
+      "bitDP の表が現実的な大きさに収まる都市数の上限",
+      ["size <= 10", "size <= 100"]),
+],
+# ---------------- 第12回 ----------------
+"AL2-12-ex2.py": [
+    B("dist[(nr, nc)] = dist[(r, c)] + 1", "dist[(r, c)] + 1",
+      "となりのマスまでの歩数は、いまのマスの歩数に1を足したもの",
+      ["dist[(r, c)]", "1"]),
+    B("if nearest is None or table[here][name] < table[here][nearest]:", "table[here][name] < table[here][nearest]",
+      "いまいる場所から歩数がいちばん少ないアイテムを選ぶ",
+      ["table[here][name] > table[here][nearest]", "name < nearest"]),
+    B("remaining.remove(nearest)", "remaining.remove(nearest)",
+      "拾ったアイテムを「まだ」の一覧から外す",
+      ["remaining.append(nearest)", "remaining.clear()"]),
+],
+"AL2-12-ex3.py": [
+    B('for order in permutations("ABCD"):', 'permutations("ABCD")',
+      "4つのアイテムを拾う順番をすべて作る",
+      ['"ABCD"', 'permutations("SABCDG")']),
+    B('total = total + table[order[-1]]["G"]', 'table[order[-1]]["G"]',
+      "最後のアイテムからゴールまでの歩数を足す",
+      ['table["S"]["G"]', 'table[order[0]]["G"]']),
+],
+"AL2-12-ex4.py": [
+    B("if used + minutes <= limit:", "used + minutes <= limit",
+      "貪欲法: 残り時間に入るクエストだけ受ける",
+      ["minutes <= limit", "used <= limit"]),
+    B("if t >= minutes:", "t >= minutes",
+      "残り時間 t にこのクエストが入るときだけ「受ける」を考える",
+      ["t <= minutes", "t > 0"]),
+    B("if best[i - 1][t - minutes] + score > best[i][t]:", "best[i - 1][t - minutes] + score > best[i][t]",
+      "このクエストを「受ける」ほうが得点が高いなら、表を書き直す",
+      ["best[i - 1][t] > best[i][t]", "score > best[i][t]"]),
+],
+# ---------------- 第13回 ----------------
+"AL2-13-ex2.py": [
+    B("if nearest is None or distance[here][j] < distance[here][nearest]:", "distance[here][j] < distance[here][nearest]",
+      "いまいる場所からいちばん近い配達先を選ぶ",
+      ["distance[here][j] > distance[here][nearest]", "j < nearest"]),
+    B("return tuple(visited[1:])", "tuple(visited[1:])",
+      "営業所（0番）を除いた、回る順番を返す",
+      ["tuple(visited)", "visited[0]"]),
+],
+"AL2-13-ex3.py": [
+    B("raise SystemExit", "raise SystemExit",
+      "行けない場所があるので、ここでプログラムを終わりにする",
+      ["continue", "break"]),
+    B("if nearest is None or table[here][name] < table[here][nearest]:", "table[here][name] < table[here][nearest]",
+      "いまいる場所から歩数がいちばん少ないアイテムを選ぶ",
+      ["table[here][name] > table[here][nearest]", "name < nearest"]),
+],
+# ---------------- 第14回 ----------------
+"AL2-14-ex2.py": [
+    B("nearest = None", "nearest = None",
+      "バグ修正: 最初は「まだ候補なし」にして、最初の未訪問の家で必ず更新されるようにする",
+      ["nearest = 0", "nearest = here"]),
+    B("if nearest is None or distance[here][j] < distance[here][nearest]:", "nearest is None or distance[here][j] < distance[here][nearest]",
+      "候補がまだ無いか、より近いときに更新する",
+      ["distance[here][j] < distance[here][nearest]", "nearest is None"]),
+],
+"AL2-14-ex3.py": [
+    B("records.append(time.time() - began)", "time.time() - began",
+      "終わった時刻から、始めた時刻を引く",
+      ["began - time.time()", "time.time()"]),
+    B("average = sum(records) / len(records)", "sum(records) / len(records)",
+      "5回の平均",
+      ["max(records)", "sum(records)"]),
+],
+"AL2-14-ex4.py": [
+    B("return total + distance[here][0]", "total + distance[here][0]",
+      "最後の都市から0番へ戻る距離を足して返す",
+      ["total", "distance[here][0]"]),
+    B("round((fast / best - 1) * 100, 1)", "(fast / best - 1) * 100",
+      "貪欲法が最適解より何%長いか",
+      ["fast - best", "best / fast * 100"]),
+],
+# ---------------- 第15回 ----------------
+"AL2-15-ex2.py": [
+    B("chance = math.exp(-difference / temperature)", "math.exp(-difference / temperature)",
+      "悪くなる量が小さいほど、温度が高いほど、受け入れる確率が高い",
+      ["math.exp(difference / temperature)", "difference / temperature"]),
+    B("accept = random.random() < chance", "random.random() < chance",
+      "0〜1の乱数が確率より小さければ受け入れる",
+      ["random.random() > chance", "chance > 1"]),
+    B("temperature = temperature * cooling", "temperature * cooling",
+      "1回ごとに温度を少しずつ下げる",
+      ["temperature + cooling", "temperature / cooling"]),
+],
+"AL2-15-ex3.py": [
+    B("if tour_length(b) < tour_length(best):", "tour_length(b) < tour_length(best)",
+      "候補のうち、いちばん短いものを親に選ぶ",
+      ["tour_length(b) > tour_length(best)", "b < best"]),
+    B("child[i] = parent1[i]", "parent1[i]",
+      "left〜right の部分は親1からそのまま受けつぐ",
+      ["parent2[i]", "None"]),
+    B("if random.random() < 0.3:", "random.random() < 0.3",
+      "30%の確率で突然変異を起こす",
+      ["random.random() < 3", "random.random() > 0.3"]),
+],
+"AL2-15-ex4.py": [
+    B("value = function()", "function()",
+      "表の各方法を順に呼び出して答えを受け取る",
+      ["function", "methods()"]),
+    B("if best_value is None or value < best_value:", "best_value is None or value < best_value",
+      "5つの答えのうち、いちばん短いものを求める",
+      ["value > best_value", "best_value is None"]),
+],
+}

@@ -2,7 +2,7 @@
 """第11回: アルゴリズム比較・復習 の本文を組み立てる。"""
 import math
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section, advanced_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -250,7 +250,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '条件からアルゴリズムを選ぶ', ex4_body)}"""
 
-ans = answers([
+ans = answers([blank_answers("11"),
     ("確かめ用の数値", """        <p><strong>問い1</strong>: <strong>すべての辺の重みが同じとき</strong>に一致します。
         重みがすべて1なら、合計コストはそのまま辺の数と同じ値になるためです。
         幅優先探索は、ダイクストラ法の特別な場合だと言えます。</p>

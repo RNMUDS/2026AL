@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -440,6 +441,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-15-ex1.py</code>, <code>AL2-15-ex2.py</code>, <code>AL2-15-ex3.py</code>, <code>AL2-15-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -462,7 +471,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>後期に学んだ6つのアルゴリズムを、1つのプログラムでまとめて動かします。
       前半は2地点間の経路、後半は全部回って戻る最短ルートです。</p>
 
-<pre><span class="code-label">Python ── AL2-15-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-15-ex1.py</span>
 <span class="cmt"># 後期のまとめ: 学んだ6つのアルゴリズムを、一度にすべて動かす</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> math
@@ -682,7 +691,7 @@ distance = []
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0689秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
+        <img src="images/a15_ex1_result.png" alt="AL2-15-ex1.py の実行結果。==================================================================== / 前半: 新宿から東京までの経路をさがす / ==================================================================== / 方法                路線の本数    合計時間    経路 / 幅優先探索          2本           41分        新宿 → 品川 → 東京 / 深さ優先探索        2本           41分        新宿 → 品川 → 東京 / ダイクストラ法      3本           27分        新宿 → 渋谷 → 品川 → 東京 /  / ==================================================================== / 後半: 10都市を全部回って戻る最短ルートをさがす / ==================================================================== / 方法                合計距離      かかった時間    性質 / 全探索              50.1          0.0694秒        必ず最適（第8回） / 貪欲法              58.2          0.0000秒        近似解（第9回） / bitDP               50.1          0.0015秒        必ず最適（第10回） / ==================================================================== /  / 6つのアルゴリズムはすべて、後期の授業で1行ずつ書いてきたもの。" width="539" height="408" loading="lazy">
       </div>
       <p class="run-note">前半では、ダイクストラ法だけが<strong>27分</strong>の経路を見つけています。幅優先探索と深さ優先探索は路線の本数が少ない41分の経路を返しました。後半では、全探索と bitDP がどちらも<strong>50.1</strong>という同じ答えを出し、貪欲法だけが58.2と長くなっています。かかった時間は、全探索が0.08秒ほどに対し bitDP は0.002秒ほどで、数十倍の差がつきました。後期の授業で1行ずつ書いてきたコードが、すべてここに集まっています。</p>
     </div>
@@ -709,7 +718,7 @@ distance = []
         </p>
       </div>
 
-<pre><span class="code-label">Python ── AL2-15-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-15-ex2.py</span>
 <span class="cmt"># 発展手法その1: 焼きなまし法（やきなましほう / Simulated Annealing）</span>
 <span class="cmt"># 考え方: 「いまより悪くなる変更も、たまには受け入れる」</span>
 <span class="cmt">#         最初は悪い変更もよく受け入れ、だんだん受け入れなくなっていく。</span>
@@ -794,8 +803,8 @@ accepted_worse = <span class="num">0</span>
         accept = <span class="kw">True</span>                       <span class="cmt"># 短くなったので必ず受け入れる</span>
     <span class="kw">else</span>:
         <span class="cmt"># 悪くなる場合でも、温度が高いうちは受け入れることがある</span>
-        chance = math.exp(-difference / temperature)
-        accept = random.random() &lt; chance
+        chance = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
+        accept = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">if</span> accept:
             accepted_worse = accepted_worse + <span class="num">1</span>
 
@@ -806,7 +815,7 @@ accepted_worse = <span class="num">0</span>
             best_length = current
             best_order = <span class="fn">list</span>(order)
 
-    temperature = temperature * cooling
+    temperature = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
 
     <span class="kw">if</span> step % <span class="num">4000</span> == <span class="num">0</span>:
         <span class="fn">print</span>(<span class="str">f&quot;  {step:&gt;8}   {temperature:&gt;7.3f}   {round(current, 1):&gt;14}&quot;</span>
@@ -823,6 +832,18 @@ accepted_worse = <span class="num">0</span>
 <span class="fn">print</span>(<span class="str">&quot;わざと悪くなる変更を受け入れることで、&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法がはまりこむ「局所最適」から抜け出せる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;温度が下がるにつれて悪い変更を受け入れなくなり、答えが落ち着いていく。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>悪くなる量が小さいほど、温度が高いほど、受け入れる確率が高い</td><td style="white-space:nowrap">A. <code>math.exp(-difference / temperature)</code><br>B. <code>difference / temperature</code><br>C. <code>math.exp(difference / temperature)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>0〜1の乱数が確率より小さければ受け入れる</td><td style="white-space:nowrap">A. <code>random.random() &lt; chance</code><br>B. <code>chance &gt; 1</code><br>C. <code>random.random() &gt; chance</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>1回ごとに温度を少しずつ下げる</td><td style="white-space:nowrap">A. <code>temperature + cooling</code><br>B. <code>temperature / cooling</code><br>C. <code>temperature * cooling</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -839,7 +860,7 @@ accepted_worse = <span class="num">0</span>
       <p>もう1つの発展手法、<strong>遺伝的アルゴリズム</strong>を体験します。
       100個のルートを「集団」として持ち、良いものどうしを組み合わせて次の世代を作ります。</p>
 
-<pre><span class="code-label">Python ── AL2-15-ex3.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-15-ex3.py</span>
 <span class="cmt"># 発展手法その2: 遺伝的アルゴリズム（いでんてきアルゴリズム / Genetic Algorithm）</span>
 <span class="cmt"># 考え方: たくさんのルートを「集団」として持ち、</span>
 <span class="cmt">#         良いルートどうしを組み合わせて次の世代を作ることをくり返す。</span>
@@ -886,7 +907,7 @@ distance = []
     b = random.choice(population)
     c = random.choice(population)
     best = a
-    <span class="kw">if</span> <span class="fn">tour_length</span>(b) &lt; <span class="fn">tour_length</span>(best):
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         best = b
     <span class="kw">if</span> <span class="fn">tour_length</span>(c) &lt; <span class="fn">tour_length</span>(best):
         best = c
@@ -904,7 +925,7 @@ distance = []
 
     child = [<span class="kw">None</span>] * size
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(left, right + <span class="num">1</span>):
-        child[i] = parent1[i]              <span class="cmt"># 親1から受けつぐ部分</span>
+        child[i] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
     used = <span class="fn">set</span>(child[left:right + <span class="num">1</span>])
     position = <span class="num">0</span>
@@ -919,7 +940,7 @@ distance = []
 
 <span class="kw">def</span> <span class="fn">mutate</span>(order):
     <span class="str">&quot;&quot;&quot;まれに2か所を入れかえる（突然変異）&quot;&quot;&quot;</span>
-    <span class="kw">if</span> random.random() &lt; <span class="num">0.3</span>:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
         i = random.randrange(<span class="fn">len</span>(order))
         j = random.randrange(<span class="fn">len</span>(order))
         order[i], order[j] = order[j], order[i]
@@ -976,6 +997,18 @@ best_length = <span class="fn">tour_length</span>(best_order)
 <span class="fn">print</span>(<span class="str">&quot;最初はばらばらのルートしかないが、&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;良いものどうしを組み合わせるうちに短くなっていく。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;集団の平均も、世代が進むにつれて下がっていく。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>候補のうち、いちばん短いものを親に選ぶ</td><td style="white-space:nowrap">A. <code>b &lt; best</code><br>B. <code>tour_length(b) &gt; tour_length(best)</code><br>C. <code>tour_length(b) &lt; tour_length(best)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>left〜right の部分は親1からそのまま受けつぐ</td><td style="white-space:nowrap">A. <code>None</code><br>B. <code>parent2[i]</code><br>C. <code>parent1[i]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>30%の確率で突然変異を起こす</td><td style="white-space:nowrap">A. <code>random.random() &gt; 0.3</code><br>B. <code>random.random() &lt; 0.3</code><br>C. <code>random.random() &lt; 3</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -992,7 +1025,7 @@ best_length = <span class="fn">tour_length</span>(best_order)
       <p>20都市の問題を、後期に学んだ方法と発展手法を合わせて5つで解き、まとめて比べます。
       実行に10秒ほどかかります。</p>
 
-<pre><span class="code-label">Python ── AL2-15-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-15-ex4.py</span>
 <span class="cmt"># 20都市の巡回セールスマン問題を、5つの方法で解いて比べる</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> math
@@ -1194,13 +1227,13 @@ methods = [
 results = []
 <span class="kw">for</span> name, function, week, note <span class="kw">in</span> methods:
     began = time.time()
-    value = <span class="fn">function</span>()
+    value = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     elapsed = time.time() - began
     results.append((name, value, elapsed, week, note))
 
 best_value = <span class="kw">None</span>
 <span class="kw">for</span> name, value, elapsed, week, note <span class="kw">in</span> results:
-    <span class="kw">if</span> best_value <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> value &lt; best_value:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         best_value = value
 <span class="kw">for</span> name, value, elapsed, week, note <span class="kw">in</span> results:
     gap = value - best_value
@@ -1211,6 +1244,17 @@ best_value = <span class="kw">None</span>
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>表の各方法を順に呼び出して答えを受け取る</td><td style="white-space:nowrap">A. <code>function</code><br>B. <code>function()</code><br>C. <code>methods()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>5つの答えのうち、いちばん短いものを求める</td><td style="white-space:nowrap">A. <code>best_value is None or value &lt; best_value</code><br>B. <code>best_value is None</code><br>C. <code>value &gt; best_value</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 370" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1247,7 +1291,7 @@ best_value = <span class="kw">None</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a15_ex4_result.png" alt="AL2-15-ex4.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.015秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.692秒         第15回 / bitDP                   91.1      最適              6.009秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
+        <img src="images/a15_ex4_result.png" alt="AL2-15-ex4.py の実行結果。20都市の巡回セールスマン問題を5つの方法で解く / （全探索なら 19! ＝ 約12京通り。まったく終わらない） / ============================================================================ / 方法                    答え      最適との差        かかった時間    学んだ回 / 貪欲法                  105.7     +14.5（15.9%）    0.000秒         第9回 / 貪欲法(全出発点)        95.0      +3.8（4.2%）      0.000秒         第11回 / 焼きなまし法            95.2      +4.1（4.5%）      0.014秒         第15回 / 遺伝的アルゴリズム      96.3      +5.2（5.7%）      0.682秒         第15回 / bitDP                   91.1      最適              6.020秒         第10回 / ============================================================================ /  / bitDP だけが「必ず最適」を保証する。ほかの4つは近似解。 / しかし都市が25個を超えると bitDP も使えなくなり、近似解に頼るしかなくなる。" width="599" height="308" loading="lazy">
       </div>
       <p class="run-note"><strong>bitDP だけが最適の91.1</strong>を出し、6秒ほどかかりました。近似解の3つ（貪欲法の全出発点版・焼きなまし法・遺伝的アルゴリズム）は、最適より<strong>わずか4〜6%長いだけ</strong>で、いずれも1秒以内に終わっています。出発点を1つに固定した貪欲法だけが15.9%長く、明らかに劣っています。20都市では bitDP が使えましたが、25都市を超えると表が大きすぎて使えなくなります。そのとき頼りになるのが、この3つの近似解法です。</p>
 
@@ -1457,7 +1501,7 @@ best_value = <span class="kw">None</span>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="95iTNi0A6IK2l4FlF/8lrAjy0yH0ZpY6Y6lpazRDgzTCJbToAle7+iX8FJICxO1FUQ9n2ynYw8gdQJF5FvdcgmuLd1C0CQaaJqlhYMYWpoaAZxhUvwCH7Vvvg+uljpTwgHiRDEhv3pNlfw4xtJJ0C9kPWNE0/AmYutEOsG+Id58wZW0SFuONxUVFqcneOtQ4Bgc2yrTGJo/6vKWe21MYGa9Lj+hLKojIPa+idNliI8nBB4B/P0sxPKY1mtqFi9HFjt1BflJDeSZaY/mWoLh78gYbL8JjoFvJ+Ex8cTQv+ZOvIhkkONMXujNic+7pXqI6oziX8xx+pQn79j/A3Pmqvm10K2B37bXNOceKb9h/9tFY8+IliXDzzdk4BXN/P5oTNPQWhdz95uKglQ6f6iuyXliMlntaOOSjYRQye9B1NbvBJ7Xua6TW97ppnLeQ7+/rmvdvq7zy5atZnzRWHCoTNhiU7RiwWuWLALHf7Zif6Um6x7br7lBYiCkzqnlQSLSy6Z4RBPgYCytClCboWMNlA4xD1aVnvmwQUhDrHQ1s2ej1gA22gDRiTMkLcfucaq5qqE21pIg1yPGI0Sgg3Oc1qZmfouWOolr2le8JOUInrLKd/bQUFR82ORmMW4i3Ez4aXgT8jvbahXm6nLhvpQk94UAzabFnSUVrKk7+jCWROWTSNe2oTUrTKlJvDuzCB/LcmMYti5k/Iksb3V67PhE9o1cIINdDQYwnQU23ShSJENz4PUB8m6W2zFjw414nORQS+cqJ9ChIRnj2gas9b34e+zBf1ie4vyCyowasnDABOof8v9auSaAp8+XSzLyhkiRrXw13jYEOSDZhP6kKf/caYXX5aP1pqnwtwCoiUxuPyihjGPZ8j1WdKTQAWF9yBV6Q2Kh1dah4VKyWbm9164OYQPu9nwS4tCK/1+JFtwxulxoUXBiyQZfs2NFvVOwrEphnNCdAAOol7veZwvpnxc5TRXceKlkBPHEOqYxCCYnf3mTstW/m4U0kp9RD3wDywqeBXDuBvF8izpNBmXarvj+ONPkXWOHGYQCyvxBzATJrbgptfRfrth2eV2MXjolEqnOS82VbhVpKDfp836EYE6dZrS5MIXpgDWTb7Ke8AcTDvRqjQbPxrsySr4YhP/8fyHLgA2Zaqbgzp2i21MZJ9zcsp3yoYPJb16xgpHGCxrWJjSuomajek7htX0WmtQGbfI4Rgn/MUjH+kNZstl+OeXw/5ecnVYNqi02Rjs132GZjF7McAWB0AHSTRJD2iAaI/CpkHN8f0QNxhdLa2nUhvec8kOPbIFDszJXhLAgCOrq1WDiSoXiVnWTIF9F3auHyMS9ezpa+64My5823ba8X9MFm+L8n0+nO1NVUd2bQiadf/Lc+ibI0ry1MG7lxKPKllhOm4nKVxA1WfGepi/RsbMB36U+rYOwHbIIBNHXIr/CM9akFoZfhMHCKIQF4ziUsXzVwuIlRJNIyh/E1KKks9DLUVL8n7srDavamfeVt08/J7sNMPbLRVUABOKW2U8R4rd64Cn1Jt891oXj/jkLFJM5SUSdPqTwp49wUP8A/AytoX5xdeWi31BOjjsWQS2GhMs6fBrFHIGxgz8wD8xflkYsSVLwdfUOrbo7OzDjnVjnDsdQW3FCU36aSlDHSMCXc6GsN06vpVdY4PwfBGsLGOvJHdbcMpH8wUVvrebGPDM0qtshFYsuuADPXeF1ncE21uUUuvB6Ua6A/5X9UspQV7GvE4eFmeUuXXtkYuF0geuq49ZbJutZ4b4pjoxHmBQRN0ZCcSjYyYj79PQ7EmCIGVGMjLudlhbbSOKDRHgctMwMKvnqHsDy14Ww="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

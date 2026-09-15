@@ -74,7 +74,7 @@ def main(src_path):
     SRC    = pathlib.Path(src_path).resolve()
     prefix = "a" + re.sub(r"\D", "", SRC.stem).zfill(2)      # s01.html -> a01
     src    = SRC.read_text(encoding="utf-8")
-    blocks = re.findall(r"<pre>(.*?)</pre>", src, re.S)
+    blocks = re.findall(r"<pre[^>]*>(.*?)</pre>", src, re.S)
     tmp    = tempfile.mkdtemp()
     OUT.mkdir(exist_ok=True)
 
@@ -93,6 +93,9 @@ def main(src_path):
             continue
         code = html.unescape(re.sub("<.*?>", "",
                re.sub(r'<span class="code-label">.*?</span>', "", b, flags=re.S))).strip("\n")
+        src_file = HERE / "src" / fname
+        if src_file.exists():             # 穴埋め（____）の入ったページのコードではなく、答え入りの src を実行する
+            code = src_file.read_text(encoding="utf-8").rstrip("\n")
         p = os.path.join(tmp, fname)
         open(p, "w", encoding="utf-8").write(code)
         r = subprocess.run([sys.executable, p], capture_output=True, text=True, timeout=600)

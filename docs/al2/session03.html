@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -495,6 +496,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code>, <code>AL2-03-ex3.py</code>, <code>AL2-03-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -517,7 +526,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>6つの駅と7本の路線からなる路線図を、隣接リストの形でPythonに書き写します。
       隣接リストは<strong>辞書</strong>を使い、「駅の名前」を鍵、「となりの駅を並べたリスト」を値にします。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-03-ex1.py</span>
 <span class="cmt"># グラフを「隣接リスト」で表す</span>
 <span class="cmt"># 隣接リスト = それぞれの頂点について「となりにある頂点」を並べた表</span>
 
@@ -577,7 +586,7 @@ edge_count = edge_count // <span class="num">2</span>      <span class="cmt"># 1
       <p>例題1とまったく同じ路線図を、今度は隣接行列の形で書き写します。
       6つの駅があるので、たて6マス・よこ6マスの表を作ります。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex2.py</span>
 <span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
 <span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
 
@@ -605,7 +614,7 @@ matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class=
     i = stations.index(a)
     j = stations.index(b)
     matrix[i][j] = <span class="num">1</span>
-    matrix[j][i] = <span class="num">1</span>
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
 
 <span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
 <span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
@@ -638,7 +647,7 @@ j = stations.index(b)
 
 <span class="cmt"># 使うマスの数を比べる</span>
 matrix_cells = n * n
-list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
+list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 <span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
 <span class="fn">print</span>()
@@ -649,6 +658,17 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
 <span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
     <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>路線は両方向に通れるので、行と列を入れかえた場所にも1を書く</td><td style="white-space:nowrap">A. <code>matrix[i][j] = 1</code><br>B. <code>matrix[j][i] = 1</code><br>C. <code>matrix[j][i] = 0</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>隣接リストのマスの数。1本の路線は両方の駅に書かれる</td><td style="white-space:nowrap">A. <code>n * n</code><br>B. <code>len(lines)</code><br>C. <code>len(lines) * 2</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -703,7 +723,7 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
       <p>迷路で使った幅優先探索を、そのままグラフに使います。
       「新宿から各駅まで、何本の路線に乗ればたどり着けるか」を求めます。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex3.py</span>
 <span class="cmt"># グラフの上を幅優先探索する</span>
 <span class="cmt"># 迷路と同じ考え方で、「新宿から各駅まで何本の路線に乗ればよいか」を求める</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -732,9 +752,9 @@ queue = <span class="fn">deque</span>([start])
     current = queue.popleft()
     <span class="fn">print</span>(<span class="str">f&quot;{current} を調べる（乗る路線の数: {rides[current]}本）&quot;</span>)
     <span class="kw">for</span> next_station <span class="kw">in</span> railway[current]:
-        <span class="kw">if</span> next_station <span class="kw">in</span> rides:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             <span class="kw">continue</span>                     <span class="cmt"># すでに調べた駅</span>
-        rides[next_station] = rides[current] + <span class="num">1</span>
+        rides[next_station] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         came_from[next_station] = current
         queue.append(next_station)
         <span class="fn">print</span>(<span class="str">f&quot;    → {next_station} は {rides[next_station]}本でたどり着ける&quot;</span>)
@@ -758,6 +778,17 @@ queue = <span class="fn">deque</span>([start])
         node = came_from[node]
     route.reverse()
     <span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} への行き方:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>すでに乗車回数が決まっている駅は飛ばす</td><td style="white-space:nowrap">A. <code>next_station in railway</code><br>B. <code>next_station == start</code><br>C. <code>next_station in rides</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりの駅の乗車回数は、いまの駅の回数に1を足したもの</td><td style="white-space:nowrap">A. <code>rides[current] + 1</code><br>B. <code>1</code><br>C. <code>rides[current]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 322" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -830,7 +861,7 @@ queue = <span class="fn">deque</span>([start])
       <p>迷路をグラフ（隣接リスト）に書き直してから、例題3と同じ幅優先探索で解きます。
       迷路の1マスを1つの頂点とし、頂点の名前を <code>"(行,列)"</code> という文字列にします。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex4.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-03-ex4.py</span>
 <span class="cmt"># 迷路もグラフである</span>
 <span class="cmt"># 迷路の1マスを頂点、となり合うマスどうしのつながりを辺と考えると、</span>
 <span class="cmt"># 迷路は「頂点がたくさんあるグラフ」になる。</span>
@@ -858,7 +889,7 @@ graph = {}
 
 <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
     <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;#&quot;</span>:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             <span class="kw">continue</span>                      <span class="cmt"># 壁は頂点にしない</span>
         name = <span class="str">f&quot;({r},{c})&quot;</span>               <span class="cmt"># 頂点の名前は「(行,列)」にする</span>
         graph[name] = []
@@ -869,7 +900,7 @@ graph = {}
                 <span class="kw">continue</span>
             <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
                 <span class="kw">continue</span>
-            graph[name].append(<span class="str">f&quot;({nr},{nc})&quot;</span>)
+            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
 <span class="fn">print</span>(<span class="str">&quot;迷路を隣接リストに変換した結果（最初の6個だけ表示）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
@@ -899,7 +930,7 @@ queue = <span class="fn">deque</span>([start])
     <span class="kw">for</span> next_node <span class="kw">in</span> graph[current]:
         <span class="kw">if</span> next_node <span class="kw">in</span> steps:
             <span class="kw">continue</span>
-        steps[next_node] = steps[current] + <span class="num">1</span>
+        steps[next_node] = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
         came_from[next_node] = current
         queue.append(next_node)
 
@@ -926,6 +957,18 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 <span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
 <span class="kw">for</span> line <span class="kw">in</span> picture:
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>壁のマスは頂点にしない</td><td style="white-space:nowrap">A. <code>maze[r][c] == &quot;#&quot;</code><br>B. <code>maze[r][c] == &quot;.&quot;</code><br>C. <code>maze[r][c] == &quot;S&quot;</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>通れるとなりのマスを、この頂点の隣接リストに足す</td><td style="white-space:nowrap">A. <code>graph[name] = [f&quot;({nr},{nc})&quot;]</code><br>B. <code>graph[name].append(f&quot;({nr},{nc})&quot;)</code><br>C. <code>graph[name].append(name)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>となりの頂点までの歩数は、いまの頂点の歩数に1を足したもの</td><td style="white-space:nowrap">A. <code>steps[current] + 1</code><br>B. <code>steps[current]</code><br>C. <code>steps[start] + 1</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1240,7 +1283,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="+N4M7WYu4KLS3GfMsCiuKxSy59ej0IN5GCUib4EPRZn7Vm8lpVy9LKXNpWqS7kBuVtHVia1t7CJ5/IctjurA4oIMwOYMkbDEgJ2xtwkKGwXcHLJGV1Hfj967kS8gs4+slxBEvgkL47D1iqqb7ODaT33Y/DMvAkkGdREWjMofNqVP5+mRExljEaPvxVW7Cl9aIW/i9NxeE9Wm6FwowDKvpaiMyG5XJQNpIlM7WScXoxb4HxH5rPlX2k1esAlNr66mstEycJvFA2e/SIUuJPRzYSlc25DVhdRphQEVLeSN/x3aetIxax7GR94m8U79sUgOXsPJh/y2AGMEXHGIcdyJ3N6vufgH2j/nFk6HkixQxrqvSjN0sAJZBslPwirn7pMpYp9UIuFuVADJZsARrxt9zT3Cm6jYYJfvj5Q9n4iFVa/aAPyV28iAwL9Sxs/N/ZRgpJtVt+XI7QppwwJyzB/phE9w99FPhMG2wyPm7K5Gu1aKgZ0ISyJ20nWi5maZ8jy6+qxEpG+8jrZeU357bYW4sHl9zZ5UVf/qarCmikd1EaXzoJ4dBZUAOzmPxiTZe/kKXXtuICwvvdSAcN2lUOlfToIo+tvoykWF/ixvC1aX4oIdF9P3EkfMIRPXSPp1COD/L9eWYibamaeSi65vQZ+2bNzUXhDvhOeJ9Q87K8PqXmQVfVzWF2cyx9iHEvholVCtbOrualNTG6QrlKaPLL9n6dZrQCWmPOBxpvITVC/WEJ9XWlNq09Y520S0oq2RYZaafdnW+cmGh87vfJ6+AYBb3Lup5eLNcRxjr/LFBOnZa0i29ONNZeDA2IKBudHmuX5z/aWwGklaS7yyIQVAwV4aCwkJ64XGY4AgegYfXYICD+J7Hh8/SUvOB4qmUx+amZ9W13dTfX5zcb9VaD6FifpcxL7SPNNp/nY0Dk3P/czoUPpGF/KYnTgwSYOm48eS2CyWP0yH0CaDvj0XJMIUji+aqopIgCVu0rGl3+RABniYF6PRnDABeDQ0onx0pR9/QUzsPH1ix3/taYgpaGjS6sW1hnPGU4Pn/iALP7jl5QMGDlI743tj6dYBBn+Ih3Cz2qayC7In05goc5vCSLosOqtz7e3aMc9bFL6S1UE7xf2SCr3PUUrVYJESxwSERxqYoU3gt7VVHWZtUnKxKjz+8NLI+4xu1zm+DT84tAYpJCtyS4XV2VIYY6RpUPvOqdGKdUX8UYjh52NLFo+6HAXyX1T7oH8cqOGY9xfh00/VNQF34uaO5UALDvfCmNm+mKwwYCT4iCfHnGElQoLulT5yA2ZRkUYuI5D6GicWhOhsfiFlqkNkFV3iGhdJ1IVW5WoQlNOK8x7nwMHIOE8N8e6SQvpYBJ3bs/qUBZ5eIUVVfuuE8lNJ2xq8S8SBgduZCbwHI4Bzbg=="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

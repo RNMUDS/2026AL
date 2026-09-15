@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第14回: 実践的課題（2）仕上げとレポート作成 の本文を組み立てる。"""
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section, advanced_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -230,7 +230,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '結果を見せる表とグラフを作る', ex4_body)}"""
 
-ans = answers([
+ans = answers([blank_answers("14"),
     ("テストの答え合わせ", """        <p>自分で決めた入力なので、数値の正解は1つではありません。
         4種類のテストで「何が起きれば正しいか」を挙げます。</p>
         <table>

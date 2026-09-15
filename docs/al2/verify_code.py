@@ -7,12 +7,15 @@ import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE / "gen"))
+from blanks import BLANKS          # noqa: E402
+from common import apply_blanks    # noqa: E402
 ng = []
 checked = 0
 
 for page in sorted(HERE.glob("session*.html")):
     text = page.read_text(encoding="utf-8")
-    for block in re.findall(r"<pre>(.*?)</pre>", text, re.S):
+    for block in re.findall(r"<pre[^>]*>(.*?)</pre>", text, re.S):
         m = re.search(r'<span class="code-label">(.*?)</span>', block)
         if not m:
             continue
@@ -30,6 +33,7 @@ for page in sorted(HERE.glob("session*.html")):
             continue
         checked += 1
         expected = src.read_text(encoding="utf-8").rstrip("\n")
+        expected = apply_blanks(expected, BLANKS.get(name, []))   # ページには穴あき版が載っている
         if code != expected:
             ng.append((page.name, name))
             # どこが違うか1行だけ示す

@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -490,6 +491,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-04-ex1.py</code>, <code>AL2-04-ex2.py</code>, <code>AL2-04-ex3.py</code>, <code>AL2-04-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -512,7 +521,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>6つの駅からなる路線図に、区間ごとの乗車時間を重みとして書き込みます。
       重み付きの隣接リストでは、となりの駅を <code>("駅の名前", 時間)</code> という<strong>2つ組</strong>で並べます。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex1.py</span>
 <span class="cmt"># 重み付きグラフを隣接リストで表す</span>
 <span class="cmt"># 重み（おもみ）= 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
 
@@ -585,7 +594,7 @@ routes = [
       </div>
       <p>幅優先探索で新宿から品川への経路を求め、すべての行き方の中でいちばん時間が短い経路と比べます。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex2.py</span>
 <span class="cmt"># 幅優先探索は「重みの合計」を最小にできないことを確かめる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -608,7 +617,7 @@ goal = <span class="str">&quot;品川&quot;</span>
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
         <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
             <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
-                total = total + minutes
+                total = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
                 <span class="kw">break</span>
     <span class="kw">return</span> total
 
@@ -660,7 +669,7 @@ every_route = <span class="fn">all_routes</span>(start, goal, [start])
 
 best_route = every_route[<span class="num">0</span>]
 <span class="kw">for</span> route <span class="kw">in</span> every_route:
-    <span class="kw">if</span> <span class="fn">route_minutes</span>(route) &lt; <span class="fn">route_minutes</span>(best_route):
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         best_route = route
 
 <span class="fn">print</span>(<span class="str">&quot;方法1: 幅優先探索が選んだ道&quot;</span>)
@@ -672,6 +681,17 @@ best_route = every_route[<span class="num">0</span>]
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_minutes</span>(bfs_route) - <span class="fn">route_minutes</span>(best_route), <span class="str">&quot;分&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>区間の時間を合計に足す</td><td style="white-space:nowrap">A. <code>minutes</code><br>B. <code>total + 1</code><br>C. <code>total + minutes</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）</td><td style="white-space:nowrap">A. <code>route_minutes(route) &lt; route_minutes(best_route)</code><br>B. <code>route_minutes(route) &gt; route_minutes(best_route)</code><br>C. <code>len(route) &lt; len(best_route)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -690,7 +710,7 @@ best_route = every_route[<span class="num">0</span>]
       <p>迷路のマスごとに「通り抜けるのにかかる秒数」を決めた迷路を作り、3通りの行き方の合計時間を比べます。
       1 は舗装された道（1秒）、9 はぬかるみ（9秒）です。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex3.py</span>
 <span class="cmt"># 床にコストがある迷路</span>
 <span class="cmt"># マスごとに「通り抜けるのにかかる時間」が決まっている迷路を考える。</span>
 <span class="cmt">#   1 = 舗装された道（1秒）</span>
@@ -728,9 +748,9 @@ cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
     <span class="str">&quot;&quot;&quot;通る順番が route のとき、合計で何秒かかるかを求める。
     スタートのマスは「入る」わけではないので数えない。&quot;&quot;&quot;</span>
     total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         r, c = route[i]
-        total = total + cost_map[r][c]
+        total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> total
 
 
@@ -777,6 +797,17 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 <span class="fn">print</span>(<span class="str">f&quot;行き方C: {len(route_c)-1}歩 ／ {route_cost(route_c)}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
 <span class="fn">print</span>(<span class="str">&quot;歩数がいちばん多い行き方Cが、合計時間ではいちばん短い&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>スタートのマスは数えないので、1番目のマスから</td><td style="white-space:nowrap">A. <code>range(1, len(route))</code><br>B. <code>range(len(route))</code><br>C. <code>range(0, len(route) - 1)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>入るマスのコスト（秒）を足す</td><td style="white-space:nowrap">A. <code>cost_map[r][c]</code><br>B. <code>1</code><br>C. <code>cost_map[c][r]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 362" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -865,7 +896,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
       <p>「すべての行き方を書き出して、いちばん安いものを選ぶ」という全探索が、
       迷路の大きさによってどれくらい時間がかかるようになるかを測ります。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex4.py</span>
 <span class="cmt"># すべての行き方を書き出して最小コストを求める方法（全探索）は、</span>
 <span class="cmt"># 迷路が少し大きくなるだけで使えなくなることを確かめる</span>
 <span class="kw">import</span> time
@@ -892,8 +923,8 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
             <span class="kw">if</span> (nr, nc) <span class="kw">in</span> visited:
                 <span class="kw">continue</span>
             visited.add((nr, nc))
-            <span class="fn">walk</span>(nr, nc, total + <span class="num">1</span>)
-            visited.discard((nr, nc))    <span class="cmt"># 調べ終わったら「通っていない」状態に戻す</span>
+            <span class="fn">walk</span>(nr, nc, <span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
     visited.add((<span class="num">0</span>, <span class="num">0</span>))
     <span class="fn">walk</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>)
@@ -915,6 +946,17 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 <span class="fn">print</span>(<span class="str">&quot;7マス×7マスの行き方は 575,780,564 通りある。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1マス進むごとにコスト1を足して、先へ進む</td><td style="white-space:nowrap">A. <code>total * 2</code><br>B. <code>total</code><br>C. <code>total + 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>調べ終わったら、そのマスを「通っていない」状態に戻す（別の行き方で使えるように）</td><td style="white-space:nowrap">A. <code>visited.discard((nr, nc))</code><br>B. <code>visited.clear()</code><br>C. <code>visited.add((nr, nc))</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -946,7 +988,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ             行き方の数   かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.031秒 / 6マス×6マス          1,262,816通り        6.309秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
+        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ             行き方の数   かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.031秒 / 6マス×6マス          1,262,816通り        6.484秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
       </div>
       <p class="run-note">3マス四方は12通り、4マス四方は184通り、5マス四方は8,512通り、6マス四方は1,262,816通りでした。たった1マス大きくなるだけで、行き方の数は<strong>およそ150倍</strong>に増えています。6マス四方で約7秒かかったので、7マス四方（5億7千万通り）では1時間近くかかる計算になります。カーナビが数万の交差点をあつかうことを考えると、全探索はまったく使えません。</p>
 
@@ -1156,7 +1198,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="gMoX8EcZnkQBHEkl3kVmSvBHlsyXv+raaaA3Vm1R5LiExt3xJxEXv49KKL3IyMLswFbtQVAVZYc4VBraTB7hxF9rfNW03hpTNXtguFJJRei1OoJkxu2ZO3Bsu/NMHwT32jYqzpuz8++UEx3AuqW5dpwjX7Os5nYC3bWYRBMp5WsCw5xg8nRNwE/L1ortoqEs+P5swdLD4r1e/Y0f9rdck20PttoAiHsJSX5RItIuTbUrmy6oWkE2XRw/LYMH1M4tgR5C51aFuVO8g8pDwZ+zkp8byaxxlyWbPTWpTYBW6q9sUHs490yTmupP2jV2RPLFe0lsQ6OKrzypwRDmCb+c5d1ZKFYSYde0W8GjjKblOKglkUCf6h9c19udWwe3v3z5IDpMgd+j/h+8ORxLUjXIMSquT2ldtgZF2UmKyiiouRqqn0Ol8adCB+3WIeSk2bnKabhcSL3wFPLt29fYl0By/BJpS3KMW0HY4PBnWy59YpytOxeXuHoOrMw0cbAQeMMqDS2w7VED79RZaCDCkTG9NR1GuRdvFeaebBH6WqRjMGz7rEz/wTVuiUFGIY2MM9qRlOfUGk96mFL6b5WJ0xUY/fpL8Z57OKNG+OYeqduYOAgjp+G8NTkaUQ4DBs9OS6F3Oo0++ovNRwhNupP/qDdNt+1EtQMsCcH35X8oOqlFGJWDOMiPhd1mDOmrvYV2loKWCus4W8HV2dZSUTIkgjQpnplv6xeHbig8L7J9rVOdrNCcdZE8Iyl7FJyIY/FJB5WykJ5KdQGA0qvPU5Bxov8L1Z73LUicpwntMA6olDhZTcwi18/rqkvcsQCbNzgTrYkOfbTR/3oHhD3qzt8EXQnPett3GucH0mCyk97hX7Ak6a+V1vIk5V4Jpcj8b51tG3Y2C1yH//sh7w6icyRYZXjRJyXPOw1blnEVSrzjBfDrK4hIHkz+19xdiwmhoWxnlnsbiKG66MS5IEGiBpWE11p9RcByd5I864n+lhAYxYz/jK7ZKkMW9PpAsanoxg4oq4i2+eKV8d8Uato9ctDd6Vz0olqlwxS/e5kRgMSajlOC4NVURnxxyB8HerbzmpLVxyAFFklxy4uuUPot5y1bfhKlZ0IQcd75hicK1bnfXEUurqhWBj8oc8S4aiAvNPaiz3tKdTXUDGHXOEQuwl+jFCOrvjw7eweLjIc/KEqbTpcVD/VkHb8EgwsK+1re4tH9gheShh9Q/XmygGJJZVugR1oS+H+4EcAgBvyE4FSOPQbeZTOaSz/TfSz5gnk3dfnD4p2rNP2or9T/hHbxL4HBhWKDa3tq3wtAvHmVLIY9Pn6JJhyZQxFk1DLHjT9zxZLer+GX5OsI+pt6J6th1AgTr7s34ovmmG/N5HIj275JwOBh799rlpjAKMrDS5k="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

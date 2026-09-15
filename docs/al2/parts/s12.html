@@ -489,6 +489,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-12-ex1.py</code>, <code>AL2-12-ex2.py</code>, <code>AL2-12-ex3.py</code>, <code>AL2-12-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -510,7 +518,7 @@
       <p>前期の数当てゲームを、「1回の質問で候補がどれだけ減るか」という目で見直します。
       1から100までのすべての数について、2つの作戦の質問回数を数えます。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-12-ex1.py</span>
 <span class="cmt"># 数当てゲームを「1回の質問でどれだけ候補を減らせるか」という目で見直す</span>
 <span class="cmt"># 作戦A: 1から順に「1ですか」「2ですか」…と聞く（逐次探索）</span>
 <span class="cmt"># 作戦B: いつも残っている範囲のまん中を聞く（二分探索）</span>
@@ -614,7 +622,7 @@ secret = <span class="num">73</span>
       <p>迷路の中に置かれた4つのアイテムを、全部拾ってゴールへ向かうパズルを貪欲法で解きます。
       まず幅優先探索で地点どうしの歩数を表にしてから、いちばん近いアイテムへ向かうことをくり返します。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-12-ex2.py</span>
 <span class="cmt"># アイテム集めパズルを貪欲法で解く</span>
 <span class="cmt"># 迷路の中に4つのアイテムがある。全部拾ってゴールへ行くまでの歩数を短くしたい。</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -658,7 +666,7 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
                 <span class="kw">continue</span>
             <span class="kw">if</span> (nr, nc) <span class="kw">in</span> dist:
                 <span class="kw">continue</span>
-            dist[(nr, nc)] = dist[(r, c)] + <span class="num">1</span>
+            dist[(nr, nc)] = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
             queue.append((nr, nc))
     <span class="kw">return</span> dist
 
@@ -706,12 +714,12 @@ order = [<span class="str">&quot;S&quot;</span>]
 <span class="kw">while</span> <span class="fn">len</span>(remaining) &gt; <span class="num">0</span>:
     nearest = <span class="kw">None</span>
     <span class="kw">for</span> name <span class="kw">in</span> remaining:
-        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> table[here][name] &lt; table[here][nearest]:
+        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
             nearest = name
     <span class="fn">print</span>(<span class="str">f&quot;  {here} にいる → いちばん近いアイテムは {nearest}（{table[here][nearest]}歩）&quot;</span>)
     total = total + table[here][nearest]
     order.append(nearest)
-    remaining.remove(nearest)
+    <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
     here = nearest
 
 total = total + table[here][<span class="str">&quot;G&quot;</span>]
@@ -722,6 +730,18 @@ order.append(<span class="str">&quot;G&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;  拾う順番:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(order))
 <span class="fn">print</span>(<span class="str">&quot;  合計歩数:&quot;</span>, total, <span class="str">&quot;歩&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>となりのマスまでの歩数は、いまのマスの歩数に1を足したもの</td><td style="white-space:nowrap">A. <code>1</code><br>B. <code>dist[(r, c)]</code><br>C. <code>dist[(r, c)] + 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いまいる場所から歩数がいちばん少ないアイテムを選ぶ</td><td style="white-space:nowrap">A. <code>name &lt; nearest</code><br>B. <code>table[here][name] &gt; table[here][nearest]</code><br>C. <code>table[here][name] &lt; table[here][nearest]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>拾ったアイテムを「まだ」の一覧から外す</td><td style="white-space:nowrap">A. <code>remaining.remove(nearest)</code><br>B. <code>remaining.append(nearest)</code><br>C. <code>remaining.clear()</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -738,7 +758,7 @@ order.append(<span class="str">&quot;G&quot;</span>)
       <p>同じパズルを全探索で解いて、貪欲法の答えと比べます。
       アイテムは4つなので、拾う順番は 4×3×2×1 = 24通りです。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-12-ex3.py</span>
 <span class="cmt"># 同じアイテム集めパズルを全探索で解いて、貪欲法と比べる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 <span class="kw">from</span> itertools <span class="kw">import</span> permutations
@@ -804,7 +824,7 @@ table = {}
     total = table[<span class="str">&quot;S&quot;</span>][order[<span class="num">0</span>]]
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(order) - <span class="num">1</span>):
         total = total + table[order[i]][order[i + <span class="num">1</span>]]
-    total = total + table[order[-<span class="num">1</span>]][<span class="str">&quot;G&quot;</span>]
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> total
 
 
@@ -814,7 +834,7 @@ table = {}
 
 best_order = <span class="kw">None</span>
 best_steps = <span class="kw">None</span>
-<span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="str">&quot;ABCD&quot;</span>):
+<span class="kw">for</span> order <span class="kw">in</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
     steps = <span class="fn">route_steps</span>(order)
     mark = <span class="str">&quot;&quot;</span>
     <span class="kw">if</span> best_steps <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> steps &lt; best_steps:
@@ -838,6 +858,17 @@ greedy_order = (<span class="str">&quot;A&quot;</span>, <span class="str">&quot;
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は最初にAへ向かったが、最短ルートは先にCを拾っている。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;Cはスタートのすぐ近くにあるのに、貪欲法は後回しにして遠回りしてしまった。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>4つのアイテムを拾う順番をすべて作る</td><td style="white-space:nowrap">A. <code>&quot;ABCD&quot;</code><br>B. <code>permutations(&quot;ABCD&quot;)</code><br>C. <code>permutations(&quot;SABCDG&quot;)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後のアイテムからゴールまでの歩数を足す</td><td style="white-space:nowrap">A. <code>table[order[-1]][&quot;G&quot;]</code><br>B. <code>table[&quot;S&quot;][&quot;G&quot;]</code><br>C. <code>table[order[0]][&quot;G&quot;]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -856,7 +887,7 @@ greedy_order = (<span class="str">&quot;A&quot;</span>, <span class="str">&quot;
       <p>限られた時間の中で、得点がいちばん高くなる組み合わせを選ぶナップサック問題を、
       貪欲法と動的計画法の両方で解いて比べます。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex4.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-12-ex4.py</span>
 <span class="cmt"># ナップサック問題: 決められた時間の中で、得点がいちばん高くなる組み合わせを選ぶ</span>
 <span class="cmt"># ゲームの「制限時間内にどのイベントをこなすか」という場面にあたる。</span>
 
@@ -901,7 +932,7 @@ greedy_score = <span class="num">0</span>
 greedy_names = []
 <span class="kw">for</span> i <span class="kw">in</span> order:
     name, minutes, score = quests[i]
-    <span class="kw">if</span> used + minutes &lt;= limit:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         used = used + minutes
         greedy_score = greedy_score + score
         greedy_names.append(name)
@@ -923,8 +954,8 @@ best = []
         <span class="cmt"># i番目を選ばない場合</span>
         best[i][t] = best[i - <span class="num">1</span>][t]
         <span class="cmt"># i番目を選ぶ場合（時間が足りるときだけ）</span>
-        <span class="kw">if</span> t &gt;= minutes:
-            <span class="kw">if</span> best[i - <span class="num">1</span>][t - minutes] + score &gt; best[i][t]:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
                 best[i][t] = best[i - <span class="num">1</span>][t - minutes] + score
 
 <span class="fn">print</span>(<span class="str">&quot;動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間）&quot;</span>)
@@ -953,6 +984,18 @@ chosen.reverse()
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, best[n][limit] - greedy_score, <span class="str">&quot;点&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は「1分あたりの得点」だけを見るので、&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;時間がぴったり収まる組み合わせを見のがしてしまう。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>貪欲法: 残り時間に入るクエストだけ受ける</td><td style="white-space:nowrap">A. <code>minutes &lt;= limit</code><br>B. <code>used &lt;= limit</code><br>C. <code>used + minutes &lt;= limit</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>残り時間 t にこのクエストが入るときだけ「受ける」を考える</td><td style="white-space:nowrap">A. <code>t &gt;= minutes</code><br>B. <code>t &gt; 0</code><br>C. <code>t &lt;= minutes</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>このクエストを「受ける」ほうが得点が高いなら、表を書き直す</td><td style="white-space:nowrap">A. <code>best[i - 1][t] &gt; best[i][t]</code><br>B. <code>best[i - 1][t - minutes] + score &gt; best[i][t]</code><br>C. <code>score &gt; best[i][t]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -1165,6 +1208,20 @@ chosen.reverse()
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-12-ex2.py</code></td><td>穴1</td><td><code>dist[(r, c)] + 1</code></td></tr>
+          <tr><td><code>AL2-12-ex2.py</code></td><td>穴2</td><td><code>table[here][name] &lt; table[here][nearest]</code></td></tr>
+          <tr><td><code>AL2-12-ex2.py</code></td><td>穴3</td><td><code>remaining.remove(nearest)</code></td></tr>
+          <tr><td><code>AL2-12-ex3.py</code></td><td>穴1</td><td><code>permutations(&quot;ABCD&quot;)</code></td></tr>
+          <tr><td><code>AL2-12-ex3.py</code></td><td>穴2</td><td><code>table[order[-1]][&quot;G&quot;]</code></td></tr>
+          <tr><td><code>AL2-12-ex4.py</code></td><td>穴1</td><td><code>used + minutes &lt;= limit</code></td></tr>
+          <tr><td><code>AL2-12-ex4.py</code></td><td>穴2</td><td><code>t &gt;= minutes</code></td></tr>
+          <tr><td><code>AL2-12-ex4.py</code></td><td>穴3</td><td><code>best[i - 1][t - minutes] + score &gt; best[i][t]</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <p><strong>問い2（使える時間を変えたとき）</strong></p>

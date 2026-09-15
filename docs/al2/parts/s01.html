@@ -279,6 +279,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-01-ex1.py</code>, <code>AL2-01-ex2.py</code>, <code>AL2-01-ex3.py</code>, <code>AL2-01-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -301,7 +309,7 @@
       <p>前期に学んだ二分探索を、数当てゲームの形で思い出します。
       1から100までの中に「秘密の数」が1つあり、コンピュータが<strong>まん中を聞く</strong>作戦で当てにいきます。</p>
 
-<pre><span class="code-label">Python ── AL2-01-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-01-ex1.py</span>
 <span class="cmt"># 数当てゲーム: コンピュータが「秘密の数」を当てる</span>
 <span class="cmt"># 1 から 100 までの中に秘密の数が1つある。</span>
 <span class="cmt"># コンピュータは「まん中を聞く」作戦で当てにいく。</span>
@@ -411,7 +419,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
       <p>二分探索がどれくらい得なのかを、逐次探索と比べて数で確かめます。
       逐次探索は先頭から1つずつ調べる方法、二分探索はまん中と比べて半分を捨てる方法です。</p>
 
-<pre><span class="code-label">Python ── AL2-01-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex2.py</span>
 <span class="cmt"># 同じ「探す」でも、やり方によって手数がどれだけ違うかを数える</span>
 
 
@@ -432,11 +440,11 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
     count = <span class="num">0</span>
     <span class="kw">while</span> low &lt;= high:
         count = count + <span class="num">1</span>
-        middle = (low + high) // <span class="num">2</span>
+        middle = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">if</span> data[middle] == target:
             <span class="kw">return</span> count
         <span class="kw">elif</span> data[middle] &lt; target:
-            low = middle + <span class="num">1</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">else</span>:
             high = middle - <span class="num">1</span>
     <span class="kw">return</span> count
@@ -454,6 +462,17 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)
 <span class="fn">print</span>(<span class="str">&quot;データが10倍になっても、二分探索の回数はほとんど増えない&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>low と high のまん中の位置。整数になる割り算を使う</td><td style="white-space:nowrap">A. <code>low + high // 2</code><br>B. <code>(low + high) / 2</code><br>C. <code>(low + high) // 2</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>まん中より大きい側に答えがあるので、調べる範囲の下側を1つ上に動かす</td><td style="white-space:nowrap">A. <code>low = middle</code><br>B. <code>low = middle + 1</code><br>C. <code>high = middle - 1</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 345" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -525,7 +544,7 @@ count = <span class="num">0</span>        <span class="cmt"># 何回目の質問
       幅優先探索は、スタートから<strong>1歩で行ける場所をすべて調べ、次に2歩で行ける場所をすべて調べる</strong>という順番で進みます。
       波紋が広がるように調べていくため、最初にゴールへ届いたときの歩数が必ず最短になります。</p>
 
-<pre><span class="code-label">Python ── AL2-01-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex3.py</span>
 <span class="cmt"># 前期の復習: 幅優先探索（はばゆうせんたんさく）で迷路の最短経路を求める</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -565,7 +584,7 @@ queue.append(start)
 came_from = {start: <span class="kw">None</span>}
 
 <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    current = queue.popleft()          <span class="cmt"># メモのいちばん古い行を読んで消す</span>
+    current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     <span class="kw">if</span> current == goal:
         <span class="kw">break</span>
 
@@ -580,7 +599,7 @@ came_from = {start: <span class="kw">None</span>}
             <span class="kw">continue</span>                   <span class="cmt"># 壁なので通れない</span>
         <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
             <span class="kw">continue</span>                   <span class="cmt"># すでに来たことがある場所</span>
-        came_from[(nr, nc)] = current
+        came_from[(nr, nc)] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         queue.append((nr, nc))
 
 <span class="cmt"># --- ゴールからスタートへ逆にたどって経路を復元する ---</span>
@@ -604,6 +623,17 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 <span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
 <span class="kw">for</span> line <span class="kw">in</span> picture:
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>メモのいちばん古い行を読んで消す（幅優先探索）</td><td style="white-space:nowrap">A. <code>queue.pop()</code><br>B. <code>queue.popleft()</code><br>C. <code>queue[0]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりのマスに「どこから来たか」として、いま調べているマスを記録する</td><td style="white-space:nowrap">A. <code>(nr, nc)</code><br>B. <code>start</code><br>C. <code>current</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 372" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -863,7 +893,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       どの家から回るかで、かかる時間が変わります。時間を最も短くする回り方を見つける問題が、第8回から学ぶ巡回セールスマン問題です。
     </div>
 
-<pre><span class="code-label">Python ── AL2-01-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-01-ex4.py</span>
 <span class="cmt"># 後期のテーマ「最適化」の入口</span>
 <span class="cmt"># 学校を出発して3か所を回り、学校へ戻る。いちばん短い順番はどれか。</span>
 
@@ -892,7 +922,7 @@ travel_time = {
     <span class="kw">for</span> next_place <span class="kw">in</span> route:
         total = total + <span class="fn">minutes_between</span>(place, next_place)
         place = next_place
-    total = total + <span class="fn">minutes_between</span>(place, <span class="str">&quot;学校&quot;</span>)   <span class="cmt"># 最後は学校へ戻る</span>
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> total
 
 
@@ -915,7 +945,7 @@ best_time = <span class="kw">None</span>
 <span class="kw">for</span> route <span class="kw">in</span> all_routes:
     minutes = <span class="fn">total_minutes</span>(route)
     <span class="fn">print</span>(<span class="str">&quot;学校 →&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route), <span class="str">&quot;→ 学校 :&quot;</span>, minutes, <span class="str">&quot;分&quot;</span>)
-    <span class="kw">if</span> best_time <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> minutes &lt; best_time:
+    <span class="kw">if</span> best_time <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         best_time = minutes
         best_route = route
 
@@ -923,6 +953,17 @@ best_time = <span class="kw">None</span>
 <span class="fn">print</span>(<span class="str">&quot;試した順番の数:&quot;</span>, <span class="fn">len</span>(all_routes), <span class="str">&quot;通り&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;いちばん短い順番: 学校 →&quot;</span>, <span class="str">&quot; → &quot;</span>.join(best_route), <span class="str">&quot;→ 学校&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;そのときの合計時間:&quot;</span>, best_time, <span class="str">&quot;分&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いま計算した合計時間が、これまでの最短より短いときだけ更新する</td><td style="white-space:nowrap">A. <code>minutes &lt; best_time</code><br>B. <code>minutes == best_time</code><br>C. <code>minutes &gt; best_time</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の場所から学校へ戻る時間を足す</td><td style="white-space:nowrap">A. <code>minutes_between(place, &quot;学校&quot;)</code><br>B. <code>0</code><br>C. <code>minutes_between(&quot;学校&quot;, route[0])</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 296" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1131,7 +1172,7 @@ Mac:      python3 -m pip install gradio</pre>
       <div class="setup-step">
         <p class="step-title">2. いちばん小さいアプリを動かしてみる</p>
         <p style="font-size:0.95rem"><code>AL2/work</code> フォルダを作り、<code>app.py</code> という名前で保存する。</p>
-<pre><span class="code-label">Python ── app.py（Gradio）</span>
+<pre data-blanks="0"><span class="code-label">Python ── app.py（Gradio）</span>
 <span class="cmt"># いちばん小さい Gradio アプリ</span>
 <span class="cmt"># VS Code の ▷ で実行すると、ブラウザに画面が開く</span>
 <span class="kw">import</span> gradio <span class="kw">as</span> gr
@@ -1232,6 +1273,18 @@ app.launch(inbrowser=<span class="kw">True</span>)                             <
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-01-ex2.py</code></td><td>穴1</td><td><code>(low + high) // 2</code></td></tr>
+          <tr><td><code>AL2-01-ex2.py</code></td><td>穴2</td><td><code>low = middle + 1</code></td></tr>
+          <tr><td><code>AL2-01-ex3.py</code></td><td>穴1</td><td><code>queue.popleft()</code></td></tr>
+          <tr><td><code>AL2-01-ex3.py</code></td><td>穴2</td><td><code>current</code></td></tr>
+          <tr><td><code>AL2-01-ex4.py</code></td><td>穴1</td><td><code>minutes &lt; best_time</code></td></tr>
+          <tr><td><code>AL2-01-ex4.py</code></td><td>穴2</td><td><code>minutes_between(place, &quot;学校&quot;)</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <p><strong>問い1（学校—カフェを20分にしたとき）</strong></p>

@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -520,6 +521,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-13-ex1.py</code>, <code>AL2-13-ex2.py</code>, <code>AL2-13-ex3.py</code>, <code>AL2-13-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -541,7 +550,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付けるゲームです。
       <code>cost_map</code> と <code>player_moves</code> を書き換えれば、自分のステージが作れます。</p>
 
-<pre><span class="code-label">Python ── AL2-13-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-13-ex1.py</span>
 <span class="cmt"># 作品テンプレートA: コスト付き迷路ゲーム</span>
 <span class="cmt"># プレイヤーが選んだ道と、ダイクストラ法が見つけた最短の道を比べて点数を付ける。</span>
 <span class="kw">import</span> heapq
@@ -692,7 +701,7 @@ player_route = <span class="fn">move_to_route</span>(player_moves)
       <p>配達先を並べると、貪欲法と全探索の両方でルートを作って比べるアプリです。
       <code>places</code> を書き換えれば、自分の配達先が作れます（8件までなら全探索が使えます）。</p>
 
-<pre><span class="code-label">Python ── AL2-13-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-13-ex2.py</span>
 <span class="cmt"># 作品テンプレートB: 配達ルート最適化アプリ</span>
 <span class="cmt"># 配達先を並べると、貪欲法と全探索でルートを作り、比べて表示する。</span>
 <span class="kw">import</span> math
@@ -752,11 +761,11 @@ distance = []
         <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
             <span class="kw">if</span> j <span class="kw">in</span> visited:
                 <span class="kw">continue</span>
-            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
                 nearest = j
         visited.append(nearest)
         here = nearest
-    <span class="kw">return</span> <span class="fn">tuple</span>(visited[<span class="num">1</span>:])
+    <span class="kw">return</span> <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
 
 <span class="kw">def</span> <span class="fn">brute_force</span>():
@@ -829,10 +838,21 @@ best_value = <span class="fn">route_length</span>(best_order)
 <span class="fn">print</span>(<span class="str">f&quot;  むだになった距離: {round(greedy_value - best_value, 1)}&quot;</span>
       <span class="str">f&quot;（{round((greedy_value / best_value - 1) * 100, 1)}% 長い）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">54</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いまいる場所からいちばん近い配達先を選ぶ</td><td style="white-space:nowrap">A. <code>j &lt; nearest</code><br>B. <code>distance[here][j] &gt; distance[here][nearest]</code><br>C. <code>distance[here][j] &lt; distance[here][nearest]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>営業所（0番）を除いた、回る順番を返す</td><td style="white-space:nowrap">A. <code>tuple(visited[1:])</code><br>B. <code>tuple(visited)</code><br>C. <code>visited[0]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000006秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000137秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
+        <img src="images/a13_ex2_result.png" alt="AL2-13-ex2.py の実行結果。====================================================== / 配達ルート最適化アプリ / ====================================================== / 配達先: 6件 /  / 配達先の位置 / ---------------------------------- / 営業所        (x= 5, y= 5) / 田中宅        (x=12, y= 3) / 鈴木宅        (x= 2, y=11) / 佐藤宅        (x=15, y=12) / 高橋宅        (x= 8, y=14) / 伊藤宅        (x=19, y= 1) / 渡辺宅        (x= 1, y= 2) / ---------------------------------- /  / 地図（左上が (0,0)。E = 営業所） / -------------------------------------------- / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . 5 / . 6 . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . 1 . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . E . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / . . 2 . . . . . . . . . . . . . . . . . / . . . . . . . . . . . . . . . 3 . . . . / . . . . . . . . . . . . . . . . . . . . / . . . . . . . . 4 . . . . . . . . . . . / . . . . . . . . . . . . . . . . . . . . / -------------------------------------------- /  / 貪欲法のルート（0.000005秒で作成） / 営業所 → 渡辺宅 → 鈴木宅 → 高橋宅 → 佐藤宅 → 田中宅 → 伊藤宅 → 営業所 / 合計距離: 59.4 /  / 全探索のルート（0.000114秒で作成） / 営業所 → 田中宅 → 伊藤宅 → 佐藤宅 → 高橋宅 → 鈴木宅 → 渡辺宅 → 営業所 / 合計距離: 54.3 /  / ------------------------------------------------------ / 貪欲法: 59.4 / 最　適: 54.3 / むだになった距離: 5.1（9.3% 長い） / ------------------------------------------------------" width="535" height="1028" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>59.4</strong>、全探索は<strong>54.3</strong>で、貪欲法は9.3%長いという結果でした。作った時間を比べると、貪欲法は0.000005秒、全探索は0.000134秒です。6件の配達先なら全探索でも一瞬ですが、件数を増やすと全探索だけが急に遅くなります。<code>places</code> に配達先を足して、9件・10件と増やしたときの時間の変化を確かめてみてください。</p>
     </div>
@@ -846,7 +866,7 @@ best_value = <span class="fn">route_length</span>(best_order)
       幅優先探索で歩数の表を作ってから、貪欲法と全探索で拾う順番を決めます。
       <code>maze</code> と <code>items</code> を書き換えれば、自分のステージが作れます。</p>
 
-<pre><span class="code-label">Python ── AL2-13-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-13-ex3.py</span>
 <span class="cmt"># 作品テンプレートC: アイテム収集パズル</span>
 <span class="cmt"># 迷路の中のアイテムを全部拾ってゴールへ向かう。貪欲法と全探索の両方で解く。</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -910,7 +930,7 @@ table = {}
     <span class="kw">for</span> other <span class="kw">in</span> places:
         <span class="kw">if</span> places[other] <span class="kw">not</span> <span class="kw">in</span> dist:
             <span class="fn">print</span>(<span class="str">f&quot;エラー: {name} から {other} へ行けません。迷路を作り直してください。&quot;</span>)
-            <span class="kw">raise</span> SystemExit          <span class="cmt"># ここでプログラムを終わりにする</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         table[name][other] = dist[places[other]]
 
 
@@ -949,7 +969,7 @@ greedy_order = []
 <span class="kw">while</span> <span class="fn">len</span>(remaining) &gt; <span class="num">0</span>:
     nearest = <span class="kw">None</span>
     <span class="kw">for</span> name <span class="kw">in</span> remaining:
-        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> table[here][name] &lt; table[here][nearest]:
+        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
             nearest = name
     greedy_order.append(nearest)
     remaining.remove(nearest)
@@ -969,6 +989,17 @@ best_steps = <span class="kw">None</span>
 <span class="fn">print</span>(<span class="str">f&quot;  最　適: S → {&#x27; → &#x27;.join(best_order)} → G   {best_steps}歩&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;  差: {route_steps(greedy_order) - best_steps}歩&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">40</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>行けない場所があるので、ここでプログラムを終わりにする</td><td style="white-space:nowrap">A. <code>raise SystemExit</code><br>B. <code>continue</code><br>C. <code>break</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いまいる場所から歩数がいちばん少ないアイテムを選ぶ</td><td style="white-space:nowrap">A. <code>table[here][name] &lt; table[here][nearest]</code><br>B. <code>table[here][name] &gt; table[here][nearest]</code><br>C. <code>name &lt; nearest</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -990,7 +1021,7 @@ best_steps = <span class="kw">None</span>
         自分の作品では <code>USE_INPUT = True</code> に書き換えると、キーボードから入力できるようになります。
       </div>
 
-<pre><span class="code-label">Python ── AL2-13-ex4.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-13-ex4.py</span>
 <span class="cmt"># 作品づくりに使える部品集</span>
 <span class="cmt"># コピーして自分の作品に組み込むための、小さな道具を4つ集めた。</span>
 <span class="kw">import</span> time
@@ -1114,7 +1145,7 @@ elapsed = time.time() - began
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a13_ex4_result.png" alt="AL2-13-ex4.py の実行結果。==================================================== / 部品1: 入力を受け取る / ==================================================== / 難易度を選んでください（1〜3）: 3  ← 入力のかわりに用意した答え / 名前を入力してください: たなか  ← 入力のかわりに用意した答え / → 難易度 3 で、たなか さんとして始めます /  / ==================================================== / 部品2: 数字だけを受け取る / ==================================================== / 配達先の数を入力してください（3〜8）: DDRR  ← 入力のかわりに用意した答え / 数字を入力してください / → 配達先を 5 件にします /  / ==================================================== / 部品3: 時間を測る / ==================================================== / 1から100万までの合計: 499,999,500,000 / かかった時間: 0.0431秒 /  / ==================================================== / 部品4: スコアを表示する / ==================================================== / あなたの結果: 42 / 最適な結果  : 18 / スコア      : 42点 / [##########...............] / 評価: ★☆☆ もう一度考えてみよう /  / あなたの結果: 19 / 最適な結果  : 18 / スコア      : 94点 / [#######################..] / 評価: ★★☆ あと少し /  / ==================================================== / 4つの部品を組み合わせれば、遊べる作品になる / ====================================================" width="498" height="808" loading="lazy">
+        <img src="images/a13_ex4_result.png" alt="AL2-13-ex4.py の実行結果。==================================================== / 部品1: 入力を受け取る / ==================================================== / 難易度を選んでください（1〜3）: 3  ← 入力のかわりに用意した答え / 名前を入力してください: たなか  ← 入力のかわりに用意した答え / → 難易度 3 で、たなか さんとして始めます /  / ==================================================== / 部品2: 数字だけを受け取る / ==================================================== / 配達先の数を入力してください（3〜8）: DDRR  ← 入力のかわりに用意した答え / 数字を入力してください / → 配達先を 5 件にします /  / ==================================================== / 部品3: 時間を測る / ==================================================== / 1から100万までの合計: 499,999,500,000 / かかった時間: 0.0412秒 /  / ==================================================== / 部品4: スコアを表示する / ==================================================== / あなたの結果: 42 / 最適な結果  : 18 / スコア      : 42点 / [##########...............] / 評価: ★☆☆ もう一度考えてみよう /  / あなたの結果: 19 / 最適な結果  : 18 / スコア      : 94点 / [#######################..] / 評価: ★★☆ あと少し /  / ==================================================== / 4つの部品を組み合わせれば、遊べる作品になる / ====================================================" width="498" height="808" loading="lazy">
       </div>
       <p class="run-note">4つの部品が順に動きました。部品2では、用意した答え「DDRR」が数字でないため<strong>「数字を入力してください」と表示され、はじかれて</strong>います。まちがった入力をそのまま受け取ると、あとでプログラムが止まる原因になります。部品3では100万回の足し算が0.05秒ほどで終わりました。部品4では、スコアに応じて <code>#</code> の棒グラフと星の評価が表示されています。文字だけでも、見せ方をくふうすれば作品らしくなります。</p>
     </div>
@@ -1322,7 +1353,7 @@ elapsed = time.time() - began
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="syB2De0FJodQaMZ/zhPVqabIxa2vRlEPtOB9ZfsEmBLMj0Fa3JynJZwQXhEPFUN2FXj13a4uupScEoH81Ox63ny4RhtFEkSwRzt5cti4/RvZBcnpaKkRpAyu7QnEXZhXd2udymGH6uNzSIpU6d8+hA1IWkle7EGnKq1bma0Vgi2IkX5Y6KJU0tk1PRXr/UTG+BgFrYMINFAwETh0vKQqg7muxWU+7UXopNaJrq/4qmjFZGRe9eni0Y7G2IO0qBSF0Kri1BVipyOolVR9s3EdnBsZEFkkZSf2m73NLRUPMY9+8Dq1VnCMmvyU29mR3uWpDv/zXg7KxWjKYwrcTs13nkdv0rIEzFrFgwA4rVbk23CaBp/r2/eTMYNmAmIbVDtvtxC5BdvoM324BdpPOGsI482ILhIX+ifI/IwII/jD3py8CNaq224ltmPF2UsDT3sOPqGz4JI6PRt5rRJ7Dmjk758QsUc+XyuDHFol0XJL9JF7Atr6Bg2IRtMza05Y+8DD8P+WrVoZWx099tvuNw+X6GQ+HW3JYHxa7/TyGfm4Z5cMWGSS+5MmLpGl0eJs/BITYo5Y9ZPu47KnHUAH8h8koQyuWLtITfPvx1Vgvqr3rnMy6JOH/6WQiOE1cbb8yAMxopDW1q8u9HnV4ofWRBkJzq7Z/Kq3Qkm9zmaYguil1T53GPJFtNcunec9wxPDWaUTNEb9A9L6gBm7RE3xHsBiF9BgMx3zmqFUMQvU3/5j2KUnaaPAK84HrLbUB6EhJc23aYgO5it/i1dc1tzJ4fcV3xM8NGDz7+7GoS+niF0dShRMKoDKbaV2XSumr3ennMxG6xe3bTEfSXv0AznnZ/4RmuJCIrGMSfVfrJ4JV27/Wa/TtROAYUKg0Wa20JCUlzvc+zBHPQTcx7nOntYmQR8a0jIkmEYkfJk6whnJSVAVM9/a1Yt4+Y8qUS2CX49BOimy8lp2fl7dQy5LYyoP8BF0awko3CTeyGlkXRNgC28V3gyN9DYCMLjXe2vWHlRU8R/h/TjZ9JGtHJ0/hiMMKtTYWdPFM6eAQPbihoQQKMcCbNXwSSDioFTrhj3M04qYZwODkdpMSHScojVhqD2ha9i0oTW0GJHkBZOfjzr/7fh1UaeWx59KmAjo2gkxrSKDQTRsb2KMJnOptQlihQFZgkGSS7t0je7kE58HAmFT/YTBFDwMPtkAxugUm3Wa/aPLEL9SPwsk5tkpsRXNglQnoUandrdmnTMA7jvHKwPIcg2qZEpH4ML7mpdNPFb17VPbleAMr7N9+XmwbBRXe0M98CTwRyVrocdTbNi7SWZQEIlbhTZUMHuZX+F6ElXjSXxA48taTh9kk1/s3jGujZ2Xak7XgR2SjxRdaZOgoLSBPcZgKWyOliWz+X5NyGzMZnNOcIbBlorswg2Av6752EVW+R9X8UiHIbXF1dCiFr8N381OYGxajeBZDFVlBwoTBUCSkgJ4e3ZBpPTH2QVX8u0OmTqHhK1IK/fuSSD/ug4w+up+8QfJcMLf1cW4uhd9114ABpkPmktBrj/7JDuyiwN+9D7pMh8OL4xzpLlmK6XADwgt5arWMOglB9SWdB6hW6aBdhRlpL4J7fWA52nDK6pNSaNw1sCgjq86DsGBEVvNHl7Y0CNQwprVTRztG8gtrZM0ovzAmpk+KQ6djGu0LALSXp0yxpXtr20qBsDPbARtgkfc7QtBeqtFu1lxHMM+/7P8f61G6uPY73gD0EsdHUV+LAu9gpgJ8jAfublfLqVeMB5JIz7lcWkJess95+9zpRTTpc8uHrGsSSxrDIBDGpmZfCwPNxqr1035C2VjPoU05+kVcg9CJfuB6BQf7F2/gdombFXeTLWZZdOFY+LNLv8L9gzFXiz9MDO1PN+aMe93VDNIk4pc7MeYZnLc8SVNsjA786UIDEZY"></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

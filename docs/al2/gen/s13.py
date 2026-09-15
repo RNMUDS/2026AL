@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """第13回: 実践的課題（1）設計と実装 の本文を組み立てる。"""
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section, advanced_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -339,7 +339,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">3つのテンプレートと�
 
 {example(4, '作品に使える部品集', ex4_body)}"""
 
-ans = answers([
+ans = answers([blank_answers("13"),
     ("つまずいたときの調べ方", """        <p>テンプレートを自分の数値に書き換えたときに、よくあるつまずきと、その調べ方を挙げます。</p>
         <table>
           <tr><th>症状</th><th>まず見るところ</th></tr>

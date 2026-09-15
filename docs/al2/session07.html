@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -670,6 +671,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-07-ex1.py</code>, <code>AL2-07-ex2.py</code>, <code>AL2-07-ex3.py</code>, <code>AL2-07-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -691,7 +700,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>第4回の例題3で使った迷路を、幅優先探索とダイクストラ法の両方で解いて比べます。
       迷路も経路も同じプログラムの中であつかい、結果を並べて表示します。</p>
 
-<pre><span class="code-label">Python ── AL2-07-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-07-ex1.py</span>
 <span class="cmt"># 床コスト付き迷路を、幅優先探索とダイクストラ法の両方で解いて比べる</span>
 <span class="kw">import</span> heapq
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -830,7 +839,7 @@ dij_route = <span class="fn">build_route</span>(came_from_dij, goal)
       <p>ダイクストラ法は、ゴールの最小コストだけを求めているわけではありません。
       止めずに最後まで動かすと、<strong>すべてのマスへの最小コスト</strong>が同時に求まります。</p>
 
-<pre><span class="code-label">Python ── AL2-07-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-07-ex2.py</span>
 <span class="cmt"># ダイクストラ法が「どのマスにいくらでたどり着けるか」を全部求めていることを見る</span>
 <span class="kw">import</span> heapq
 
@@ -862,7 +871,7 @@ settled = <span class="fn">set</span>()
     <span class="kw">if</span> current <span class="kw">in</span> settled:
         <span class="kw">continue</span>
     settled.add(current)
-    order.append((current, total))
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     r, c = current
     <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
         nr = r + dr
@@ -872,7 +881,7 @@ settled = <span class="fn">set</span>()
         new_total = total + cost_map[nr][nc]
         <span class="kw">if</span> new_total &lt; distance[(nr, nc)]:
             distance[(nr, nc)] = new_total
-            heapq.heappush(pq, (new_total, (nr, nc)))
+            heapq.heappush(pq, <span class="blank">____</span>)      <span class="cmt"># ← 穴2</span>
 
 <span class="fn">print</span>(<span class="str">&quot;確定した順番（コストが小さいマスから順に決まっていく）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
@@ -901,6 +910,17 @@ line = <span class="str">&quot;&quot;</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">30</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;ダイクストラ法は、ゴールだけでなく全部のマスへの最小コストを同時に求めている&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>確定した順番に、マスと合計秒数を記録する</td><td style="white-space:nowrap">A. <code>order.insert(0, current)</code><br>B. <code>order.append(current)</code><br>C. <code>order.append((current, total))</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>（合計秒数, マス）の組を入れる。秒数で並ぶようにする</td><td style="white-space:nowrap">A. <code>(new_total, (nr, nc))</code><br>B. <code>new_total</code><br>C. <code>((nr, nc), new_total)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -917,7 +937,7 @@ line = <span class="str">&quot;&quot;</span>
       <p>迷路を大きくしていったとき、ダイクストラ法がどれくらいの時間で解けるかを測ります。
       50マス四方から400マス四方まで、4通りの大きさを試します。</p>
 
-<pre><span class="code-label">Python ── AL2-07-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-07-ex3.py</span>
 <span class="cmt"># 迷路を大きくしたとき、ダイクストラ法がどれくらいの時間で解けるかを測る</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> time
@@ -961,7 +981,7 @@ line = <span class="str">&quot;&quot;</span>
         <span class="kw">if</span> current <span class="kw">in</span> settled:
             <span class="kw">continue</span>
         settled.add(current)
-        <span class="kw">if</span> current == goal:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             <span class="kw">break</span>
         r, c = current
         <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
@@ -974,7 +994,7 @@ line = <span class="str">&quot;&quot;</span>
                 distance[(nr, nc)] = new_total
                 heapq.heappush(pq, (new_total, (nr, nc)))
 
-    <span class="kw">return</span> distance[goal], <span class="fn">len</span>(settled)
+    <span class="kw">return</span> <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
 
 <span class="fn">print</span>(<span class="str">&quot;迷路の大きさを変えて、ダイクストラ法の実行時間を測る&quot;</span>)
@@ -992,6 +1012,17 @@ line = <span class="str">&quot;&quot;</span>
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;マスの数が4倍になっても、時間は4倍すこしにしかならない。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>ゴールが確定した時点でやめる（調べるマスの数が減る）</td><td style="white-space:nowrap">A. <code>current == start</code><br>B. <code>len(pq) == 0</code><br>C. <code>current == goal</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>ゴールまでの最小コストと、確定したマスの数を返す</td><td style="white-space:nowrap">A. <code>distance[goal], len(settled)</code><br>B. <code>len(distance), len(settled)</code><br>C. <code>distance[start], len(pq)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 362" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1021,7 +1052,7 @@ line = <span class="str">&quot;&quot;</span>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.008秒 / 200×200        40,000          398      39,997       0.037秒 / 400×400       160,000          798     159,997       0.191秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
+        <img src="images/a07_ex3_result.png" alt="AL2-07-ex3.py の実行結果。迷路の大きさを変えて、ダイクストラ法の実行時間を測る / -------------------------------------------------------------- / 大きさ         マスの数   最小コスト  調べたマス  かかった時間 / 50×50          2,500           98       2,497       0.002秒 / 100×100        10,000          198       9,998       0.008秒 / 200×200        40,000          398      39,997       0.035秒 / 400×400       160,000          798     159,997       0.175秒 / -------------------------------------------------------------- /  / マスの数が4倍になっても、時間は4倍すこしにしかならない。 / 第4回の全探索が6マス四方で約7秒かかったことと比べてみよう。" width="494" height="268" loading="lazy">
       </div>
       <p class="run-note">400マス四方（160,000マス）でも<strong>0.2秒ほど</strong>で解けています。マスの数が4倍になるたびに、かかる時間も4倍すこしずつ増えています。第4回の例題4で、全探索が6マス四方（36マス）に約7秒かかったことと比べてください。全探索では6マス四方が限界でしたが、ダイクストラ法なら400マス四方が一瞬で終わります。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。</p>
 
@@ -1036,7 +1067,7 @@ line = <span class="str">&quot;&quot;</span>
       <p>同じ大きさ・同じスタートとゴールで、地形だけを3通りに変えて経路を比べます。
       1 は平地（1秒）、5 は森（5秒）、9 は川（9秒）です。</p>
 
-<pre><span class="code-label">Python ── AL2-07-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-07-ex4.py</span>
 <span class="cmt"># 地形を変えると、いちばん安い経路がどう変わるかを見る</span>
 <span class="kw">import</span> heapq
 
@@ -1106,7 +1137,7 @@ forest = [
             new_total = total + cost_map[nr][nc]
             <span class="kw">if</span> new_total &lt; distance[(nr, nc)]:
                 distance[(nr, nc)] = new_total
-                came_from[(nr, nc)] = current
+                came_from[(nr, nc)] = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
                 heapq.heappush(pq, (new_total, (nr, nc)))
 
     route = []
@@ -1114,7 +1145,7 @@ forest = [
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
         route.append(node)
         node = came_from[node]
-    route.reverse()
+    <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> route, distance[goal]
 
 
@@ -1146,6 +1177,17 @@ forest = [
 <span class="fn">print</span>(<span class="str">&quot;地形Aでは道順は何通りもあるが、どれも同じ14秒になる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;地形Bでは、わざわざ橋のある行まで回り道して川をわたっている。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;地形Cでは、森を避けてななめの細い平地をたどっている。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>となりのマスに「どこから来たか」を記録する</td><td style="white-space:nowrap">A. <code>goal</code><br>B. <code>current</code><br>C. <code>start</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>ゴールから逆にたどった道順を、スタートからの順に直す</td><td style="white-space:nowrap">A. <code>route.sort()</code><br>B. <code>route.pop()</code><br>C. <code>route.reverse()</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 342" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1758,7 +1800,7 @@ forest = [
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="PzpQFdlBQWMFwbj9erc5pipQVlTw5LJ0wjVE4DegzdFZVY3NfH3LMx4uXZAoZla8Sat/2/sRh/Fp+J/Hdl/CCKEFV/NgfhYqWt4T05gs6dBmR6rJdTdBaaDOLg4NkCxEkKyGgPgnCUx0q17eHWOjR6W1uSkjqj0pNsOngPnvTS3CYDaF1zQ2k2KoNoq+FaA6Sgwy56WBSpDSxp+DBmoRkb+mrOEMNRJ8fsOffpsLtE5O4pDEOIO+9l6ENARtB9Kufr115bcDVbk1FYw3mVOYxjvZRWtMYbjCqPboyuaptM7ASh/jBOOG7EHEt5Z5W86imbKJPrq7AMKBPgF1nAGh3luS91oOxpJ73qv9S9x0z2nHmL711Au6lmYCVtbBqfdmSAADuW4WI6CH6gBUZMxFxWLwp40M6Dvsn4zTi4n4RJquJ9yuKjxhHCFbyDkDJsOMQcorhI1P8RyO4pp9PKGY/kU/93holDXGP4cYmzvCgzWDHGLvJjOl7vS2DSiEmsxavs6iT+XOe9PW98FADPRWgjnCVnnPRG8Q2f0bh+4L7lXriDgYTjTmkIwINKgtgRVvTxGpE51l8L9wqiwQAT8HgCTmZeKIcpUzW3Fa7ShNgMGvqTA2ZNJnhGprEsLdNeLqOJ3j4fwdYXlpWvOyN6ulbJkkQQ88Np2Adk7Exr7jyNnkvESNQvfRT7x28PFFPDiALzP1oQgzj/q54+plbcMqIbIO9tSPTcj1z0OBhRWYbTZNeMarvDDa2xSLILlu437kaC+//aVXrowl+mEKkwcds03hjPFgWWJdDRKGO2ZTjlzZ84BEUhVmQBndCRpANPBR+ZdYUH7NL+WYnljngLyGuUWZJpDJL82xa/uwgOW3dh+C7zyvFm9eAhBE0/4yhAiEWo93/BfThDfoIzB4yET2xwuv+/kTogYEENOpfsEdfwoev4IjqCIY4fcD3qddupNByLz/1FwmQpyivl9/zNwGBcOOAbDHkSmIswzLEHbjgUwXyCFNfY9kk7Qzda86VRRnXb7vOK2aU5fbt6gfEZxIihE/0QwVPaZ6XFPksOnpbbP+qxyoqIesHrKerfPo76KZCch/pg5I03I+8e81JI/vvBQN0P1zPv1DVr+/5kytvkpsxkfQ/b4FYwwiDWn6QdGrH5yaVwTMM73dhtvqqgbtkSJZmckDDh3eSXFzpNnCgb5GdS5SfEDL9CCBWQaJChAjt9NyZ1FU4PooFyiV/hJKTvnzTcKZdotlU9MYZ2AZexAbgzFOrRXvjTgr8oVGQoORem/FAP42VZyHEiAY8jzvi7h3lDu9o4SAGMOrXLkv44XNyD5WYZc7nyoboEL/bQrp2wPcOPCfsK3Jn6mL4RUc78SOYcPFEChsomt2/xyhp9R/S5uBrs6aIh9cPpDvJLe+LNwlCUcqAH+oG2TadBZ69/RK9pTMTB5VLcqR39ECmNdZ1iQArO3Ul+lORNuER7m2klpHr0KsX48ShEw2YJox8Su8BxbuDWajZ2nC3njfb2zAkF4="></div>
+    <div id="answers-encrypted" data-cipher="I+0mVJyel9HsEma339ZAafBRHC6LVHak8mhNoc3K0QJmd6mcyEM44mMV6ViZLVolr5Hu7Xti/rZfN7Y6bh83cY/k7b+X6qHlRxAA0jH5F1KZndpAshaBRkXHJiD5HqYaquVJx4OP3p5Va5HegyzjLbsxl3OV8WcYbSRx3igMrn3QraY73xA8XS2/Zsy4TYhEz0tjNqfflvTYa2+icf+2jeqQguFb2j9LxTMXNbkL/MEX5thKoRX3odYnzzk+9PoLQz+SNK9owbmeyqSacIRt08igWgDVDV+SE8svPAimumJH7VsS6nT9VebcTsafCY6ehZ8jxRZLOXs2g8jXEimzz4mJdlHp8WANUM4ba3VxJA91tiIupRbOSfXJa4oFps5IRDgMw4Xi9bV1RlKAoh1QZvgkXBTd8XMV55xXx0GP/BL+QbDfH5bc9+SYQ4zCTM0Imsls+C6ywtBxKpuFDJ7w0Z52V25WAa6ExjnHq/UAZPJvSXo+t+ZLn8yCievPjtty6rbdWytLxVk/tqupbdtcRZ4c2tZ9LziKWZuY5SQHKxRaTuyhlzSs7Tk76z1yGhB18MqY39wNFC9JFupxuGpawbxO8gYw018K73YmlMOqYS5UnExt303lqUtiiVeJyiAyuIkLSB1gw7lMgd9ycm4gNcslI51lGxnhddVEFDmCnoJ3IX3XX/qRStC8gmAxwW0THjyzJjsFi0wz/pidioLCR10ZVDujf0izFkmpq7OuCqj36kaVKHS69jr36R5GMzBcU79EM5AQHNteKluemdgPIg3pMd3WI0tP/Gj1ZicaxnO5ug4uOD5SUJYSAZdvvm0/km8dVsOyhV8thgCLqRHxMC429HQ2ktLcpRU12PfF2IMpmAnQJ84upY8ejmR6h9kU8ICEKN3Rswb46lWL0tWYapTMrllKpQZCMyky5OcubAp4L8lgqln2P3hw7lgQGwo59vtPMIQdXXkxCQzij9M3Bs55ICv3SHV5ecR/I4tS34coYvd+TbcxB6oXuZ3IkOyyuamJ2RWCoanfJ71qofcjDCnrovTE99/EHrsZ6H4VNIwcJSrnOdfK2MIdo0QT7eQ9rKwnLEHNYnx9p4nE+bXuRC/IskCA8PBDtoGtDwn2N+IHLDqn2PeAxaKy91cwlm4r5vezDyjEikz7fQok/EVam42ARVXmvpwrEB1KNdJ7p3r+pcHjN9h1hd3HRiXav51BQot8sw32gBo5RDZTWTH31t927Z310yR1TTtZdh0JQpJ1fp8diICQ1Obd8lNqy8X+j6mLTGvZG9tUEW0STc4RTxGcoPEOgKtBdaoRAiLiH9UZXPZaVPkftFXG/7+DoecjfwOuBEzmr+08SpNNG84E6DnQS2A5EjU2UKiUIQWAgjdUeuvPHxH1/qg5IWOHfQzxxXLNcpq1GUc+Q0nyTFWfQU+h2guTbyy1b1svJngYS4NxqbpRzMp+/IlY70Vf6obqhcyt2gul9kU5uSb38AgF7qBkXgJxfXLTBAjRPns9dfa39eOmAoh0r3LDWFY8hZiZp0z295oBtxnVX7kSgWqMeXpMjsSJMtFChnsl/vuqhw0uezYX1qiIuCn69GhDoyT0+QLgvnX53agHsgVMHf4DWfEGqdxygmiSZeXe63rH7MZ4gVoi7vgm5r/SJdQx4w6UM/fgV3U6a42rjOuUSqxJH4XG1sRASv3ZB9TgDW95JnauBn0e1rU8jnxa9AW7o1Hp+1Y6JDSpb8likDh/RjUJQBClvLih/6ZHac1F24k90qCMxaLFZ8TVOMiac1h/VMWm/95ciHZJk+xCQP6eidE0Q8NyWIV/z+7zEqOKKY4YQ1vlgZSru0+zE98aIl0DBnygXpsZHcafKak213xgmGkUzRQhe4P5SE+jGimdEysJfAOb/pDbgNSoCMjb0qWrbn/2buVKEocfSD8OOA55a/fp49P4vqv7p31NzJaCN0/ylN1FlYU1CKmgYEknhM+J3yQrEij/COFdm+FU1cf6+C1UZcRhiwQVgObDTi0DrlA0MbAUwnMzAFdSs0d9Esb+zYoMvvhmZ4j1nMNuIKpdegoydIBpgujAAYjNiArZy/wHOMorHCFTS3PgwqYQG6suMv9DBgFXJn0KSuqjczGuMAHLByBXDM89yD4Keay8CT/SWj8O5P2F4dmFMMPAJY1/de4kdBSoue61wAY3SdAs9GAjWbGnQFgtnG0E5sHCtgpMZAxpG0X8sj8Z69/y/StDWjfzeDt31wuJAbT/rqcgQaUiCUNT0qRPvCcQPbED9uIpzA9cHBSrjk0eA7BW+lFoV3SGWTcGqh5+bMINAzGHVo4CIPWRKFJDy5GHs6CdYLx69oegMBbiTYV3MMDb/kPhd+YyX3EfHEE+lZUp2ID97dKZltwYY6mgkvWo1GDOcCpaON1rgX93wSdUuXN5PGeBlmHDedzF384p+EpbcFT6H4XM38aEDKnZ5c5CSB0+RrLtQ0MZ7c4bWTbHmVXppFFyse0vnt9N+UYDOAdwZCUGlkKSKHoohZj7/vWQKv4/KUZLhorAgiJT7XHXtHkL/GPewxPNj0P2rCrP5ZpyIe1OTsk5R4ACH+rOYHnXcJWr/GOQaDsshUKndIJ//commaUKum3xjIbvfbdl"></div>
 
   </div>
 </section>

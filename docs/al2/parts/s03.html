@@ -298,6 +298,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-03-ex1.py</code>, <code>AL2-03-ex2.py</code>, <code>AL2-03-ex3.py</code>, <code>AL2-03-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -320,7 +328,7 @@
       <p>6つの駅と7本の路線からなる路線図を、隣接リストの形でPythonに書き写します。
       隣接リストは<strong>辞書</strong>を使い、「駅の名前」を鍵、「となりの駅を並べたリスト」を値にします。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-03-ex1.py</span>
 <span class="cmt"># グラフを「隣接リスト」で表す</span>
 <span class="cmt"># 隣接リスト = それぞれの頂点について「となりにある頂点」を並べた表</span>
 
@@ -380,7 +388,7 @@ edge_count = edge_count // <span class="num">2</span>      <span class="cmt"># 1
       <p>例題1とまったく同じ路線図を、今度は隣接行列の形で書き写します。
       6つの駅があるので、たて6マス・よこ6マスの表を作ります。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex2.py</span>
 <span class="cmt"># 同じグラフを「隣接行列」で表して、隣接リストと比べる</span>
 <span class="cmt"># 隣接行列 = 表（マス目）を作り、つながっていれば1、つながっていなければ0を書く</span>
 
@@ -408,7 +416,7 @@ matrix = [[<span class="num">0</span> <span class="kw">for</span> j <span class=
     i = stations.index(a)
     j = stations.index(b)
     matrix[i][j] = <span class="num">1</span>
-    matrix[j][i] = <span class="num">1</span>
+    <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
 
 <span class="cmt"># 表の見出しには、駅の名前ではなく番号を使う（そのほうが桁がそろって読みやすい）</span>
 <span class="fn">print</span>(<span class="str">&quot;駅の番号&quot;</span>)
@@ -441,7 +449,7 @@ j = stations.index(b)
 
 <span class="cmt"># 使うマスの数を比べる</span>
 matrix_cells = n * n
-list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
+list_cells = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 <span class="fn">print</span>(<span class="str">&quot;隣接行列が使うマスの数:&quot;</span>, matrix_cells, <span class="str">&quot;マス（駅の数の2乗）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;隣接リストが使うマスの数:&quot;</span>, list_cells, <span class="str">&quot;マス（路線の数の2倍）&quot;</span>)
 <span class="fn">print</span>()
@@ -452,6 +460,17 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
 <span class="kw">for</span> count <span class="kw">in</span> [<span class="num">6</span>, <span class="num">50</span>, <span class="num">500</span>, <span class="num">5000</span>]:
     <span class="fn">print</span>(<span class="str">f&quot;{count:&gt;10}   {count*count:&gt;16}   {count*3*2:&gt;18}&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">48</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>路線は両方向に通れるので、行と列を入れかえた場所にも1を書く</td><td style="white-space:nowrap">A. <code>matrix[i][j] = 1</code><br>B. <code>matrix[j][i] = 1</code><br>C. <code>matrix[j][i] = 0</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>隣接リストのマスの数。1本の路線は両方の駅に書かれる</td><td style="white-space:nowrap">A. <code>n * n</code><br>B. <code>len(lines)</code><br>C. <code>len(lines) * 2</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -506,7 +525,7 @@ list_cells = <span class="fn">len</span>(lines) * <span class="num">2</span>
       <p>迷路で使った幅優先探索を、そのままグラフに使います。
       「新宿から各駅まで、何本の路線に乗ればたどり着けるか」を求めます。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-03-ex3.py</span>
 <span class="cmt"># グラフの上を幅優先探索する</span>
 <span class="cmt"># 迷路と同じ考え方で、「新宿から各駅まで何本の路線に乗ればよいか」を求める</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -535,9 +554,9 @@ queue = <span class="fn">deque</span>([start])
     current = queue.popleft()
     <span class="fn">print</span>(<span class="str">f&quot;{current} を調べる（乗る路線の数: {rides[current]}本）&quot;</span>)
     <span class="kw">for</span> next_station <span class="kw">in</span> railway[current]:
-        <span class="kw">if</span> next_station <span class="kw">in</span> rides:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             <span class="kw">continue</span>                     <span class="cmt"># すでに調べた駅</span>
-        rides[next_station] = rides[current] + <span class="num">1</span>
+        rides[next_station] = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         came_from[next_station] = current
         queue.append(next_station)
         <span class="fn">print</span>(<span class="str">f&quot;    → {next_station} は {rides[next_station]}本でたどり着ける&quot;</span>)
@@ -561,6 +580,17 @@ queue = <span class="fn">deque</span>([start])
         node = came_from[node]
     route.reverse()
     <span class="fn">print</span>(<span class="str">f&quot;{start} から {goal} への行き方:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(route))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>すでに乗車回数が決まっている駅は飛ばす</td><td style="white-space:nowrap">A. <code>next_station in railway</code><br>B. <code>next_station == start</code><br>C. <code>next_station in rides</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>となりの駅の乗車回数は、いまの駅の回数に1を足したもの</td><td style="white-space:nowrap">A. <code>rides[current] + 1</code><br>B. <code>1</code><br>C. <code>rides[current]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 322" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -633,7 +663,7 @@ queue = <span class="fn">deque</span>([start])
       <p>迷路をグラフ（隣接リスト）に書き直してから、例題3と同じ幅優先探索で解きます。
       迷路の1マスを1つの頂点とし、頂点の名前を <code>"(行,列)"</code> という文字列にします。</p>
 
-<pre><span class="code-label">Python ── AL2-03-ex4.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-03-ex4.py</span>
 <span class="cmt"># 迷路もグラフである</span>
 <span class="cmt"># 迷路の1マスを頂点、となり合うマスどうしのつながりを辺と考えると、</span>
 <span class="cmt"># 迷路は「頂点がたくさんあるグラフ」になる。</span>
@@ -661,7 +691,7 @@ graph = {}
 
 <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
     <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
-        <span class="kw">if</span> maze[r][c] == <span class="str">&quot;#&quot;</span>:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             <span class="kw">continue</span>                      <span class="cmt"># 壁は頂点にしない</span>
         name = <span class="str">f&quot;({r},{c})&quot;</span>               <span class="cmt"># 頂点の名前は「(行,列)」にする</span>
         graph[name] = []
@@ -672,7 +702,7 @@ graph = {}
                 <span class="kw">continue</span>
             <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
                 <span class="kw">continue</span>
-            graph[name].append(<span class="str">f&quot;({nr},{nc})&quot;</span>)
+            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
 <span class="fn">print</span>(<span class="str">&quot;迷路を隣接リストに変換した結果（最初の6個だけ表示）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
@@ -702,7 +732,7 @@ queue = <span class="fn">deque</span>([start])
     <span class="kw">for</span> next_node <span class="kw">in</span> graph[current]:
         <span class="kw">if</span> next_node <span class="kw">in</span> steps:
             <span class="kw">continue</span>
-        steps[next_node] = steps[current] + <span class="num">1</span>
+        steps[next_node] = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
         came_from[next_node] = current
         queue.append(next_node)
 
@@ -729,6 +759,18 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
 <span class="fn">print</span>(<span class="str">&quot;最短経路（* が通り道）&quot;</span>)
 <span class="kw">for</span> line <span class="kw">in</span> picture:
     <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>壁のマスは頂点にしない</td><td style="white-space:nowrap">A. <code>maze[r][c] == &quot;#&quot;</code><br>B. <code>maze[r][c] == &quot;.&quot;</code><br>C. <code>maze[r][c] == &quot;S&quot;</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>通れるとなりのマスを、この頂点の隣接リストに足す</td><td style="white-space:nowrap">A. <code>graph[name] = [f&quot;({nr},{nc})&quot;]</code><br>B. <code>graph[name].append(f&quot;({nr},{nc})&quot;)</code><br>C. <code>graph[name].append(name)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>となりの頂点までの歩数は、いまの頂点の歩数に1を足したもの</td><td style="white-space:nowrap">A. <code>steps[current] + 1</code><br>B. <code>steps[current]</code><br>C. <code>steps[start] + 1</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 330" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1044,6 +1086,19 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-03-ex2.py</code></td><td>穴1</td><td><code>matrix[j][i] = 1</code></td></tr>
+          <tr><td><code>AL2-03-ex2.py</code></td><td>穴2</td><td><code>len(lines) * 2</code></td></tr>
+          <tr><td><code>AL2-03-ex3.py</code></td><td>穴1</td><td><code>next_station in rides</code></td></tr>
+          <tr><td><code>AL2-03-ex3.py</code></td><td>穴2</td><td><code>rides[current] + 1</code></td></tr>
+          <tr><td><code>AL2-03-ex4.py</code></td><td>穴1</td><td><code>maze[r][c] == &quot;#&quot;</code></td></tr>
+          <tr><td><code>AL2-03-ex4.py</code></td><td>穴2</td><td><code>graph[name].append(f&quot;({nr},{nc})&quot;)</code></td></tr>
+          <tr><td><code>AL2-03-ex4.py</code></td><td>穴3</td><td><code>steps[current] + 1</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <table>

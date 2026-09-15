@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -475,6 +476,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-06-ex1.py</code>, <code>AL2-06-ex2.py</code>, <code>AL2-06-ex3.py</code>, <code>AL2-06-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -497,7 +506,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>ダイクストラ法に使う前に、<code>heapq</code> がどう動くかだけを確かめます。
       数を入れる例と、<code>(時間, 駅名)</code> の組を入れる例の2つを実行します。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex1.py</span>
 <span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
 <span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
 <span class="kw">import</span> heapq
@@ -556,7 +565,7 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
       <p>第5回のダイクストラ法を、<code>heapq</code> を使う形に書き直します。
       「まだ決まっていない駅を全部見る」ループがなくなり、<code>heappop</code> の1行に置きかわります。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex2.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法</span>
 <span class="cmt"># 第5回では「まだ決まっていない駅を全部見て、いちばん小さい駅をさがす」ことをしていた。</span>
 <span class="cmt"># heapq を使うと、その「さがす」作業を任せられる。</span>
@@ -589,9 +598,9 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 
 <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    minutes, current = heapq.heappop(queue)   <span class="cmt"># いちばん時間が小さい組を取り出す</span>
+    minutes, current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
 
-    <span class="kw">if</span> current <span class="kw">in</span> settled:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         <span class="cmt"># 同じ駅の古い（時間の大きい）組が残っていることがあるので読み飛ばす</span>
         <span class="fn">print</span>(<span class="str">f&quot;  ({minutes}分, {current}) → すでに確定済みなので読み飛ばす&quot;</span>)
         <span class="kw">continue</span>
@@ -604,7 +613,7 @@ settled = <span class="fn">set</span>()
         <span class="kw">if</span> new_distance &lt; distance[name]:
             distance[name] = new_distance
             came_from[name] = current
-            heapq.heappush(queue, (new_distance, name))
+            heapq.heappush(queue, <span class="blank">____</span>)      <span class="cmt"># ← 穴3</span>
             <span class="fn">print</span>(<span class="str">f&quot;        {name} を {new_distance}分として queue に入れた&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
@@ -631,6 +640,18 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;第5回の例題1・例題2と、まったく同じ答えになっている&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いちばん時間が小さい組を取り出す</td><td style="white-space:nowrap">A. <code>queue.popleft()</code><br>B. <code>heapq.heappop(queue)</code><br>C. <code>queue.pop()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>同じ駅が2回出てきたら、あとの方は読み飛ばす</td><td style="white-space:nowrap">A. <code>current in settled</code><br>B. <code>current not in settled</code><br>C. <code>current == start</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>heapq に入れる組は（時間, 駅名）の順。時間で並ぶようにする</td><td style="white-space:nowrap">A. <code>new_distance</code><br>B. <code>(new_distance, name)</code><br>C. <code>(name, new_distance)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -649,7 +670,7 @@ settled = <span class="fn">set</span>()
       <p>第5回のやり方（全部見る）と、第6回のやり方（heapq）で、同じグラフの最短距離を求めて時間を比べます。
       グラフはマス目の形で、大きさを 20×20 から 120×120 まで変えていきます。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-06-ex3.py</span>
 <span class="cmt"># 「全部見てさがす方法」と「heapq を使う方法」の速さを比べる</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> time
@@ -716,9 +737,9 @@ settled = <span class="fn">set</span>()
             <span class="kw">continue</span>
         settled.add(current)
         <span class="kw">for</span> name, weight <span class="kw">in</span> graph[current]:
-            <span class="kw">if</span> d + weight &lt; distance[name]:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
                 distance[name] = d + weight
-                heapq.heappush(queue, (distance[name], name))
+                heapq.heappush(queue, <span class="blank">____</span>)      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> distance
 
 
@@ -751,6 +772,17 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;2つの方法は、どの大きさでも完全に同じ答えを出している。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;マス目が大きくなるほど、heapq を使った方法との差が開いていく。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>取り出した頂点までの距離に重みを足し、表より短ければ書き直す</td><td style="white-space:nowrap">A. <code>d + weight &gt; distance[name]</code><br>B. <code>weight &lt; distance[name]</code><br>C. <code>d + weight &lt; distance[name]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>書き直した距離と頂点の組を heapq に入れる</td><td style="white-space:nowrap">A. <code>(distance[name], name)</code><br>B. <code>distance[name]</code><br>C. <code>(name, distance[name])</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 402" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -798,7 +830,7 @@ settled = <span class="fn">set</span>()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        23.3倍 / 40×40           1600         0.065秒        0.001秒        84.1倍 / 80×80           6400         1.040秒        0.004秒       287.6倍 / 120×120         14400         6.112秒        0.011秒       566.8倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
+        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        23.4倍 / 40×40           1600         0.066秒        0.001秒        79.2倍 / 80×80           6400         1.055秒        0.004秒       274.5倍 / 120×120         14400         5.964秒        0.010秒       594.9倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
       </div>
       <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
 
@@ -813,7 +845,7 @@ settled = <span class="fn">set</span>()
       <p>heapq を使ったダイクストラ法で、10マス四方の床コスト付き迷路を解きます。
       1 は舗装された道（1秒）、9 はぬかるみ（9秒）です。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-06-ex4.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法で、大きめの重み付き迷路を解く</span>
 <span class="kw">import</span> heapq
 
@@ -853,7 +885,7 @@ settled = <span class="fn">set</span>()
     <span class="kw">if</span> current <span class="kw">in</span> settled:
         <span class="kw">continue</span>
     settled.add(current)
-    <span class="kw">if</span> current == goal:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         <span class="kw">break</span>
 
     r, c = current
@@ -862,7 +894,7 @@ settled = <span class="fn">set</span>()
         nc = c + dc
         <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
             <span class="kw">continue</span>
-        new_total = total + cost_map[nr][nc]
+        new_total = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">if</span> new_total &lt; distance[(nr, nc)]:
             distance[(nr, nc)] = new_total
             came_from[(nr, nc)] = current
@@ -914,6 +946,17 @@ simple_cost = <span class="num">0</span>
 
 <span class="fn">print</span>(<span class="str">&quot;参考: 上の行を右へ進んでから右の列を下りる経路&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;  歩数:&quot;</span>, <span class="fn">len</span>(simple_route) - <span class="num">1</span>, <span class="str">&quot;歩 ／ 合計コスト:&quot;</span>, simple_cost, <span class="str">&quot;秒&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>ゴールが確定したら、もう調べなくてよい</td><td style="white-space:nowrap">A. <code>current == goal</code><br>B. <code>current == start</code><br>C. <code>len(queue) == 0</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>取り出したマスまでの合計に、となりのマスのコストを足す</td><td style="white-space:nowrap">A. <code>total + 1</code><br>B. <code>cost_map[nr][nc]</code><br>C. <code>total + cost_map[nr][nc]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 408" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1536,7 +1579,7 @@ simple_cost = <span class="num">0</span>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="8RQX1mRvAJwpx98swQmYvaPgm7amYyi0/IjCwJQou6ky3w10GXVoB8ej3p+hTffjzii8d9OuYWU4sm/7Gzf974RPOGLmQ6+c+MeiMv9X8pZinL63bgA5n1jqx1XUdqAIj8j1KJHjJ5qGlOkczVIREoQcx+P18hhV6xWXE67KfHsFEy3NWK9QgueWnDXj/L96331HXvPHf0f6UtLyjWUt2IUa4+tKQfG0UZ2qmwGZ7ZPm861JpHiNttNEPrGpIoO91jjYokNoQ7f6SaAr2UfLtde6CZ/XdE+zfG/m/JNx90FghNk+ucId5HneLPbu8sUO4T+XYOknB+VEVlw8C0I98z8yuqSwRGxMjHaU0MrsaQCfAXpXJUlkYc85I408wEMIexRqXjUl+tdTPkAJ3AIgE8iFtt0Hzp6cCfl68FAnH1M6vbhI6c+uWWT66jkPsiCyj6EI6rgfpAfa8pPFSbIFQdFVYDFl5a25/+K1bXvjnmKagiJehgR24dnuL0lx2aXMPwv74qlNMjsxmfxSUsVG494ZFKvDfe0wYOMKLNVPbgk6HISUDOIk93Oi0rF38pwbnuaAQWwkbMiQVcVACIU5cvQLpFlTpIWCYr0eW0PHSSxyzWapMlj8/k03H5RGsu5L0IrhB9GZH5XlDfCMtqp6fb725xV5TX/XblWETiYVFpmDOceGMT/D+dgfqMJsdIb4AJlizaCrh2DkveffFdbLjoHvu1H4uuTerHxLpVW7l/RjQtcOMItYWW6GVqarefgRD9vu/ahW8025t8Hg4bKexgGOPDSyVU4XmCsd0/lbJJXV355eF6adLq3pJueoAEPD5086A2AFroHhXKw7BP3aED/XdbkaUrPZv9+qroPGdNpBR7DmPf4qpqAF1sYYQCyFsHjYcFtoGd50Fa+FRiES8e5gVnr9u0y7xnb8USbi/cge/Obtl/EyZ4seqwT6FGYVseJBMUJ3LXBPK36JLyv4gopAn6qB6CTDcRxRS62HDWMEyHKDsTKjPujGecd2u0tOHnLJx1Qn+u7bA6Wq5YvuqneHOIizmGprhylk2FioBVPsA0MW5bKqe5aygLH4XUcEFl8j2NvNgv9VetJBakk5IoYYwFFzxdn8cIewP1lVhLOOcupdAAUh1fiky7MeBBE9Eb4YcZxv5/H2rn0our8xuh94pPbk4kvEiKqc3tNpH4O90Rnn87p/8caqo/f5j8YNC5HjBLbWH1jhMWkhevnMFNRjLF6Df6zjUWv0yW+8MafOWPkqLwNvYszdz0JI1xm1/spxElbNZ3VpNd/goE9jyX2AdC2A6SfJRbebXulSTOwyoyvEhSk1TlbF6In9KgY4+DQRc6Zh2m/oDr34vcq4tNdbKNBiCRg2xwuPP/Hnc245lHLdHyxN2Xu3+OLDB7P98sOlpD025cNht8/dHkK1pX5T5uqCjpSnRA=="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

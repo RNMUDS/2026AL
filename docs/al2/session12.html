@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -686,6 +687,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-12-ex1.py</code>, <code>AL2-12-ex2.py</code>, <code>AL2-12-ex3.py</code>, <code>AL2-12-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -707,7 +716,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       <p>前期の数当てゲームを、「1回の質問で候補がどれだけ減るか」という目で見直します。
       1から100までのすべての数について、2つの作戦の質問回数を数えます。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-12-ex1.py</span>
 <span class="cmt"># 数当てゲームを「1回の質問でどれだけ候補を減らせるか」という目で見直す</span>
 <span class="cmt"># 作戦A: 1から順に「1ですか」「2ですか」…と聞く（逐次探索）</span>
 <span class="cmt"># 作戦B: いつも残っている範囲のまん中を聞く（二分探索）</span>
@@ -811,7 +820,7 @@ secret = <span class="num">73</span>
       <p>迷路の中に置かれた4つのアイテムを、全部拾ってゴールへ向かうパズルを貪欲法で解きます。
       まず幅優先探索で地点どうしの歩数を表にしてから、いちばん近いアイテムへ向かうことをくり返します。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-12-ex2.py</span>
 <span class="cmt"># アイテム集めパズルを貪欲法で解く</span>
 <span class="cmt"># 迷路の中に4つのアイテムがある。全部拾ってゴールへ行くまでの歩数を短くしたい。</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
@@ -855,7 +864,7 @@ goal = (rows - <span class="num">1</span>, cols - <span class="num">1</span>)
                 <span class="kw">continue</span>
             <span class="kw">if</span> (nr, nc) <span class="kw">in</span> dist:
                 <span class="kw">continue</span>
-            dist[(nr, nc)] = dist[(r, c)] + <span class="num">1</span>
+            dist[(nr, nc)] = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
             queue.append((nr, nc))
     <span class="kw">return</span> dist
 
@@ -903,12 +912,12 @@ order = [<span class="str">&quot;S&quot;</span>]
 <span class="kw">while</span> <span class="fn">len</span>(remaining) &gt; <span class="num">0</span>:
     nearest = <span class="kw">None</span>
     <span class="kw">for</span> name <span class="kw">in</span> remaining:
-        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> table[here][name] &lt; table[here][nearest]:
+        <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
             nearest = name
     <span class="fn">print</span>(<span class="str">f&quot;  {here} にいる → いちばん近いアイテムは {nearest}（{table[here][nearest]}歩）&quot;</span>)
     total = total + table[here][nearest]
     order.append(nearest)
-    remaining.remove(nearest)
+    <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
     here = nearest
 
 total = total + table[here][<span class="str">&quot;G&quot;</span>]
@@ -919,6 +928,18 @@ order.append(<span class="str">&quot;G&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法の答え&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;  拾う順番:&quot;</span>, <span class="str">&quot; → &quot;</span>.join(order))
 <span class="fn">print</span>(<span class="str">&quot;  合計歩数:&quot;</span>, total, <span class="str">&quot;歩&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>となりのマスまでの歩数は、いまのマスの歩数に1を足したもの</td><td style="white-space:nowrap">A. <code>1</code><br>B. <code>dist[(r, c)]</code><br>C. <code>dist[(r, c)] + 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いまいる場所から歩数がいちばん少ないアイテムを選ぶ</td><td style="white-space:nowrap">A. <code>name &lt; nearest</code><br>B. <code>table[here][name] &gt; table[here][nearest]</code><br>C. <code>table[here][name] &lt; table[here][nearest]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>拾ったアイテムを「まだ」の一覧から外す</td><td style="white-space:nowrap">A. <code>remaining.remove(nearest)</code><br>B. <code>remaining.append(nearest)</code><br>C. <code>remaining.clear()</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -935,7 +956,7 @@ order.append(<span class="str">&quot;G&quot;</span>)
       <p>同じパズルを全探索で解いて、貪欲法の答えと比べます。
       アイテムは4つなので、拾う順番は 4×3×2×1 = 24通りです。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-12-ex3.py</span>
 <span class="cmt"># 同じアイテム集めパズルを全探索で解いて、貪欲法と比べる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 <span class="kw">from</span> itertools <span class="kw">import</span> permutations
@@ -1001,7 +1022,7 @@ table = {}
     total = table[<span class="str">&quot;S&quot;</span>][order[<span class="num">0</span>]]
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(order) - <span class="num">1</span>):
         total = total + table[order[i]][order[i + <span class="num">1</span>]]
-    total = total + table[order[-<span class="num">1</span>]][<span class="str">&quot;G&quot;</span>]
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> total
 
 
@@ -1011,7 +1032,7 @@ table = {}
 
 best_order = <span class="kw">None</span>
 best_steps = <span class="kw">None</span>
-<span class="kw">for</span> order <span class="kw">in</span> <span class="fn">permutations</span>(<span class="str">&quot;ABCD&quot;</span>):
+<span class="kw">for</span> order <span class="kw">in</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
     steps = <span class="fn">route_steps</span>(order)
     mark = <span class="str">&quot;&quot;</span>
     <span class="kw">if</span> best_steps <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> steps &lt; best_steps:
@@ -1035,6 +1056,17 @@ greedy_order = (<span class="str">&quot;A&quot;</span>, <span class="str">&quot;
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は最初にAへ向かったが、最短ルートは先にCを拾っている。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;Cはスタートのすぐ近くにあるのに、貪欲法は後回しにして遠回りしてしまった。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>4つのアイテムを拾う順番をすべて作る</td><td style="white-space:nowrap">A. <code>&quot;ABCD&quot;</code><br>B. <code>permutations(&quot;ABCD&quot;)</code><br>C. <code>permutations(&quot;SABCDG&quot;)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後のアイテムからゴールまでの歩数を足す</td><td style="white-space:nowrap">A. <code>table[order[-1]][&quot;G&quot;]</code><br>B. <code>table[&quot;S&quot;][&quot;G&quot;]</code><br>C. <code>table[order[0]][&quot;G&quot;]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -1053,7 +1085,7 @@ greedy_order = (<span class="str">&quot;A&quot;</span>, <span class="str">&quot;
       <p>限られた時間の中で、得点がいちばん高くなる組み合わせを選ぶナップサック問題を、
       貪欲法と動的計画法の両方で解いて比べます。</p>
 
-<pre><span class="code-label">Python ── AL2-12-ex4.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-12-ex4.py</span>
 <span class="cmt"># ナップサック問題: 決められた時間の中で、得点がいちばん高くなる組み合わせを選ぶ</span>
 <span class="cmt"># ゲームの「制限時間内にどのイベントをこなすか」という場面にあたる。</span>
 
@@ -1098,7 +1130,7 @@ greedy_score = <span class="num">0</span>
 greedy_names = []
 <span class="kw">for</span> i <span class="kw">in</span> order:
     name, minutes, score = quests[i]
-    <span class="kw">if</span> used + minutes &lt;= limit:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         used = used + minutes
         greedy_score = greedy_score + score
         greedy_names.append(name)
@@ -1120,8 +1152,8 @@ best = []
         <span class="cmt"># i番目を選ばない場合</span>
         best[i][t] = best[i - <span class="num">1</span>][t]
         <span class="cmt"># i番目を選ぶ場合（時間が足りるときだけ）</span>
-        <span class="kw">if</span> t &gt;= minutes:
-            <span class="kw">if</span> best[i - <span class="num">1</span>][t - minutes] + score &gt; best[i][t]:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
                 best[i][t] = best[i - <span class="num">1</span>][t - minutes] + score
 
 <span class="fn">print</span>(<span class="str">&quot;動的計画法の表（たて = 何個目まで見たか、よこ = 使える時間）&quot;</span>)
@@ -1150,6 +1182,18 @@ chosen.reverse()
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, best[n][limit] - greedy_score, <span class="str">&quot;点&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は「1分あたりの得点」だけを見るので、&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;時間がぴったり収まる組み合わせを見のがしてしまう。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>貪欲法: 残り時間に入るクエストだけ受ける</td><td style="white-space:nowrap">A. <code>minutes &lt;= limit</code><br>B. <code>used &lt;= limit</code><br>C. <code>used + minutes &lt;= limit</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>残り時間 t にこのクエストが入るときだけ「受ける」を考える</td><td style="white-space:nowrap">A. <code>t &gt;= minutes</code><br>B. <code>t &gt; 0</code><br>C. <code>t &lt;= minutes</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>このクエストを「受ける」ほうが得点が高いなら、表を書き直す</td><td style="white-space:nowrap">A. <code>best[i - 1][t] &gt; best[i][t]</code><br>B. <code>best[i - 1][t - minutes] + score &gt; best[i][t]</code><br>C. <code>score &gt; best[i][t]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -1361,7 +1405,7 @@ chosen.reverse()
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="AIo+K5xVI3mKd3xX38UapOM9uahVEvnZYUcOEOHLbgm9yAbdRHVPtyHPlsFLyQauZfKANAvWhVfNLIb38iaHHWV2jo7AsyPM3olfi6B7RzcDhSIZqOluKHlD9/AUdqb1SY/ea7hHmQtHLmyhg/wV/I5k/P5XDS0R3cROO1JJrFPrkWRvB44KNUkSGKDmvKvV2ouiSmPWYl8Wiqw6YWh9n1wI9PaT8VpZ+EbJ1UoWwSiDwNBG2s788i2+Yt8+hYMIh6iTHDA7R+6ErWJIa8w5hLjVzTMLzU4W1WtnP9vQ4Qzl4/uVHXO1jMxOo8QcaKibFRfhdO7JZWwsaNim8+kiN+yvgotEpKgAtAnUAxsSDqP1fjaWo6Q+a4hnVKLhZeR/bEyBpsV5ao+3yLeuPzZ8AbAQXerUK4yFrYuYMykJpiAevuVc9ZvgvkRoOShN1F7vKOm+Zhzb2JVHmb5p1CwrDhChqkLuWpiWUjy5TmDhIrv6XtsUHH1+IyMXHLzcsVLSfIDOuquqQbkZWgTSFaR4RJlTfXntbO/Wmyimz743FUjJlHmaSWDf5PteavLZbvsBOtsvP8issrkG0Qvnj8y4dQSOfxa7o1G1gCshLuzD6/nsR5X/yRyU3XUzec3Q6dZqCpCuDhB1vISLFaGMG9B8uRe7Xmpti/n6sCQ/ShdbJdy1DbDSrY+3STOFpdcI63WrfqjauPrQmXBH++E+YgkVwz9cSjjNPQW74tv8mXrgdWn/IXzvFGVM6dnbw4pTS2nch+3rbQQi08X/7kApJ0H+RuXt7IApHS6GRNgChw+1HBwHZpg1Ff+ExmZKAoKSqWgxrkULwYlbFdJzcRYylyr5kpvM+0oDqyxam73HVIuv/5SG4KY3kBaRz/SFAMB3kizYpJczEkkR5rKCnvcOk4Myzdh8oVYZfO0NjTaT1XcgRGn8AMg/Ucw90mwlr4GBdUtdb556ArXn2XzE31HQ8qqwBxB6tED/NRJ0x0BPUfmQEozbqjh4sGDmt9yzbAvo0Pug6R6E81yVUxsuzl60SZ6dZ3t7qe8kcm6Cz66JFutXeTz4LeO+qLAmE9eoEPdglkHaBCIe460qrSIEjN/nde9QsRdBwgNPDM96N3N1txsflZlIviNDDdEdWRlsiqvJ7x6SD5iU5ljXiQJ68zwe+2aZyZ3+aB71O1jWowBMNYeIQvfHTkQWVZgeypL4hrW0mk7QDDCU6DoGFVny4YFD0FsyoOVgCYxR8CvMKdJeea7z3VPfeXhON24eBntVWhLHi13sD1AkF9MOpE8Sd/qM6g1NQcvyCWAbKmd1BoTkxbIzNIZFmyhGiD01LyYq4RAWw6AHB/gb9psdqvE7MJqMFQahXqTRYCsT4NfTjIes2qVHPfF2gBC3UpxfqzJUfCbpjFFTzIBMamZOWGaBIGjzSWg0/yfNcwEEIu7FQZ152NSA4Fg96yWomolKmTVGGI5zrkFobYGe1PEz+3i45qMsKU/ORJvvXCFV4l5IvMdB/1QaGY8cDZZtAD/hKg=="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

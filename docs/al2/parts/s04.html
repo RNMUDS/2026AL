@@ -293,6 +293,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-04-ex1.py</code>, <code>AL2-04-ex2.py</code>, <code>AL2-04-ex3.py</code>, <code>AL2-04-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -315,7 +323,7 @@
       <p>6つの駅からなる路線図に、区間ごとの乗車時間を重みとして書き込みます。
       重み付きの隣接リストでは、となりの駅を <code>("駅の名前", 時間)</code> という<strong>2つ組</strong>で並べます。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-04-ex1.py</span>
 <span class="cmt"># 重み付きグラフを隣接リストで表す</span>
 <span class="cmt"># 重み（おもみ）= 辺ごとに付いている数値。ここでは「乗車時間（分）」を重みにする。</span>
 
@@ -388,7 +396,7 @@ routes = [
       </div>
       <p>幅優先探索で新宿から品川への経路を求め、すべての行き方の中でいちばん時間が短い経路と比べます。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex2.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex2.py</span>
 <span class="cmt"># 幅優先探索は「重みの合計」を最小にできないことを確かめる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -411,7 +419,7 @@ goal = <span class="str">&quot;品川&quot;</span>
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(route) - <span class="num">1</span>):
         <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[route[i]]:
             <span class="kw">if</span> name == route[i + <span class="num">1</span>]:
-                total = total + minutes
+                total = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
                 <span class="kw">break</span>
     <span class="kw">return</span> total
 
@@ -463,7 +471,7 @@ every_route = <span class="fn">all_routes</span>(start, goal, [start])
 
 best_route = every_route[<span class="num">0</span>]
 <span class="kw">for</span> route <span class="kw">in</span> every_route:
-    <span class="kw">if</span> <span class="fn">route_minutes</span>(route) &lt; <span class="fn">route_minutes</span>(best_route):
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         best_route = route
 
 <span class="fn">print</span>(<span class="str">&quot;方法1: 幅優先探索が選んだ道&quot;</span>)
@@ -475,6 +483,17 @@ best_route = every_route[<span class="num">0</span>]
 <span class="fn">print</span>(<span class="str">&quot;差:&quot;</span>, <span class="fn">route_minutes</span>(bfs_route) - <span class="fn">route_minutes</span>(best_route), <span class="str">&quot;分&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;幅優先探索は「路線の本数」を最小にする。「合計時間」は最小にならない。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>区間の時間を合計に足す</td><td style="white-space:nowrap">A. <code>minutes</code><br>B. <code>total + 1</code><br>C. <code>total + minutes</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）</td><td style="white-space:nowrap">A. <code>route_minutes(route) &lt; route_minutes(best_route)</code><br>B. <code>route_minutes(route) &gt; route_minutes(best_route)</code><br>C. <code>len(route) &lt; len(best_route)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -493,7 +512,7 @@ best_route = every_route[<span class="num">0</span>]
       <p>迷路のマスごとに「通り抜けるのにかかる秒数」を決めた迷路を作り、3通りの行き方の合計時間を比べます。
       1 は舗装された道（1秒）、9 はぬかるみ（9秒）です。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex3.py</span>
 <span class="cmt"># 床にコストがある迷路</span>
 <span class="cmt"># マスごとに「通り抜けるのにかかる時間」が決まっている迷路を考える。</span>
 <span class="cmt">#   1 = 舗装された道（1秒）</span>
@@ -531,9 +550,9 @@ cols = <span class="fn">len</span>(cost_map[<span class="num">0</span>])
     <span class="str">&quot;&quot;&quot;通る順番が route のとき、合計で何秒かかるかを求める。
     スタートのマスは「入る」わけではないので数えない。&quot;&quot;&quot;</span>
     total = <span class="num">0</span>
-    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(route)):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         r, c = route[i]
-        total = total + cost_map[r][c]
+        total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> total
 
 
@@ -580,6 +599,17 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 <span class="fn">print</span>(<span class="str">f&quot;行き方C: {len(route_c)-1}歩 ／ {route_cost(route_c)}秒&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">44</span>)
 <span class="fn">print</span>(<span class="str">&quot;歩数がいちばん多い行き方Cが、合計時間ではいちばん短い&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>スタートのマスは数えないので、1番目のマスから</td><td style="white-space:nowrap">A. <code>range(1, len(route))</code><br>B. <code>range(len(route))</code><br>C. <code>range(0, len(route) - 1)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>入るマスのコスト（秒）を足す</td><td style="white-space:nowrap">A. <code>cost_map[r][c]</code><br>B. <code>1</code><br>C. <code>cost_map[c][r]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 362" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -668,7 +698,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
       <p>「すべての行き方を書き出して、いちばん安いものを選ぶ」という全探索が、
       迷路の大きさによってどれくらい時間がかかるようになるかを測ります。</p>
 
-<pre><span class="code-label">Python ── AL2-04-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-04-ex4.py</span>
 <span class="cmt"># すべての行き方を書き出して最小コストを求める方法（全探索）は、</span>
 <span class="cmt"># 迷路が少し大きくなるだけで使えなくなることを確かめる</span>
 <span class="kw">import</span> time
@@ -695,8 +725,8 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
             <span class="kw">if</span> (nr, nc) <span class="kw">in</span> visited:
                 <span class="kw">continue</span>
             visited.add((nr, nc))
-            <span class="fn">walk</span>(nr, nc, total + <span class="num">1</span>)
-            visited.discard((nr, nc))    <span class="cmt"># 調べ終わったら「通っていない」状態に戻す</span>
+            <span class="fn">walk</span>(nr, nc, <span class="blank">____</span>)      <span class="cmt"># ← 穴1</span>
+            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 
     visited.add((<span class="num">0</span>, <span class="num">0</span>))
     <span class="fn">walk</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>)
@@ -718,6 +748,17 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 <span class="fn">print</span>(<span class="str">&quot;7マス×7マスの行き方は 575,780,564 通りある。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1マス進むごとにコスト1を足して、先へ進む</td><td style="white-space:nowrap">A. <code>total * 2</code><br>B. <code>total</code><br>C. <code>total + 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>調べ終わったら、そのマスを「通っていない」状態に戻す（別の行き方で使えるように）</td><td style="white-space:nowrap">A. <code>visited.discard((nr, nc))</code><br>B. <code>visited.clear()</code><br>C. <code>visited.add((nr, nc))</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 320" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -749,7 +790,7 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ             行き方の数   かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.031秒 / 6マス×6マス          1,262,816通り        6.309秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
+        <img src="images/a04_ex4_result.png" alt="AL2-04-ex4.py の実行結果。全探索で「すべての行き方」を数えたときの通り数と時間 / -------------------------------------------------------- / 迷路の大きさ             行き方の数   かかった時間 / 3マス×3マス                 12通り        0.000秒 / 4マス×4マス                184通り        0.000秒 / 5マス×5マス              8,512通り        0.031秒 / 6マス×6マス          1,262,816通り        6.484秒 / -------------------------------------------------------- /  / 7マス×7マスの行き方は 575,780,564 通りある。 / 6マス×6マスのおよそ456倍なので、同じパソコンでは1時間近くかかる計算になる。 / 迷路が1マス大きくなるだけで、全探索は現実的な時間で終わらなくなる。" width="505" height="288" loading="lazy">
       </div>
       <p class="run-note">3マス四方は12通り、4マス四方は184通り、5マス四方は8,512通り、6マス四方は1,262,816通りでした。たった1マス大きくなるだけで、行き方の数は<strong>およそ150倍</strong>に増えています。6マス四方で約7秒かかったので、7マス四方（5億7千万通り）では1時間近くかかる計算になります。カーナビが数万の交差点をあつかうことを考えると、全探索はまったく使えません。</p>
 
@@ -960,6 +1001,18 @@ route_c = [(<span class="num">0</span>, <span class="num">0</span>), (<span clas
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-04-ex2.py</code></td><td>穴1</td><td><code>total + minutes</code></td></tr>
+          <tr><td><code>AL2-04-ex2.py</code></td><td>穴2</td><td><code>route_minutes(route) &lt; route_minutes(best_route)</code></td></tr>
+          <tr><td><code>AL2-04-ex3.py</code></td><td>穴1</td><td><code>range(1, len(route))</code></td></tr>
+          <tr><td><code>AL2-04-ex3.py</code></td><td>穴2</td><td><code>cost_map[r][c]</code></td></tr>
+          <tr><td><code>AL2-04-ex4.py</code></td><td>穴1</td><td><code>total + 1</code></td></tr>
+          <tr><td><code>AL2-04-ex4.py</code></td><td>穴2</td><td><code>visited.discard((nr, nc))</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <p><strong>問い2（新宿—品川を12分にしたとき）</strong></p>

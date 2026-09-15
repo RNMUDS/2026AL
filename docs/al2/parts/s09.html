@@ -272,6 +272,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-09-ex1.py</code>, <code>AL2-09-ex2.py</code>, <code>AL2-09-ex3.py</code>, <code>AL2-09-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -295,7 +303,7 @@
       「いまいる都市から、まだ行っていない都市のうちいちばん近いところへ進む」をくり返すだけです。
       全探索の答えと比べます。</p>
 
-<pre><span class="code-label">Python ── AL2-09-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-09-ex1.py</span>
 <span class="cmt"># 貪欲法（どんよくほう）で巡回セールスマン問題を解く</span>
 <span class="cmt"># 作戦はとても単純: 「いまいる都市から、まだ行っていない都市のうち</span>
 <span class="cmt"># いちばん近いところへ進む」をくり返すだけ。</span>
@@ -402,7 +410,7 @@ best_route, best_length = <span class="fn">brute_force</span>()
       </div>
       <p>都市を8個に増やして、同じ比較をします。都市が増えると結果はどう変わるでしょうか。</p>
 
-<pre><span class="code-label">Python ── AL2-09-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-09-ex2.py</span>
 <span class="cmt"># 都市を8個に増やして、貪欲法と全探索を比べる</span>
 <span class="kw">import</span> math
 <span class="kw">import</span> time
@@ -438,9 +446,9 @@ distance = []
     <span class="kw">while</span> <span class="fn">len</span>(visited) &lt; n:
         nearest = <span class="kw">None</span>
         <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n):
-            <span class="kw">if</span> j <span class="kw">in</span> visited:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
                 <span class="kw">continue</span>
-            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
+            <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
                 nearest = j
         total = total + distance[here][nearest]
         visited.append(nearest)
@@ -497,16 +505,28 @@ brute_time = time.time() - began
 <span class="fn">print</span>()
 
 difference = greedy_length - best_length
-ratio = greedy_length / best_length
+ratio = <span class="blank">____</span>      <span class="cmt"># ← 穴3</span>
 <span class="fn">print</span>(<span class="str">f&quot;距離の差: {round(difference, 1)}&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;貪欲法は最短ルートより {round((ratio - 1) * 100, 1)}% 長い&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;速さの差: 貪欲法は全探索の {round(brute_time / greedy_time)} 倍速い&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は速いが、最短ルートを見つけるとはかぎらない。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>すでに行った都市は候補にしない</td><td style="white-space:nowrap">A. <code>j == here</code><br>B. <code>j in visited</code><br>C. <code>j not in visited</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>いまいる場所から、まだ行っていない都市のうちいちばん近いものを選ぶ</td><td style="white-space:nowrap">A. <code>distance[here][j] &lt; distance[here][nearest]</code><br>B. <code>distance[here][j] &gt; distance[here][nearest]</code><br>C. <code>distance[j][j] &lt; distance[nearest][nearest]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>貪欲法の答えが、最適解の何倍か</td><td style="white-space:nowrap">A. <code>best_length / greedy_length</code><br>B. <code>greedy_length / best_length</code><br>C. <code>greedy_length - best_length</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000907秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 190 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
+        <img src="images/a09_ex2_result.png" alt="AL2-09-ex2.py の実行結果。8つの都市で、貪欲法と全探索を比べる / -------------------------------------------------------------- / 貪欲法 / 学校 → 公園 → カフェ → 書店 → 郵便局 → 駅 → 図書館 → 病院 → 学校 / 合計距離: 53.2   かかった時間: 0.000005秒 /  / 全探索 / 学校 → 公園 → カフェ → 病院 → 図書館 → 駅 → 郵便局 → 書店 → 学校 / 合計距離: 46.8   かかった時間: 0.000785秒 / 試した順番の数: 5,040通り / -------------------------------------------------------------- /  / 距離の差: 6.4 / 貪欲法は最短ルートより 13.6% 長い / 速さの差: 貪欲法は全探索の 150 倍速い /  / 貪欲法は速いが、最短ルートを見つけるとはかぎらない。" width="513" height="388" loading="lazy">
       </div>
       <p class="run-note">貪欲法は<strong>53.2</strong>、全探索は<strong>46.8</strong>で、差は6.4でした。貪欲法のルートは最短ルートより<strong>13.6%長い</strong>という結果です。一方で速さは、貪欲法が全探索の約150倍でした。都市が5個のときは同じ答えでしたが、8個になると差が出ています。都市が増えるほど、貪欲法が最短に当たる可能性は下がっていきます。</p>
 
@@ -521,7 +541,7 @@ ratio = greedy_length / best_length
       <p>貪欲法は出発点によって答えが変わります。
       8つの都市それぞれを出発点にして、貪欲法を8回動かし、結果を並べて比べます。</p>
 
-<pre><span class="code-label">Python ── AL2-09-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-09-ex3.py</span>
 <span class="cmt"># 出発する都市を変えると、貪欲法の答えはどう変わるか</span>
 <span class="kw">import</span> math
 <span class="kw">from</span> itertools <span class="kw">import</span> permutations
@@ -602,7 +622,7 @@ best_length = <span class="fn">brute_force</span>()
 
 results = []
 <span class="kw">for</span> start <span class="kw">in</span> <span class="fn">range</span>(n):
-    route, total = <span class="fn">greedy</span>(start)
+    route, total = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     results.append((<span class="fn">round</span>(total, <span class="num">1</span>), start, route))
 
     names = []
@@ -617,13 +637,24 @@ results = []
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
 <span class="fn">print</span>()
 
-results.sort()          <span class="cmt"># タプルの1つ目（合計距離）が小さい順に並べかえる</span>
+<span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
 <span class="fn">print</span>(<span class="str">&quot;いちばん良かった出発点:&quot;</span>, cities[results[<span class="num">0</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[<span class="num">0</span>][<span class="num">0</span>])
 <span class="fn">print</span>(<span class="str">&quot;いちばん悪かった出発点:&quot;</span>, cities[results[-<span class="num">1</span>][<span class="num">1</span>]][<span class="num">0</span>], <span class="str">&quot;→&quot;</span>, results[-<span class="num">1</span>][<span class="num">0</span>])
 <span class="fn">print</span>()
 <span class="kw">if</span> results[<span class="num">0</span>][<span class="num">0</span>] == <span class="fn">round</span>(best_length, <span class="num">1</span>):
     <span class="fn">print</span>(<span class="str">&quot;書店から出発したときだけ、貪欲法が本当の最短ルートを見つけている。&quot;</span>)
     <span class="fn">print</span>(<span class="str">&quot;出発点を変えるだけで答えが14以上も変わる。貪欲法は運に左右される。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>出発点を変えて貪欲法を動かす</td><td style="white-space:nowrap">A. <code>greedy(start)</code><br>B. <code>greedy(0)</code><br>C. <code>brute_force()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>タプルの1つ目（合計距離）が小さい順に並べかえる</td><td style="white-space:nowrap">A. <code>results.append(0)</code><br>B. <code>results.reverse()</code><br>C. <code>results.sort()</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 374" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -673,7 +704,7 @@ results.sort()          <span class="cmt"># タプルの1つ目（合計距離�
       <p>貪欲法が大きく損をする配置を作って、失敗のしかたを観察します。
       配達先のうち1軒だけが、ほかから遠く離れた場所にある場合です。</p>
 
-<pre><span class="code-label">Python ── AL2-09-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-09-ex4.py</span>
 <span class="cmt"># 貪欲法が大きく損をする配達先の配置</span>
 <span class="cmt"># 遠くにぽつんと1軒だけ離れた家があると、貪欲法はその家を最後まで残してしまう。</span>
 <span class="kw">import</span> math
@@ -711,13 +742,13 @@ distance = []
             <span class="kw">if</span> j <span class="kw">in</span> visited:
                 <span class="kw">continue</span>
             <span class="kw">if</span> nearest <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[here][j] &lt; distance[here][nearest]:
-                nearest = j
+                <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         steps.append((houses[here][<span class="num">0</span>], houses[nearest][<span class="num">0</span>], <span class="fn">round</span>(distance[here][nearest], <span class="num">1</span>)))
         total = total + distance[here][nearest]
         visited.append(nearest)
         here = nearest
     steps.append((houses[here][<span class="num">0</span>], houses[start][<span class="num">0</span>], <span class="fn">round</span>(distance[here][start], <span class="num">1</span>)))
-    total = total + distance[here][start]
+    total = total + <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> visited, total, steps
 
 
@@ -787,6 +818,17 @@ best_route, best_length = <span class="fn">brute_force</span>()
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;貪欲法は近い家から順に回るため、遠方のD宅を最後まで残してしまう。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;最後にD宅へ行って営業所へ戻る2回の移動だけで、27以上かかっている。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>より近い家が見つかったので、候補を置きかえる</td><td style="white-space:nowrap">A. <code>nearest = here</code><br>B. <code>j = nearest</code><br>C. <code>nearest = j</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>最後の家から営業所へ戻る距離を足す</td><td style="white-space:nowrap">A. <code>distance[here][start]</code><br>B. <code>distance[start][start]</code><br>C. <code>0</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 334" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1060,6 +1102,19 @@ best_route, best_length = <span class="fn">brute_force</span>()
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-09-ex2.py</code></td><td>穴1</td><td><code>j in visited</code></td></tr>
+          <tr><td><code>AL2-09-ex2.py</code></td><td>穴2</td><td><code>distance[here][j] &lt; distance[here][nearest]</code></td></tr>
+          <tr><td><code>AL2-09-ex2.py</code></td><td>穴3</td><td><code>greedy_length / best_length</code></td></tr>
+          <tr><td><code>AL2-09-ex3.py</code></td><td>穴1</td><td><code>greedy(start)</code></td></tr>
+          <tr><td><code>AL2-09-ex3.py</code></td><td>穴2</td><td><code>results.sort()</code></td></tr>
+          <tr><td><code>AL2-09-ex4.py</code></td><td>穴1</td><td><code>nearest = j</code></td></tr>
+          <tr><td><code>AL2-09-ex4.py</code></td><td>穴2</td><td><code>distance[here][start]</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <p><strong>問い2（出発点を変えたとき）</strong></p>

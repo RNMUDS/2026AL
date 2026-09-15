@@ -278,6 +278,14 @@ heapqとは #sec-explanation
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-06-ex1.py</code>, <code>AL2-06-ex2.py</code>, <code>AL2-06-ex3.py</code>, <code>AL2-06-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -300,7 +308,7 @@ heapqとは #sec-explanation
       <p>ダイクストラ法に使う前に、<code>heapq</code> がどう動くかだけを確かめます。
       数を入れる例と、<code>(時間, 駅名)</code> の組を入れる例の2つを実行します。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-06-ex1.py</span>
 <span class="cmt"># 優先度付きキュー（heapq）の使い方を確かめる</span>
 <span class="cmt"># heapq を使うと、「入れた中でいちばん小さいもの」をいつでも速く取り出せる。</span>
 <span class="kw">import</span> heapq
@@ -359,7 +367,7 @@ heapq.heappush(tasks, (<span class="num">9</span>, <span class="str">&quot;池�
       <p>第5回のダイクストラ法を、<code>heapq</code> を使う形に書き直します。
       「まだ決まっていない駅を全部見る」ループがなくなり、<code>heappop</code> の1行に置きかわります。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-06-ex2.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法</span>
 <span class="cmt"># 第5回では「まだ決まっていない駅を全部見て、いちばん小さい駅をさがす」ことをしていた。</span>
 <span class="cmt"># heapq を使うと、その「さがす」作業を任せられる。</span>
@@ -392,9 +400,9 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 
 <span class="kw">while</span> <span class="fn">len</span>(queue) &gt; <span class="num">0</span>:
-    minutes, current = heapq.heappop(queue)   <span class="cmt"># いちばん時間が小さい組を取り出す</span>
+    minutes, current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
 
-    <span class="kw">if</span> current <span class="kw">in</span> settled:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
         <span class="cmt"># 同じ駅の古い（時間の大きい）組が残っていることがあるので読み飛ばす</span>
         <span class="fn">print</span>(<span class="str">f&quot;  ({minutes}分, {current}) → すでに確定済みなので読み飛ばす&quot;</span>)
         <span class="kw">continue</span>
@@ -407,7 +415,7 @@ settled = <span class="fn">set</span>()
         <span class="kw">if</span> new_distance &lt; distance[name]:
             distance[name] = new_distance
             came_from[name] = current
-            heapq.heappush(queue, (new_distance, name))
+            heapq.heappush(queue, <span class="blank">____</span>)      <span class="cmt"># ← 穴3</span>
             <span class="fn">print</span>(<span class="str">f&quot;        {name} を {new_distance}分として queue に入れた&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
@@ -434,6 +442,18 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;第5回の例題1・例題2と、まったく同じ答えになっている&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いちばん時間が小さい組を取り出す</td><td style="white-space:nowrap">A. <code>queue.popleft()</code><br>B. <code>heapq.heappop(queue)</code><br>C. <code>queue.pop()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>同じ駅が2回出てきたら、あとの方は読み飛ばす</td><td style="white-space:nowrap">A. <code>current in settled</code><br>B. <code>current not in settled</code><br>C. <code>current == start</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>heapq に入れる組は（時間, 駅名）の順。時間で並ぶようにする</td><td style="white-space:nowrap">A. <code>new_distance</code><br>B. <code>(new_distance, name)</code><br>C. <code>(name, new_distance)</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -452,7 +472,7 @@ settled = <span class="fn">set</span>()
       <p>第5回のやり方（全部見る）と、第6回のやり方（heapq）で、同じグラフの最短距離を求めて時間を比べます。
       グラフはマス目の形で、大きさを 20×20 から 120×120 まで変えていきます。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-06-ex3.py</span>
 <span class="cmt"># 「全部見てさがす方法」と「heapq を使う方法」の速さを比べる</span>
 <span class="kw">import</span> heapq
 <span class="kw">import</span> time
@@ -519,9 +539,9 @@ settled = <span class="fn">set</span>()
             <span class="kw">continue</span>
         settled.add(current)
         <span class="kw">for</span> name, weight <span class="kw">in</span> graph[current]:
-            <span class="kw">if</span> d + weight &lt; distance[name]:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
                 distance[name] = d + weight
-                heapq.heappush(queue, (distance[name], name))
+                heapq.heappush(queue, <span class="blank">____</span>)      <span class="cmt"># ← 穴2</span>
     <span class="kw">return</span> distance
 
 
@@ -554,6 +574,17 @@ settled = <span class="fn">set</span>()
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;2つの方法は、どの大きさでも完全に同じ答えを出している。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;マス目が大きくなるほど、heapq を使った方法との差が開いていく。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>取り出した頂点までの距離に重みを足し、表より短ければ書き直す</td><td style="white-space:nowrap">A. <code>d + weight &gt; distance[name]</code><br>B. <code>weight &lt; distance[name]</code><br>C. <code>d + weight &lt; distance[name]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>書き直した距離と頂点の組を heapq に入れる</td><td style="white-space:nowrap">A. <code>(distance[name], name)</code><br>B. <code>distance[name]</code><br>C. <code>(name, distance[name])</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 402" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -601,7 +632,7 @@ settled = <span class="fn">set</span>()
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        23.3倍 / 40×40           1600         0.065秒        0.001秒        84.1倍 / 80×80           6400         1.040秒        0.004秒       287.6倍 / 120×120         14400         6.112秒        0.011秒       566.8倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
+        <img src="images/a06_ex3_result.png" alt="AL2-06-ex3.py の実行結果。2つのやり方で、同じグラフの最短距離を求めて時間を測る / ------------------------------------------------------------------ / 大きさ        頂点の数    全部見る方法    heapqの方法    何倍速いか / 20×20            400         0.004秒        0.000秒        23.4倍 / 40×40           1600         0.066秒        0.001秒        79.2倍 / 80×80           6400         1.055秒        0.004秒       274.5倍 / 120×120         14400         5.964秒        0.010秒       594.9倍 / ------------------------------------------------------------------ /  / 2つの方法は、どの大きさでも完全に同じ答えを出している。 / マス目が大きくなるほど、heapq を使った方法との差が開いていく。" width="524" height="268" loading="lazy">
       </div>
       <p class="run-note">120マス四方（頂点14,400個）では、全部見る方法が<strong>約6秒</strong>、heapq を使う方法が<strong>0.01秒ほど</strong>で、<strong>数百倍</strong>の差が出ました。20マス四方のときは20倍ほどだったので、頂点が増えるほど差が広がっています。2つの方法が出した答えは、どの大きさでも完全に一致しています。秒数はパソコンの性能で変わるので、自分の結果が画像と一致しなくても問題ありません。大切なのは<strong>差の広がり方</strong>です。</p>
 
@@ -616,7 +647,7 @@ settled = <span class="fn">set</span>()
       <p>heapq を使ったダイクストラ法で、10マス四方の床コスト付き迷路を解きます。
       1 は舗装された道（1秒）、9 はぬかるみ（9秒）です。</p>
 
-<pre><span class="code-label">Python ── AL2-06-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-06-ex4.py</span>
 <span class="cmt"># heapq を使ったダイクストラ法で、大きめの重み付き迷路を解く</span>
 <span class="kw">import</span> heapq
 
@@ -656,7 +687,7 @@ settled = <span class="fn">set</span>()
     <span class="kw">if</span> current <span class="kw">in</span> settled:
         <span class="kw">continue</span>
     settled.add(current)
-    <span class="kw">if</span> current == goal:
+    <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
         <span class="kw">break</span>
 
     r, c = current
@@ -665,7 +696,7 @@ settled = <span class="fn">set</span>()
         nc = c + dc
         <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
             <span class="kw">continue</span>
-        new_total = total + cost_map[nr][nc]
+        new_total = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         <span class="kw">if</span> new_total &lt; distance[(nr, nc)]:
             distance[(nr, nc)] = new_total
             came_from[(nr, nc)] = current
@@ -717,6 +748,17 @@ simple_cost = <span class="num">0</span>
 
 <span class="fn">print</span>(<span class="str">&quot;参考: 上の行を右へ進んでから右の列を下りる経路&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;  歩数:&quot;</span>, <span class="fn">len</span>(simple_route) - <span class="num">1</span>, <span class="str">&quot;歩 ／ 合計コスト:&quot;</span>, simple_cost, <span class="str">&quot;秒&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>ゴールが確定したら、もう調べなくてよい</td><td style="white-space:nowrap">A. <code>current == goal</code><br>B. <code>current == start</code><br>C. <code>len(queue) == 0</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>取り出したマスまでの合計に、となりのマスのコストを足す</td><td style="white-space:nowrap">A. <code>total + 1</code><br>B. <code>cost_map[nr][nc]</code><br>C. <code>total + cost_map[nr][nc]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 408" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1340,6 +1382,19 @@ simple_cost = <span class="num">0</span>
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-06-ex2.py</code></td><td>穴1</td><td><code>heapq.heappop(queue)</code></td></tr>
+          <tr><td><code>AL2-06-ex2.py</code></td><td>穴2</td><td><code>current in settled</code></td></tr>
+          <tr><td><code>AL2-06-ex2.py</code></td><td>穴3</td><td><code>(new_distance, name)</code></td></tr>
+          <tr><td><code>AL2-06-ex3.py</code></td><td>穴1</td><td><code>d + weight &lt; distance[name]</code></td></tr>
+          <tr><td><code>AL2-06-ex3.py</code></td><td>穴2</td><td><code>(distance[name], name)</code></td></tr>
+          <tr><td><code>AL2-06-ex4.py</code></td><td>穴1</td><td><code>current == goal</code></td></tr>
+          <tr><td><code>AL2-06-ex4.py</code></td><td>穴2</td><td><code>total + cost_map[nr][nc]</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <p><strong>問い2（池袋—品川 5分 を足したとき）</strong></p>

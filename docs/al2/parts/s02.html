@@ -191,6 +191,14 @@
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-02-ex1.py</code>, <code>AL2-02-ex2.py</code>, <code>AL2-02-ex3.py</code>, <code>AL2-02-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -219,7 +227,7 @@
         <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>stack.pop()</code></td><td>いちばん新しい行</td></tr>
       </table>
 
-<pre><span class="code-label">Python ── AL2-02-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-02-ex1.py</span>
 <span class="cmt"># 深さ優先探索（ふかさゆうせんたんさく）で迷路を解く</span>
 <span class="cmt"># 幅優先探索との違いは「メモのどこを読むか」だけ。</span>
 <span class="cmt">#   幅優先探索: いちばん古い行を読む → popleft()</span>
@@ -311,7 +319,7 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
       <p>幅優先探索と深さ優先探索を1つのプログラムにまとめ、同じ迷路で走らせて比べます。
       <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。</p>
 
-<pre><span class="code-label">Python ── AL2-02-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-02-ex2.py</span>
 <span class="cmt"># 幅優先探索と深さ優先探索を、同じ迷路で走らせて比べる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -358,14 +366,14 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
 
     <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
         <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
-            current = memo.popleft()    <span class="cmt"># いちばん古い行を読む</span>
+            current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">else</span>:
-            current = memo.pop()        <span class="cmt"># いちばん新しい行を読む</span>
+            current = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
         checked = checked + <span class="num">1</span>
         <span class="kw">if</span> current == goal:
             <span class="kw">break</span>
         <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
-            <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
                 <span class="kw">continue</span>
             came_from[next_cell] = current
             memo.append(next_cell)
@@ -405,6 +413,18 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 <span class="fn">print</span>()
 <span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路（12歩・最短）&quot;</span>)
 <span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路（18歩・最短ではない）&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>幅優先探索: メモのいちばん古い行を読む</td><td style="white-space:nowrap">A. <code>memo[-1]</code><br>B. <code>memo.popleft()</code><br>C. <code>memo.pop()</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>深さ優先探索: メモのいちばん新しい行を読む</td><td style="white-space:nowrap">A. <code>memo.popleft()</code><br>B. <code>memo.pop()</code><br>C. <code>memo[0]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>すでに来たことがある場所は飛ばす</td><td style="white-space:nowrap">A. <code>next_cell in came_from</code><br>B. <code>next_cell in memo</code><br>C. <code>next_cell == goal</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -769,7 +789,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <p>迷路を15マス×15マスに大きくし、壁（障害物）を増やして同じ比較をします。
       迷路が大きくなると、2つの探索の差はどう変わるかを観察してください。</p>
 
-<pre><span class="code-label">Python ── AL2-02-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex3.py</span>
 <span class="cmt"># 障害物を増やした大きい迷路（15マス×15マス）で、2つの探索を比べる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -826,14 +846,14 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
             current = memo.popleft()
         <span class="kw">else</span>:
             current = memo.pop()
-        checked = checked + <span class="num">1</span>
+        checked = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">if</span> current == goal:
             <span class="kw">break</span>
         <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
             <span class="kw">if</span> next_cell <span class="kw">in</span> came_from:
                 <span class="kw">continue</span>
             came_from[next_cell] = current
-            memo.append(next_cell)
+            <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     path = []
     node = goal
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
@@ -868,6 +888,17 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
 
 <span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路&quot;</span>)
 <span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>1マス調べるたびに数を1つ増やす</td><td style="white-space:nowrap">A. <code>checked</code><br>B. <code>checked * 2</code><br>C. <code>checked + 1</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>見つけたとなりのマスをメモの最後に書き足す（2つの探索で同じ）</td><td style="white-space:nowrap">A. <code>memo.appendleft(next_cell)</code><br>B. <code>memo.append(next_cell)</code><br>C. <code>memo.popleft()</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 298" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -905,7 +936,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <p>壁がまったくない広場で、2つの探索がどんな道を選ぶかを見ます。
       広場は10マス×10マス、20マス×20マス、40マス×40マスの3種類を試します。</p>
 
-<pre><span class="code-label">Python ── AL2-02-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex4.py</span>
 <span class="cmt"># 壁のない広場で、2つの探索がどれだけ違う道を選ぶかを見る</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -931,7 +962,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
             nr = r + dr
             nc = c + dc
-            <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= size <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= size:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
                 <span class="kw">continue</span>
             <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
                 <span class="kw">continue</span>
@@ -942,7 +973,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
     node = goal
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
         path.append(node)
-        node = came_from[node]
+        node = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
     path.reverse()
     <span class="kw">return</span> path, checked
 
@@ -970,6 +1001,17 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
     <span class="kw">for</span> line <span class="kw">in</span> picture:
         <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
     <span class="fn">print</span>()</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>広場の外に出るマスを飛ばす条件（上下左右の4方向すべて）</td><td style="white-space:nowrap">A. <code>nr &lt; 0 and nc &lt; 0</code><br>B. <code>nr &lt; 0 or nr &gt;= size or nc &lt; 0 or nc &gt;= size</code><br>C. <code>nr &gt; size or nc &gt; size</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>ゴールから「どこから来たか」を1つずつ逆にたどる</td><td style="white-space:nowrap">A. <code>came_from[start]</code><br>B. <code>came_from[node]</code><br>C. <code>node - 1</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 346" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -1399,6 +1441,19 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
     </div>
 
     <div id="answers-content">
+      <div class="ans-item">
+        <h4>穴埋めの答え</h4>
+        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+          <tr><td><code>AL2-02-ex2.py</code></td><td>穴1</td><td><code>memo.popleft()</code></td></tr>
+          <tr><td><code>AL2-02-ex2.py</code></td><td>穴2</td><td><code>memo.pop()</code></td></tr>
+          <tr><td><code>AL2-02-ex2.py</code></td><td>穴3</td><td><code>next_cell in came_from</code></td></tr>
+          <tr><td><code>AL2-02-ex3.py</code></td><td>穴1</td><td><code>checked + 1</code></td></tr>
+          <tr><td><code>AL2-02-ex3.py</code></td><td>穴2</td><td><code>memo.append(next_cell)</code></td></tr>
+          <tr><td><code>AL2-02-ex4.py</code></td><td>穴1</td><td><code>nr &lt; 0 or nr &gt;= size or nc &lt; 0 or nc &gt;= size</code></td></tr>
+          <tr><td><code>AL2-02-ex4.py</code></td><td>穴2</td><td><code>came_from[node]</code></td></tr>
+        </table>
+      </div>
       <div class="ans-item">
         <h4>確かめ用の数値</h4>
         <table>

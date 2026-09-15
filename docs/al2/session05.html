@@ -182,6 +182,7 @@ pre { position: relative; }
 a.sub-item:hover { border-color: #4A7A00; }
 .tag { white-space: nowrap; }
 .code-label { right: 84px; border-radius: 0 0 8px 8px; }
+.blank{background:#3a2a00;color:#FFB800;font-weight:700;padding:0 3px;border-radius:3px}
 </style>
 </head>
 
@@ -501,6 +502,14 @@ a.sub-item:hover { border-color: #4A7A00; }
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: <code>AL2-05-ex1.py</code>, <code>AL2-05-ex2.py</code>, <code>AL2-05-ex3.py</code>, <code>AL2-05-ex4.py</code></p>
       </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
+      </div>
     </div>
 
     <div class="concept-box" style="margin-bottom:1.5rem">
@@ -524,7 +533,7 @@ a.sub-item:hover { border-color: #4A7A00; }
       1つの手順が終わるたびに、距離表の中身をそのまま表示します。
       表の中で <code>*</code> が付いている駅は「もう変わらない」と決まった駅です。</p>
 
-<pre><span class="code-label">Python ── AL2-05-ex1.py</span>
+<pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex1.py</span>
 <span class="cmt"># ダイクストラ法（1）: 距離表が1ステップずつ決まっていく様子を見る</span>
 <span class="cmt"># 出発点から各駅までの「合計時間がいちばん短い行き方」を求める。</span>
 
@@ -623,7 +632,7 @@ step = <span class="num">0</span>
       <p>ダイクストラ法は最短時間を求めますが、そのままでは「どの道を通ったか」が分かりません。
       距離を書き直すときに、<strong>どの駅から来たか</strong>も一緒に記録しておけば、あとで道順を組み立てられます。</p>
 
-<pre><span class="code-label">Python ── AL2-05-ex2.py</span>
+<pre data-blanks="3"><span class="code-label">Python ── AL2-05-ex2.py</span>
 <span class="cmt"># ダイクストラ法（2）: 最短時間だけでなく「どの道を通ったか」も記録する</span>
 <span class="cmt"># 距離を書き直したときに「どこから来たか」も一緒に記録しておけば、あとで道順を復元できる。</span>
 
@@ -655,7 +664,7 @@ settled = <span class="fn">set</span>()
             <span class="kw">continue</span>
         <span class="kw">if</span> distance[station] == INF:
             <span class="kw">continue</span>
-        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> distance[station] &lt; distance[current]:
+        <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
             current = station
     <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
         <span class="kw">break</span>
@@ -665,8 +674,8 @@ settled = <span class="fn">set</span>()
     <span class="kw">for</span> name, minutes <span class="kw">in</span> railway[current]:
         <span class="kw">if</span> name <span class="kw">in</span> settled:
             <span class="kw">continue</span>
-        new_distance = distance[current] + minutes
-        <span class="kw">if</span> new_distance &lt; distance[name]:
+        new_distance = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
             distance[name] = new_distance
             came_from[name] = current      <span class="cmt"># 「どこから来たか」を記録する</span>
 
@@ -698,6 +707,18 @@ settled = <span class="fn">set</span>()
     <span class="fn">print</span>(<span class="str">f&quot;  {station}: {came_from[station]}&quot;</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;came_from をゴールから逆にたどると、道順ができあがる&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>まだ確定していない駅の中で、いちばん時間が小さい駅を選ぶ</td><td style="white-space:nowrap">A. <code>distance[station] &gt; distance[current]</code><br>B. <code>station &lt; current</code><br>C. <code>distance[station] &lt; distance[current]</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>確定した駅までの時間に、その路線の時間を足す</td><td style="white-space:nowrap">A. <code>distance[current] + minutes</code><br>B. <code>distance[name] + minutes</code><br>C. <code>minutes</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴3</strong></td><td>いまの表の値より短いときだけ書き直す</td><td style="white-space:nowrap">A. <code>new_distance &gt; distance[name]</code><br>B. <code>new_distance &lt; distance[name]</code><br>C. <code>new_distance == distance[name]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -716,7 +737,7 @@ settled = <span class="fn">set</span>()
       3つのお店をめぐる例で確かめます。B店を通ると5円のクーポンがもらえるので、
       B店からA店へ向かう辺の重みは <code>-5</code> になっています。</p>
 
-<pre><span class="code-label">Python ── AL2-05-ex3.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-05-ex3.py</span>
 <span class="cmt"># ダイクストラ法（3）: マイナスの重みがあると答えを間違える</span>
 <span class="cmt"># 3つのお店をめぐる。辺の重みは「かかる金額（円）」。</span>
 <span class="cmt"># B店を通ると5円のクーポンがもらえるので、B店からA店へ行く辺の重みは -5 になる。</span>
@@ -749,7 +770,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
                 current = shop
         <span class="kw">if</span> current <span class="kw">is</span> <span class="kw">None</span>:
             <span class="kw">break</span>
-        settled.add(current)
+        <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="fn">print</span>(<span class="str">f&quot;  {current} を「{distance[current]}円で確定」とした&quot;</span>)
         <span class="kw">for</span> name, price <span class="kw">in</span> shops[current]:
             <span class="kw">if</span> name <span class="kw">in</span> settled:
@@ -757,7 +778,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
                       <span class="str">f&quot;{distance[current] + price} 円で行けるが、&quot;</span>
                       <span class="str">f&quot;{name} はすでに確定しているので無視された&quot;</span>)
                 <span class="kw">continue</span>
-            new_price = distance[current] + price
+            new_price = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
             <span class="kw">if</span> new_price &lt; distance[name]:
                 distance[name] = new_price
     <span class="kw">return</span> distance
@@ -819,6 +840,17 @@ best = {}
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;A店について、ダイクストラ法は&quot;</span>, result[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円と答えたが、本当は&quot;</span>, best[<span class="str">&quot;A店&quot;</span>], <span class="str">&quot;円で行ける。&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;マイナスの重みがあると、ダイクストラ法は正しい答えを出せない。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>いちばん小さい店を「確定」にする（マイナスがあると、ここが間違いのもとになる）</td><td style="white-space:nowrap">A. <code>settled.remove(current)</code><br>B. <code>settled.add(current)</code><br>C. <code>settled.add(start)</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>確定した店までの金額に、その道の金額を足す</td><td style="white-space:nowrap">A. <code>distance[name] + price</code><br>B. <code>distance[current] + price</code><br>C. <code>price</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <div class="diagram-container">
         <svg viewBox="0 0 700 326" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
@@ -872,7 +904,7 @@ best = {}
       <p>出発点を6つの駅すべてに変えて距離表を作り、
       さらに全探索（すべての行き方を書き出す方法）の答えと一致するかを機械的に確かめます。</p>
 
-<pre><span class="code-label">Python ── AL2-05-ex4.py</span>
+<pre data-blanks="2"><span class="code-label">Python ── AL2-05-ex4.py</span>
 <span class="cmt"># ダイクストラ法（4）: 出発点を変えて表を作り、全探索の答えと一致するか確かめる</span>
 
 railway = {
@@ -924,7 +956,7 @@ INF = <span class="fn">float</span>(<span class="str">&quot;inf&quot;</span>)
             <span class="kw">if</span> name <span class="kw">in</span> visited:
                 <span class="kw">continue</span>
             new_total = total + minutes
-            <span class="kw">if</span> name <span class="kw">not</span> <span class="kw">in</span> best <span class="kw">or</span> new_total &lt; best[name]:
+            <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴1</span>
                 best[name] = new_total
             <span class="fn">walk</span>(name, new_total, visited + [name])
 
@@ -951,7 +983,7 @@ all_same = <span class="kw">True</span>
     fast = <span class="fn">dijkstra</span>(start)
     slow = <span class="fn">brute_force</span>(start)
     <span class="kw">for</span> goal <span class="kw">in</span> stations:
-        <span class="kw">if</span> fast[goal] != slow[goal]:
+        <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴2</span>
             <span class="fn">print</span>(<span class="str">f&quot;  ちがう: {start} → {goal}  ダイクストラ {fast[goal]} / 全探索 {slow[goal]}&quot;</span>)
             all_same = <span class="kw">False</span>
 <span class="kw">if</span> all_same:
@@ -959,6 +991,17 @@ all_same = <span class="kw">True</span>
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>()
 <span class="fn">print</span>(<span class="str">&quot;重みがすべて0以上なら、ダイクストラ法は全探索と同じ答えを、はるかに速く出せる。&quot;</span>)</pre>
+      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+        <tr><td style="white-space:nowrap"><strong>穴1</strong></td><td>初めて着いた駅か、これまでより短いときに記録する</td><td style="white-space:nowrap">A. <code>name not in best or new_total &lt; best[name]</code><br>B. <code>new_total &gt; best[name]</code><br>C. <code>name in best</code></td></tr>
+        <tr><td style="white-space:nowrap"><strong>穴2</strong></td><td>2つの方法の答えがちがっていたら「同じでない」にする</td><td style="white-space:nowrap">A. <code>fast == slow</code><br>B. <code>fast[goal] == slow[goal]</code><br>C. <code>fast[goal] != slow[goal]</code></td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>
 
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
@@ -1170,7 +1213,7 @@ all_same = <span class="kw">True</span>
       <h2>解答例</h2>
     </div>
 
-    <div id="answers-encrypted" data-cipher="AMnbtbvMeJDeaV82w5KbXdAgEq9Fq8Q6JhcHx4UqD1X0iVOCIQU4hMbvI+4NuEOSBKPlr3tGBWo3xUcKWLQbaMtCihrq6zZvRfOcEEa4OhLZzvuE1mwQ7ICWMs2m4t3uaSSZmWUJbIb1G/f/5NH+p+kpzfAQTekECkm4wLGa+QPLjdVDgZVjrUcap23qbgyQ+wRtkgiph4DUvVRLxAVod1LhNOWe6L1F0DbexVj3ROL6RjTFRg6p+glSKCvW2EJh6ikrhuyzQaT1XgkgZIgmgMgmppNqCHPlw1TX4Fz3om8k2HDT1e1/ZKZ+mOQgrAdGjfA+R+YyfVlIrKc3nubYI6ogKaGzBzi4H1ibtziXyNRSCS/Efr6otwnMdYoKZR2udMQpzGyIwEvg0fSxKQ+yk/54AW1UaAi8wNhmiRgpAYwc8mdhc9eUJuipW1V3aNyKFMxYdlHuuCV/IfiuxCdS1nVlq+vPXMVdmKB8H2wXrrQrzAIDS+iWm0fY6TJt61R+9cAC0+ArLpZkZGX74dmpNJ813IkiersPNE3JKHfq8Qpit0FMSGGGiBkwu0gh+hroLrRrvgiC9d9jJ7WDEyY104plTVzoqDzIU397aQvQhdv5ES1+L5Upb1YfRxOgKZxZuxulST5/qYbqYSP24gnI3V/97evE+228fxov5gJ5XZTy7G8uC9Q1GwVFRaR7usvGr44Ozk1uetp/QnzcT40PePyEMl9Twt8M4W2+Du41IJOY1EsgeiGS7dlMesVi+2SAvGQWZYwLP7lEtSfANdqtw8Zv/GArrafEfXosZJXTmcAK4SSmEk6Mg1YOcbACs7UjyCwx+TtvTnBqV08Xfd1HeByj2EGp8oxnjF8IP+1mqraPN69dBNb/bgVw5CazsO2AX+M9+rwcI4GfUNM7v1COjxzd/GjAqFpK+X2+e7ReQHKjxZyJ4FBtb25J6Vj98PfjNQxzncpcMvWqssIeXBpaLDaSkrakq946fMHT5NoC/uHEfLgDDluIUIZVrR6HaYjb3GcQ4OKHyfLJ27oUUXqPPszBE+6l2+ViwGIFU6qMKVIR/Upu94UAa0PRV5Ucv0wsDaMs6d5w5rG6JAc4WEhb941XxfHYaPlfZzEOxfzg9DNZfx9166kmTEbcw9PdZQcF+mkIE9UbBvO4KpxczzsB1eSRpAh0YSRPs16kz1nuMoF3z2p2lV6UoemvhU1ZGeByuLF6xkOCA8VVrJVxSYZXb1hKTEYLfpC2+n9TdObBTrWYqTiW/qHwGXNgBuKjramlhx5bw1IBxQ87FtgnSnKwCFrVhsJsIeK4NPEPb7haCTQ5ETz7aoHjO2Aa96Ox0xe2Je2fyu6YFHRTuusY06t96repq28h5bgCTWxd95nIXptnFNbMhcHZ08Ii7eefnl5ghdBPTqm1/5NRxHzJv99FO3xyLgnfEVA="></div>
+    <div id="answers-encrypted" data-cipher="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"></div>
 
   </div>
 </section>

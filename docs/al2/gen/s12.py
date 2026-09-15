@@ -3,7 +3,7 @@
 import math
 from collections import deque
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section, advanced_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     AMBER, GRAY, GREEN, RED, BLUE, answers, code, example, fig,
                     keywords, notion, reveal, run, section, setup_guide,
                     standard, write)
@@ -315,7 +315,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, 'ナップサック問題を動的計画法で解く', ex4_body)}"""
 
-ans = answers([
+ans = answers([blank_answers("12"),
     ("確かめ用の数値", """        <p><strong>問い2（使える時間を変えたとき）</strong></p>
         <table>
           <tr><th>使える時間</th><th>貪欲法</th><th>動的計画法</th><th>差</th></tr>

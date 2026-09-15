@@ -8,11 +8,86 @@ from pyhl import highlight   # noqa: E402
 from build import SESSIONS   # noqa: E402
 
 
+def apply_blanks(src, items):
+    """src の中の、items で指定された部分を ____ にして返す（行末に穴番号を付ける）。"""
+    for i, b in enumerate(items, 1):
+        pos = -1
+        for _ in range(b["nth"] + 1):
+            pos = src.index(b["find"], pos + 1)
+        line_start = src.rfind("\n", 0, pos) + 1
+        line_end = src.find("\n", pos)
+        if line_end < 0:
+            line_end = len(src)
+        line = src[line_start:line_end]
+        blanked = line.replace(b["answer"], "____", 1)
+        if "#" in blanked:
+            blanked = blanked.split("#")[0].rstrip()
+        blanked = blanked + f"      # ← 穴{i}"
+        src = src[:line_start] + blanked + src[line_end:]
+    return src
+
+
 def code(filename, label=None):
-    """src/ に置いた Python ファイルを、色つきの <pre> ブロックに変換する。"""
+    """src/ に置いた Python ファイルを、色つきの <pre> ブロックに変換する。
+    blanks.BLANKS に載っているファイルは、要になる行を ____ にして載せ、
+    下にヒントと候補の表を付ける（答えは解答セクションに入る）。"""
+    from blanks import BLANKS
     src = (HERE / "src" / filename).read_text(encoding="utf-8").rstrip("\n")
     label = label or ("Python ── " + filename)
-    return f'<pre><span class="code-label">{label}</span>\n{highlight(src)}</pre>'
+    items = BLANKS.get(filename, [])
+    src = apply_blanks(src, items)
+    body = highlight(src).replace("____", '<span class="blank">____</span>')
+    pre = f'<pre data-blanks="{len(items)}"><span class="code-label">{label}</span>\n{body}</pre>'
+    if not items:
+        return pre
+    return pre + "\n" + blank_hints(filename, items)
+
+
+def _choices(filename, i, b):
+    """答えとまちがい2つを、ファイル名と穴番号で決まる順に並べる（毎回同じ順になる）。"""
+    import random
+    options = [b["answer"]] + list(b["wrong"])
+    random.Random(f"{filename}-{i}").shuffle(options)
+    return options
+
+
+def blank_hints(filename, items):
+    import html as H
+    rows = []
+    for i, b in enumerate(items, 1):
+        choices = "<br>".join(f"{'ABC'[k]}. <code>{H.escape(c)}</code>" for k, c in enumerate(_choices(filename, i, b)))
+        rows.append(f'        <tr><td style="white-space:nowrap"><strong>穴{i}</strong></td><td>{b["hint"]}</td>'
+                    f'<td style="white-space:nowrap">{choices}</td></tr>')
+    return f"""      <div class="concept-box" style="margin-top:0.8rem">
+      <h4>穴埋め（____ を埋めてから実行する）</h4>
+      <table>
+        <tr><th>穴</th><th>ヒント</th><th>候補（1つが正解）</th></tr>
+{chr(10).join(rows)}
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す。
+        答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
+    </div>"""
+
+
+def blank_answers(week):
+    """その回の穴埋めの答え一覧（解答セクション用）。"""
+    import html as H
+    from blanks import BLANKS
+    rows = []
+    for fname in sorted(BLANKS):
+        if not fname.startswith(f"AL2-{week}-"):
+            continue
+        for i, b in enumerate(BLANKS[fname], 1):
+            rows.append(f"          <tr><td><code>{fname}</code></td><td>穴{i}</td>"
+                        f"<td><code>{H.escape(b['answer'])}</code></td></tr>")
+    if not rows:
+        return ("穴埋めの答え", "        <p>この回に穴埋めはありません。</p>")
+    body = f"""        <table>
+          <tr><th>ファイル</th><th>穴</th><th>答え</th></tr>
+{chr(10).join(rows)}
+        </table>"""
+    return ("穴埋めの答え", body)
 
 
 def plain(text, label):
@@ -133,6 +208,14 @@ def setup_guide(no, files):
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
         <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル: {filelist}</p>
+      </div>
+
+      <div class="note-warn">
+        <strong>例題2〜4は穴埋めです。</strong>
+        コードの中の <code>____</code>（穴）は、アルゴリズムの要になる部分です。
+        コードの下の「ヒント」と「候補」を見て、<strong>自分で埋めてから</strong>実行してください。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        例題1は完成したコードなので、読んで実行するだけで構いません。
       </div>
     </div>"""
 

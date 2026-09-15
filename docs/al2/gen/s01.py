@@ -3,7 +3,7 @@
 import math
 from collections import deque
 from slides_data import SLIDES
-from common import (slide_submission, slides_for, rubric_section, advanced_section,
+from common import (slide_submission, slides_for, rubric_section, advanced_section, blank_answers,
                     answers, code, example, keywords, notion, run, section,
                     setup_guide, standard, write)
 
@@ -531,7 +531,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1から例題4までの
 
 {example(4, '全部の順番を試して、いちばん短いものを選ぶ（後期の予告）', ex4_body)}"""
 
-ans = answers([
+ans = answers([blank_answers("01"),
     ("確かめ用の数値", """        <p><strong>問い1（学校—カフェを20分にしたとき）</strong></p>
         <table>
           <tr><th>順番</th><th>20分にする前</th><th>20分にしたあと</th></tr>
