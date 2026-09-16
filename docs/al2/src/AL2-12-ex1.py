@@ -29,7 +29,7 @@ def count_binary(secret, low, high):
 
 
 low = 1
-high = 100
+high = 1000
 
 linear_counts = []
 binary_counts = []
@@ -37,7 +37,7 @@ for secret in range(low, high + 1):
     linear_counts.append(count_linear(secret, low, high))
     binary_counts.append(count_binary(secret, low, high))
 
-print("1から100までの100個の数すべてを、2つの作戦で当ててみる")
+print("1から1000までの1000個の数すべてを、2つの作戦で当ててみる")
 print("-" * 56)
 print("作戦                  最悪の回数    平均の回数")
 print(f"A: 1から順に聞く    {max(linear_counts):>10}回 {sum(linear_counts)/len(linear_counts):>11.2f}回")
@@ -46,17 +46,17 @@ print("-" * 56)
 print()
 
 # 1回の質問で候補がどれだけ減るかを見る
-print("1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき）")
+print(f"1回の質問で「残る候補の数」がどう変わるか（秘密の数が{314159}のとき）")
 print("-" * 56)
-print("質問  作戦A: 1から順に聞く      作戦B: 中央を聞く")
+print("質問  作戦A: 1から順に聞く              作戦B: 中央を聞く")
 
 low_a = 1
-high_a = 100
+high_a = 1000000
 low_b = 1
-high_b = 100
-secret = 58
+high_b = 1000000
+secret = 314159
 
-for step in range(1, 8):
+for step in range(1, 21):
     # 作戦A: step 番目の数を聞く
     remain_a = high_a - low_a + 1
     if low_a <= secret <= high_a:
@@ -76,8 +76,8 @@ for step in range(1, 8):
             high_b = middle
     after_b = high_b - low_b + 1
 
-    print(f"{step:>3}回目  {remain_a:>4}個 → {after_a:>4}個"
-          f"            {remain_b:>4}個 → {after_b:>4}個")
+    print(f"{step:>3}回目  {remain_a:>7}個 → {after_a:>7}個"
+          f"      {remain_b:>7}個 → {after_b:>7}個")
 
 print("-" * 56)
 print()

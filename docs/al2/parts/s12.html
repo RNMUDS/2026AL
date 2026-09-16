@@ -640,7 +640,7 @@ secret = <span class="num">73</span>
 
 
 low = <span class="num">1</span>
-high = <span class="num">100</span>
+high = <span class="num">1000</span>
 
 linear_counts = []
 binary_counts = []
@@ -648,7 +648,7 @@ binary_counts = []
     linear_counts.append(<span class="fn">count_linear</span>(secret, low, high))
     binary_counts.append(<span class="fn">count_binary</span>(secret, low, high))
 
-<span class="fn">print</span>(<span class="str">&quot;1から100までの100個の数すべてを、2つの作戦で当ててみる&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;1から1000までの1000個の数すべてを、2つの作戦で当ててみる&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>(<span class="str">&quot;作戦                  最悪の回数    平均の回数&quot;</span>)
 <span class="fn">print</span>(<span class="str">f&quot;A: 1から順に聞く    {max(linear_counts):&gt;10}回 {sum(linear_counts)/len(linear_counts):&gt;11.2f}回&quot;</span>)
@@ -657,17 +657,17 @@ binary_counts = []
 <span class="fn">print</span>()
 
 <span class="cmt"># 1回の質問で候補がどれだけ減るかを見る</span>
-<span class="fn">print</span>(<span class="str">&quot;1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき）&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;1回の質問で「残る候補の数」がどう変わるか（秘密の数が{314159}のとき）&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
-<span class="fn">print</span>(<span class="str">&quot;質問  作戦A: 1から順に聞く      作戦B: 中央を聞く&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;質問  作戦A: 1から順に聞く              作戦B: 中央を聞く&quot;</span>)
 
 low_a = <span class="num">1</span>
-high_a = <span class="num">100</span>
+high_a = <span class="num">1000000</span>
 low_b = <span class="num">1</span>
-high_b = <span class="num">100</span>
-secret = <span class="num">58</span>
+high_b = <span class="num">1000000</span>
+secret = <span class="num">314159</span>
 
-<span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">8</span>):
+<span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">21</span>):
     <span class="cmt"># 作戦A: step 番目の数を聞く</span>
     remain_a = high_a - low_a + <span class="num">1</span>
     <span class="kw">if</span> low_a &lt;= secret &lt;= high_a:
@@ -687,8 +687,8 @@ secret = <span class="num">58</span>
             high_b = middle
     after_b = high_b - low_b + <span class="num">1</span>
 
-    <span class="fn">print</span>(<span class="str">f&quot;{step:&gt;3}回目  {remain_a:&gt;4}個 → {after_a:&gt;4}個&quot;</span>
-          <span class="str">f&quot;            {remain_b:&gt;4}個 → {after_b:&gt;4}個&quot;</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;{step:&gt;3}回目  {remain_a:&gt;7}個 → {after_a:&gt;7}個&quot;</span>
+          <span class="str">f&quot;      {remain_b:&gt;7}個 → {after_b:&gt;7}個&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">56</span>)
 <span class="fn">print</span>()
@@ -708,7 +708,7 @@ secret = <span class="num">58</span>
     </div>
       <p class="run-label">▶ 実行結果</p>
       <div class="run-capture">
-        <img src="images/a12_ex1_result.png" alt="AL2-12-ex1.py の実行結果。1から100までの100個の数すべてを、2つの作戦で当ててみる / -------------------------------------------------------- / 作戦                  最悪の回数    平均の回数 / A: 1から順に聞く           100回       50.50回 / B: 中央を聞く                7回        5.80回 / -------------------------------------------------------- /  / 1回の質問で「残る候補の数」がどう変わるか（秘密の数が73のとき） / -------------------------------------------------------- / 質問  作戦A: 1から順に聞く      作戦B: 中央を聞く / 1回目   100個 →   99個             100個 →   50個 / 2回目    99個 →   98個              50個 →   24個 / 3回目    98個 →   97個              24個 →   11個 / 4回目    97個 →   96個              11個 →    5個 / 5回目    96個 →   95個               5個 →    2個 / 6回目    95個 →   94個               2個 →    1個 / 7回目    94個 →   93個               1個 →    1個 / -------------------------------------------------------- /  / 作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。 / 「1回の質問でいちばん多く候補を減らす」選び方が、中央を聞く作戦になっている。" width="510" height="468" loading="lazy">
+        <img src="images/a12_ex1_result.png" alt="AL2-12-ex1.py の実行結果。1から1000までの1000個の数すべてを、2つの作戦で当ててみる / -------------------------------------------------------- / 作戦                  最悪の回数    平均の回数 / A: 1から順に聞く          1000回      500.50回 / B: 中央を聞く               10回        8.99回 / -------------------------------------------------------- /  / 1回の質問で「残る候補の数」がどう変わるか（秘密の数が314159のとき） / -------------------------------------------------------- / 質問  作戦A: 1から順に聞く              作戦B: 中央を聞く / 1回目  1000000個 →  999999個      1000000個 →  499999個 / 2回目   999999個 →  999998個       499999個 →  249999個 / 3回目   999998個 →  999997個       249999個 →  124999個 / 4回目   999997個 →  999996個       124999個 →   62499個 / 5回目   999996個 →  999995個        62499個 →   31249個 / 6回目   999995個 →  999994個        31249個 →   15624個 / 7回目   999994個 →  999993個        15624個 →    7811個 / 8回目   999993個 →  999992個         7811個 →    3905個 / 9回目   999992個 →  999991個         3905個 →    1952個 / 10回目   999991個 →  999990個         1952個 →     976個 / 11回目   999990個 →  999989個          976個 →     488個 / 12回目   999989個 →  999988個          488個 →     243個 / 13回目   999988個 →  999987個          243個 →     121個 / 14回目   999987個 →  999986個          121個 →      60個 / 15回目   999986個 →  999985個           60個 →      29個 / 16回目   999985個 →  999984個           29個 →      14個 / 17回目   999984個 →  999983個           14個 →       7個 / 18回目   999983個 →  999982個            7個 →       3個 / 19回目   999982個 →  999981個            3個 →       1個 / 20回目   999981個 →  999980個            1個 →       1個 / -------------------------------------------------------- /  / 作戦Aは1回につき1個しか減らない。作戦Bは1回で半分に減る。 / 「1回の質問でいちばん多く候補を減らす」選び方が、中央を聞く作戦になっている。" width="510" height="728" loading="lazy">
       </div>
       <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
