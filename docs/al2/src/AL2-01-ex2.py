@@ -47,7 +47,9 @@ def total_minutes(route):
         # いまの場所から次の場所までの時間を足す
         total = total + minutes_between(place, next_place)
         place = next_place              # 移動したので、いまの場所を更新する
-    total = total + minutes_between(place, "学校")   # 最後は学校へ戻る
+    # 最後の場所から学校までの時間を足す
+    # なぜなら、学校 → route の順に回る → 学校 に戻るまでの合計時間を求めたいから
+    total = total + minutes_between(place, "学校")
     return total
 
 
