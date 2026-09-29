@@ -28,6 +28,26 @@ document.querySelectorAll('pre').forEach(function(pre) {
   });
   pre.appendChild(btn);
 });
+
+// コードをすべて閉じる／開くボタン（コードの箱があるページだけ）
+(function() {
+  var folds = document.querySelectorAll('details.code-fold');
+  if (folds.length === 0) return;
+  var btn = document.createElement('button');
+  btn.className = 'fold-all-btn';
+  function update() {
+    var anyOpen = Array.prototype.some.call(folds, function(d) { return d.open; });
+    btn.textContent = anyOpen ? 'コードをすべて閉じる' : 'コードをすべて開く';
+  }
+  btn.addEventListener('click', function() {
+    var anyOpen = Array.prototype.some.call(folds, function(d) { return d.open; });
+    folds.forEach(function(d) { d.open = !anyOpen; });
+    update();
+  });
+  folds.forEach(function(d) { d.addEventListener('toggle', update); });
+  update();
+  document.body.appendChild(btn);
+})();
 </script>
 
 </body>

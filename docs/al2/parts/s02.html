@@ -38,6 +38,19 @@
       違いは<strong>たった1行</strong>、「メモのどこを読むか」だけです。
     </p>
 
+    <div class="concept-box">
+      <h4>2つの探索の呼び名（略したアルファベット）</h4>
+      <table>
+        <tr><th>日本語</th><th>略した呼び名</th><th>英語（元の言葉）</th><th>言葉の意味</th></tr>
+        <tr><td><strong style="color:#76B900">幅優先探索</strong></td><td><strong style="color:#76B900">BFS</strong>（ビー・エフ・エス）</td>
+            <td><strong>B</strong>readth-<strong>F</strong>irst <strong>S</strong>earch</td><td>breadth = 幅、first = 優先（先に）、search = 探索</td></tr>
+        <tr><td><strong style="color:#FFB800">深さ優先探索</strong></td><td><strong style="color:#FFB800">DFS</strong>（ディー・エフ・エス）</td>
+            <td><strong>D</strong>epth-<strong>F</strong>irst <strong>S</strong>earch</td><td>depth = 深さ、first = 優先（先に）、search = 探索</td></tr>
+      </table>
+      <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">
+        本やWebの説明では略した呼び名がよく使われます。例題のコードでも、<code>search("bfs")</code> は幅優先探索、<code>search("dfs")</code> は深さ優先探索を表します。</p>
+    </div>
+
     <div class="analogy">
       迷路で分かれ道に来ると、進める方向が2つ以上見えることがあります。
       体は1つなので、同時に両方へは進めません。そこで「あとで見に行く場所」をメモに書いておきます。
@@ -125,6 +138,634 @@
       </p>
     </div>
 
+    <p style="margin:1.5rem 0 0.5rem">
+      では、実際の迷路でメモがどう変わるかを見てみます。下の図は、例題の迷路で2つの探索を動かしたときの<strong>最初の4手順</strong>です。
+      マスの場所は <strong>(行,列)</strong> で表します。行は上から、列は左から数え、どちらも <strong>0 から</strong>数えます（スタートの左上が (0,0)）。
+      どちらの探索も、手順1ではスタート (0,0) を読み、となりの (1,0)（下）と (0,1)（右）をメモに書き足します。
+      ちがいが出るのは手順2からです。
+    </p>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 748" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">メモの変化を1手順ずつ追う（例題の迷路の手順1〜4）</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">迷路の上の数字が列、左の数字が行。(行,列) でマスの場所を表す（どちらも 0 から数える）</text>
+        <rect x="30" y="60" width="13" height="13" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="2"/>
+        <text x="49" y="71" fill="#ccc" font-size="11">壁</text>
+        <rect x="162" y="60" width="13" height="13" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="2"/>
+        <text x="181" y="71" fill="#ccc" font-size="11">いま読んだマス</text>
+        <rect x="294" y="60" width="13" height="13" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="2"/>
+        <text x="313" y="71" fill="#ccc" font-size="11">前に読んだマス</text>
+        <rect x="426" y="60" width="13" height="13" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <text x="445" y="71" fill="#ccc" font-size="11">メモ（幅優先）</text>
+        <rect x="558" y="60" width="13" height="13" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <text x="577" y="71" fill="#ccc" font-size="11">メモ（深さ優先）</text>
+        <text x="350" y="92" text-anchor="middle" fill="#888888" font-size="11">「次」の文字が付いたマスが、次の手順で読まれる行（メモの箱の太枠と同じマス）</text>
+        <text x="180" y="112" text-anchor="middle" fill="#76B900" font-size="13" font-weight="700">幅優先探索（キュー）: 左端を読む</text>
+        <text x="20" y="146" fill="#E0E0E0" font-size="12" font-weight="700">手順1</text>
+        <text x="64.0" y="151" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="80.0" y="151" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="96.0" y="151" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="112.0" y="151" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="128.0" y="151" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="144.0" y="151" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="160.0" y="151" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="51" y="165" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="51" y="181" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="51" y="197" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="51" y="213" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="51" y="229" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="51" y="245" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="51" y="261" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="57" y="155" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <text x="64.0" y="166" text-anchor="middle" fill="#111" font-size="9" font-weight="700">S</text>
+        <rect x="73" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <rect x="89" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="155" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="171" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <text x="64.0" y="182" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700">次</text>
+        <rect x="73" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="171" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="187" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="187" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="203" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="203" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="203" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="57" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="219" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="219" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="219" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="235" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="235" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="235" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="89" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="160.0" y="262" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="182" y="168" fill="#ccc" font-size="11">読んだマス (0,0)</text>
+        <text x="182" y="192" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="182" y="200" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="204.0" y="214" text-anchor="middle" fill="#76B900" font-size="10">(1,0)</text>
+        <rect x="230" y="200" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="252.0" y="214" text-anchor="middle" fill="#E0E0E0" font-size="10">(0,1)</text>
+        <text x="182" y="238" fill="#76B900" font-size="10">次に読む: (1,0)</text>
+        <text x="20" y="292" fill="#E0E0E0" font-size="12" font-weight="700">手順2</text>
+        <text x="64.0" y="297" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="80.0" y="297" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="96.0" y="297" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="112.0" y="297" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="128.0" y="297" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="144.0" y="297" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="160.0" y="297" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="51" y="311" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="51" y="327" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="51" y="343" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="51" y="359" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="51" y="375" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="51" y="391" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="51" y="407" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="57" y="301" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <text x="64.0" y="312" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">S</text>
+        <rect x="73" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <text x="80.0" y="312" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700">次</text>
+        <rect x="89" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="301" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="317" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="73" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="317" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <rect x="73" y="333" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="333" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="349" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="349" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="349" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="57" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="365" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="365" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="365" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="381" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="381" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="381" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="89" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="160.0" y="408" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="182" y="314" fill="#ccc" font-size="11">読んだマス (1,0)</text>
+        <text x="182" y="338" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="182" y="346" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="204.0" y="360" text-anchor="middle" fill="#76B900" font-size="10">(0,1)</text>
+        <rect x="230" y="346" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="252.0" y="360" text-anchor="middle" fill="#E0E0E0" font-size="10">(2,0)</text>
+        <text x="182" y="384" fill="#76B900" font-size="10">次に読む: (0,1)</text>
+        <text x="20" y="438" fill="#E0E0E0" font-size="12" font-weight="700">手順3</text>
+        <text x="64.0" y="443" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="80.0" y="443" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="96.0" y="443" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="112.0" y="443" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="128.0" y="443" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="144.0" y="443" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="160.0" y="443" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="51" y="457" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="51" y="473" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="51" y="489" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="51" y="505" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="51" y="521" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="51" y="537" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="51" y="553" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="57" y="447" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <text x="64.0" y="458" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">S</text>
+        <rect x="73" y="447" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="89" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <rect x="105" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="447" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="463" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <rect x="73" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="463" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <text x="64.0" y="490" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700">次</text>
+        <rect x="73" y="479" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="479" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="495" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="495" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="495" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="57" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="511" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="511" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="511" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="527" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="527" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="527" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="89" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="160.0" y="554" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="182" y="460" fill="#ccc" font-size="11">読んだマス (0,1)</text>
+        <text x="182" y="484" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="182" y="492" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="204.0" y="506" text-anchor="middle" fill="#76B900" font-size="10">(2,0)</text>
+        <rect x="230" y="492" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="252.0" y="506" text-anchor="middle" fill="#E0E0E0" font-size="10">(0,2)</text>
+        <text x="182" y="530" fill="#76B900" font-size="10">次に読む: (2,0)</text>
+        <text x="20" y="584" fill="#E0E0E0" font-size="12" font-weight="700">手順4</text>
+        <text x="64.0" y="589" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="80.0" y="589" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="96.0" y="589" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="112.0" y="589" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="128.0" y="589" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="144.0" y="589" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="160.0" y="589" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="51" y="603" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="51" y="619" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="51" y="635" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="51" y="651" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="51" y="667" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="51" y="683" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="51" y="699" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="57" y="593" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <text x="64.0" y="604" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">S</text>
+        <rect x="73" y="593" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <rect x="89" y="593" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <text x="96.0" y="604" text-anchor="middle" fill="#76B900" font-size="8" font-weight="700">次</text>
+        <rect x="105" y="593" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="593" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="593" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="593" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="609" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <rect x="73" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="609" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="625" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="73" y="625" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="625" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#76B900" stroke-width="2"/>
+        <rect x="73" y="641" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="641" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="121" y="641" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="57" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="657" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="657" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="657" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="673" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="89" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="105" y="673" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="137" y="673" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="57" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="73" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="89" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="105" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="121" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="137" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="153" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="160.0" y="700" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="182" y="606" fill="#ccc" font-size="11">読んだマス (2,0)</text>
+        <text x="182" y="630" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="182" y="638" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
+        <text x="204.0" y="652" text-anchor="middle" fill="#76B900" font-size="10">(0,2)</text>
+        <rect x="230" y="638" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="252.0" y="652" text-anchor="middle" fill="#E0E0E0" font-size="10">(3,0)</text>
+        <text x="182" y="676" fill="#76B900" font-size="10">次に読む: (0,2)</text>
+        <text x="525" y="112" text-anchor="middle" fill="#FFB800" font-size="13" font-weight="700">深さ優先探索（スタック）: 右端を読む</text>
+        <text x="365" y="146" fill="#E0E0E0" font-size="12" font-weight="700">手順1</text>
+        <text x="409.0" y="151" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="425.0" y="151" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="441.0" y="151" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="457.0" y="151" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="473.0" y="151" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="489.0" y="151" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="505.0" y="151" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="396" y="165" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="396" y="181" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="396" y="197" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="396" y="213" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="396" y="229" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="396" y="245" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="396" y="261" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="402" y="155" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <text x="409.0" y="166" text-anchor="middle" fill="#111" font-size="9" font-weight="700">S</text>
+        <rect x="418" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <text x="425.0" y="166" text-anchor="middle" fill="#FFB800" font-size="8" font-weight="700">次</text>
+        <rect x="434" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="155" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="155" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="171" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <rect x="418" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="171" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="171" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="187" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="187" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="187" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="203" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="203" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="203" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="203" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="402" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="219" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="219" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="219" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="219" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="235" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="235" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="235" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="235" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="434" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="251" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="505.0" y="262" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="527" y="168" fill="#ccc" font-size="11">読んだマス (0,0)</text>
+        <text x="527" y="192" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="527" y="200" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="549.0" y="214" text-anchor="middle" fill="#E0E0E0" font-size="10">(1,0)</text>
+        <rect x="575" y="200" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="597.0" y="214" text-anchor="middle" fill="#FFB800" font-size="10">(0,1)</text>
+        <text x="527" y="238" fill="#FFB800" font-size="10">次に読む: (0,1)</text>
+        <text x="365" y="292" fill="#E0E0E0" font-size="12" font-weight="700">手順2</text>
+        <text x="409.0" y="297" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="425.0" y="297" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="441.0" y="297" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="457.0" y="297" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="473.0" y="297" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="489.0" y="297" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="505.0" y="297" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="396" y="311" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="396" y="327" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="396" y="343" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="396" y="359" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="396" y="375" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="396" y="391" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="396" y="407" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="402" y="301" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <text x="409.0" y="312" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">S</text>
+        <rect x="418" y="301" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="434" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <text x="441.0" y="312" text-anchor="middle" fill="#FFB800" font-size="8" font-weight="700">次</text>
+        <rect x="450" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="301" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="301" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="317" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <rect x="418" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="317" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="317" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="333" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="333" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="333" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="349" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="349" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="349" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="349" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="402" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="365" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="365" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="365" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="365" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="381" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="381" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="381" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="381" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="434" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="397" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="505.0" y="408" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="527" y="314" fill="#ccc" font-size="11">読んだマス (0,1)</text>
+        <text x="527" y="338" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="527" y="346" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="549.0" y="360" text-anchor="middle" fill="#E0E0E0" font-size="10">(1,0)</text>
+        <rect x="575" y="346" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="597.0" y="360" text-anchor="middle" fill="#FFB800" font-size="10">(0,2)</text>
+        <text x="527" y="384" fill="#FFB800" font-size="10">次に読む: (0,2)</text>
+        <text x="365" y="438" fill="#E0E0E0" font-size="12" font-weight="700">手順3</text>
+        <text x="409.0" y="443" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="425.0" y="443" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="441.0" y="443" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="457.0" y="443" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="473.0" y="443" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="489.0" y="443" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="505.0" y="443" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="396" y="457" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="396" y="473" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="396" y="489" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="396" y="505" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="396" y="521" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="396" y="537" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="396" y="553" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="402" y="447" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <text x="409.0" y="458" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">S</text>
+        <rect x="418" y="447" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <rect x="434" y="447" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="450" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <text x="457.0" y="458" text-anchor="middle" fill="#FFB800" font-size="8" font-weight="700">次</text>
+        <rect x="466" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="447" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="447" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="463" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <rect x="418" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="463" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="463" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="479" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="479" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="479" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="495" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="495" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="495" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="495" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="402" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="511" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="511" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="511" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="511" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="527" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="527" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="527" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="527" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="434" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="543" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="505.0" y="554" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="527" y="460" fill="#ccc" font-size="11">読んだマス (0,2)</text>
+        <text x="527" y="484" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="527" y="492" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="549.0" y="506" text-anchor="middle" fill="#E0E0E0" font-size="10">(1,0)</text>
+        <rect x="575" y="492" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="597.0" y="506" text-anchor="middle" fill="#FFB800" font-size="10">(0,3)</text>
+        <text x="527" y="530" fill="#FFB800" font-size="10">次に読む: (0,3)</text>
+        <text x="365" y="584" fill="#E0E0E0" font-size="12" font-weight="700">手順4</text>
+        <text x="409.0" y="589" text-anchor="middle" fill="#666" font-size="8">0</text>
+        <text x="425.0" y="589" text-anchor="middle" fill="#666" font-size="8">1</text>
+        <text x="441.0" y="589" text-anchor="middle" fill="#666" font-size="8">2</text>
+        <text x="457.0" y="589" text-anchor="middle" fill="#666" font-size="8">3</text>
+        <text x="473.0" y="589" text-anchor="middle" fill="#666" font-size="8">4</text>
+        <text x="489.0" y="589" text-anchor="middle" fill="#666" font-size="8">5</text>
+        <text x="505.0" y="589" text-anchor="middle" fill="#666" font-size="8">6</text>
+        <text x="396" y="603" text-anchor="end" fill="#666" font-size="8">0</text>
+        <text x="396" y="619" text-anchor="end" fill="#666" font-size="8">1</text>
+        <text x="396" y="635" text-anchor="end" fill="#666" font-size="8">2</text>
+        <text x="396" y="651" text-anchor="end" fill="#666" font-size="8">3</text>
+        <text x="396" y="667" text-anchor="end" fill="#666" font-size="8">4</text>
+        <text x="396" y="683" text-anchor="end" fill="#666" font-size="8">5</text>
+        <text x="396" y="699" text-anchor="end" fill="#666" font-size="8">6</text>
+        <rect x="402" y="593" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <text x="409.0" y="604" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">S</text>
+        <rect x="418" y="593" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <rect x="434" y="593" width="14" height="14" rx="2" fill="#3a3a3a" stroke="#999" stroke-width="1"/>
+        <rect x="450" y="593" width="14" height="14" rx="2" fill="#E0E0E0" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="466" y="593" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <text x="473.0" y="604" text-anchor="middle" fill="#FFB800" font-size="8" font-weight="700">次</text>
+        <rect x="482" y="593" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="593" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="609" width="14" height="14" rx="2" fill="#141414" stroke="#FFB800" stroke-width="2"/>
+        <rect x="418" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="609" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="609" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="625" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="625" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="625" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="641" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="641" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="466" y="641" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="641" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="402" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="657" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="657" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="657" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="657" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="673" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="434" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="450" y="673" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="482" y="673" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="673" width="14" height="14" rx="2" fill="#8a6a2a" stroke="#8a6a2a" stroke-width="1"/>
+        <rect x="402" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="418" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="434" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="450" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="466" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="482" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <rect x="498" y="689" width="14" height="14" rx="2" fill="#141414" stroke="#333" stroke-width="1"/>
+        <text x="505.0" y="700" text-anchor="middle" fill="#FFB800" font-size="9" font-weight="700">G</text>
+        <text x="527" y="606" fill="#ccc" font-size="11">読んだマス (0,3)</text>
+        <text x="527" y="630" fill="#888888" font-size="10">そのあとのメモ（左が古い）</text>
+        <rect x="527" y="638" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="1"/>
+        <text x="549.0" y="652" text-anchor="middle" fill="#E0E0E0" font-size="10">(1,0)</text>
+        <rect x="575" y="638" width="44" height="20" rx="5" fill="#1A1A1A" stroke="#FFB800" stroke-width="2"/>
+        <text x="597.0" y="652" text-anchor="middle" fill="#FFB800" font-size="10">(0,4)</text>
+        <text x="527" y="676" fill="#FFB800" font-size="10">次に読む: (0,4)</text>
+        <line x1="350" y1="98" x2="350" y2="712" stroke="#333" stroke-width="1"/>
+        <text x="350" y="732" text-anchor="middle" fill="#FFB800" font-size="12" font-weight="700">幅優先探索はスタートのまわりを少しずつ広げ、深さ優先探索は (1,0) を残したまま右へ進み続ける</text>
+        </svg>
+      </div>
+
+    <div class="analogy">
+      幅優先探索は、メモの<strong>左端（いちばん古い行）</strong>を読むので、下の (1,0) と右の (0,1) を交互に読み、スタートのまわりを少しずつ広げていきます。
+      深さ優先探索は、メモの<strong>右端（いちばん新しい行）</strong>を読むので、いま書き足したばかりの右のマスへ進み続けます。
+      下の (1,0) はメモの左端に書かれたまま、行き止まりに当たるまで読まれません。
+      この1行のちがいが、調べる順番と、見つかる道のちがいになります。
+    </div>
+
     <div class="concept-box">
       <h4>幅優先探索が最短を保証する理由</h4>
       <p style="font-size:0.95rem">
@@ -206,11 +847,79 @@
       </div>
     </div>
 
+    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
+      <div class="card-header">
+        <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
+        <h3>迷路を絵で表示する道具（pygame）を入れる</h3>
+      </div>
+      <p style="font-size:0.95rem">今回の例題は、探索のようすを<strong>窓（ウィンドウ）の中のアニメーション</strong>で見せます。
+      マスが1つずつ色づき、何番目に調べたかの数字が入っていき、最後にゴールまでの通り道が白い線で示されます。
+      そのために <strong>pygame</strong>（パイゲーム: Python で絵やゲームの画面を作る道具）を使います。</p>
+      <div class="setup-step">
+        <p class="step-title">1. VS Code のターミナルで pygame を入れる（1回だけ・Windows）</p>
+        <ol>
+          <li><strong>VS Code を開く</strong>（上の「準備」で開いた AL2/No02 フォルダのままでよい）</li>
+          <li>画面いちばん上のメニューから <strong>「ターミナル」→「新しいターミナル」</strong>を選ぶ
+              （キーボードなら <strong>Ctrl + @</strong> でも開く）</li>
+          <li>画面の下に黒い（または白い）枠が開き、<code>PS C:&#92;Users&#92;あなたの名前&#92;Desktop&#92;AL2&#92;No02&gt;</code> のような行が出る。
+              これが<strong>ターミナル</strong>（文字で命令を打ちこむ場所）</li>
+          <li>その行の最後をクリックして、次の1行を<strong>そのまま打ちこむ</strong>（コピーして右クリックで貼り付けてもよい）</li>
+        </ol>
+<pre><span class="code-label">ターミナル（Windows）</span>
+py -m pip install pygame</pre>
+        <ol start="5">
+          <li><strong>Enter</strong> を押す。英語の文字が何行か流れ、数十秒〜数分かかる</li>
+          <li>最後のほうに <code>Successfully installed pygame-2.6.1</code>（数字はちがってよい）と出れば成功</li>
+          <li>入ったかを確かめる。次の1行を打ちこんで Enter を押し、<code>2.6.1</code> のような数字が出ればよい</li>
+        </ol>
+<pre><span class="code-label">ターミナル（Windows）</span>
+py -c &quot;import pygame; print(pygame.version.ver)&quot;</pre>
+        <div class="note-warn" style="margin-top:0.8rem">
+          <strong>うまくいかないとき</strong>
+          <table style="margin-top:0.4rem">
+            <tr><th>出たメッセージ</th><th>やること</th></tr>
+            <tr><td><code>'py' は、内部コマンドまたは外部コマンド…として認識されていません</code><br>
+                    または <code>py : 用語 'py' は…認識されません</code></td>
+                <td>最初の <code>py</code> を <code>python</code> に変えて、<code>python -m pip install pygame</code> を実行する</td></tr>
+            <tr><td><code>Requirement already satisfied</code></td>
+                <td>すでに入っている。何もしなくてよい</td></tr>
+            <tr><td>赤い文字のエラーで止まる（<code>error: subprocess-exited-with-error</code> など）</td>
+                <td><code>py -m pip install pygame-ce</code> を実行する（pygame の別版。使い方は同じ）</td></tr>
+            <tr><td>例題を ▷ で実行すると <code>ModuleNotFoundError: No module named 'pygame'</code></td>
+                <td>▷ が使う Python と、pygame を入れた Python がちがう。ターミナルで
+                    <code>python -m pip install pygame</code> も実行してから、もう一度 ▷ を押す</td></tr>
+          </table>
+        </div>
+        <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">Mac の人は <code>py</code> のかわりに <code>python3</code> と打つ（<code>python3 -m pip install pygame</code>）。</p>
+      </div>
+      <div class="setup-step">
+        <p class="step-title">2. 窓の操作</p>
+        <table>
+          <tr><th>キー</th><th>動き</th></tr>
+          <tr><td>スペース</td><td>自動で再生／一時停止</td></tr>
+          <tr><td>→（右矢印）</td><td>1手順だけ進める（標準課題の図を描くときに便利）</td></tr>
+          <tr><td>R</td><td>最初からやり直す</td></tr>
+          <tr><td>Esc または窓の × </td><td>終わる（窓を閉じるとプログラムも終わる）</td></tr>
+        </table>
+        <p style="font-size:0.9rem;color:#888;margin-top:0.5rem">窓に絵を描くコードは、各例題ファイルの<strong>いちばん下</strong>
+        （「ここから下は、迷路を pygame の窓に絵で表示するための道具です」と書いた行より下）に入っています。そこは読まなくてかまいません。
+        ファイルは1つだけで動くので、ほかのファイルを用意する必要はありません。
+        ターミナルに結果が出たあとで窓が開きます。窓が見当たらないときは、タスクバー（Mac は Dock）を見てください。</p>
+      </div>
+    </div>
+
+    <div class="note-warn">
+      <strong>穴埋めの注意:</strong> まちがった候補を入れると、プログラムが<strong>止まらなくなる</strong>ことがあります
+      （ターミナルに何も出ないまま動き続ける）。そのときはターミナルをクリックして <strong>Ctrl+C</strong> を押して止め、穴を見直してください。
+      たとえば、メモを読むだけで消さない書き方（<code>memo[-1]</code> や <code>stack[0]</code> など）にすると、同じ行を何度も読み続けて先へ進みません。
+    </div>
+
     <div class="concept-box" style="margin-bottom:1.5rem">
       <h4>今回のキーワード</h4>
       <table>
         <tr><th>用語</th><th>説明</th></tr>
-        <tr><td><strong style="color:#76B900">深さ優先探索</strong></td><td>行き止まりに当たるまで一方向へ進み、行き止まりなら1つ戻って別の道を試す探し方。見つかる道は最短とはかぎらない。</td></tr>
+        <tr><td><strong style="color:#76B900">幅優先探索（BFS）</strong></td><td>BFS は Breadth-First Search の略。スタートから近いマスから順に、同じ歩数のマスをすべて調べてから次の歩数へ進む探し方。見つかる道は必ず最短の歩数になる。</td></tr>
+        <tr><td><strong style="color:#76B900">深さ優先探索（DFS）</strong></td><td>DFS は Depth-First Search の略。行き止まりに当たるまで一方向へ進み、行き止まりなら、まだ調べていない道が残っているいちばん最近の分かれ道まで戻って別の道を試す探し方。見つかる道は最短とはかぎらない。</td></tr>
         <tr><td><strong style="color:#76B900">スタック</strong></td><td>あとから入れたものを先に取り出す入れもの。積み重ねた本と同じ。Pythonのリストでは <code>append()</code> で入れて <code>pop()</code> で取り出す。</td></tr>
         <tr><td><strong style="color:#76B900">キュー</strong></td><td>先に入れたものを先に取り出す入れもの。レジの行列と同じ。Pythonでは <code>deque</code> の <code>append()</code> と <code>popleft()</code> を使う。</td></tr>
         <tr><td><strong style="color:#76B900">到達可能性</strong></td><td>「ゴールへ行けるかどうか」だけを判定すること。最短の道は要らないので、深さ優先探索でも十分な場合が多い。</td></tr>
@@ -228,11 +937,13 @@
 
       <table>
         <tr><th>探索方法</th><th>メモの入れもの</th><th>取り出す命令</th><th>取り出す場所</th></tr>
-        <tr><td>幅優先探索</td><td><code>deque</code>（キュー）</td><td><code>queue.popleft()</code></td><td>いちばん古い行</td></tr>
-        <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>stack.pop()</code></td><td>いちばん新しい行</td></tr>
+        <tr><td>幅優先探索</td><td><code>deque</code>（キュー）</td><td><code>popleft()</code></td><td>いちばん古い行</td></tr>
+        <tr><td>深さ優先探索</td><td><code>list</code>（スタック）</td><td><code>pop()</code></td><td>いちばん新しい行</td></tr>
       </table>
 
 <p class="run-label">例題1（参考）── 完成したコード。コメントなしで全体の流れをつかむ。保存するなら <code>AL2-02-ex1-ref.py</code> の名前で</p>
+<details class="code-fold" open>
+<summary><span class="fold-name">AL2-02-ex1-ref.py</span><span class="fold-meta">241行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="0"><span class="code-label">Python ── AL2-02-ex1-ref.py</span>
 maze = [
     <span class="str">&quot;S.....#&quot;</span>,
@@ -254,14 +965,10 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
         <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
             goal = (r, c)
 
-<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> maze:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
-<span class="fn">print</span>()
-
 stack = [start]
 came_from = {start: <span class="kw">None</span>}
 visited_order = []
+memo_log = []
 
 <span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
     current = stack.pop()
@@ -281,6 +988,7 @@ visited_order = []
             <span class="kw">continue</span>
         came_from[(nr, nc)] = current
         stack.append((nr, nc))
+    memo_log.append((current, <span class="fn">list</span>(stack)))
 
 path = []
 node = goal
@@ -291,29 +999,216 @@ path.reverse()
 
 <span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路の歩数:&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;調べたマスの数:&quot;</span>, <span class="fn">len</span>(visited_order), <span class="str">&quot;マス&quot;</span>)
-<span class="fn">print</span>()
 
-picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-<span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
 
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路（* が通り道）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> picture:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
-      <p class="run-label">▶ 実行結果</p>
+<span class="cmt"># ---- ここから下は、迷路を窓に絵で表示するための道具（読まなくてよい） ----</span>
+<span class="kw">import</span> os
+
+os.environ.setdefault(<span class="str">&quot;PYGAME_HIDE_SUPPORT_PROMPT&quot;</span>, <span class="str">&quot;1&quot;</span>)
+<span class="kw">import</span> pygame
+
+CELL = <span class="num">48</span>
+STEP_MS = <span class="num">350</span>
+BG = (<span class="num">18</span>, <span class="num">18</span>, <span class="num">24</span>)
+FLOOR = (<span class="num">38</span>, <span class="num">40</span>, <span class="num">52</span>)
+WALL = (<span class="num">92</span>, <span class="num">98</span>, <span class="num">118</span>)
+WALL_DARK = (<span class="num">66</span>, <span class="num">70</span>, <span class="num">86</span>)
+TEXT = (<span class="num">230</span>, <span class="num">230</span>, <span class="num">235</span>)
+SUB = (<span class="num">150</span>, <span class="num">150</span>, <span class="num">160</span>)
+COLORS = [(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>), (<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)]
+FONT_FILES = [
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/Hiragino Sans GB.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/meiryo.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/YuGothM.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/msgothic.ttc&quot;</span>,
+]
+FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notosanscjkjp,notosansjp&quot;</span>
+
+
+<span class="kw">def</span> <span class="fn">_font</span>(size, bold=<span class="kw">False</span>):
+    <span class="kw">for</span> path <span class="kw">in</span> FONT_FILES:
+        <span class="kw">if</span> os.path.exists(path):
+            <span class="kw">return</span> pygame.font.Font(path, size)
+    <span class="kw">return</span> pygame.font.SysFont(FONT_NAMES, size, bold=bold)
+
+
+<span class="kw">def</span> <span class="fn">_memo_at</span>(log, goal, k):
+    <span class="str">&quot;&quot;&quot;k 手順目（1から）に読んだマスと、そのあとのメモ。ゴールを読んだ手順は記録がないので作る。&quot;&quot;&quot;</span>
+    <span class="kw">if</span> k - <span class="num">1</span> &lt; <span class="fn">len</span>(log):
+        <span class="kw">return</span> log[k - <span class="num">1</span>]
+    memo = [cell <span class="kw">for</span> cell <span class="kw">in</span> log[-<span class="num">1</span>][<span class="num">1</span>] <span class="kw">if</span> cell != goal] <span class="kw">if</span> log <span class="kw">else</span> []
+    <span class="kw">return</span> goal, memo
+
+
+<span class="kw">def</span> <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, x0, y0, color):
+    title, order, path, log = run
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    goal = <span class="fn">next</span>((r, c) <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows) <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols) <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>)
+    k = <span class="fn">min</span>(k, <span class="fn">len</span>(order))
+    done = k == <span class="fn">len</span>(order)
+    number = {cell: i + <span class="num">1</span> <span class="kw">for</span> i, cell <span class="kw">in</span> <span class="fn">enumerate</span>(order[:k])}
+    current, memo = <span class="fn">_memo_at</span>(log, goal, k) <span class="kw">if</span> k &gt; <span class="num">0</span> <span class="kw">else</span> (<span class="kw">None</span>, [])
+    next_cell = <span class="kw">None</span> <span class="kw">if</span> done <span class="kw">else</span> order[k]
+
+    big, mid, small = fonts
+    screen.blit(big.render(title, <span class="kw">True</span>, color), (x0, y0))
+    gy = y0 + <span class="num">44</span>
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        t = small.render(<span class="fn">str</span>(c), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">22</span> + c * CELL + CELL // <span class="num">2</span> - t.get_width() // <span class="num">2</span>, gy - <span class="num">2</span>))
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        t = small.render(<span class="fn">str</span>(r), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">4</span>, gy + <span class="num">18</span> + r * CELL + CELL // <span class="num">2</span> - t.get_height() // <span class="num">2</span>))
+    gx, gy = x0 + <span class="num">22</span>, gy + <span class="num">18</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                pygame.draw.rect(screen, WALL, rect, border_radius=<span class="num">6</span>)
+                pygame.draw.rect(screen, WALL_DARK, rect.inflate(-<span class="num">14</span>, -<span class="num">14</span>), border_radius=<span class="num">4</span>)
+                <span class="kw">continue</span>
+            fill = FLOOR
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                fill = <span class="fn">tuple</span>(<span class="fn">int</span>(f * <span class="num">0.55</span> + col * <span class="num">0.45</span>) <span class="kw">for</span> f, col <span class="kw">in</span> <span class="fn">zip</span>(FLOOR, color))
+            pygame.draw.rect(screen, fill, rect, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> memo:
+                pygame.draw.rect(screen, color, rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) == current <span class="kw">and</span> <span class="kw">not</span> done:
+                pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">4</span>, border_radius=<span class="num">6</span>)
+    <span class="kw">if</span> done <span class="kw">and</span> <span class="fn">len</span>(path) &gt; <span class="num">1</span>:
+        <span class="kw">for</span> r, c <span class="kw">in</span> path:
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+        points = [(gx + c * CELL + CELL // <span class="num">2</span>, gy + r * CELL + CELL // <span class="num">2</span>) <span class="kw">for</span> r, c <span class="kw">in</span> path]
+        pygame.draw.lines(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), <span class="kw">False</span>, points, <span class="num">3</span>)
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            <span class="kw">if</span> ch <span class="kw">in</span> <span class="str">&quot;SG&quot;</span>:
+                label = small.render(ch, <span class="kw">True</span>, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>) <span class="kw">if</span> ch == <span class="str">&quot;S&quot;</span> <span class="kw">else</span> (<span class="num">255</span>, <span class="num">215</span>, <span class="num">64</span>))
+                screen.blit(label, (rect.x + <span class="num">3</span>, rect.y))
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                t = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, TEXT)
+                shadow = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, (<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>))
+                tx, ty = rect.centerx - t.get_width() // <span class="num">2</span>, rect.centery - t.get_height() // <span class="num">2</span> + <span class="num">4</span>
+                screen.blit(shadow, (tx + <span class="num">1</span>, ty + <span class="num">1</span>))
+                screen.blit(t, (tx, ty))
+            <span class="kw">if</span> (r, c) == next_cell:
+                t = small.render(<span class="str">&quot;次&quot;</span>, <span class="kw">True</span>, color)
+                screen.blit(t, (rect.right - t.get_width() - <span class="num">3</span>, rect.y + <span class="num">1</span>))
+    by = gy + rows * CELL + <span class="num">12</span>
+    <span class="kw">if</span> k == <span class="num">0</span>:
+        info = <span class="str">&quot;スペースで開始／→で1手順&quot;</span>
+    <span class="kw">elif</span> done:
+        info = <span class="str">f&quot;ゴール！ 通り道 {len(path) - 1}歩 ／ 調べたマス {len(order)}マス&quot;</span>
+    <span class="kw">else</span>:
+        info = <span class="str">f&quot;手順{k}  読んだマス ({current[0]},{current[1]})&quot;</span>
+    screen.blit(mid.render(info, <span class="kw">True</span>, TEXT), (x0, by))
+    screen.blit(small.render(<span class="str">&quot;メモ（左が古い行、右が新しい行）&quot;</span>, <span class="kw">True</span>, SUB), (x0, by + <span class="num">30</span>))
+    bx = x0
+    width = cols * CELL + <span class="num">22</span>
+    <span class="kw">for</span> i, (r, c) <span class="kw">in</span> <span class="fn">enumerate</span>(memo):
+        t = small.render(<span class="str">f&quot;({r},{c})&quot;</span>, <span class="kw">True</span>, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> TEXT)
+        w = t.get_width() + <span class="num">12</span>
+        <span class="kw">if</span> bx + w &gt; x0 + width - <span class="num">20</span>:
+            screen.blit(small.render(<span class="str">&quot;…&quot;</span>, <span class="kw">True</span>, SUB), (bx, by + <span class="num">56</span>))
+            <span class="kw">break</span>
+        box = pygame.Rect(bx, by + <span class="num">52</span>, w, <span class="num">26</span>)
+        pygame.draw.rect(screen, (<span class="num">30</span>, <span class="num">30</span>, <span class="num">38</span>), box, border_radius=<span class="num">5</span>)
+        pygame.draw.rect(screen, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> (<span class="num">80</span>, <span class="num">80</span>, <span class="num">90</span>), box,
+                         width=<span class="num">2</span> <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> <span class="num">1</span>, border_radius=<span class="num">5</span>)
+        screen.blit(t, (bx + <span class="num">6</span>, by + <span class="num">55</span>))
+        bx += w + <span class="num">4</span>
+
+
+<span class="kw">def</span> <span class="fn">show_window</span>(maze, runs):
+    <span class="str">&quot;&quot;&quot;runs の探索を横に並べて、1手順ずつアニメーション表示する。窓を閉じると終わる。&quot;&quot;&quot;</span>
+    <span class="kw">global</span> CELL
+    pygame.init()
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    CELL = <span class="fn">max</span>(<span class="num">20</span>, <span class="fn">min</span>(<span class="num">48</span>, <span class="num">1100</span> // (<span class="fn">len</span>(runs) * cols + <span class="num">1</span>), <span class="num">620</span> // (rows + <span class="num">1</span>)))
+    panel_w = <span class="fn">max</span>(cols * CELL + <span class="num">22</span>, <span class="num">340</span>)
+    panel_h = <span class="num">44</span> + <span class="num">18</span> + rows * CELL + <span class="num">100</span>
+    width = <span class="fn">max</span>(<span class="num">30</span> + <span class="fn">len</span>(runs) * (panel_w + <span class="num">30</span>), <span class="num">800</span>)
+    height = panel_h + <span class="num">84</span>
+    capture = os.environ.get(<span class="str">&quot;AL2_CAPTURE&quot;</span>)
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption(<span class="str">&quot;迷路の探索&quot;</span>)
+    fonts = (<span class="fn">_font</span>(<span class="num">22</span>, <span class="kw">True</span>), <span class="fn">_font</span>(<span class="num">18</span>), <span class="fn">_font</span>(<span class="num">14</span>))
+    longest = <span class="fn">max</span>(<span class="fn">len</span>(run[<span class="num">1</span>]) <span class="kw">for</span> run <span class="kw">in</span> runs)
+    k = longest <span class="kw">if</span> capture <span class="kw">else</span> <span class="num">0</span>
+    playing = <span class="kw">False</span>
+    clock = pygame.time.Clock()
+    last = pygame.time.get_ticks()
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="kw">for</span> event <span class="kw">in</span> pygame.event.get():
+            <span class="kw">if</span> event.type == pygame.QUIT:
+                pygame.quit()
+                <span class="kw">return</span>
+            <span class="kw">if</span> event.type == pygame.KEYDOWN:
+                <span class="kw">if</span> event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    <span class="kw">return</span>
+                <span class="kw">if</span> event.key == pygame.K_SPACE:
+                    playing = <span class="kw">not</span> playing
+                <span class="kw">if</span> event.key == pygame.K_RIGHT <span class="kw">and</span> k &lt; longest:
+                    k += <span class="num">1</span>
+                    playing = <span class="kw">False</span>
+                <span class="kw">if</span> event.key == pygame.K_r:
+                    k, playing = <span class="num">0</span>, <span class="kw">False</span>
+        <span class="kw">if</span> playing <span class="kw">and</span> pygame.time.get_ticks() - last &gt;= STEP_MS:
+            last = pygame.time.get_ticks()
+            <span class="kw">if</span> k &lt; longest:
+                k += <span class="num">1</span>
+            <span class="kw">else</span>:
+                playing = <span class="kw">False</span>
+        screen.fill(BG)
+        <span class="kw">for</span> i, run <span class="kw">in</span> <span class="fn">enumerate</span>(runs):
+            <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, <span class="num">30</span> + i * (panel_w + <span class="num">30</span>), <span class="num">20</span>,
+                        COLORS[<span class="num">1</span>] <span class="kw">if</span> run[<span class="num">0</span>].startswith(<span class="str">&quot;深さ&quot;</span>) <span class="kw">else</span> COLORS[<span class="num">0</span>])
+        legend = fonts[<span class="num">2</span>].render(<span class="str">&quot;色つき = 調べたマス（数字は何番目か）   枠だけ = メモにあるマス   白い線 = 通り道   灰色のブロック = 壁&quot;</span>,
+                                 <span class="kw">True</span>, SUB)
+        screen.blit(legend, (<span class="num">30</span>, height - <span class="num">56</span>))
+        hint = fonts[<span class="num">2</span>].render(<span class="str">&quot;スペース: 再生／一時停止   →: 1手順すすめる   R: 最初から   Esc: 終わる&quot;</span>, <span class="kw">True</span>, SUB)
+        screen.blit(hint, (<span class="num">30</span>, height - <span class="num">30</span>))
+        pygame.display.flip()
+        <span class="kw">if</span> capture:
+            pygame.image.save(screen, capture)
+            pygame.quit()
+            <span class="kw">return</span>
+        clock.tick(<span class="num">30</span>)
+
+
+<span class="fn">show_window</span>(maze, [(<span class="str">&quot;深さ優先探索&quot;</span>, visited_order, path, memo_log)])</pre>
+</details>
+      <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a02_ex1-ref_result.png" alt="AL2-02-ex1-ref.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S.....# / .####.# / .#....# / .#.##.. / .#..#.# / .##.#.# / ......G /  / 深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="448" loading="lazy">
+        <img src="images/a02_ex1-ref_result.png" alt="AL2-02-ex1-ref.py の実行結果。深さ優先探索が見つけた経路の歩数: 18 歩 / 調べたマスの数: 19 マス" width="380" height="88" loading="lazy">
       </div>
-      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。迷路の絵を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
+      <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
+      <div class="run-capture">
+        <img src="images/a02_ex1-ref_window.png" alt="AL2-02-ex1-ref.py を実行して開いた窓（最後まで進めたところ）" width="800" height="582" loading="lazy">
+      </div>
+      <p class="run-note">深さ優先探索が見つけた道は<strong>18歩</strong>でした。同じ迷路で幅優先探索が見つける道は12歩なので、6歩も長い道になっています。窓の図を見ると、上の行を右へ進んでから下りてくる大回りの道になっています。一方で調べたマスの数は<strong>19マス</strong>だけでした。</p>
 <p class="run-label" style="margin-top:1.8rem">例題1（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-02-ex1.py</code> の名前で保存して実行する</p>
+<details class="code-fold" open>
+<summary><span class="fold-name">AL2-02-ex1.py</span><span class="fold-meta">280行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="2"><span class="code-label">Python ── AL2-02-ex1.py</span>
 <span class="cmt"># 深さ優先探索で迷路を解く</span>
 <span class="cmt"># 幅優先探索との違いは「メモのどこを読むか」だけ。</span>
-<span class="cmt">#   幅優先探索: いちばん古い行を読む → popleft()</span>
+<span class="cmt">#   幅優先探索: いちばん古い行（先に書いた行）を読む → popleft()</span>
+<span class="cmt">#     （popleft() は deque の先頭を取り出す命令。前期の幅優先探索で使った）</span>
 <span class="cmt">#   深さ優先探索: いちばん新しい行を読む → pop()</span>
 
 <span class="cmt"># S = スタート、G = ゴール、# = 壁、. = 通路</span>
+<span class="cmt"># 文字列のリスト。maze[行][列] で1マスの文字が取り出せる（行・列は 0 から数える）</span>
+<span class="cmt"># 例 maze[0][0] は &quot;S&quot;、maze[0][3] は &quot;#&quot;</span>
 maze = [
     <span class="str">&quot;S..#...&quot;</span>,
     <span class="str">&quot;.#.#.#.&quot;</span>,
@@ -324,9 +1219,10 @@ maze = [
     <span class="str">&quot;.#....G&quot;</span>,
 ]
 
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+rows = <span class="fn">len</span>(maze)        <span class="cmt"># 行の数（縦のマス数）</span>
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])     <span class="cmt"># 列の数（横のマス数）。1行目の文字数で数える</span>
 
+<span class="cmt"># S と G の場所をさがす。場所は (行, 列) の組（タプル）で表す</span>
 <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
     <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
         <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
@@ -334,55 +1230,257 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
         <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>:
             goal = (r, c)
 
-<span class="fn">print</span>(<span class="str">&quot;迷路（S=スタート  G=ゴール  #=壁  .=通路）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> maze:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + line)
-<span class="fn">print</span>()
-
 <span class="cmt"># --- 深さ優先探索 ---</span>
-stack = [start]                 <span class="cmt"># これから調べる場所を書いたメモ</span>
-came_from = {start: <span class="kw">None</span>}       <span class="cmt"># 「その場所へ、どこから来たか」の記録</span>
+<span class="cmt"># stack は「これから調べる場所」を書いたメモ。最初はスタートだけが書いてある。</span>
+<span class="cmt"># 分かれ道では行ける場所が2つ以上見えるが、体は1つなので、</span>
+<span class="cmt"># 1つに進むあいだ、残りは「あとで見る場所」としてメモに書いておく。</span>
+<span class="cmt"># 深さ優先探索ではメモを積み重ねた本のように使う（スタック: 最後に置いたものを最初に取る）</span>
+stack = [start]
+<span class="cmt"># came_from は「その場所へ、どこから来たか」の記録（辞書）。</span>
+<span class="cmt"># 例 came_from[(0, 1)] = (0, 0) なら「(0,1) へは (0,0) から来た」</span>
+came_from = {start: <span class="kw">None</span>}
 visited_order = []              <span class="cmt"># 調べた順番を記録する</span>
+memo_log = []                   <span class="cmt"># 手順ごとの「読んだマス」と「そのあとのメモ」の記録（窓の表示に使う）</span>
 
-<span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:
+<span class="kw">while</span> <span class="fn">len</span>(stack) &gt; <span class="num">0</span>:           <span class="cmt"># メモが空になるまでくり返す</span>
+    <span class="cmt"># pop() はリストの最後（いちばん新しく書いた行）を取り出して消す。</span>
+    <span class="cmt"># だから、いま見つけたばかりの道の先へ、どんどん進んでいく</span>
     current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
     visited_order.append(current)
-    <span class="kw">if</span> current == goal:
+    <span class="kw">if</span> current == goal:         <span class="cmt"># ゴールを読んだら終わり（break はくり返しを抜ける）</span>
         <span class="kw">break</span>
 
-    r, c = current
+    r, c = current              <span class="cmt"># (行, 列) の組を、r（行）と c（列）の2つの変数に分けて入れる</span>
+    <span class="cmt"># (-1, 0) は上、(1, 0) は下、(0, -1) は左、(0, 1) は右へ1マス動くことを表す</span>
+    <span class="cmt"># for dr, dc in ... は、組 (-1, 0) を取り出して dr = -1、dc = 0 のように2つの変数に分けて入れる</span>
     <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
         nr = r + dr
         nc = c + dc
+        <span class="cmt"># 迷路の外に出てしまう場所は飛ばす（continue は「この回を飛ばして次へ」）</span>
         <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
             <span class="kw">continue</span>
-        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:     <span class="cmt"># 壁も飛ばす</span>
             <span class="kw">continue</span>
+        <span class="cmt"># すでにメモに書いた場所をもう一度書くと、同じマスを何度も調べてしまうので飛ばす</span>
         <span class="kw">if</span> (nr, nc) <span class="kw">in</span> came_from:
             <span class="kw">continue</span>
         came_from[(nr, nc)] = current
         <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
+    <span class="cmt"># list(stack) でメモの中身をコピーして記録する。stack はこのあとも書き換わるので、コピーしないと残らない</span>
+    memo_log.append((current, <span class="fn">list</span>(stack)))
 
 <span class="cmt"># --- ゴールからスタートへ逆にたどって経路を復元する ---</span>
 path = []
 node = goal
+<span class="cmt"># None は「何もない」を表す特別な値。スタートの came_from は None なので、そこで止まる</span>
 <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
     path.append(node)
     node = came_from[node]
-path.reverse()
+path.reverse()              <span class="cmt"># ゴール→スタートの順を、スタート→ゴールの順に直す</span>
 
+<span class="cmt"># 歩数は「通ったマスの数 - 1」（スタートのマスは歩数に数えない）</span>
 <span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路の歩数:&quot;</span>, <span class="fn">len</span>(path) - <span class="num">1</span>, <span class="str">&quot;歩&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;調べたマスの数:&quot;</span>, <span class="fn">len</span>(visited_order), <span class="str">&quot;マス&quot;</span>)
-<span class="fn">print</span>()
 
-picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-<span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-    <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-        picture[r][c] = <span class="str">&quot;*&quot;</span>
 
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索が見つけた経路（* が通り道）&quot;</span>)
-<span class="kw">for</span> line <span class="kw">in</span> picture:
-    <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))</pre>
+<span class="cmt"># ============================================================</span>
+<span class="cmt"># ここから下は、迷路を pygame の窓に絵で表示するための道具です。</span>
+<span class="cmt"># 中身は読まなくてかまいません（アルゴリズムは上の部分にあります）。</span>
+<span class="cmt"># 操作: スペース = 再生／一時停止   → = 1手順すすめる   R = 最初から   Esc = 終わる</span>
+<span class="cmt"># ============================================================</span>
+<span class="kw">import</span> os
+
+os.environ.setdefault(<span class="str">&quot;PYGAME_HIDE_SUPPORT_PROMPT&quot;</span>, <span class="str">&quot;1&quot;</span>)   <span class="cmt"># pygame のあいさつ文を出さない</span>
+<span class="kw">import</span> pygame
+
+CELL = <span class="num">48</span>                       <span class="cmt"># 1マスの大きさ（ピクセル）</span>
+STEP_MS = <span class="num">350</span>                   <span class="cmt"># 1手順あたりの時間（ミリ秒）</span>
+BG = (<span class="num">18</span>, <span class="num">18</span>, <span class="num">24</span>)
+FLOOR = (<span class="num">38</span>, <span class="num">40</span>, <span class="num">52</span>)
+WALL = (<span class="num">92</span>, <span class="num">98</span>, <span class="num">118</span>)
+WALL_DARK = (<span class="num">66</span>, <span class="num">70</span>, <span class="num">86</span>)
+TEXT = (<span class="num">230</span>, <span class="num">230</span>, <span class="num">235</span>)
+SUB = (<span class="num">150</span>, <span class="num">150</span>, <span class="num">160</span>)
+COLORS = [(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>), (<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)]     <span class="cmt"># 1つ目の探索は緑、2つ目は橙</span>
+<span class="cmt"># 日本語が出せるフォントの場所（Mac → Windows の順にさがす）</span>
+FONT_FILES = [
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/Hiragino Sans GB.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/meiryo.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/YuGothM.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/msgothic.ttc&quot;</span>,
+]
+FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notosanscjkjp,notosansjp&quot;</span>
+
+
+<span class="kw">def</span> <span class="fn">_font</span>(size, bold=<span class="kw">False</span>):
+    <span class="kw">for</span> path <span class="kw">in</span> FONT_FILES:
+        <span class="kw">if</span> os.path.exists(path):
+            <span class="kw">return</span> pygame.font.Font(path, size)
+    <span class="kw">return</span> pygame.font.SysFont(FONT_NAMES, size, bold=bold)
+
+
+<span class="kw">def</span> <span class="fn">_memo_at</span>(log, goal, k):
+    <span class="str">&quot;&quot;&quot;k 手順目（1から）に読んだマスと、そのあとのメモ。ゴールを読んだ手順は記録がないので作る。&quot;&quot;&quot;</span>
+    <span class="kw">if</span> k - <span class="num">1</span> &lt; <span class="fn">len</span>(log):
+        <span class="kw">return</span> log[k - <span class="num">1</span>]
+    memo = [cell <span class="kw">for</span> cell <span class="kw">in</span> log[-<span class="num">1</span>][<span class="num">1</span>] <span class="kw">if</span> cell != goal] <span class="kw">if</span> log <span class="kw">else</span> []
+    <span class="kw">return</span> goal, memo
+
+
+<span class="kw">def</span> <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, x0, y0, color):
+    title, order, path, log = run
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    goal = <span class="fn">next</span>((r, c) <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows) <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols) <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>)
+    k = <span class="fn">min</span>(k, <span class="fn">len</span>(order))
+    done = k == <span class="fn">len</span>(order)
+    number = {cell: i + <span class="num">1</span> <span class="kw">for</span> i, cell <span class="kw">in</span> <span class="fn">enumerate</span>(order[:k])}
+    current, memo = <span class="fn">_memo_at</span>(log, goal, k) <span class="kw">if</span> k &gt; <span class="num">0</span> <span class="kw">else</span> (<span class="kw">None</span>, [])
+    next_cell = <span class="kw">None</span> <span class="kw">if</span> done <span class="kw">else</span> order[k]     <span class="cmt"># 次の手順で読まれるマス</span>
+
+    big, mid, small = fonts
+    screen.blit(big.render(title, <span class="kw">True</span>, color), (x0, y0))
+    gy = y0 + <span class="num">44</span>
+    <span class="cmt"># 列・行の番号</span>
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        t = small.render(<span class="fn">str</span>(c), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">22</span> + c * CELL + CELL // <span class="num">2</span> - t.get_width() // <span class="num">2</span>, gy - <span class="num">2</span>))
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        t = small.render(<span class="fn">str</span>(r), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">4</span>, gy + <span class="num">18</span> + r * CELL + CELL // <span class="num">2</span> - t.get_height() // <span class="num">2</span>))
+    gx, gy = x0 + <span class="num">22</span>, gy + <span class="num">18</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                pygame.draw.rect(screen, WALL, rect, border_radius=<span class="num">6</span>)
+                pygame.draw.rect(screen, WALL_DARK, rect.inflate(-<span class="num">14</span>, -<span class="num">14</span>), border_radius=<span class="num">4</span>)
+                <span class="kw">continue</span>
+            fill = FLOOR
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                fill = <span class="fn">tuple</span>(<span class="fn">int</span>(f * <span class="num">0.55</span> + col * <span class="num">0.45</span>) <span class="kw">for</span> f, col <span class="kw">in</span> <span class="fn">zip</span>(FLOOR, color))
+            pygame.draw.rect(screen, fill, rect, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> memo:
+                pygame.draw.rect(screen, color, rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) == current <span class="kw">and</span> <span class="kw">not</span> done:
+                pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">4</span>, border_radius=<span class="num">6</span>)
+    <span class="cmt"># 通り道（最後まで調べ終えたら、白い枠と線で示す）</span>
+    <span class="kw">if</span> done <span class="kw">and</span> <span class="fn">len</span>(path) &gt; <span class="num">1</span>:
+        <span class="kw">for</span> r, c <span class="kw">in</span> path:
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+        points = [(gx + c * CELL + CELL // <span class="num">2</span>, gy + r * CELL + CELL // <span class="num">2</span>) <span class="kw">for</span> r, c <span class="kw">in</span> path]
+        pygame.draw.lines(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), <span class="kw">False</span>, points, <span class="num">3</span>)
+    <span class="cmt"># マスの中の文字（S・G・調べた番号・次）</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            <span class="kw">if</span> ch <span class="kw">in</span> <span class="str">&quot;SG&quot;</span>:
+                label = small.render(ch, <span class="kw">True</span>, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>) <span class="kw">if</span> ch == <span class="str">&quot;S&quot;</span> <span class="kw">else</span> (<span class="num">255</span>, <span class="num">215</span>, <span class="num">64</span>))
+                screen.blit(label, (rect.x + <span class="num">3</span>, rect.y))
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                t = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, TEXT)
+                shadow = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, (<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>))
+                tx, ty = rect.centerx - t.get_width() // <span class="num">2</span>, rect.centery - t.get_height() // <span class="num">2</span> + <span class="num">4</span>
+                screen.blit(shadow, (tx + <span class="num">1</span>, ty + <span class="num">1</span>))
+                screen.blit(t, (tx, ty))
+            <span class="kw">if</span> (r, c) == next_cell:
+                t = small.render(<span class="str">&quot;次&quot;</span>, <span class="kw">True</span>, color)
+                screen.blit(t, (rect.right - t.get_width() - <span class="num">3</span>, rect.y + <span class="num">1</span>))
+    <span class="cmt"># 下の説明</span>
+    by = gy + rows * CELL + <span class="num">12</span>
+    <span class="kw">if</span> k == <span class="num">0</span>:
+        info = <span class="str">&quot;スペースで開始／→で1手順&quot;</span>
+    <span class="kw">elif</span> done:
+        info = <span class="str">f&quot;ゴール！ 通り道 {len(path) - 1}歩 ／ 調べたマス {len(order)}マス&quot;</span>
+    <span class="kw">else</span>:
+        info = <span class="str">f&quot;手順{k}  読んだマス ({current[0]},{current[1]})&quot;</span>
+    screen.blit(mid.render(info, <span class="kw">True</span>, TEXT), (x0, by))
+    screen.blit(small.render(<span class="str">&quot;メモ（左が古い行、右が新しい行）&quot;</span>, <span class="kw">True</span>, SUB), (x0, by + <span class="num">30</span>))
+    bx = x0
+    width = cols * CELL + <span class="num">22</span>
+    <span class="kw">for</span> i, (r, c) <span class="kw">in</span> <span class="fn">enumerate</span>(memo):
+        t = small.render(<span class="str">f&quot;({r},{c})&quot;</span>, <span class="kw">True</span>, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> TEXT)
+        w = t.get_width() + <span class="num">12</span>
+        <span class="kw">if</span> bx + w &gt; x0 + width - <span class="num">20</span>:
+            screen.blit(small.render(<span class="str">&quot;…&quot;</span>, <span class="kw">True</span>, SUB), (bx, by + <span class="num">56</span>))
+            <span class="kw">break</span>
+        box = pygame.Rect(bx, by + <span class="num">52</span>, w, <span class="num">26</span>)
+        pygame.draw.rect(screen, (<span class="num">30</span>, <span class="num">30</span>, <span class="num">38</span>), box, border_radius=<span class="num">5</span>)
+        pygame.draw.rect(screen, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> (<span class="num">80</span>, <span class="num">80</span>, <span class="num">90</span>), box,
+                         width=<span class="num">2</span> <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> <span class="num">1</span>, border_radius=<span class="num">5</span>)
+        screen.blit(t, (bx + <span class="num">6</span>, by + <span class="num">55</span>))
+        bx += w + <span class="num">4</span>
+
+
+<span class="kw">def</span> <span class="fn">show_window</span>(maze, runs):
+    <span class="str">&quot;&quot;&quot;runs の探索を横に並べて、1手順ずつアニメーション表示する。窓を閉じると終わる。&quot;&quot;&quot;</span>
+    <span class="kw">global</span> CELL
+    pygame.init()
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    <span class="cmt"># 大きな迷路でも窓が画面に収まるように、マスの大きさを決める（最大48、最小20ピクセル）</span>
+    CELL = <span class="fn">max</span>(<span class="num">20</span>, <span class="fn">min</span>(<span class="num">48</span>, <span class="num">1100</span> // (<span class="fn">len</span>(runs) * cols + <span class="num">1</span>), <span class="num">620</span> // (rows + <span class="num">1</span>)))
+    panel_w = <span class="fn">max</span>(cols * CELL + <span class="num">22</span>, <span class="num">340</span>)
+    panel_h = <span class="num">44</span> + <span class="num">18</span> + rows * CELL + <span class="num">100</span>
+    width = <span class="fn">max</span>(<span class="num">30</span> + <span class="fn">len</span>(runs) * (panel_w + <span class="num">30</span>), <span class="num">800</span>)
+    height = panel_h + <span class="num">84</span>
+    capture = os.environ.get(<span class="str">&quot;AL2_CAPTURE&quot;</span>)      <span class="cmt"># 授業ページの画像を作るときだけ使う</span>
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption(<span class="str">&quot;迷路の探索&quot;</span>)
+    fonts = (<span class="fn">_font</span>(<span class="num">22</span>, <span class="kw">True</span>), <span class="fn">_font</span>(<span class="num">18</span>), <span class="fn">_font</span>(<span class="num">14</span>))
+    longest = <span class="fn">max</span>(<span class="fn">len</span>(run[<span class="num">1</span>]) <span class="kw">for</span> run <span class="kw">in</span> runs)
+    k = longest <span class="kw">if</span> capture <span class="kw">else</span> <span class="num">0</span>
+    playing = <span class="kw">False</span>
+    clock = pygame.time.Clock()
+    last = pygame.time.get_ticks()
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="kw">for</span> event <span class="kw">in</span> pygame.event.get():
+            <span class="kw">if</span> event.type == pygame.QUIT:
+                pygame.quit()
+                <span class="kw">return</span>
+            <span class="kw">if</span> event.type == pygame.KEYDOWN:
+                <span class="kw">if</span> event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    <span class="kw">return</span>
+                <span class="kw">if</span> event.key == pygame.K_SPACE:
+                    playing = <span class="kw">not</span> playing
+                <span class="kw">if</span> event.key == pygame.K_RIGHT <span class="kw">and</span> k &lt; longest:
+                    k += <span class="num">1</span>
+                    playing = <span class="kw">False</span>
+                <span class="kw">if</span> event.key == pygame.K_r:
+                    k, playing = <span class="num">0</span>, <span class="kw">False</span>
+        <span class="kw">if</span> playing <span class="kw">and</span> pygame.time.get_ticks() - last &gt;= STEP_MS:
+            last = pygame.time.get_ticks()
+            <span class="kw">if</span> k &lt; longest:
+                k += <span class="num">1</span>
+            <span class="kw">else</span>:
+                playing = <span class="kw">False</span>
+        screen.fill(BG)
+        <span class="kw">for</span> i, run <span class="kw">in</span> <span class="fn">enumerate</span>(runs):
+            <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, <span class="num">30</span> + i * (panel_w + <span class="num">30</span>), <span class="num">20</span>,
+                        COLORS[<span class="num">1</span>] <span class="kw">if</span> run[<span class="num">0</span>].startswith(<span class="str">&quot;深さ&quot;</span>) <span class="kw">else</span> COLORS[<span class="num">0</span>])
+        legend = fonts[<span class="num">2</span>].render(<span class="str">&quot;色つき = 調べたマス（数字は何番目か）   枠だけ = メモにあるマス   白い線 = 通り道   灰色のブロック = 壁&quot;</span>,
+                                 <span class="kw">True</span>, SUB)
+        screen.blit(legend, (<span class="num">30</span>, height - <span class="num">56</span>))
+        hint = fonts[<span class="num">2</span>].render(<span class="str">&quot;スペース: 再生／一時停止   →: 1手順すすめる   R: 最初から   Esc: 終わる&quot;</span>, <span class="kw">True</span>, SUB)
+        screen.blit(hint, (<span class="num">30</span>, height - <span class="num">30</span>))
+        pygame.display.flip()
+        <span class="kw">if</span> capture:
+            pygame.image.save(screen, capture)
+            pygame.quit()
+            <span class="kw">return</span>
+        clock.tick(<span class="num">30</span>)
+
+<span class="cmt"># --- 窓を開いて、深さ優先探索が進むようすをアニメーション表示する ---</span>
+<span class="cmt"># マスの数字は「何番目に調べたか」。最後まで進むと、通り道が線で示される。</span>
+<span class="cmt"># スペースで再生／一時停止、→ で1手順ずつ進む。窓を閉じるとプログラムが終わる</span>
+<span class="fn">show_window</span>(maze, [(<span class="str">&quot;深さ優先探索&quot;</span>, visited_order, path, memo_log)])</pre>
+</details>
       <div class="concept-box" style="margin-top:0.8rem">
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
@@ -394,9 +1492,13 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-      <p class="run-label">▶ 実行結果</p>
+      <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。迷路（S=スタート  G=ゴール  #=壁  .=通路） / S..#... / .#.#.#. / .#...#. / .####.. / ...#.#. / .#.#.#. / .#....G /  / 深さ優先探索が見つけた経路の歩数: 16 歩 / 調べたマスの数: 18 マス /  / 深さ優先探索が見つけた経路（* が通り道） / S**#*** / .#*#*#* / .#***#* / .####.* / ...#.#* / .#.#.#* / .#....G" width="380" height="448" loading="lazy">
+        <img src="images/a02_ex1_result.png" alt="AL2-02-ex1.py の実行結果。深さ優先探索が見つけた経路の歩数: 16 歩 / 調べたマスの数: 18 マス" width="380" height="88" loading="lazy">
+      </div>
+      <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
+      <div class="run-capture">
+        <img src="images/a02_ex1_window.png" alt="AL2-02-ex1.py を実行して開いた窓（最後まで進めたところ）" width="800" height="582" loading="lazy">
       </div>
       <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
     </div>
@@ -407,9 +1509,21 @@ picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <
         <h3>2つの探索を同じ迷路で比べる</h3>
       </div>
       <p>幅優先探索と深さ優先探索を1つのプログラムにまとめ、同じ迷路で走らせて比べます。
-      <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。</p>
+      <code>search</code> 関数の中で <code>mode</code> が <code>"bfs"</code> か <code>"dfs"</code> かによって、取り出す行だけを切り替えています。
+      実行すると、ターミナルに2つ、窓に1つ表示されます。</p>
+
+
+      <table>
+        <tr><th>表示されるもの</th><th>読み方</th></tr>
+        <tr><td>（ターミナル）歩数と調べたマス数の表</td><td>歩数 = ゴールまでの道のマス数 − 1。調べたマス数 = メモから読んだマスの数</td></tr>
+        <tr><td>（ターミナル）メモの変化（手順1〜5）</td><td>「読んだマス」と、そのあとのメモの中身。左が古い行、右が新しい行</td></tr>
+        <tr><td>（窓）調べた順番のアニメーション</td><td>色の付いたマスの数字 = 何番目に調べたか。灰色のブロックは壁、色の付いていないマスは調べなかったマス、
+        枠だけのマスはメモにあるマス、「次」の字は次に読むマス。最後まで進むと、通り道が白い線で示される</td></tr>
+      </table>
 
 <p class="run-label">例題2（参考）── 完成したコード。コメントなしで全体の流れをつかむ。保存するなら <code>AL2-02-ex2-ref.py</code> の名前で</p>
+<details class="code-fold" open>
+<summary><span class="fold-name">AL2-02-ex2-ref.py</span><span class="fold-meta">279行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="0"><span class="code-label">Python ── AL2-02-ex2-ref.py</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
@@ -450,14 +1564,15 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
     <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
     memo = <span class="fn">deque</span>([start])
     came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>
+    visited_order = []
+    memo_log = []
 
     <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
         <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
             current = memo.popleft()
         <span class="kw">else</span>:
             current = memo.pop()
-        checked = checked + <span class="num">1</span>
+        visited_order.append(current)
         <span class="kw">if</span> current == goal:
             <span class="kw">break</span>
         <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
@@ -465,6 +1580,7 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
                 <span class="kw">continue</span>
             came_from[next_cell] = current
             memo.append(next_cell)
+        memo_log.append((current, <span class="fn">list</span>(memo)))
 
     path = []
     node = goal
@@ -472,37 +1588,232 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
         path.append(node)
         node = came_from[node]
     path.reverse()
-    <span class="kw">return</span> path, checked
+    <span class="kw">return</span> path, visited_order, memo_log
 
-bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
-dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
+bfs_path, bfs_order, bfs_log = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
+dfs_path, dfs_order, dfs_log = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
 <span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{len(bfs_order):&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{len(dfs_order):&gt;10}マス&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()
 
-<span class="kw">def</span> <span class="fn">draw</span>(path, title):
-    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
-    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-            picture[r][c] = <span class="str">&quot;*&quot;</span>
+<span class="kw">def</span> <span class="fn">show_memo</span>(log, title):
+    <span class="str">&quot;&quot;&quot;最初の5手順について、読んだマスと、そのあとのメモの中身を表示する&quot;&quot;&quot;</span>
     <span class="fn">print</span>(title)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">min</span>(<span class="num">5</span>, <span class="fn">len</span>(log))):
+        current, memo = log[step]
+        cells = <span class="str">&quot;&quot;</span>
+        <span class="kw">for</span> r, c <span class="kw">in</span> memo:
+            cells = cells + <span class="str">f&quot;({r},{c}) &quot;</span>
+        <span class="fn">print</span>(<span class="str">f&quot;  手順{step + 1}  読んだマス ({current[0]},{current[1]})  → メモ: {cells}&quot;</span>)
     <span class="fn">print</span>()
 
-<span class="fn">print</span>()
-<span class="fn">draw</span>(bfs_path, <span class="str">&quot;幅優先探索の経路（12歩・最短）&quot;</span>)
-<span class="fn">draw</span>(dfs_path, <span class="str">&quot;深さ優先探索の経路（18歩・最短ではない）&quot;</span>)</pre>
-      <p class="run-label">▶ 実行結果</p>
+<span class="fn">show_memo</span>(bfs_log, <span class="str">&quot;幅優先探索: メモの変化（左が古い行、右が新しい行）&quot;</span>)
+<span class="fn">show_memo</span>(dfs_log, <span class="str">&quot;深さ優先探索: メモの変化（左が古い行、右が新しい行）&quot;</span>)
+
+
+<span class="cmt"># ---- ここから下は、迷路を窓に絵で表示するための道具（読まなくてよい） ----</span>
+<span class="kw">import</span> os
+
+os.environ.setdefault(<span class="str">&quot;PYGAME_HIDE_SUPPORT_PROMPT&quot;</span>, <span class="str">&quot;1&quot;</span>)
+<span class="kw">import</span> pygame
+
+CELL = <span class="num">48</span>
+STEP_MS = <span class="num">350</span>
+BG = (<span class="num">18</span>, <span class="num">18</span>, <span class="num">24</span>)
+FLOOR = (<span class="num">38</span>, <span class="num">40</span>, <span class="num">52</span>)
+WALL = (<span class="num">92</span>, <span class="num">98</span>, <span class="num">118</span>)
+WALL_DARK = (<span class="num">66</span>, <span class="num">70</span>, <span class="num">86</span>)
+TEXT = (<span class="num">230</span>, <span class="num">230</span>, <span class="num">235</span>)
+SUB = (<span class="num">150</span>, <span class="num">150</span>, <span class="num">160</span>)
+COLORS = [(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>), (<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)]
+FONT_FILES = [
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/Hiragino Sans GB.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/meiryo.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/YuGothM.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/msgothic.ttc&quot;</span>,
+]
+FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notosanscjkjp,notosansjp&quot;</span>
+
+
+<span class="kw">def</span> <span class="fn">_font</span>(size, bold=<span class="kw">False</span>):
+    <span class="kw">for</span> path <span class="kw">in</span> FONT_FILES:
+        <span class="kw">if</span> os.path.exists(path):
+            <span class="kw">return</span> pygame.font.Font(path, size)
+    <span class="kw">return</span> pygame.font.SysFont(FONT_NAMES, size, bold=bold)
+
+
+<span class="kw">def</span> <span class="fn">_memo_at</span>(log, goal, k):
+    <span class="str">&quot;&quot;&quot;k 手順目（1から）に読んだマスと、そのあとのメモ。ゴールを読んだ手順は記録がないので作る。&quot;&quot;&quot;</span>
+    <span class="kw">if</span> k - <span class="num">1</span> &lt; <span class="fn">len</span>(log):
+        <span class="kw">return</span> log[k - <span class="num">1</span>]
+    memo = [cell <span class="kw">for</span> cell <span class="kw">in</span> log[-<span class="num">1</span>][<span class="num">1</span>] <span class="kw">if</span> cell != goal] <span class="kw">if</span> log <span class="kw">else</span> []
+    <span class="kw">return</span> goal, memo
+
+
+<span class="kw">def</span> <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, x0, y0, color):
+    title, order, path, log = run
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    goal = <span class="fn">next</span>((r, c) <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows) <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols) <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>)
+    k = <span class="fn">min</span>(k, <span class="fn">len</span>(order))
+    done = k == <span class="fn">len</span>(order)
+    number = {cell: i + <span class="num">1</span> <span class="kw">for</span> i, cell <span class="kw">in</span> <span class="fn">enumerate</span>(order[:k])}
+    current, memo = <span class="fn">_memo_at</span>(log, goal, k) <span class="kw">if</span> k &gt; <span class="num">0</span> <span class="kw">else</span> (<span class="kw">None</span>, [])
+    next_cell = <span class="kw">None</span> <span class="kw">if</span> done <span class="kw">else</span> order[k]
+
+    big, mid, small = fonts
+    screen.blit(big.render(title, <span class="kw">True</span>, color), (x0, y0))
+    gy = y0 + <span class="num">44</span>
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        t = small.render(<span class="fn">str</span>(c), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">22</span> + c * CELL + CELL // <span class="num">2</span> - t.get_width() // <span class="num">2</span>, gy - <span class="num">2</span>))
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        t = small.render(<span class="fn">str</span>(r), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">4</span>, gy + <span class="num">18</span> + r * CELL + CELL // <span class="num">2</span> - t.get_height() // <span class="num">2</span>))
+    gx, gy = x0 + <span class="num">22</span>, gy + <span class="num">18</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                pygame.draw.rect(screen, WALL, rect, border_radius=<span class="num">6</span>)
+                pygame.draw.rect(screen, WALL_DARK, rect.inflate(-<span class="num">14</span>, -<span class="num">14</span>), border_radius=<span class="num">4</span>)
+                <span class="kw">continue</span>
+            fill = FLOOR
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                fill = <span class="fn">tuple</span>(<span class="fn">int</span>(f * <span class="num">0.55</span> + col * <span class="num">0.45</span>) <span class="kw">for</span> f, col <span class="kw">in</span> <span class="fn">zip</span>(FLOOR, color))
+            pygame.draw.rect(screen, fill, rect, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> memo:
+                pygame.draw.rect(screen, color, rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) == current <span class="kw">and</span> <span class="kw">not</span> done:
+                pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">4</span>, border_radius=<span class="num">6</span>)
+    <span class="kw">if</span> done <span class="kw">and</span> <span class="fn">len</span>(path) &gt; <span class="num">1</span>:
+        <span class="kw">for</span> r, c <span class="kw">in</span> path:
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+        points = [(gx + c * CELL + CELL // <span class="num">2</span>, gy + r * CELL + CELL // <span class="num">2</span>) <span class="kw">for</span> r, c <span class="kw">in</span> path]
+        pygame.draw.lines(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), <span class="kw">False</span>, points, <span class="num">3</span>)
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            <span class="kw">if</span> ch <span class="kw">in</span> <span class="str">&quot;SG&quot;</span>:
+                label = small.render(ch, <span class="kw">True</span>, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>) <span class="kw">if</span> ch == <span class="str">&quot;S&quot;</span> <span class="kw">else</span> (<span class="num">255</span>, <span class="num">215</span>, <span class="num">64</span>))
+                screen.blit(label, (rect.x + <span class="num">3</span>, rect.y))
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                t = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, TEXT)
+                shadow = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, (<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>))
+                tx, ty = rect.centerx - t.get_width() // <span class="num">2</span>, rect.centery - t.get_height() // <span class="num">2</span> + <span class="num">4</span>
+                screen.blit(shadow, (tx + <span class="num">1</span>, ty + <span class="num">1</span>))
+                screen.blit(t, (tx, ty))
+            <span class="kw">if</span> (r, c) == next_cell:
+                t = small.render(<span class="str">&quot;次&quot;</span>, <span class="kw">True</span>, color)
+                screen.blit(t, (rect.right - t.get_width() - <span class="num">3</span>, rect.y + <span class="num">1</span>))
+    by = gy + rows * CELL + <span class="num">12</span>
+    <span class="kw">if</span> k == <span class="num">0</span>:
+        info = <span class="str">&quot;スペースで開始／→で1手順&quot;</span>
+    <span class="kw">elif</span> done:
+        info = <span class="str">f&quot;ゴール！ 通り道 {len(path) - 1}歩 ／ 調べたマス {len(order)}マス&quot;</span>
+    <span class="kw">else</span>:
+        info = <span class="str">f&quot;手順{k}  読んだマス ({current[0]},{current[1]})&quot;</span>
+    screen.blit(mid.render(info, <span class="kw">True</span>, TEXT), (x0, by))
+    screen.blit(small.render(<span class="str">&quot;メモ（左が古い行、右が新しい行）&quot;</span>, <span class="kw">True</span>, SUB), (x0, by + <span class="num">30</span>))
+    bx = x0
+    width = cols * CELL + <span class="num">22</span>
+    <span class="kw">for</span> i, (r, c) <span class="kw">in</span> <span class="fn">enumerate</span>(memo):
+        t = small.render(<span class="str">f&quot;({r},{c})&quot;</span>, <span class="kw">True</span>, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> TEXT)
+        w = t.get_width() + <span class="num">12</span>
+        <span class="kw">if</span> bx + w &gt; x0 + width - <span class="num">20</span>:
+            screen.blit(small.render(<span class="str">&quot;…&quot;</span>, <span class="kw">True</span>, SUB), (bx, by + <span class="num">56</span>))
+            <span class="kw">break</span>
+        box = pygame.Rect(bx, by + <span class="num">52</span>, w, <span class="num">26</span>)
+        pygame.draw.rect(screen, (<span class="num">30</span>, <span class="num">30</span>, <span class="num">38</span>), box, border_radius=<span class="num">5</span>)
+        pygame.draw.rect(screen, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> (<span class="num">80</span>, <span class="num">80</span>, <span class="num">90</span>), box,
+                         width=<span class="num">2</span> <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> <span class="num">1</span>, border_radius=<span class="num">5</span>)
+        screen.blit(t, (bx + <span class="num">6</span>, by + <span class="num">55</span>))
+        bx += w + <span class="num">4</span>
+
+
+<span class="kw">def</span> <span class="fn">show_window</span>(maze, runs):
+    <span class="str">&quot;&quot;&quot;runs の探索を横に並べて、1手順ずつアニメーション表示する。窓を閉じると終わる。&quot;&quot;&quot;</span>
+    <span class="kw">global</span> CELL
+    pygame.init()
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    CELL = <span class="fn">max</span>(<span class="num">20</span>, <span class="fn">min</span>(<span class="num">48</span>, <span class="num">1100</span> // (<span class="fn">len</span>(runs) * cols + <span class="num">1</span>), <span class="num">620</span> // (rows + <span class="num">1</span>)))
+    panel_w = <span class="fn">max</span>(cols * CELL + <span class="num">22</span>, <span class="num">340</span>)
+    panel_h = <span class="num">44</span> + <span class="num">18</span> + rows * CELL + <span class="num">100</span>
+    width = <span class="fn">max</span>(<span class="num">30</span> + <span class="fn">len</span>(runs) * (panel_w + <span class="num">30</span>), <span class="num">800</span>)
+    height = panel_h + <span class="num">84</span>
+    capture = os.environ.get(<span class="str">&quot;AL2_CAPTURE&quot;</span>)
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption(<span class="str">&quot;迷路の探索&quot;</span>)
+    fonts = (<span class="fn">_font</span>(<span class="num">22</span>, <span class="kw">True</span>), <span class="fn">_font</span>(<span class="num">18</span>), <span class="fn">_font</span>(<span class="num">14</span>))
+    longest = <span class="fn">max</span>(<span class="fn">len</span>(run[<span class="num">1</span>]) <span class="kw">for</span> run <span class="kw">in</span> runs)
+    k = longest <span class="kw">if</span> capture <span class="kw">else</span> <span class="num">0</span>
+    playing = <span class="kw">False</span>
+    clock = pygame.time.Clock()
+    last = pygame.time.get_ticks()
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="kw">for</span> event <span class="kw">in</span> pygame.event.get():
+            <span class="kw">if</span> event.type == pygame.QUIT:
+                pygame.quit()
+                <span class="kw">return</span>
+            <span class="kw">if</span> event.type == pygame.KEYDOWN:
+                <span class="kw">if</span> event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    <span class="kw">return</span>
+                <span class="kw">if</span> event.key == pygame.K_SPACE:
+                    playing = <span class="kw">not</span> playing
+                <span class="kw">if</span> event.key == pygame.K_RIGHT <span class="kw">and</span> k &lt; longest:
+                    k += <span class="num">1</span>
+                    playing = <span class="kw">False</span>
+                <span class="kw">if</span> event.key == pygame.K_r:
+                    k, playing = <span class="num">0</span>, <span class="kw">False</span>
+        <span class="kw">if</span> playing <span class="kw">and</span> pygame.time.get_ticks() - last &gt;= STEP_MS:
+            last = pygame.time.get_ticks()
+            <span class="kw">if</span> k &lt; longest:
+                k += <span class="num">1</span>
+            <span class="kw">else</span>:
+                playing = <span class="kw">False</span>
+        screen.fill(BG)
+        <span class="kw">for</span> i, run <span class="kw">in</span> <span class="fn">enumerate</span>(runs):
+            <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, <span class="num">30</span> + i * (panel_w + <span class="num">30</span>), <span class="num">20</span>,
+                        COLORS[<span class="num">1</span>] <span class="kw">if</span> run[<span class="num">0</span>].startswith(<span class="str">&quot;深さ&quot;</span>) <span class="kw">else</span> COLORS[<span class="num">0</span>])
+        legend = fonts[<span class="num">2</span>].render(<span class="str">&quot;色つき = 調べたマス（数字は何番目か）   枠だけ = メモにあるマス   白い線 = 通り道   灰色のブロック = 壁&quot;</span>,
+                                 <span class="kw">True</span>, SUB)
+        screen.blit(legend, (<span class="num">30</span>, height - <span class="num">56</span>))
+        hint = fonts[<span class="num">2</span>].render(<span class="str">&quot;スペース: 再生／一時停止   →: 1手順すすめる   R: 最初から   Esc: 終わる&quot;</span>, <span class="kw">True</span>, SUB)
+        screen.blit(hint, (<span class="num">30</span>, height - <span class="num">30</span>))
+        pygame.display.flip()
+        <span class="kw">if</span> capture:
+            pygame.image.save(screen, capture)
+            pygame.quit()
+            <span class="kw">return</span>
+        clock.tick(<span class="num">30</span>)
+
+
+<span class="fn">show_window</span>(maze, [
+    (<span class="str">&quot;幅優先探索&quot;</span>, bfs_order, bfs_path, bfs_log),
+    (<span class="str">&quot;深さ優先探索&quot;</span>, dfs_order, dfs_path, dfs_log),
+])</pre>
+</details>
+      <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a02_ex2-ref_result.png" alt="AL2-02-ex2-ref.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S.....# / *####.# / *#....# / *#.##.. / *#..#.# / *##.#.# / ******G /  / 深さ優先探索の経路（18歩・最短ではない） / S*****# / .####*# / .#****# / .#*##.. / .#**#.# / .##*#.# / ...***G" width="380" height="528" loading="lazy">
+        <img src="images/a02_ex2-ref_result.png" alt="AL2-02-ex2-ref.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         31マス / 深さ優先探索       18歩         19マス / ---------------------------------------------- /  / 幅優先探索: メモの変化（左が古い行、右が新しい行） / 手順1  読んだマス (0,0)  → メモ: (1,0) (0,1) / 手順2  読んだマス (1,0)  → メモ: (0,1) (2,0) / 手順3  読んだマス (0,1)  → メモ: (2,0) (0,2) / 手順4  読んだマス (2,0)  → メモ: (0,2) (3,0) / 手順5  読んだマス (0,2)  → メモ: (3,0) (0,3) /  / 深さ優先探索: メモの変化（左が古い行、右が新しい行） / 手順1  読んだマス (0,0)  → メモ: (1,0) (0,1) / 手順2  読んだマス (0,1)  → メモ: (1,0) (0,2) / 手順3  読んだマス (0,2)  → メモ: (1,0) (0,3) / 手順4  読んだマス (0,3)  → メモ: (1,0) (0,4) / 手順5  読んだマス (0,4)  → メモ: (1,0) (0,5)" width="380" height="448" loading="lazy">
       </div>
-      <p class="run-note">幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。</p>
+      <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
+      <div class="run-capture">
+        <img src="images/a02_ex2-ref_window.png" alt="AL2-02-ex2-ref.py を実行して開いた窓（最後まで進めたところ）" width="806" height="582" loading="lazy">
+      </div>
+      <p class="run-note">幅優先探索は<strong>12歩・31マス調査</strong>、深さ優先探索は<strong>18歩・19マス調査</strong>という結果でした。「調べた順番」を見ると、幅優先探索の番号はスタートから近い順に 1, 2, 3, … と少しずつ広がり、深さ優先探索の番号は 1 → 2 → … → 6 と上の行を一直線に右へ進んでいます。幅優先探索は短い道を見つけるかわりに、たくさんのマスを調べています。深さ優先探索は調べるマスが少ないかわりに、遠回りの道を答えとして返しています。どちらが優れているかではなく、<strong>何がほしいかで選ぶ</strong>という点が大切です。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 280" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じ迷路を調べる順番の比較（数字は何番目に調べたか）</text>
@@ -849,10 +2160,23 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         </svg>
       </div>
 <p class="run-label" style="margin-top:1.8rem">例題2（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。要の行が ____ になっているので、コメントを読みながら埋めて、<code>AL2-02-ex2.py</code> の名前で保存して実行する</p>
+<details class="code-fold" open>
+<summary><span class="fold-name">AL2-02-ex2.py</span><span class="fold-meta">334行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="3"><span class="code-label">Python ── AL2-02-ex2.py</span>
 <span class="cmt"># 幅優先探索と深さ優先探索を、同じ迷路で走らせて比べる</span>
+<span class="cmt"># 2つの探索のちがいは「メモのどこを読むか」の1行だけ。</span>
+<span class="cmt">#   幅優先探索: メモのいちばん古い行を読む → popleft()</span>
+<span class="cmt">#   深さ優先探索: メモのいちばん新しい行を読む → pop()</span>
+<span class="cmt"># その1行のちがいで、調べる順番と見つかる道がどう変わるかを表示する。</span>
+
+<span class="cmt"># deque（デック）は、両端から出し入れできるリストのようなもの。</span>
+<span class="cmt"># 先頭（いちばん古い行）を popleft()、末尾（いちばん新しい行）を pop() で取り出せる</span>
 <span class="kw">from</span> collections <span class="kw">import</span> deque
 
+<span class="cmt"># --- 迷路 ---</span>
+<span class="cmt"># S = スタート、G = ゴール、# = 壁、. = 通路</span>
+<span class="cmt"># 文字列のリスト。maze[行][列] で1マスの文字が取り出せる（行・列は 0 から数える）</span>
+<span class="cmt"># 例 maze[0][0] は &quot;S&quot;、maze[0][3] は &quot;#&quot;</span>
 maze = [
     <span class="str">&quot;S..#...&quot;</span>,
     <span class="str">&quot;.#.#.#.&quot;</span>,
@@ -863,9 +2187,10 @@ maze = [
     <span class="str">&quot;.#....G&quot;</span>,
 ]
 
-rows = <span class="fn">len</span>(maze)
-cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
+rows = <span class="fn">len</span>(maze)        <span class="cmt"># 行の数（縦のマス数）</span>
+cols = <span class="fn">len</span>(maze[<span class="num">0</span>])     <span class="cmt"># 列の数（横のマス数）。1行目の文字数で数える</span>
 
+<span class="cmt"># S と G の場所をさがす。場所は (行, 列) の組（タプル）で表す</span>
 <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
     <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
         <span class="kw">if</span> maze[r][c] == <span class="str">&quot;S&quot;</span>:
@@ -874,15 +2199,20 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
             goal = (r, c)
 
 
+<span class="cmt"># def は「名前をつけた手順のまとまり（関数）」を作る文。() の中の r, c は引数（関数に渡す値の受け取り口）。</span>
+<span class="cmt"># 作っただけでは動かず、neighbors(0, 0) のように呼んだときに中身が実行される</span>
 <span class="kw">def</span> <span class="fn">neighbors</span>(r, c):
     <span class="str">&quot;&quot;&quot;上・下・左・右のうち、迷路の中にあって壁ではない場所を返す&quot;&quot;&quot;</span>
     result = []
+    <span class="cmt"># (-1, 0) は上、(1, 0) は下、(0, -1) は左、(0, 1) は右へ1マス動くことを表す。</span>
+    <span class="cmt"># for dr, dc in ... は、組 (-1, 0) を取り出して dr = -1、dc = 0 のように2つの変数に分けて入れる</span>
     <span class="kw">for</span> dr, dc <span class="kw">in</span> [(-<span class="num">1</span>, <span class="num">0</span>), (<span class="num">1</span>, <span class="num">0</span>), (<span class="num">0</span>, -<span class="num">1</span>), (<span class="num">0</span>, <span class="num">1</span>)]:
         nr = r + dr
         nc = c + dc
+        <span class="cmt"># 迷路の外に出てしまう場所は飛ばす（continue は「この回を飛ばして次へ」）</span>
         <span class="kw">if</span> nr &lt; <span class="num">0</span> <span class="kw">or</span> nr &gt;= rows <span class="kw">or</span> nc &lt; <span class="num">0</span> <span class="kw">or</span> nc &gt;= cols:
             <span class="kw">continue</span>
-        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:
+        <span class="kw">if</span> maze[nr][nc] == <span class="str">&quot;#&quot;</span>:     <span class="cmt"># 壁も飛ばす</span>
             <span class="kw">continue</span>
         result.append((nr, nc))
     <span class="kw">return</span> result
@@ -890,59 +2220,284 @@ cols = <span class="fn">len</span>(maze[<span class="num">0</span>])
 
 <span class="kw">def</span> <span class="fn">search</span>(mode):
     <span class="str">&quot;&quot;&quot;mode が &quot;bfs&quot; なら幅優先探索、&quot;dfs&quot; なら深さ優先探索で迷路を解く&quot;&quot;&quot;</span>
-    memo = <span class="fn">deque</span>([start])           <span class="cmt"># これから調べる場所のメモ</span>
+    <span class="cmt"># memo は「これから調べる場所」を書いたメモ。最初はスタートだけが書いてある。</span>
+    <span class="cmt"># 迷路では、となりに行けるマスが同時に2つ以上見えることがある。</span>
+    <span class="cmt"># 体は1つなので、1つに進むあいだ、残りは「あとで見る場所」としてメモに書いておく</span>
+    memo = <span class="fn">deque</span>([start])
+    <span class="cmt"># came_from は「その場所へ、どこから来たか」の記録（辞書）。</span>
+    <span class="cmt"># 例 came_from[(0, 1)] = (0, 0) なら「(0,1) へは (0,0) から来た」。</span>
+    <span class="cmt"># ここに載っている場所は「もうメモに書いた場所」でもある</span>
     came_from = {start: <span class="kw">None</span>}
-    checked = <span class="num">0</span>                     <span class="cmt"># 何マス調べたか</span>
+    visited_order = []      <span class="cmt"># 調べた順番（読んだマスを順に並べる）</span>
+    memo_log = []           <span class="cmt"># 手順ごとの「読んだマス」と「そのあとのメモ」の記録</span>
 
-    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:
+    <span class="kw">while</span> <span class="fn">len</span>(memo) &gt; <span class="num">0</span>:    <span class="cmt"># メモが空になるまでくり返す</span>
         <span class="kw">if</span> mode == <span class="str">&quot;bfs&quot;</span>:
             current = <span class="blank">____</span>      <span class="cmt"># ← 穴1</span>
         <span class="kw">else</span>:
             current = <span class="blank">____</span>      <span class="cmt"># ← 穴2</span>
-        checked = checked + <span class="num">1</span>
-        <span class="kw">if</span> current == goal:
+        visited_order.append(current)
+        <span class="kw">if</span> current == goal:             <span class="cmt"># ゴールを読んだら終わり（break はくり返しを抜ける）</span>
             <span class="kw">break</span>
+        <span class="cmt"># いまのマスのとなりを調べ、まだメモに書いていない場所だけ書き足す。</span>
+        <span class="cmt"># current は (行, 列) の組なので、current[0] が行、current[1] が列</span>
         <span class="kw">for</span> next_cell <span class="kw">in</span> <span class="fn">neighbors</span>(current[<span class="num">0</span>], current[<span class="num">1</span>]):
+            <span class="cmt"># すでに記録がある場所を書き足すと、同じマスを何度も調べてしまうので飛ばす</span>
             <span class="kw">if</span> <span class="blank">____</span>:      <span class="cmt"># ← 穴3</span>
                 <span class="kw">continue</span>
             came_from[next_cell] = current
-            memo.append(next_cell)
+            memo.append(next_cell)      <span class="cmt"># メモの最後（いちばん新しい行）に書き足す</span>
+        <span class="cmt"># list(memo) でメモの中身をコピーして記録する（あとで表示するため）。</span>
+        <span class="cmt"># memo はこのあとも書き換わり続けるので、コピーしないと「その時点の中身」が残らない</span>
+        memo_log.append((current, <span class="fn">list</span>(memo)))
 
+    <span class="cmt"># --- ゴールからスタートへ、came_from を逆にたどって通り道を作る ---</span>
     path = []
     node = goal
+    <span class="cmt"># None は「何もない」を表す特別な値。スタートの came_from は None なので、そこで止まる</span>
     <span class="kw">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
         path.append(node)
         node = came_from[node]
-    path.reverse()
-    <span class="kw">return</span> path, checked
+    path.reverse()              <span class="cmt"># ゴール→スタートの順を、スタート→ゴールの順に直す</span>
+    <span class="cmt"># return で3つの値をまとめて返す。受け取る側も3つの変数で受け取る</span>
+    <span class="kw">return</span> path, visited_order, memo_log
 
 
-bfs_path, bfs_checked = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
-dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
+<span class="cmt"># search(&quot;bfs&quot;) は、引数 mode に &quot;bfs&quot; を渡して関数を呼ぶという意味。返ってきた3つの値を3つの変数で受け取る</span>
+bfs_path, bfs_order, bfs_log = <span class="fn">search</span>(<span class="str">&quot;bfs&quot;</span>)
+dfs_path, dfs_order, dfs_log = <span class="fn">search</span>(<span class="str">&quot;dfs&quot;</span>)
 
 <span class="fn">print</span>(<span class="str">&quot;同じ迷路を2つの方法で解いた結果&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)                 <span class="cmt"># &quot;-&quot; を 46 個つなげた区切り線</span>
 <span class="fn">print</span>(<span class="str">&quot;方法               歩数   調べたマス数&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{bfs_checked:&gt;10}マス&quot;</span>)
-<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{dfs_checked:&gt;10}マス&quot;</span>)
+<span class="cmt"># 歩数は「通ったマスの数 - 1」（スタートのマスは歩数に数えない）</span>
+<span class="cmt"># f&quot;{値:&gt;4}&quot; は「値を4文字ぶんの幅で右にそろえる」書き方</span>
+<span class="fn">print</span>(<span class="str">&quot;幅優先探索      &quot;</span>, <span class="str">f&quot;{len(bfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{len(bfs_order):&gt;10}マス&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;深さ優先探索    &quot;</span>, <span class="str">f&quot;{len(dfs_path)-1:&gt;4}歩&quot;</span>, <span class="str">f&quot;{len(dfs_order):&gt;10}マス&quot;</span>)
 <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">46</span>)
+<span class="fn">print</span>()                         <span class="cmt"># 何も書かない print() は空行を1行出す</span>
 
 
-<span class="kw">def</span> <span class="fn">draw</span>(path, title):
-    <span class="str">&quot;&quot;&quot;通り道に * を付けて迷路を表示する&quot;&quot;&quot;</span>
-    picture = [<span class="fn">list</span>(line) <span class="kw">for</span> line <span class="kw">in</span> maze]
-    <span class="kw">for</span> (r, c) <span class="kw">in</span> path:
-        <span class="kw">if</span> picture[r][c] == <span class="str">&quot;.&quot;</span>:
-            picture[r][c] = <span class="str">&quot;*&quot;</span>
+<span class="kw">def</span> <span class="fn">show_memo</span>(log, title):
+    <span class="str">&quot;&quot;&quot;最初の5手順について、読んだマスと、そのあとのメモの中身を表示する&quot;&quot;&quot;</span>
     <span class="fn">print</span>(title)
-    <span class="kw">for</span> line <span class="kw">in</span> picture:
-        <span class="fn">print</span>(<span class="str">&quot;  &quot;</span> + <span class="str">&quot;&quot;</span>.join(line))
+    <span class="cmt"># min(5, len(log)) は「5 と記録の数の小さいほう」。記録が5つより少なくても止まらないように</span>
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">min</span>(<span class="num">5</span>, <span class="fn">len</span>(log))):
+        current, memo = log[step]       <span class="cmt"># 記録の組（読んだマス, メモ）を2つの変数に分けて取り出す</span>
+        <span class="cmt"># メモのマスを1つずつ取り出し、&quot;(行,列) &quot; の文字にして後ろにつないでいく</span>
+        cells = <span class="str">&quot;&quot;</span>                      <span class="cmt"># &quot;&quot; は空の文字列（まだ何も書いていない）</span>
+        <span class="kw">for</span> r, c <span class="kw">in</span> memo:
+            cells = cells + <span class="str">f&quot;({r},{c}) &quot;</span>
+        <span class="fn">print</span>(<span class="str">f&quot;  手順{step + 1}  読んだマス ({current[0]},{current[1]})  → メモ: {cells}&quot;</span>)
     <span class="fn">print</span>()
 
 
-<span class="fn">print</span>()
-<span class="fn">draw</span>(bfs_path, <span class="str">f&quot;幅優先探索の経路（{len(bfs_path) - 1}歩・最短）&quot;</span>)
-<span class="fn">draw</span>(dfs_path, <span class="str">f&quot;深さ優先探索の経路（{len(dfs_path) - 1}歩・最短ではない）&quot;</span>)</pre>
+
+<span class="fn">show_memo</span>(bfs_log, <span class="str">&quot;幅優先探索: メモの変化（左が古い行、右が新しい行）&quot;</span>)
+<span class="fn">show_memo</span>(dfs_log, <span class="str">&quot;深さ優先探索: メモの変化（左が古い行、右が新しい行）&quot;</span>)
+
+
+<span class="cmt"># ============================================================</span>
+<span class="cmt"># ここから下は、迷路を pygame の窓に絵で表示するための道具です。</span>
+<span class="cmt"># 中身は読まなくてかまいません（アルゴリズムは上の部分にあります）。</span>
+<span class="cmt"># 操作: スペース = 再生／一時停止   → = 1手順すすめる   R = 最初から   Esc = 終わる</span>
+<span class="cmt"># ============================================================</span>
+<span class="kw">import</span> os
+
+os.environ.setdefault(<span class="str">&quot;PYGAME_HIDE_SUPPORT_PROMPT&quot;</span>, <span class="str">&quot;1&quot;</span>)   <span class="cmt"># pygame のあいさつ文を出さない</span>
+<span class="kw">import</span> pygame
+
+CELL = <span class="num">48</span>                       <span class="cmt"># 1マスの大きさ（ピクセル）</span>
+STEP_MS = <span class="num">350</span>                   <span class="cmt"># 1手順あたりの時間（ミリ秒）</span>
+BG = (<span class="num">18</span>, <span class="num">18</span>, <span class="num">24</span>)
+FLOOR = (<span class="num">38</span>, <span class="num">40</span>, <span class="num">52</span>)
+WALL = (<span class="num">92</span>, <span class="num">98</span>, <span class="num">118</span>)
+WALL_DARK = (<span class="num">66</span>, <span class="num">70</span>, <span class="num">86</span>)
+TEXT = (<span class="num">230</span>, <span class="num">230</span>, <span class="num">235</span>)
+SUB = (<span class="num">150</span>, <span class="num">150</span>, <span class="num">160</span>)
+COLORS = [(<span class="num">118</span>, <span class="num">185</span>, <span class="num">0</span>), (<span class="num">255</span>, <span class="num">184</span>, <span class="num">0</span>)]     <span class="cmt"># 1つ目の探索は緑、2つ目は橙</span>
+<span class="cmt"># 日本語が出せるフォントの場所（Mac → Windows の順にさがす）</span>
+FONT_FILES = [
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc&quot;</span>,
+    <span class="str">&quot;/System/Library/Fonts/Hiragino Sans GB.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/meiryo.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/YuGothM.ttc&quot;</span>,
+    <span class="str">&quot;C:/Windows/Fonts/msgothic.ttc&quot;</span>,
+]
+FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notosanscjkjp,notosansjp&quot;</span>
+
+
+<span class="kw">def</span> <span class="fn">_font</span>(size, bold=<span class="kw">False</span>):
+    <span class="kw">for</span> path <span class="kw">in</span> FONT_FILES:
+        <span class="kw">if</span> os.path.exists(path):
+            <span class="kw">return</span> pygame.font.Font(path, size)
+    <span class="kw">return</span> pygame.font.SysFont(FONT_NAMES, size, bold=bold)
+
+
+<span class="kw">def</span> <span class="fn">_memo_at</span>(log, goal, k):
+    <span class="str">&quot;&quot;&quot;k 手順目（1から）に読んだマスと、そのあとのメモ。ゴールを読んだ手順は記録がないので作る。&quot;&quot;&quot;</span>
+    <span class="kw">if</span> k - <span class="num">1</span> &lt; <span class="fn">len</span>(log):
+        <span class="kw">return</span> log[k - <span class="num">1</span>]
+    memo = [cell <span class="kw">for</span> cell <span class="kw">in</span> log[-<span class="num">1</span>][<span class="num">1</span>] <span class="kw">if</span> cell != goal] <span class="kw">if</span> log <span class="kw">else</span> []
+    <span class="kw">return</span> goal, memo
+
+
+<span class="kw">def</span> <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, x0, y0, color):
+    title, order, path, log = run
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    goal = <span class="fn">next</span>((r, c) <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows) <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols) <span class="kw">if</span> maze[r][c] == <span class="str">&quot;G&quot;</span>)
+    k = <span class="fn">min</span>(k, <span class="fn">len</span>(order))
+    done = k == <span class="fn">len</span>(order)
+    number = {cell: i + <span class="num">1</span> <span class="kw">for</span> i, cell <span class="kw">in</span> <span class="fn">enumerate</span>(order[:k])}
+    current, memo = <span class="fn">_memo_at</span>(log, goal, k) <span class="kw">if</span> k &gt; <span class="num">0</span> <span class="kw">else</span> (<span class="kw">None</span>, [])
+    next_cell = <span class="kw">None</span> <span class="kw">if</span> done <span class="kw">else</span> order[k]     <span class="cmt"># 次の手順で読まれるマス</span>
+
+    big, mid, small = fonts
+    screen.blit(big.render(title, <span class="kw">True</span>, color), (x0, y0))
+    gy = y0 + <span class="num">44</span>
+    <span class="cmt"># 列・行の番号</span>
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        t = small.render(<span class="fn">str</span>(c), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">22</span> + c * CELL + CELL // <span class="num">2</span> - t.get_width() // <span class="num">2</span>, gy - <span class="num">2</span>))
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        t = small.render(<span class="fn">str</span>(r), <span class="kw">True</span>, SUB)
+        screen.blit(t, (x0 + <span class="num">4</span>, gy + <span class="num">18</span> + r * CELL + CELL // <span class="num">2</span> - t.get_height() // <span class="num">2</span>))
+    gx, gy = x0 + <span class="num">22</span>, gy + <span class="num">18</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                pygame.draw.rect(screen, WALL, rect, border_radius=<span class="num">6</span>)
+                pygame.draw.rect(screen, WALL_DARK, rect.inflate(-<span class="num">14</span>, -<span class="num">14</span>), border_radius=<span class="num">4</span>)
+                <span class="kw">continue</span>
+            fill = FLOOR
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                fill = <span class="fn">tuple</span>(<span class="fn">int</span>(f * <span class="num">0.55</span> + col * <span class="num">0.45</span>) <span class="kw">for</span> f, col <span class="kw">in</span> <span class="fn">zip</span>(FLOOR, color))
+            pygame.draw.rect(screen, fill, rect, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> memo:
+                pygame.draw.rect(screen, color, rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+            <span class="kw">if</span> (r, c) == current <span class="kw">and</span> <span class="kw">not</span> done:
+                pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">4</span>, border_radius=<span class="num">6</span>)
+    <span class="cmt"># 通り道（最後まで調べ終えたら、白い枠と線で示す）</span>
+    <span class="kw">if</span> done <span class="kw">and</span> <span class="fn">len</span>(path) &gt; <span class="num">1</span>:
+        <span class="kw">for</span> r, c <span class="kw">in</span> path:
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            pygame.draw.rect(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), rect, width=<span class="num">3</span>, border_radius=<span class="num">6</span>)
+        points = [(gx + c * CELL + CELL // <span class="num">2</span>, gy + r * CELL + CELL // <span class="num">2</span>) <span class="kw">for</span> r, c <span class="kw">in</span> path]
+        pygame.draw.lines(screen, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>), <span class="kw">False</span>, points, <span class="num">3</span>)
+    <span class="cmt"># マスの中の文字（S・G・調べた番号・次）</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            ch = maze[r][c]
+            <span class="kw">if</span> ch == <span class="str">&quot;#&quot;</span>:
+                <span class="kw">continue</span>
+            rect = pygame.Rect(gx + c * CELL + <span class="num">2</span>, gy + r * CELL + <span class="num">2</span>, CELL - <span class="num">4</span>, CELL - <span class="num">4</span>)
+            <span class="kw">if</span> ch <span class="kw">in</span> <span class="str">&quot;SG&quot;</span>:
+                label = small.render(ch, <span class="kw">True</span>, (<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>) <span class="kw">if</span> ch == <span class="str">&quot;S&quot;</span> <span class="kw">else</span> (<span class="num">255</span>, <span class="num">215</span>, <span class="num">64</span>))
+                screen.blit(label, (rect.x + <span class="num">3</span>, rect.y))
+            <span class="kw">if</span> (r, c) <span class="kw">in</span> number:
+                t = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, TEXT)
+                shadow = mid.render(<span class="fn">str</span>(number[(r, c)]), <span class="kw">True</span>, (<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>))
+                tx, ty = rect.centerx - t.get_width() // <span class="num">2</span>, rect.centery - t.get_height() // <span class="num">2</span> + <span class="num">4</span>
+                screen.blit(shadow, (tx + <span class="num">1</span>, ty + <span class="num">1</span>))
+                screen.blit(t, (tx, ty))
+            <span class="kw">if</span> (r, c) == next_cell:
+                t = small.render(<span class="str">&quot;次&quot;</span>, <span class="kw">True</span>, color)
+                screen.blit(t, (rect.right - t.get_width() - <span class="num">3</span>, rect.y + <span class="num">1</span>))
+    <span class="cmt"># 下の説明</span>
+    by = gy + rows * CELL + <span class="num">12</span>
+    <span class="kw">if</span> k == <span class="num">0</span>:
+        info = <span class="str">&quot;スペースで開始／→で1手順&quot;</span>
+    <span class="kw">elif</span> done:
+        info = <span class="str">f&quot;ゴール！ 通り道 {len(path) - 1}歩 ／ 調べたマス {len(order)}マス&quot;</span>
+    <span class="kw">else</span>:
+        info = <span class="str">f&quot;手順{k}  読んだマス ({current[0]},{current[1]})&quot;</span>
+    screen.blit(mid.render(info, <span class="kw">True</span>, TEXT), (x0, by))
+    screen.blit(small.render(<span class="str">&quot;メモ（左が古い行、右が新しい行）&quot;</span>, <span class="kw">True</span>, SUB), (x0, by + <span class="num">30</span>))
+    bx = x0
+    width = cols * CELL + <span class="num">22</span>
+    <span class="kw">for</span> i, (r, c) <span class="kw">in</span> <span class="fn">enumerate</span>(memo):
+        t = small.render(<span class="str">f&quot;({r},{c})&quot;</span>, <span class="kw">True</span>, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> TEXT)
+        w = t.get_width() + <span class="num">12</span>
+        <span class="kw">if</span> bx + w &gt; x0 + width - <span class="num">20</span>:
+            screen.blit(small.render(<span class="str">&quot;…&quot;</span>, <span class="kw">True</span>, SUB), (bx, by + <span class="num">56</span>))
+            <span class="kw">break</span>
+        box = pygame.Rect(bx, by + <span class="num">52</span>, w, <span class="num">26</span>)
+        pygame.draw.rect(screen, (<span class="num">30</span>, <span class="num">30</span>, <span class="num">38</span>), box, border_radius=<span class="num">5</span>)
+        pygame.draw.rect(screen, color <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> (<span class="num">80</span>, <span class="num">80</span>, <span class="num">90</span>), box,
+                         width=<span class="num">2</span> <span class="kw">if</span> (r, c) == next_cell <span class="kw">else</span> <span class="num">1</span>, border_radius=<span class="num">5</span>)
+        screen.blit(t, (bx + <span class="num">6</span>, by + <span class="num">55</span>))
+        bx += w + <span class="num">4</span>
+
+
+<span class="kw">def</span> <span class="fn">show_window</span>(maze, runs):
+    <span class="str">&quot;&quot;&quot;runs の探索を横に並べて、1手順ずつアニメーション表示する。窓を閉じると終わる。&quot;&quot;&quot;</span>
+    <span class="kw">global</span> CELL
+    pygame.init()
+    rows, cols = <span class="fn">len</span>(maze), <span class="fn">len</span>(maze[<span class="num">0</span>])
+    <span class="cmt"># 大きな迷路でも窓が画面に収まるように、マスの大きさを決める（最大48、最小20ピクセル）</span>
+    CELL = <span class="fn">max</span>(<span class="num">20</span>, <span class="fn">min</span>(<span class="num">48</span>, <span class="num">1100</span> // (<span class="fn">len</span>(runs) * cols + <span class="num">1</span>), <span class="num">620</span> // (rows + <span class="num">1</span>)))
+    panel_w = <span class="fn">max</span>(cols * CELL + <span class="num">22</span>, <span class="num">340</span>)
+    panel_h = <span class="num">44</span> + <span class="num">18</span> + rows * CELL + <span class="num">100</span>
+    width = <span class="fn">max</span>(<span class="num">30</span> + <span class="fn">len</span>(runs) * (panel_w + <span class="num">30</span>), <span class="num">800</span>)
+    height = panel_h + <span class="num">84</span>
+    capture = os.environ.get(<span class="str">&quot;AL2_CAPTURE&quot;</span>)      <span class="cmt"># 授業ページの画像を作るときだけ使う</span>
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption(<span class="str">&quot;迷路の探索&quot;</span>)
+    fonts = (<span class="fn">_font</span>(<span class="num">22</span>, <span class="kw">True</span>), <span class="fn">_font</span>(<span class="num">18</span>), <span class="fn">_font</span>(<span class="num">14</span>))
+    longest = <span class="fn">max</span>(<span class="fn">len</span>(run[<span class="num">1</span>]) <span class="kw">for</span> run <span class="kw">in</span> runs)
+    k = longest <span class="kw">if</span> capture <span class="kw">else</span> <span class="num">0</span>
+    playing = <span class="kw">False</span>
+    clock = pygame.time.Clock()
+    last = pygame.time.get_ticks()
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="kw">for</span> event <span class="kw">in</span> pygame.event.get():
+            <span class="kw">if</span> event.type == pygame.QUIT:
+                pygame.quit()
+                <span class="kw">return</span>
+            <span class="kw">if</span> event.type == pygame.KEYDOWN:
+                <span class="kw">if</span> event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    <span class="kw">return</span>
+                <span class="kw">if</span> event.key == pygame.K_SPACE:
+                    playing = <span class="kw">not</span> playing
+                <span class="kw">if</span> event.key == pygame.K_RIGHT <span class="kw">and</span> k &lt; longest:
+                    k += <span class="num">1</span>
+                    playing = <span class="kw">False</span>
+                <span class="kw">if</span> event.key == pygame.K_r:
+                    k, playing = <span class="num">0</span>, <span class="kw">False</span>
+        <span class="kw">if</span> playing <span class="kw">and</span> pygame.time.get_ticks() - last &gt;= STEP_MS:
+            last = pygame.time.get_ticks()
+            <span class="kw">if</span> k &lt; longest:
+                k += <span class="num">1</span>
+            <span class="kw">else</span>:
+                playing = <span class="kw">False</span>
+        screen.fill(BG)
+        <span class="kw">for</span> i, run <span class="kw">in</span> <span class="fn">enumerate</span>(runs):
+            <span class="fn">_draw_panel</span>(screen, fonts, maze, run, k, <span class="num">30</span> + i * (panel_w + <span class="num">30</span>), <span class="num">20</span>,
+                        COLORS[<span class="num">1</span>] <span class="kw">if</span> run[<span class="num">0</span>].startswith(<span class="str">&quot;深さ&quot;</span>) <span class="kw">else</span> COLORS[<span class="num">0</span>])
+        legend = fonts[<span class="num">2</span>].render(<span class="str">&quot;色つき = 調べたマス（数字は何番目か）   枠だけ = メモにあるマス   白い線 = 通り道   灰色のブロック = 壁&quot;</span>,
+                                 <span class="kw">True</span>, SUB)
+        screen.blit(legend, (<span class="num">30</span>, height - <span class="num">56</span>))
+        hint = fonts[<span class="num">2</span>].render(<span class="str">&quot;スペース: 再生／一時停止   →: 1手順すすめる   R: 最初から   Esc: 終わる&quot;</span>, <span class="kw">True</span>, SUB)
+        screen.blit(hint, (<span class="num">30</span>, height - <span class="num">30</span>))
+        pygame.display.flip()
+        <span class="kw">if</span> capture:
+            pygame.image.save(screen, capture)
+            pygame.quit()
+            <span class="kw">return</span>
+        clock.tick(<span class="num">30</span>)
+
+<span class="cmt"># --- 窓を開いて、2つの探索を横に並べてアニメーション表示する ---</span>
+<span class="cmt"># マスの数字は「何番目に調べたか」。最後まで進むと、通り道が線で示される。</span>
+<span class="cmt"># スペースで再生／一時停止、→ で1手順ずつ進む。窓を閉じるとプログラムが終わる</span>
+<span class="fn">show_window</span>(maze, [
+    (<span class="str">&quot;幅優先探索&quot;</span>, bfs_order, bfs_path, bfs_log),
+    (<span class="str">&quot;深さ優先探索&quot;</span>, dfs_order, dfs_path, dfs_log),
+])</pre>
+</details>
       <div class="concept-box" style="margin-top:0.8rem">
       <h4>穴埋め（____ を埋めてから実行する）</h4>
       <table>
@@ -955,13 +2510,17 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         埋めたら保存して実行し、下の実行結果と同じになるか見比べる。ちがえば、どの穴がちがうかを考えて直す（上の「参考」のコードと見比べてもよい）。
         答えは次回の授業の時刻に、ページのいちばん下の「解答例」に出ます。</p>
     </div>
-      <p class="run-label">▶ 実行結果</p>
+      <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         28マス / 深さ優先探索       16歩         18マス / ---------------------------------------------- /  / 幅優先探索の経路（12歩・最短） / S..#... / *#.#.#. / *#...#. / *####.. / ***#.#. / .#*#.#. / .#****G /  / 深さ優先探索の経路（16歩・最短ではない） / S**#*** / .#*#*#* / .#***#* / .####.* / ...#.#* / .#.#.#* / .#....G" width="380" height="528" loading="lazy">
+        <img src="images/a02_ex2_result.png" alt="AL2-02-ex2.py の実行結果。同じ迷路を2つの方法で解いた結果 / ---------------------------------------------- / 方法               歩数   調べたマス数 / 幅優先探索         12歩         28マス / 深さ優先探索       16歩         18マス / ---------------------------------------------- /  / 幅優先探索: メモの変化（左が古い行、右が新しい行） / 手順1  読んだマス (0,0)  → メモ: (1,0) (0,1) / 手順2  読んだマス (1,0)  → メモ: (0,1) (2,0) / 手順3  読んだマス (0,1)  → メモ: (2,0) (0,2) / 手順4  読んだマス (2,0)  → メモ: (0,2) (3,0) / 手順5  読んだマス (0,2)  → メモ: (3,0) (1,2) /  / 深さ優先探索: メモの変化（左が古い行、右が新しい行） / 手順1  読んだマス (0,0)  → メモ: (1,0) (0,1) / 手順2  読んだマス (0,1)  → メモ: (1,0) (0,2) / 手順3  読んだマス (0,2)  → メモ: (1,0) (1,2) / 手順4  読んだマス (1,2)  → メモ: (1,0) (2,2) / 手順5  読んだマス (2,2)  → メモ: (1,0) (2,3)" width="380" height="448" loading="lazy">
+      </div>
+      <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
+      <div class="run-capture">
+        <img src="images/a02_ex2_window.png" alt="AL2-02-ex2.py を実行して開いた窓（最後まで進めたところ）" width="806" height="582" loading="lazy">
       </div>
       <p class="run-note">埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。</p>
 
-      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2の実行結果から、幅優先探索と深さ優先探索の「歩数」と「調べたマス数」を表にまとめる。あわせて、2つの迷路の絵を見比べて、経路がどう違うかを言葉で説明する。</span></div>
+      <div class="slide-hint"><span><strong>図のヒント:</strong> 例題2（実践）の実行結果で、「メモの変化」の手順2〜3を見比べ、幅優先探索と深さ優先探索が<strong>それぞれどのマスを読んだか</strong>を確かめる。読んだマスがメモの左端か右端かを、自分の目で確認しておく（標準課題の「キュー」と「スタック」の図と同じ動きになっている）。</span></div>
     </div>
   </div>
 </section>
@@ -973,7 +2532,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <h2>標準課題: アルゴリズムの仕組みを図で説明する</h2>
     </div>
     <p style="margin-bottom:1.5rem">
-      第2回のGoogleスライドを新しく作り、見出しを「第2回: 幅優先探索の広がり方」にしてください。
+      第2回のGoogleスライドを新しく作り、見出しを「第2回: キューとスタック ── メモのどこを読むかで、読む順番が変わる」にしてください。
       その回のアルゴリズムの仕組みを、<strong>コード上の変数や自分で決めた数値を用いて図で説明</strong>します。
       枚数は自由です（1枚に収まらなければ分けてかまいません）。
     </p>
@@ -981,7 +2540,7 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <div class="note-warn">
         <strong>毎回同じ4つの約束</strong>
         <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
-          <li>例題を自分で決めた数値で動かし、アルゴリズムの仕組みをコード上の変数や数値を用いて図形で説明する</li>
+          <li>自分で決めた文字や数字を使って、キューとスタックの仕組みを図形で説明する</li>
           <li>画像の貼り付けは不可（図形・矢印・テキストボックスで描く。クリックすると1つずつ選べる状態）</li>
           <li>図の中に自分の数値を入れる</li>
           <li>文章は1枚につき1〜2行まで</li>
@@ -991,32 +2550,31 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題</span>
-        <h3>幅優先探索の広がり方を図形で描く</h3>
+        <h3>キューとスタックの読む順番を、自分の文字や数字で図形に描く</h3>
       </div>
       <div class="setup-step">
-        <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-02-ex2.py</code> を開き、<code>maze</code> を自分の迷路に書き換える。<strong>5行×5列以上</strong>、壁（<code>#</code>）を<strong>4つ以上</strong>、<code>S</code> と <code>G</code> を1つずつ入れる。行の長さはそろえる。
-        保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
+        <p class="step-title">1. メモに書き足すものを、自分で決める</p>
+        <p style="font-size:0.95rem">メモに書き足すものを<strong>5つ以上</strong>、自分で決める（好きな食べ物、よく使う駅、数字など何でもよい）。授業の図の「ア〜オ」はそのまま使わない。書き足す順番も自分で決め、スライドの左上に「書き足した順番: ○ → ○ → …」と書いておく。</p>
       </div>
       <div class="setup-step">
-        <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
-        <p style="font-size:0.95rem">自分の迷路をマス目で描き、幅優先探索が各マスに着いたときの<strong>スタートからの歩数</strong>を書き込む。ゴールまでの通り道を矢印で示す。</p>
-
+        <p class="step-title">2. 図形で描く</p>
+        <p style="font-size:0.95rem">1章の図「2つの探索の違いは『メモのどこを読むか』だけ」と同じことを、自分の文字や数字で図形を使って描く。<br><strong>①キュー（幅優先探索）</strong>: 自分の5つを、左が古い・右が新しいになるように箱を横に並べて描く。1回目〜5回目にどの箱を読んで消すかを、箱の上に <strong>①〜⑤</strong> の番号で書き、命令 <code>popleft()</code> を添える。<br><strong>②スタック（深さ優先探索）</strong>: 同じ5つを同じ並びで描き、読む順番の番号 ①〜⑤ と命令 <code>pop()</code> を書く。<br><strong>③読む順番</strong>: それぞれの読む順番を「キュー: ○ → ○ → …」「スタック: ○ → ○ → …」の形で1行ずつ書く。</p>
+<p style="font-size:0.9rem;color:#888">見本は1章のはじめの図です（その図は「ア〜オ」で描いたもの。自分で決めた文字や数字に置きかえて描く）。迷路の例題を動かす必要はありません。</p>
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
-          <li>自分の迷路（壁は塗りつぶし、S と G を書く）</li>
-          <li>各マスに書き込んだ、スタートからの歩数</li>
-          <li>ゴールまでの通り道の矢印</li>
+          <li>①キューの箱の並び（自分の5つ）と、読む順番の番号 ①〜⑤、命令 <code>popleft()</code></li>
+          <li>②スタックの箱の並び（同じ5つ）と、読む順番の番号 ①〜⑤、命令 <code>pop()</code></li>
+          <li>③キューとスタックの読む順番（1行ずつ）</li>
         </ol>
       </div>
       <div class="setup-step">
-        <p class="step-title">3. 文章を1〜2行だけ書く</p>
-        <p style="font-size:0.95rem">図から分かることを、自分の数値を使って1〜2行で書く。
-        「自分の数値では○○が△△になった」の形。</p>
+        <p class="step-title">3. 理解度チェック ── 次の問いに1〜2行で答える</p>
+        <p style="font-size:0.95rem"><strong>問い:</strong> キューとスタックのそれぞれで、<strong>3つ読んで消したあと</strong>に、新しいもの（自分で決める）を1つメモに書き足した。次に読まれるのはどれか。キュー・スタックそれぞれについて、理由とあわせて答える。</p>
+        <p style="font-size:0.9rem;color:#888">答えはスライドの図の下に1〜2行で書く。図の中の自分の文字や数値を必ず1つ以上使う。</p>
       </div>
       <div class="concept-box" style="margin-top:1rem">
         <h4>課題要件（満点の条件）</h4>
-        <p style="font-size:0.95rem;margin:0">歩数がスタートから1ずつ増えて広がっており、通り道の長さが実行結果の「歩数」と一致する</p>
+        <p style="font-size:0.95rem;margin:0">①②の番号が、キューは書き足した順（古い順）、スタックはその逆順（新しい順）になっていて、理解度チェックの答えが「キュー＝残っていたうちでいちばん古いもの」「スタック＝いま書き足したもの」になっている</p>
       </div>
     </div>
 
@@ -1172,100 +2730,64 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
       <div class="diagram-container">
         <svg viewBox="0 0 700 416" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif">
         <rect x="30" y="20" width="640" height="360" rx="6" fill="#FFFFFF" stroke="#555"/>
-        <text x="48" y="48" text-anchor="start" fill="#222222" font-size="15" font-weight="700">第2回: 幅優先探索の広がり方</text>
+        <text x="48" y="48" text-anchor="start" fill="#222222" font-size="15" font-weight="700">第2回: キューとスタック ── メモのどこを読むかで、読む順番が変わる</text>
         <line x1="48" y1="56" x2="652" y2="56" stroke="#DDD"/>
-        <g transform="translate(30,20)"><rect x="60" y="66" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="87.0" text-anchor="middle" fill="#3E7A00" font-size="12" font-weight="700">S</text>
-<rect x="94" y="66" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="111.0" y="87.0" text-anchor="middle" fill="#222222" font-size="12">1</text>
-<rect x="128" y="66" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="145.0" y="87.0" text-anchor="middle" fill="#222222" font-size="12">2</text>
-<rect x="162" y="66" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="179.0" y="87.0" text-anchor="middle" fill="#222222" font-size="12">3</text>
-<rect x="196" y="66" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="213.0" y="87.0" text-anchor="middle" fill="#222222" font-size="12">4</text>
-<rect x="230" y="66" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="87.0" text-anchor="middle" fill="#222222" font-size="12">5</text>
-<rect x="264" y="66" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="60" y="100" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="121.0" text-anchor="middle" fill="#222222" font-size="12">1</text>
-<rect x="94" y="100" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="128" y="100" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="162" y="100" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="196" y="100" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="230" y="100" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="121.0" text-anchor="middle" fill="#222222" font-size="12">6</text>
-<rect x="264" y="100" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="60" y="134" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="155.0" text-anchor="middle" fill="#222222" font-size="12">2</text>
-<rect x="94" y="134" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="128" y="134" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="145.0" y="155.0" text-anchor="middle" fill="#222222" font-size="12">10</text>
-<rect x="162" y="134" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="179.0" y="155.0" text-anchor="middle" fill="#222222" font-size="12">9</text>
-<rect x="196" y="134" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="213.0" y="155.0" text-anchor="middle" fill="#222222" font-size="12">8</text>
-<rect x="230" y="134" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="155.0" text-anchor="middle" fill="#222222" font-size="12">7</text>
-<rect x="264" y="134" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="60" y="168" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="189.0" text-anchor="middle" fill="#222222" font-size="12">3</text>
-<rect x="94" y="168" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="128" y="168" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="145.0" y="189.0" text-anchor="middle" fill="#222222" font-size="12">11</text>
-<rect x="162" y="168" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="196" y="168" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="230" y="168" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="189.0" text-anchor="middle" fill="#222222" font-size="12">8</text>
-<rect x="264" y="168" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="281.0" y="189.0" text-anchor="middle" fill="#222222" font-size="12">9</text>
-<rect x="60" y="202" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="223.0" text-anchor="middle" fill="#222222" font-size="12">4</text>
-<rect x="94" y="202" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="128" y="202" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="145.0" y="223.0" text-anchor="middle" fill="#222222" font-size="12">12</text>
-<rect x="162" y="202" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="179.0" y="223.0" text-anchor="middle" fill="#222222" font-size="12">11</text>
-<rect x="196" y="202" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="230" y="202" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="223.0" text-anchor="middle" fill="#222222" font-size="12">9</text>
-<rect x="264" y="202" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="60" y="236" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="257.0" text-anchor="middle" fill="#222222" font-size="12">5</text>
-<rect x="94" y="236" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="128" y="236" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="162" y="236" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="179.0" y="257.0" text-anchor="middle" fill="#222222" font-size="12">10</text>
-<rect x="196" y="236" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="230" y="236" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="257.0" text-anchor="middle" fill="#222222" font-size="12">10</text>
-<rect x="264" y="236" width="34" height="34" rx="0" fill="#555" stroke="#AAA" stroke-width="1"/>
-<rect x="60" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="77.0" y="291.0" text-anchor="middle" fill="#222222" font-size="12">6</text>
-<rect x="94" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="111.0" y="291.0" text-anchor="middle" fill="#222222" font-size="12">7</text>
-<rect x="128" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="145.0" y="291.0" text-anchor="middle" fill="#222222" font-size="12">8</text>
-<rect x="162" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="179.0" y="291.0" text-anchor="middle" fill="#222222" font-size="12">9</text>
-<rect x="196" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="213.0" y="291.0" text-anchor="middle" fill="#222222" font-size="12">10</text>
-<rect x="230" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="247.0" y="291.0" text-anchor="middle" fill="#222222" font-size="12">11</text>
-<rect x="264" y="270" width="34" height="34" rx="0" fill="#FFFFFF" stroke="#AAA" stroke-width="1"/>
-<text x="281.0" y="291.0" text-anchor="middle" fill="#3E7A00" font-size="12" font-weight="700">G</text>
-<polyline points="77.0,83.0 77.0,117.0 77.0,151.0 77.0,185.0 77.0,219.0 77.0,253.0 77.0,287.0 111.0,287.0 145.0,287.0 179.0,287.0 213.0,287.0 247.0,287.0 281.0,287.0" fill="none" stroke="#3E7A00" stroke-width="3" opacity="0.6"/>
-<line x1="247.0" y1="287.0" x2="264.0" y2="287.0" stroke="#3E7A00" stroke-width="3"/><polygon points="272,287.0 264.0,283.0 264.0,291.0" fill="#3E7A00"/>
-<text x="340" y="90" text-anchor="start" fill="#222222" font-size="11" font-weight="700">数字 = スタートからの歩数</text>
-<text x="340" y="110" text-anchor="start" fill="#444" font-size="10.5">同じ数字のマスが「同時に」調べられる</text>
-<text x="340" y="126" text-anchor="start" fill="#444" font-size="10.5">（幅優先探索は近い順に広がる）</text>
-<rect x="340" y="146" width="14" height="14" rx="4" fill="#555" stroke="#555" stroke-width="1"/>
-<text x="360" y="157" text-anchor="start" fill="#222222" font-size="10.5">壁（# のマス）</text>
-<line x1="340" y1="182" x2="380" y2="182" stroke="#3E7A00" stroke-width="3" opacity="0.6"/>
-<text x="388" y="186" text-anchor="start" fill="#222222" font-size="10.5">ゴールまでの通り道（12歩）</text>
-<text x="340" y="215" text-anchor="start" fill="#3E7A00" font-size="11" font-weight="700">実行結果: 幅優先探索 12歩 ／ 31マス</text>
-<text x="340" y="233" text-anchor="start" fill="#3E7A00" font-size="10.5">→ G の数字 12 と一致</text></g>
-        <text x="48" y="354" text-anchor="start" fill="#333" font-size="10.5">自分の迷路では、歩数が S から 1 ずつ増えて広がり、G は 12 になった。実行結果の 12歩 と一致した。</text>
+        <g transform="translate(30,20)"><text x="20" y="76" text-anchor="start" fill="#222222" font-size="10.5" font-weight="700">書き足した順番: りんご → みかん → ぶどう → もも → なし</text>
+<text x="20" y="104" text-anchor="start" fill="#3E7A00" font-size="11" font-weight="700">① キュー（幅優先探索）</text>
+<text x="20" y="120" text-anchor="start" fill="#444" font-size="9.5">popleft() … いちばん古い行（左端）から読む</text>
+<text x="20" y="162" text-anchor="start" fill="#777777" font-size="9">古い</text>
+<text x="402" y="162" text-anchor="start" fill="#777777" font-size="9">新しい</text>
+<rect x="52" y="144" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
+<text x="82" y="162" text-anchor="middle" fill="#222222" font-size="10.5">りんご</text>
+<circle cx="82" cy="132" r="8" fill="#3E7A00"/>
+<text x="82" y="136" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">1</text>
+<rect x="120" y="144" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
+<text x="150" y="162" text-anchor="middle" fill="#222222" font-size="10.5">みかん</text>
+<circle cx="150" cy="132" r="8" fill="#3E7A00"/>
+<text x="150" y="136" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">2</text>
+<rect x="188" y="144" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
+<text x="218" y="162" text-anchor="middle" fill="#222222" font-size="10.5">ぶどう</text>
+<circle cx="218" cy="132" r="8" fill="#3E7A00"/>
+<text x="218" y="136" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">3</text>
+<rect x="256" y="144" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
+<text x="286" y="162" text-anchor="middle" fill="#222222" font-size="10.5">もも</text>
+<circle cx="286" cy="132" r="8" fill="#3E7A00"/>
+<text x="286" y="136" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">4</text>
+<rect x="324" y="144" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
+<text x="354" y="162" text-anchor="middle" fill="#222222" font-size="10.5">なし</text>
+<circle cx="354" cy="132" r="8" fill="#3E7A00"/>
+<text x="354" y="136" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">5</text>
+<text x="452" y="150" text-anchor="start" fill="#777777" font-size="9.5">読む順番</text>
+<text x="452" y="166" text-anchor="start" fill="#3E7A00" font-size="8.5" font-weight="700">りんご → みかん → ぶどう → もも → なし</text>
+<text x="20" y="208" text-anchor="start" fill="#B26A00" font-size="11" font-weight="700">② スタック（深さ優先探索）</text>
+<text x="20" y="224" text-anchor="start" fill="#444" font-size="9.5">pop() … いちばん新しい行（右端）から読む</text>
+<text x="20" y="266" text-anchor="start" fill="#777777" font-size="9">古い</text>
+<text x="402" y="266" text-anchor="start" fill="#777777" font-size="9">新しい</text>
+<rect x="52" y="248" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#B26A00" stroke-width="1.5"/>
+<text x="82" y="266" text-anchor="middle" fill="#222222" font-size="10.5">りんご</text>
+<circle cx="82" cy="236" r="8" fill="#B26A00"/>
+<text x="82" y="240" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">5</text>
+<rect x="120" y="248" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#B26A00" stroke-width="1.5"/>
+<text x="150" y="266" text-anchor="middle" fill="#222222" font-size="10.5">みかん</text>
+<circle cx="150" cy="236" r="8" fill="#B26A00"/>
+<text x="150" y="240" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">4</text>
+<rect x="188" y="248" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#B26A00" stroke-width="1.5"/>
+<text x="218" y="266" text-anchor="middle" fill="#222222" font-size="10.5">ぶどう</text>
+<circle cx="218" cy="236" r="8" fill="#B26A00"/>
+<text x="218" y="240" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">3</text>
+<rect x="256" y="248" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#B26A00" stroke-width="1.5"/>
+<text x="286" y="266" text-anchor="middle" fill="#222222" font-size="10.5">もも</text>
+<circle cx="286" cy="236" r="8" fill="#B26A00"/>
+<text x="286" y="240" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">2</text>
+<rect x="324" y="248" width="60" height="26" rx="4" fill="#FFFFFF" stroke="#B26A00" stroke-width="1.5"/>
+<text x="354" y="266" text-anchor="middle" fill="#222222" font-size="10.5">なし</text>
+<circle cx="354" cy="236" r="8" fill="#B26A00"/>
+<text x="354" y="240" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700">1</text>
+<text x="452" y="254" text-anchor="start" fill="#777777" font-size="9.5">読む順番</text>
+<text x="452" y="270" text-anchor="start" fill="#B26A00" font-size="8.5" font-weight="700">なし → もも → ぶどう → みかん → りんご</text>
+<text x="20" y="318" text-anchor="start" fill="#222222" font-size="10" font-weight="700">③ キュー: 書いた順に読む（古い順）／ スタック: 書いた逆順に読む（新しい順）</text></g>
+        <text x="48" y="354" text-anchor="start" fill="#333" font-size="10.5">理解度チェック: 3つ読んだあとに「いちご」を書き足すと、キューは残っていたうちいちばん古い「もも」、</text>
+        <text x="48" y="369" text-anchor="start" fill="#333" font-size="10.5">スタックはいま書き足した「いちご」を次に読む。</text>
         <text x="350.0" y="404" text-anchor="middle" fill="#999" font-size="11">スライドの例（例題の数値で描いたもの。自分の数値に置きかえて描く）</text>
         </svg>
       </div>
@@ -1282,17 +2804,18 @@ dfs_path, dfs_checked = <span class="fn">search</span>(<span class="str">&quot;d
         </table>
       </div>
       <div class="ans-item">
-        <h4>確かめ用の数値</h4>
+        <h4>理解度チェックの答えの例</h4>
+        <p><strong>問い</strong>: 3つ読んで消したあとに、新しいものを1つ書き足した。次に読まれるのはどれか（キュー・スタックそれぞれ）。</p>
+        <p style="margin-top:0.6rem"><strong>答えの例</strong>（書き足した順番: りんご → みかん → ぶどう → もも → なし、あとから「いちご」を書き足した場合）</p>
         <table>
-          <tr><th>項目</th><th>書き換える前</th><th>書き換えたあと</th></tr>
-          <tr><td>幅優先探索の歩数</td><td>12歩</td><td><strong style="color:#76B900">12歩（変わらない）</strong></td></tr>
-          <tr><td>幅優先探索の調べたマス数</td><td>31マス</td><td>26マス</td></tr>
-          <tr><td>深さ優先探索の歩数</td><td>18歩</td><td>18歩</td></tr>
+          <tr><th></th><th>3つ読んだあとのメモ</th><th>いちごを書き足したメモ</th><th>次に読まれるもの</th><th>理由</th></tr>
+          <tr><td><strong style="color:#76B900">キュー</strong></td><td>もも、なし</td><td>もも、なし、いちご</td>
+              <td><strong>もも</strong></td><td>いちばん古い行（左端）から読むので、残っていたうちで先に書いた「もも」</td></tr>
+          <tr><td><strong style="color:#FFB800">スタック</strong></td><td>りんご、みかん</td><td>りんご、みかん、いちご</td>
+              <td><strong>いちご</strong></td><td>いちばん新しい行（右端）から読むので、いま書き足した「いちご」</td></tr>
         </table>
-        <p style="margin-top:0.6rem"><strong>歩数は変わりませんが、通り道は別の道に変わります。</strong>
-        書き換える前は左の列を下って下の行を右へ進む道、書き換えたあとは上の行を右へ進んで右の列を下る道です。</p>
-        <p style="margin-top:0.8rem"><strong>問い2の根拠になる数値</strong>: 40マス四方の広場で、
-        幅優先探索は78歩・1600マス調査、深さ優先探索は780歩・859マス調査。</p>
+        <p style="margin-top:0.6rem">迷路でいえば、スタック（深さ優先探索）は<strong>いま見つけたばかりのマス</strong>をすぐ読むので一方向へ進み続け、
+        キュー（幅優先探索）は<strong>前から待っているマス</strong>を先に読むので、スタートに近いマスから順に広がる。</p>
       </div>
     </div>
 

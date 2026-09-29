@@ -86,7 +86,7 @@ def main(src_path):
         if "──" not in label:
             continue
         fname = label.split("── ")[-1].strip()
-        if not fname.endswith(".py"):
+        if not fname.endswith(".py") or not fname.startswith("AL2-"):
             continue
         if "std" in fname:            # 予測課題なので答えの画像は作らない
             print(f"skip {fname} (prediction task)")
@@ -98,12 +98,15 @@ def main(src_path):
             code = src_file.read_text(encoding="utf-8").rstrip("\n")
         p = os.path.join(tmp, fname)
         open(p, "w", encoding="utf-8").write(code)
-        r = subprocess.run([sys.executable, p], capture_output=True, text=True, timeout=600)
+        stem = re.sub(r"^AL2-\d+-", "", fname).replace(".py", "")
+        win_png = OUT / f"{prefix}_{stem}_window.png"
+        # pygame の窓は画面に出さず（dummy）、最後まで進めた画面を win_png に保存させる
+        env = dict(os.environ, SDL_VIDEODRIVER="dummy", AL2_CAPTURE=str(win_png))
+        r = subprocess.run([sys.executable, p], capture_output=True, text=True, timeout=600, env=env, cwd=tmp)
         if r.returncode != 0:
             print(f"!! {fname} FAILED\n{r.stderr}")
             continue
         out = r.stdout.rstrip("\n").split("\n")
-        stem = re.sub(r"^AL2-\d+-", "", fname).replace(".py", "")
         png  = OUT / f"{prefix}_{stem}_result.png"
         size = render(png, fname, out)
 
@@ -116,6 +119,16 @@ def main(src_path):
         src_html, n = pat.subn(lambda m: new, src_html)
         SRC.write_text(src_html, encoding="utf-8")
         print(f"{png.name}  {size[0]}x{size[1]}px → 表示 {lw}x{lh_}  ({len(out)}行)  本文更新={n}")
+        if "show_window(" in code and win_png.exists():
+            wimg = Image.open(win_png)
+            ww, wh = wimg.size            # 窓の画像は等倍で表示する
+            walt = html.escape(f"{fname} を実行して開いた窓（最後まで進めたところ）", quote=True)
+            wpat = re.compile(r'<img src="images/' + re.escape(win_png.name) + r'"[^>]*>')
+            src_html = SRC.read_text(encoding="utf-8")
+            src_html, wn = wpat.subn(lambda m: f'<img src="images/{win_png.name}" alt="{walt}" '
+                                               f'width="{ww}" height="{wh}" loading="lazy">', src_html)
+            SRC.write_text(src_html, encoding="utf-8")
+            print(f"{win_png.name}  {wimg.size[0]}x{wimg.size[1]}px  本文更新={wn}")
 
 
 for arg in sys.argv[1:]:

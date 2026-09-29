@@ -93,36 +93,31 @@ def ex01():
 
 
 def ex02():
-    maze = ["S.....#", ".####.#", ".#....#", ".#.##..", ".#..#.#", ".##.#.#", "......G"]
-    dist = {(0, 0): 0, (0, 1): 1, (0, 2): 2, (0, 3): 3, (0, 4): 4, (0, 5): 5, (1, 0): 1, (1, 5): 6,
-            (2, 0): 2, (2, 2): 10, (2, 3): 9, (2, 4): 8, (2, 5): 7, (3, 0): 3, (3, 2): 11, (3, 5): 8, (3, 6): 9,
-            (4, 0): 4, (4, 2): 12, (4, 3): 11, (4, 5): 9, (5, 0): 5, (5, 3): 10, (5, 5): 10,
-            (6, 0): 6, (6, 1): 7, (6, 2): 8, (6, 3): 9, (6, 4): 10, (6, 5): 11, (6, 6): 12}
-    cell = 34; ox, oy = 60, 66
-    s = []
-    for r in range(7):
-        for c in range(7):
-            x, y = ox + c * cell, oy + r * cell
-            wall = maze[r][c] == "#"
-            s.append(_box(x, y, cell, cell, "#555" if wall else "#FFFFFF", "#AAA", 1, 0))
-            if not wall:
-                label = "S" if maze[r][c] == "S" else ("G" if maze[r][c] == "G" else str(dist[(r, c)]))
-                color = GREEN if label in "SG" else INK
-                s.append(_t(x + cell / 2, y + cell / 2 + 4, label, 12, color, "middle", 700 if label in "SG" else None))
-    path = [(r, 0) for r in range(7)] + [(6, c) for c in range(1, 7)]
-    pts = " ".join(f"{ox + c * cell + cell / 2},{oy + r * cell + cell / 2}" for r, c in path)
-    s.append(f'<polyline points="{pts}" fill="none" stroke="{GREEN}" stroke-width="3" opacity="0.6"/>')
-    s.append(_arrow(ox + 5 * cell + cell / 2, oy + 6 * cell + cell / 2, ox + 6 * cell + 8, oy + 6 * cell + cell / 2, GREEN, 3))
-    s.append(_t(340, 90, "数字 = スタートからの歩数", 11, INK, "start", 700))
-    s.append(_t(340, 110, "同じ数字のマスが「同時に」調べられる", 10.5, "#444", "start"))
-    s.append(_t(340, 126, "（幅優先探索は近い順に広がる）", 10.5, "#444", "start"))
-    s.append(_box(340, 146, 14, 14, "#555", "#555")); s.append(_t(360, 157, "壁（# のマス）", 10.5, INK, "start"))
-    s.append(f'<line x1="340" y1="182" x2="380" y2="182" stroke="{GREEN}" stroke-width="3" opacity="0.6"/>')
-    s.append(_t(388, 186, "ゴールまでの通り道（12歩）", 10.5, INK, "start"))
-    s.append(_t(340, 215, "実行結果: 幅優先探索 12歩 ／ 31マス", 11, GREEN, "start", 700))
-    s.append(_t(340, 233, "→ G の数字 12 と一致", 10.5, GREEN, "start"))
-    return _slide("02", "幅優先探索の広がり方", "\n".join(s),
-                  ["自分の迷路では、歩数が S から 1 ずつ増えて広がり、G は 12 になった。実行結果の 12歩 と一致した。"])
+    items = ["りんご", "みかん", "ぶどう", "もも", "なし"]
+    n = len(items)
+    s = [_t(20, 76, "書き足した順番: りんご → みかん → ぶどう → もも → なし", 10.5, INK, "start", 700)]
+    rows = [("① キュー（幅優先探索）", "popleft() … いちばん古い行（左端）から読む", GREEN, list(range(n))),
+            ("② スタック（深さ優先探索）", "pop() … いちばん新しい行（右端）から読む", AMBER, list(range(n - 1, -1, -1)))]
+    for j, (title, cmd, color, order) in enumerate(rows):
+        y = 104 + j * 104
+        s.append(_t(20, y, title, 11, color, "start", 700))
+        s.append(_t(20, y + 16, cmd, 9.5, "#444", "start"))
+        s.append(_t(20, y + 58, "古い", 9, GRAY, "start"))
+        s.append(_t(402, y + 58, "新しい", 9, GRAY, "start"))
+        for i, name in enumerate(items):
+            x = 52 + i * 68
+            s.append(_box(x, y + 40, 60, 26, "#FFFFFF", color, 1.5))
+            s.append(_t(x + 30, y + 58, name, 10.5, INK))
+            k = order.index(i) + 1
+            s.append(f'<circle cx="{x + 30}" cy="{y + 28}" r="8" fill="{color}"/>')
+            s.append(_t(x + 30, y + 32, str(k), 9.5, "#FFFFFF", "middle", 700))
+        seq = " → ".join(items[i] for i in order)
+        s.append(_t(452, y + 46, "読む順番", 9.5, GRAY, "start"))
+        s.append(_t(452, y + 62, seq, 8.5, color, "start", 700))
+    s.append(_t(20, 318, "③ キュー: 書いた順に読む（古い順）／ スタック: 書いた逆順に読む（新しい順）", 10, INK, "start", 700))
+    return _slide("02", "キューとスタック ── メモのどこを読むかで、読む順番が変わる", "\n".join(s),
+                  ["理解度チェック: 3つ読んだあとに「いちご」を書き足すと、キューは残っていたうちいちばん古い「もも」、",
+                   "スタックはいま書き足した「いちご」を次に読む。"])
 
 
 def ex03():

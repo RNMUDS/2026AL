@@ -107,6 +107,32 @@ footer { background: #0A0A0A; color: #888888; padding: 2rem 0; text-align: cente
 /* ============ SCROLL TARGET OFFSET ============ */
 [id] { scroll-margin-top: 3rem; }
 
+/* ============ CODE FOLD（コードの開閉） ============ */
+details.code-fold { margin: 0.6rem 0 1rem; }
+details.code-fold > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.7rem;
+  background: #141414; border: 1px solid #333; border-radius: 10px;
+  padding: 0.5rem 0.9rem; font-size: 0.88rem; color: #E0E0E0; user-select: none;
+}
+details.code-fold > summary::-webkit-details-marker { display: none; }
+details.code-fold > summary::before { content: "▶"; color: #76B900; font-size: 0.75rem; transition: transform 0.2s; }
+details.code-fold[open] > summary::before { transform: rotate(90deg); }
+details.code-fold > summary:hover { border-color: #76B900; }
+details.code-fold .fold-name { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+details.code-fold .fold-meta { color: #888; font-size: 0.8rem; }
+details.code-fold .fold-hint { margin-left: auto; color: #888; font-size: 0.8rem; }
+details.code-fold .fold-hint::after { content: "クリックで開く"; }
+details.code-fold[open] .fold-hint::after { content: "クリックで閉じる"; }
+details.code-fold[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+details.code-fold > pre { margin-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+.fold-all-btn {
+  position: fixed; right: 16px; bottom: 16px; z-index: 50;
+  background: #1A1A1A; color: #E0E0E0; border: 1px solid #76B900; border-radius: 999px;
+  padding: 0.5rem 1rem; font-size: 0.82rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+.fold-all-btn:hover { background: #76B900; color: #fff; }
+
 /* ============ COPY BUTTON ============ */
 pre { position: relative; }
 .copy-btn {

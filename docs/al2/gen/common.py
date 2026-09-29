@@ -27,6 +27,21 @@ def apply_blanks(src, items):
     return src
 
 
+FOLD_WEEKS = ("02",)     # コードを開閉できる箱に入れる回（いまは第2回だけ）
+
+
+def fold(pre, filename, src):
+    """コードの <pre> を、見出しをクリックすると開閉できる箱（details）に入れる。最初は開いた状態。
+    FOLD_WEEKS にない回のファイルは、そのまま返す。"""
+    if not any(filename.startswith(f"AL2-{w}-") for w in FOLD_WEEKS):
+        return pre
+    lines = src.count("\n") + 1
+    return (f'<details class="code-fold" open>\n'
+            f'<summary><span class="fold-name">{filename}</span>'
+            f'<span class="fold-meta">{lines}行</span><span class="fold-hint"></span></summary>\n'
+            f'{pre}\n</details>')
+
+
 def code(filename, label=None):
     """src/ に置いた Python ファイルを、色つきの <pre> ブロックに変換する。
     blanks.BLANKS に載っているファイルは、要になる行を ____ にして載せ、
@@ -37,7 +52,7 @@ def code(filename, label=None):
     items = BLANKS.get(filename, [])
     src = apply_blanks(src, items)
     body = highlight(src).replace("____", '<span class="blank">____</span>')
-    pre = f'<pre data-blanks="{len(items)}"><span class="code-label">{label}</span>\n{body}</pre>'
+    pre = fold(f'<pre data-blanks="{len(items)}"><span class="code-label">{label}</span>\n{body}</pre>', filename, src)
     if not items:
         return pre
     return pre + "\n" + blank_hints(filename, items)
@@ -73,14 +88,18 @@ def example_pair(filename, note, extra=""):
     stem = re.sub(r"^AL2-(\d+)-", r"a\1_", filename).replace(".py", "")
     ref_img = stem.replace("_ex", "_ex").rsplit("_", 1)[0] + "_" + stem.rsplit("_", 1)[1] + "-ref_result.png"
     prac_img = stem + "_result.png"
+    uses_window = "show_window(" in ref_src         # pygame の窓を開く例題は、窓の画像も載せる
+    win = (lambda img: img.replace("_result.png", "_window.png")) if uses_window else (lambda img: None)
     ref_pre = (f'<p class="run-label">例題{n}（参考）── 完成したコード。コメントなしで全体の流れをつかむ。'
                f'保存するなら <code>{ref_name}</code> の名前で</p>\n'
-               f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{highlight(ref_src)}</pre>\n'
-               + run(ref_img, note))
+               + fold(f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{highlight(ref_src)}</pre>',
+                      ref_name, ref_src) + "\n"
+               + run(ref_img, note, win(ref_img)))
     prac = (f'<p class="run-label" style="margin-top:1.8rem">例題{n}（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。'
             f'要の行が ____ になっているので、コメントを読みながら埋めて、<code>{filename}</code> の名前で保存して実行する</p>\n'
             + code(filename) + "\n"
-            + run(prac_img, "埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。"))
+            + run(prac_img, "埋めて実行した結果が、この画像と同じになれば正解です。ちがうときは、どの穴がちがうかを考えて直してください。",
+                  win(prac_img)))
     return ref_pre + "\n" + (extra + "\n" if extra else "") + prac
 
 
@@ -137,12 +156,19 @@ def plain(text, label):
     return f'<pre><span class="code-label">{label}</span>\n{H.escape(text.rstrip())}</pre>'
 
 
-def run(img, note):
-    """実行結果のキャプチャと、読み取り方の説明をまとめて出力する。"""
-    return f"""      <p class="run-label">▶ 実行結果</p>
+def run(img, note, window=None):
+    """実行結果のキャプチャと、読み取り方の説明をまとめて出力する。
+    window を渡すと、pygame の窓の画面（最後まで進めたところ）も並べる。"""
+    win = (f"""
+      <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
+      <div class="run-capture">
+        <img src="images/{window}">
+      </div>""" if window else "")
+    label = "▶ 実行結果（ターミナル）" if window else "▶ 実行結果"
+    return f"""      <p class="run-label">{label}</p>
       <div class="run-capture">
         <img src="images/{img}">
-      </div>
+      </div>{win}
       <p class="run-note">{note}</p>"""
 
 
@@ -337,8 +363,10 @@ RULES = [
 ]
 
 
-def rules_box():
-    items = "\n".join(f"          <li>{t}</li>" for t in RULES)
+def rules_box(first=None):
+    """毎回同じ4つの約束。first を渡すと、1つ目だけその回の言い方に差し替える。"""
+    rules = [first or RULES[0]] + RULES[1:]
+    items = "\n".join(f"          <li>{t}</li>" for t in rules)
     return f"""      <div class="note-warn">
         <strong>毎回同じ4つの約束</strong>
         <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
@@ -374,6 +402,35 @@ def slide_submission(week):
 </section>"""
 
 
+def _step1(d):
+    """標準課題の手順1。run_file がない回は、例題を動かさずに自分の値を決めるだけにする。"""
+    if d.get("run_file"):
+        return f"""      <div class="setup-step">
+        <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
+        <p style="font-size:0.95rem"><code>{d["run_file"]}</code> を開き、{d["own"]}
+        保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
+      </div>"""
+    return f"""      <div class="setup-step">
+        <p class="step-title">{d.get("step1_title", "1. 自分の値を決める")}</p>
+        <p style="font-size:0.95rem">{d["own"]}</p>
+      </div>"""
+
+
+def _step3(d):
+    """標準課題の手順3。quiz があれば理解度チェックの問いに答える形にする。"""
+    if d.get("quiz"):
+        return f"""      <div class="setup-step">
+        <p class="step-title">3. 理解度チェック ── 次の問いに1〜2行で答える</p>
+        <p style="font-size:0.95rem"><strong>問い:</strong> {d["quiz"]}</p>
+        <p style="font-size:0.9rem;color:#888">答えはスライドの図の下に1〜2行で書く。図の中の自分の文字や数値を必ず1つ以上使う。</p>
+      </div>"""
+    return """      <div class="setup-step">
+        <p class="step-title">3. 文章を1〜2行だけ書く</p>
+        <p style="font-size:0.95rem">図から分かることを、自分の数値を使って1〜2行で書く。
+        「自分の数値では○○が△△になった」の形。</p>
+      </div>"""
+
+
 def slides_section(week, d):
     """標準課題「アルゴリズムの仕組みを図で説明する」のセクション。"""
     n = int(week)
@@ -384,20 +441,16 @@ def slides_section(week, d):
       枚数は自由です（1枚に収まらなければ分けてかまいません）。
     </p>
 
-{rules_box()}
+{rules_box(d.get("rule1"))}
 
     <div class="card standard">
       <div class="card-header">
         <span class="tag tag-standard">標準課題</span>
-        <h3>{d["topic"]}を図形で描く</h3>
+        <h3>{d.get("card_title", d["topic"] + "を図形で描く")}</h3>
       </div>
+{_step1(d)}
       <div class="setup-step">
-        <p class="step-title">1. 自分の数値を決めて、例題を動かす</p>
-        <p style="font-size:0.95rem"><code>{d["run_file"]}</code> を開き、{d["own"]}
-        保存して実行し、実行結果をそのまま残しておく（あとで図と見比べる）。</p>
-      </div>
-      <div class="setup-step">
-        <p class="step-title">2. 実行結果を見ながら、図形で描く</p>
+        <p class="step-title">{d.get("step2_title", "2. 実行結果を見ながら、図形で描く")}</p>
         <p style="font-size:0.95rem">{d["draw"]}</p>
 {d.get("help", "")}
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
@@ -405,11 +458,7 @@ def slides_section(week, d):
 {el_items}
         </ol>
       </div>
-      <div class="setup-step">
-        <p class="step-title">3. 文章を1〜2行だけ書く</p>
-        <p style="font-size:0.95rem">図から分かることを、自分の数値を使って1〜2行で書く。
-        「自分の数値では○○が△△になった」の形。</p>
-      </div>
+{_step3(d)}
       <div class="concept-box" style="margin-top:1rem">
         <h4>課題要件（満点の条件）</h4>
         <p style="font-size:0.95rem;margin:0">{d["check"]}</p>
