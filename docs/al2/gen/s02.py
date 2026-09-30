@@ -426,7 +426,7 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1と例題2のコード
               これが<strong>ターミナル</strong>（文字で命令を打ちこむ場所）</li>
           <li>その行の最後をクリックして、次の1行を<strong>そのまま打ちこむ</strong>（コピーして右クリックで貼り付けてもよい）</li>
         </ol>
-{plain("py -m pip install pygame", "ターミナル（Windows）")}
+{plain("pip install pygame", "ターミナル（Windows）")}
         <ol start="5">
           <li><strong>Enter</strong> を押す。英語の文字が何行か流れ、数十秒〜数分かかる</li>
           <li>最後のほうに <code>Successfully installed pygame-2.6.1</code>（数字はちがってよい）と出れば成功</li>
@@ -439,17 +439,17 @@ examples = f"""    <p style="margin-bottom:1.5rem">例題1と例題2のコード
             <tr><th>出たメッセージ</th><th>やること</th></tr>
             <tr><td><code>'py' は、内部コマンドまたは外部コマンド…として認識されていません</code><br>
                     または <code>py : 用語 'py' は…認識されません</code></td>
-                <td>最初の <code>py</code> を <code>python</code> に変えて、<code>python -m pip install pygame</code> を実行する</td></tr>
+                <td>確かめるコマンドの最初の <code>py</code> を <code>python</code> に変えて実行する</td></tr>
             <tr><td><code>Requirement already satisfied</code></td>
                 <td>すでに入っている。何もしなくてよい</td></tr>
             <tr><td>赤い文字のエラーで止まる（<code>error: subprocess-exited-with-error</code> など）</td>
-                <td><code>py -m pip install pygame-ce</code> を実行する（pygame の別版。使い方は同じ）</td></tr>
+                <td><code>pip install pygame-ce</code> を実行する（pygame の別版。使い方は同じ）</td></tr>
             <tr><td>例題を ▷ で実行すると <code>ModuleNotFoundError: No module named 'pygame'</code></td>
                 <td>▷ が使う Python と、pygame を入れた Python がちがう。ターミナルで
-                    <code>python -m pip install pygame</code> も実行してから、もう一度 ▷ を押す</td></tr>
+                    <code>pip install pygame</code> をもう一度実行してから、もう一度 ▷ を押す</td></tr>
           </table>
         </div>
-        <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">Mac の人は <code>py</code> のかわりに <code>python3</code> と打つ（<code>python3 -m pip install pygame</code>）。</p>
+        <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">Mac の人は <code>pip</code> のかわりに <code>pip3</code>、<code>py</code> のかわりに <code>python3</code> と打つ（<code>pip3 install pygame</code>）。</p>
       </div>
       <div class="setup-step">
         <p class="step-title">2. 窓の操作</p>
