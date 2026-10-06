@@ -54,7 +54,9 @@ import tempfile, os
 tmp = tempfile.mkdtemp()
 fail = []
 for src in sorted((HERE / "src").glob("*.py")):
-    r = subprocess.run([sys.executable, str(src)], capture_output=True, text=True, timeout=600)
+    # pygame の窓は画面に出さず（dummy）、最後の画面を一時フォルダに保存してすぐ終わらせる
+    env = dict(os.environ, SDL_VIDEODRIVER="dummy", AL2_CAPTURE=os.path.join(tmp, "window.png"))
+    r = subprocess.run([sys.executable, str(src)], capture_output=True, text=True, timeout=600, env=env)
     if r.returncode != 0:
         fail.append((src.name, r.stderr.strip().splitlines()[-1]))
 print("実行失敗:", fail or "なし")

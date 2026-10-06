@@ -121,25 +121,43 @@ def ex02():
 
 
 def ex03():
-    pos = {"新宿": (110, 110), "渋谷": (70, 200), "池袋": (170, 70), "東京": (220, 150), "品川": (150, 250), "上野": (280, 90)}
+    pos = {"池袋": (95, 92), "新宿": (55, 150), "上野": (180, 92), "東京": (175, 165), "渋谷": (60, 230), "品川": (150, 235)}
+    stations = ["新宿", "渋谷", "池袋", "東京", "品川", "上野"]
     edges = [("新宿", "渋谷"), ("新宿", "池袋"), ("新宿", "東京"), ("渋谷", "品川"), ("東京", "品川"), ("東京", "上野"), ("池袋", "上野")]
-    s = []
+    s = [_t(20, 76, "① グラフ", 11, INK, "start", 700)]
     for a, b in edges:
         s.append(f'<line x1="{pos[a][0]}" y1="{pos[a][1]}" x2="{pos[b][0]}" y2="{pos[b][1]}" stroke="#888" stroke-width="2"/>')
     for name, (x, y) in pos.items():
-        s.append(f'<circle cx="{x}" cy="{y}" r="18" fill="#E8F5D8" stroke="{GREEN}" stroke-width="1.5"/>')
-        s.append(_t(x, y + 4, name, 11, INK, "middle", 700))
-    s.append(_t(160, 300, "頂点（丸）6個 ／ 辺（線）7本", 11, GREEN, "middle", 700))
-    adj = [("新宿", "渋谷、池袋、東京"), ("渋谷", "新宿、品川"), ("池袋", "新宿、上野"),
-           ("東京", "新宿、品川、上野"), ("品川", "渋谷、東京"), ("上野", "池袋、東京")]
-    s.append(_t(360, 82, "隣接リスト（となりの表）", 12, INK, "start", 700))
-    for i, (k, v) in enumerate(adj):
-        y = 100 + i * 30
-        s.append(_box(360, y, 60, 24, LIGHT, "#BBB")); s.append(_t(390, y + 16, k, 11, INK, "middle", 700))
-        s.append(_box(420, y, 200, 24, "#FFFFFF", "#BBB")); s.append(_t(428, y + 16, v, 11, INK, "start"))
-    s.append(_t(360, 296, "表の名前の数 = 14 = 辺7本 × 2", 10.5, GRAY, "start"))
-    return _slide("03", "グラフと隣接リスト", "\n".join(s),
-                  ["自分で決めた6駅では、辺が7本になり、隣接リストの中身は線と一致した。実行結果の辺の数 7 と一致。"])
+        s.append(f'<circle cx="{x}" cy="{y}" r="17" fill="#E8F5D8" stroke="{GREEN}" stroke-width="1.5"/>')
+        s.append(_t(x, y + 4, name, 10, INK, "middle", 700))
+        s.append(_t(x + 16, y - 14, str(stations.index(name)), 9, AMBER, "middle", 700))
+    s.append(_t(20, 280, "頂点6個 ／ 辺7本（実行結果と一致）", 10, GREEN, "start", 700))
+    adj = {st: [] for st in stations}
+    for a, b in edges:
+        adj[a].append(b)
+        adj[b].append(a)
+    s.append(_t(222, 76, "② 隣接リスト", 11, INK, "start", 700))
+    for i, st in enumerate(stations):
+        y = 88 + i * 28
+        s.append(_box(222, y, 44, 22, LIGHT, "#BBB")); s.append(_t(244, y + 15, st, 10, INK, "middle", 700))
+        s.append(_box(266, y, 120, 22, "#FFFFFF", "#BBB")); s.append(_t(272, y + 15, "、".join(adj[st]), 10, INK, "start"))
+    s.append(_t(222, 280, "名前の合計 14 = 辺7本 × 2", 10, GRAY, "start"))
+    s.append(_t(408, 76, "③ 隣接行列", 11, INK, "start", 700))
+    c = 26
+    mx, my = 448, 100
+    for j in range(6):
+        s.append(_t(mx + j * c + c / 2, my - 6, str(j), 9, GRAY))
+    for i, st in enumerate(stations):
+        s.append(_t(mx - 4, my + i * c + 17, f"{i} {st}", 9, GRAY, "end"))
+        for j in range(6):
+            v = 1 if (stations[i], stations[j]) in edges or (stations[j], stations[i]) in edges else 0
+            s.append(_box(mx + j * c, my + i * c, c - 2, c - 2, "#E8F5D8" if v else "#FFFFFF", GREEN if v else "#CCC"))
+            s.append(_t(mx + j * c + (c - 2) / 2, my + i * c + 17, str(v), 10, INK if v else "#AAA", "middle", 700 if v else None))
+    s.append(f'<line x1="{mx}" y1="{my}" x2="{mx + 6 * c - 2}" y2="{my + 6 * c - 2}" stroke="{AMBER}" stroke-width="1" stroke-dasharray="3 3"/>')
+    s.append(_t(408, 280, "1 は14マス。点線をはさんで左右対称", 10, GRAY, "start"))
+    return _slide("03", "グラフを隣接リストと隣接行列に書き写す", "\n".join(s),
+                  ["理解度チェック: 新宿—品川を足すと、隣接リストは新宿の行と品川の行の2か所に名前が増え、",
+                   "隣接行列は matrix[0][4] と matrix[4][0] の2マスが 1 になる。路線は両方向に通れるので、両方の駅の側に書くから。"])
 
 
 def ex04():

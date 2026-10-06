@@ -27,7 +27,7 @@ def apply_blanks(src, items):
     return src
 
 
-FOLD_WEEKS = ("02",)     # コードを開閉できる箱に入れる回（いまは第2回だけ）
+FOLD_WEEKS = ("02", "03")     # コードを開閉できる箱に入れる回（第2回から）
 
 
 def fold(pre, filename, src):
