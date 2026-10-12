@@ -27,7 +27,8 @@ def apply_blanks(src, items):
     return src
 
 
-FOLD_WEEKS = ("02", "03")     # コードを開閉できる箱に入れる回（第2回から）
+FOLD_WEEKS = ("02", "03", "04")     # コードを開閉できる箱に入れる回（第2回から）
+COMMENTED_REF_WEEKS = ("04",)      # 参考のコードにもコメントを付け、★ の行を実践の穴のヒントにする回
 
 
 def fold(pre, filename, src):
@@ -90,7 +91,10 @@ def example_pair(filename, note, extra=""):
     prac_img = stem + "_result.png"
     uses_window = "show_window(" in ref_src         # pygame の窓を開く例題は、窓の画像も載せる
     win = (lambda img: img.replace("_result.png", "_window.png")) if uses_window else (lambda img: None)
-    ref_pre = (f'<p class="run-label">例題{n}（参考）── 完成したコード。コメントなしで全体の流れをつかむ。'
+    week = re.search(r"AL2-(\d+)-", filename).group(1)
+    ref_desc = ("完成したコード。<strong>★ の行が実践の穴</strong>にあたるので、そのコメントを穴埋めのヒントにする。"
+                if week in COMMENTED_REF_WEEKS else "完成したコード。コメントなしで全体の流れをつかむ。")
+    ref_pre = (f'<p class="run-label">例題{n}（参考）── {ref_desc}'
                f'保存するなら <code>{ref_name}</code> の名前で</p>\n'
                + fold(f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{highlight(ref_src)}</pre>',
                       ref_name, ref_src) + "\n"
@@ -235,6 +239,8 @@ def setup_guide(no, files):
     prev_line = (f'          &nbsp;&nbsp;&nbsp;&nbsp;├── {prev}/&nbsp;&nbsp;&nbsp;'
                  f'<span style="color:#555">← 前回のファイル</span><br>\n') if prev else ""
     filelist = ", ".join(f"<code>{f}</code>" for f in files)
+    ref_line = ("完成したコード。大事な行にコメントが付いていて、<strong>★ の行が実践の穴</strong>にあたる。まず読んで流れをつかみ、穴埋めのヒントにする"
+                if no in COMMENTED_REF_WEEKS else "コメントなしの完成したコード。まず読んで、全体の流れをつかむ")
     return f"""    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
         <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
@@ -280,7 +286,7 @@ def setup_guide(no, files):
       <div class="note-warn">
         <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
         <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
-          <li><strong>参考</strong>: コメントなしの完成したコード。まず読んで、全体の流れをつかむ</li>
+          <li><strong>参考</strong>: {ref_line}</li>
           <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
               丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
         </ol>

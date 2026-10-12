@@ -126,3 +126,72 @@ def graph_help():
     t(350, y0 + 300, "図の中の頂点の名前・番号は、すべて自分で決めたものにする（A・B・C や授業の駅名は使わない）",
       11, "#E0E0E0")
     return fig(700, y0 + 316, "\n".join(s))
+
+
+def weighted_help():
+    """重み付きグラフ・幅優先探索の道・いちばん短い道の描き方を、3頂点 A・B・C の小さな例で示す。
+    下半分はスライドの配置の例。学生の頂点（5つ以上）の答えは含まない。"""
+    BLUE = "#5AAAFF"
+    s = [f'        <text x="350" y="24" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
+         '描き方の例 ── 頂点 A・B・C、出発 A → ゴール C の場合</text>',
+         f'        <text x="350" y="44" text-anchor="middle" fill="{GRAY}" font-size="11">'
+         '自分の頂点（5つ以上）と時間で、同じ3つを描く</text>']
+
+    def t(x, y, text, size=12, fill="#E0E0E0", anchor="middle", bold=False):
+        w = ' font-weight="700"' if bold else ""
+        s.append(f'        <text x="{x}" y="{y}" text-anchor="{anchor}" fill="{fill}" font-size="{size}"{w}>{text}</text>')
+
+    def graph(cx, title, tcolor, route=None, color=None, order=None):
+        t(cx, 74, title, 13, tcolor, bold=True)
+        pos = {"A": (cx - 60, 190), "B": (cx, 104), "C": (cx + 60, 190)}
+        edges = [("A", "B", 3), ("B", "C", 4), ("A", "C", 10)]
+        on = set()
+        if route:
+            on = {frozenset((route[i], route[i + 1])) for i in range(len(route) - 1)}
+        for a, b, w in edges:
+            (x1, y1), (x2, y2) = pos[a], pos[b]
+            hot = frozenset((a, b)) in on
+            s.append(f'        <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color if hot else "#888"}" '
+                     f'stroke-width="{5 if hot else 2.5}"/>')
+            mx, my = (x1 + x2) / 2, (y1 + y2) / 2
+            s.append(f'        <rect x="{mx - 18}" y="{my - 10}" width="36" height="20" rx="6" fill="#0A0A0A" '
+                     f'stroke="{color if hot else "#555"}"/>')
+            t(mx, my + 5, f"{w}分", 11, color if hot else "#ddd")
+        for name, (x, y) in pos.items():
+            s.append(f'        <circle cx="{x}" cy="{y}" r="19" fill="#1A1A1A" stroke="{GREEN}" stroke-width="2"/>')
+            t(x, y + 5, name, 13, bold=True)
+            if order and name in order:
+                t(x + 30, y + 5, "①②③"[order.index(name)], 13, BLUE, bold=True)
+
+    graph(110, "① 重み付きグラフ", GREEN)
+    t(110, 232, "線のまん中に時間を書く", 10, GRAY)
+    graph(340, "② 幅優先探索の道（色1）", BLUE, ["A", "C"], BLUE, ["A", "B", "C"])
+    t(340, 232, "取り出した順 ①A ②B ③C", 10, GRAY)
+    t(340, 250, "路線1本 ／ 合計 10分", 12, BLUE, bold=True)
+    graph(570, "③ いちばん短い道（色2）", GREEN, ["A", "B", "C"], GREEN)
+    t(570, 232, "3 + 4 = 7", 10, GRAY)
+    t(570, 250, "路線2本 ／ 合計 7分", 12, GREEN, bold=True)
+    s.append('        <line x1="225" y1="66" x2="225" y2="258" stroke="#333"/>')
+    s.append('        <line x1="455" y1="66" x2="455" y2="258" stroke="#333"/>')
+
+    y0 = 294
+    t(350, y0 - 6, "スライドの配置の例（1枚に収まらなければ分けてよい）", 13, GREEN, bold=True)
+    s.append(f'        <rect x="110" y="{y0 + 6}" width="480" height="270" rx="8" fill="#F4F4F4" stroke="#888"/>')
+    t(126, y0 + 30, "第4回: ○○（自分の頂点）で、乗りかえが少ない道と時間が短い道", 12, "#222", "start", True)
+    s.append(f'        <line x1="126" y1="{y0 + 40}" x2="574" y2="{y0 + 40}" stroke="#ccc"/>')
+    boxes = [(126, "① 重み付きグラフ", "#3E7A00", "丸と線、", "線ごとの時間"),
+             (276, "② 幅優先探索の道", "#1565C0", "取り出した順の番号、", "本数と合計（色1）"),
+             (426, "③ いちばん短い道", "#3E7A00", "本数と合計、", "足し算の式（色2）")]
+    for x, title, color, l1, l2 in boxes:
+        s.append(f'        <rect x="{x}" y="{y0 + 52}" width="140" height="150" rx="6" fill="#FFFFFF" '
+                 'stroke="#999" stroke-dasharray="5 4"/>')
+        t(x + 70, y0 + 112, title, 12, color, bold=True)
+        t(x + 70, y0 + 134, l1, 10, "#777")
+        t(x + 70, y0 + 150, l2, 10, "#777")
+    s.append(f'        <rect x="126" y="{y0 + 212}" width="440" height="50" rx="6" fill="#FFFFFF" '
+             'stroke="#999" stroke-dasharray="5 4"/>')
+    t(346, y0 + 234, "理解度チェックの答え（1〜2行）", 12, "#222", bold=True)
+    t(346, y0 + 252, "書き換える辺と時間、そうすると一致する理由", 10, "#777")
+    t(350, y0 + 300, "図の中の頂点の名前・時間は、すべて自分で決めたものにする（A・B・C や授業の駅名は使わない）",
+      11, "#E0E0E0")
+    return fig(700, y0 + 316, "\n".join(s))

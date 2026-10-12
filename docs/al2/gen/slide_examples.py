@@ -163,7 +163,8 @@ def ex03():
 def ex04():
     pos = {"新宿": (90, 150), "渋谷": (200, 240), "池袋": (200, 60), "上野": (330, 60), "東京": (400, 150), "品川": (330, 240)}
     edges = [("新宿", "渋谷", 7), ("新宿", "池袋", 9), ("新宿", "品川", 30), ("渋谷", "品川", 9), ("池袋", "上野", 12), ("上野", "東京", 6), ("東京", "品川", 11)]
-    s = []
+    order = ["新宿", "渋谷", "池袋", "品川"]          # 幅優先探索が取り出した順
+    s = [_t(20, 76, "① 重み付きグラフ", 11, INK, "start", 700)]
     for a, b, w in edges:
         (x1, y1), (x2, y2) = pos[a], pos[b]
         color, sw = "#999", 2
@@ -178,15 +179,21 @@ def ex04():
     for name, (x, y) in pos.items():
         s.append(f'<circle cx="{x}" cy="{y}" r="18" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>')
         s.append(_t(x, y + 4, name, 11, INK, "middle", 700))
-    s.append(f'<line x1="460" y1="100" x2="500" y2="100" stroke="{BLUE}" stroke-width="5"/>')
-    s.append(_t(508, 104, "幅優先探索の道", 11, INK, "start", 700))
-    s.append(_t(508, 120, "新宿→品川 路線1本 30分", 10.5, BLUE, "start"))
-    s.append(f'<line x1="460" y1="160" x2="500" y2="160" stroke="{GREEN}" stroke-width="5"/>')
-    s.append(_t(508, 164, "いちばん短い道", 11, INK, "start", 700))
-    s.append(_t(508, 180, "新宿→渋谷→品川 16分", 10.5, GREEN, "start"))
-    s.append(_t(460, 220, "差 14分", 12, RED, "start", 700))
+        if name in order:
+            s.append(_t(x - 20, y - 16, "①②③④"[order.index(name)], 11, BLUE, "middle", 700))
+    s.append(f'<line x1="452" y1="86" x2="492" y2="86" stroke="{BLUE}" stroke-width="5"/>')
+    s.append(_t(500, 90, "② 幅優先探索の道", 11, INK, "start", 700))
+    s.append(_t(500, 106, "新宿→品川", 10.5, BLUE, "start"))
+    s.append(_t(500, 121, "路線1本 ／ 30分", 10.5, BLUE, "start"))
+    s.append(_t(500, 136, "取り出した順 ①〜④", 9.5, GRAY, "start"))
+    s.append(f'<line x1="452" y1="166" x2="492" y2="166" stroke="{GREEN}" stroke-width="5"/>')
+    s.append(_t(500, 170, "③ いちばん短い道", 11, INK, "start", 700))
+    s.append(_t(500, 186, "新宿→渋谷→品川", 10.5, GREEN, "start"))
+    s.append(_t(500, 201, "路線2本 ／ 7 + 9 = 16分", 10.5, GREEN, "start"))
+    s.append(_t(452, 238, "差 14分", 12, RED, "start", 700))
     return _slide("04", "乗りかえが少ない道と時間が短い道", "\n".join(s),
-                  ["自分の時間では、幅優先探索は路線1本の道（30分）を選び、いちばん短い道は2本の道（16分）だった。"])
+                  ["理解度チェック: 新宿—品川を15分以下（例 12分）にする。幅優先探索は時間を見ないので道は直通のまま変わらず、",
+                   "直通が渋谷経由の16分より短くなるので、いちばん短い道も直通になって一致する。"])
 
 
 def ex05():
