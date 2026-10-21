@@ -67,6 +67,12 @@ table { width: 100%; border-collapse: collapse; font-size: 1.65cqw; }
 th, td { border: 1px solid var(--line); padding: 0.8cqw 1.2cqw; text-align: left; vertical-align: top; }
 th { background: var(--panel); color: var(--green); font-weight: 700; }
 td:first-child { color: #bbb; white-space: nowrap; }
+table.compact { font-size: 1.45cqw; }
+table.compact th, table.compact td { padding: 0.35cqw 1cqw; }
+.why { flex: 0 0 auto; margin-top: 1.4cqw; }
+.why .box { font-size: 1.5cqw; padding: 1.1cqw 1.6cqw; height: 100%; }
+.why .box h3 { font-size: 1.65cqw; }
+.why + .goal { margin-top: 1.2cqw; }
 
 /* 操作 */
 .nav { position: fixed; bottom: 12px; right: 16px; display: flex; gap: 8px; align-items: center; z-index: 5; }
@@ -244,7 +250,7 @@ td:first-child { color: #bbb; white-space: nowrap; }
   <section class="slide">
     <h2><span class="num">第5回</span>手計算で1手順ずつたどる（新宿から）</h2>
     <p class="lead">①〜③を、すべての駅が確定するまでくり返します。表の「－」は、まだ行き方が見つかっていない駅です。</p>
-    <table>
+    <table class="compact">
       <tr><th>手順</th><th>確定する駅</th><th>やったこと</th><th>新宿</th><th>渋谷</th><th>池袋</th><th>品川</th><th>上野</th><th>東京</th></tr>
       <tr><td>1</td><td>新宿（0分）</td><td>渋谷・池袋・品川に書き込む</td><td class="g">0</td><td>7</td><td>9</td><td>30</td><td>－</td><td>－</td></tr>
       <tr><td>2</td><td>渋谷（7分）</td><td><span class="a">品川を 30 → 16 に書き直す（7 + 9）</span></td><td class="g">0</td><td class="g">7</td><td>9</td><td class="a">16</td><td>－</td><td>－</td></tr>
@@ -253,7 +259,17 @@ td:first-child { color: #bbb; white-space: nowrap; }
       <tr><td>5</td><td>上野（21分）</td><td>東京は 21 + 6 = 27 で同じ → 何もしない</td><td class="g">0</td><td class="g">7</td><td class="g">9</td><td class="g">16</td><td class="g">21</td><td>27</td></tr>
       <tr><td>6</td><td>東京（27分）</td><td>となりはすべて確定済み</td><td class="g">0</td><td class="g">7</td><td class="g">9</td><td class="g">16</td><td class="g">21</td><td class="g">27</td></tr>
     </table>
-    <p class="goal">第4回で幅優先探索が見のがした <span class="g">16分</span> の道が、手順2の書き直しで見つかる。</p>
+    <div class="body why">
+      <div class="col">
+        <div class="box amber"><h3>工夫1　遅い行き方は捨てる（手順2）</h3>
+          品川には、いちばん早い <b>16分</b> だけを残す。直通 30分 の行き方は、品川から先をたどらない（先で何をしても、16分で来たほうが速い）。</div>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>工夫2　いちばん小さい駅は確定してよい（手順4）</h3>
+          このとき未確定は 品川16・上野21・東京－。品川へ別の道で来るには上野を通るので、<b>21分以上</b>（時間は0以上なので、進むほど増えるだけ）。だから品川の16分は、もう変わらない。</div>
+      </div>
+    </div>
+    <p class="goal">全探索は<span class="r">「行き方」を全部</span>調べる。ダイクストラ法は<span class="g">「駅」を1つずつ確定</span>するので、6駅なら<span class="g">6手順</span>で終わる。</p>
   </section>
 
   <!-- 10 第5回でやること -->
