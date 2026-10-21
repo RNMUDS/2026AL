@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1〜5回の流れ | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111111; --panel: #1A1A1A; --panel2: #141414; --line: #333;
+  --text: #E0E0E0; --sub: #999; --green: #76B900; --lime: #93D500;
+  --amber: #FFB800; --blue: #5AAAFF; --red: #FF5252;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #000; color: var(--text);
+  -webkit-font-smoothing: antialiased; overflow: hidden; }
+
+/* 16:9 のスライドを画面いっぱいに置く。文字の大きさはスライドの幅（cqw）に合わせる */
+.deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+.slide { position: absolute; width: min(100vw, 177.78vh); height: min(56.25vw, 100vh);
+  background: radial-gradient(circle at 85% 10%, rgba(118,185,0,0.12), transparent 45%), var(--bg);
+  container-type: size; padding: 5cqw 6cqw 6cqw; display: none; flex-direction: column; overflow: hidden; }
+.slide.active { display: flex; }
+.slide h2 { font-size: 3.4cqw; font-weight: 900; line-height: 1.3; margin-bottom: 0.6cqw; }
+.slide h2 .num { color: var(--green); margin-right: 1cqw; }
+.lead { font-size: 1.9cqw; color: #ccc; margin-bottom: 2.4cqw; line-height: 1.6; }
+.body { flex: 1; display: flex; gap: 3cqw; min-height: 0; }
+.col { flex: 1; display: flex; flex-direction: column; gap: 1.6cqw; min-width: 0; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 1.2cqw; padding: 1.6cqw 2cqw; font-size: 1.75cqw; line-height: 1.65; }
+.box h3 { font-size: 1.9cqw; margin-bottom: 0.6cqw; color: var(--green); }
+.box.amber { border-color: var(--amber); } .box.amber h3 { color: var(--amber); }
+.box.blue { border-color: var(--blue); } .box.blue h3 { color: var(--blue); }
+.box.red { border-color: var(--red); } .box.red h3 { color: var(--red); }
+.box.green { border-color: var(--green); }
+.box ul { padding-left: 2.2cqw; } .box li + li { margin-top: 0.4cqw; }
+b, strong { color: #fff; }
+code { font-family: 'JetBrains Mono', ui-monospace, monospace; color: #cdd6f4; background: #0A0A0A; border-radius: 0.4cqw; padding: 0 0.4cqw; font-size: 0.95em; }
+.g { color: var(--green); font-weight: 700; } .a { color: var(--amber); font-weight: 700; }
+.bl { color: var(--blue); font-weight: 700; } .r { color: var(--red); font-weight: 700; }
+.muted { color: var(--sub); }
+svg { width: 100%; height: 100%; display: block; }
+.figure { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+
+/* 表紙 */
+.cover { justify-content: center; }
+.cover .badge { display: inline-block; align-self: flex-start; border: 1px solid rgba(255,255,255,0.25); border-radius: 100px;
+  padding: 0.4cqw 1.6cqw; font-size: 1.5cqw; margin-bottom: 2cqw; color: #ddd; }
+.cover h1 { font-size: 5.2cqw; font-weight: 900; line-height: 1.25; margin-bottom: 1.6cqw; }
+.cover h1 span { color: var(--green); }
+.cover p { font-size: 2cqw; color: #bbb; }
+
+/* 5回の道のり */
+.road { display: flex; gap: 1.2cqw; align-items: stretch; margin-top: 1cqw; }
+.step { flex: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 1.2cqw; padding: 1.4cqw 1.3cqw; position: relative; }
+.step .wk { font-size: 1.4cqw; color: var(--sub); font-weight: 700; }
+.step .tt { font-size: 1.9cqw; font-weight: 900; margin: 0.3cqw 0 0.8cqw; line-height: 1.3; }
+.step .tx { font-size: 1.45cqw; color: #ccc; line-height: 1.55; }
+.step.now { border: 2px solid var(--green); background: #16210c; }
+.step.now .wk { color: var(--green); }
+.step:not(:last-child)::after { content: "▶"; position: absolute; right: -1.1cqw; top: 45%; color: #666; font-size: 1.2cqw; }
+.goal { margin-top: 2cqw; font-size: 1.9cqw; text-align: center; color: #ccc; }
+
+/* 比べる表 */
+table { width: 100%; border-collapse: collapse; font-size: 1.65cqw; }
+th, td { border: 1px solid var(--line); padding: 0.8cqw 1.2cqw; text-align: left; vertical-align: top; }
+th { background: var(--panel); color: var(--green); font-weight: 700; }
+td:first-child { color: #bbb; white-space: nowrap; }
+
+/* 操作 */
+.nav { position: fixed; bottom: 12px; right: 16px; display: flex; gap: 8px; align-items: center; z-index: 5; }
+.nav button { background: #1A1A1A; color: var(--text); border: 1px solid var(--green); border-radius: 999px;
+  width: 40px; height: 40px; font-size: 16px; cursor: pointer; }
+.nav button:hover { background: var(--green); color: #fff; }
+.nav .count { font-size: 13px; color: var(--sub); min-width: 52px; text-align: center; }
+.back { position: fixed; top: 10px; left: 16px; font-size: 13px; color: var(--sub); text-decoration: none; z-index: 5; }
+.back:hover { color: var(--green); }
+.bar { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--green); transition: width 0.25s; z-index: 5; }
+</style>
+</head>
+<body>
+<a class="back" href="session05.html">← 第5回のページへ</a>
+
+<div class="deck">
+
+  <!-- 1 表紙 -->
+  <section class="slide cover">
+    <span class="badge">アルゴリズム論及び演習II　第5回の前に</span>
+    <h1>第1〜4回は、<br><span>ダイクストラ法</span>への準備だった</h1>
+    <p>これまでの4回をふり返り、第5回で何をするのかを確かめます。<br>→ キー・スペース・画面の右半分をクリックで次へ</p>
+  </section>
+
+  <!-- 2 全体の道のり -->
+  <section class="slide">
+    <h2>5回の道のり</h2>
+    <p class="lead">後期の目標は「<b>いちばん良い答え（最短・最小）を、速く求める</b>」こと。第1〜4回で道具と問題をそろえました。</p>
+    <div class="road">
+      <div class="step"><div class="wk">第1回</div><div class="tt">全探索</div><div class="tx">全部試せば、いちばん短いものが必ず見つかる。でも数が爆発する</div></div>
+      <div class="step"><div class="wk">第2回</div><div class="tt">幅優先・深さ優先</div><div class="tx">キューとスタック。幅優先探索は、歩数がいちばん少ない道を求める</div></div>
+      <div class="step"><div class="wk">第3回</div><div class="tt">グラフ</div><div class="tx">迷路も路線図も「頂点と辺」。隣接リストでPythonに書き写す</div></div>
+      <div class="step"><div class="wk">第4回</div><div class="tt">重み付きグラフ</div><div class="tx">辺に時間を書く。幅優先探索では、時間がいちばん短い道を求められない</div></div>
+      <div class="step now"><div class="wk">第5回（今回）</div><div class="tt">ダイクストラ法</div><div class="tx">時間を見て、全部は調べずに、いちばん短い道を求める</div></div>
+    </div>
+    <p class="goal">第1〜4回で見つかった<span class="r">2つの困りごと</span>を、第5回で<span class="g">1つの方法</span>で解決します。</p>
+  </section>
+
+  <!-- 3 第1回 -->
+  <section class="slide">
+    <h2><span class="num">第1回</span>全探索 ── 全部試して、いちばん短いものを選ぶ</h2>
+    <p class="lead">前期の復習（二分探索）のあと、後期の予告として「全部の順番を試す」方法を動かしました。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box green"><h3>よいところ</h3>すべての候補を調べるので、<b>必ず正しい答え</b>（いちばん短いもの）が見つかる。</div>
+        <div class="box red"><h3>困るところ</h3>候補が少し増えるだけで、調べる数が<b>爆発的に増える</b>。大きな問題では、いつまでも終わらない。</div>
+      </div>
+      <div class="col">
+        <div class="box"><h3>第5回とのつながり</h3>
+          第4回でも全探索で「新宿 → 品川」のいちばん短い道（16分）を見つけました。<br><br>
+          ダイクストラ法は、全探索と<span class="g">同じ正しい答え</span>を、<span class="g">全部は調べずに</span>求めます。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 第2回 -->
+  <section class="slide">
+    <h2><span class="num">第2回</span>幅優先探索と深さ優先探索</h2>
+    <p class="lead">迷路で2つの探索を比べました。ちがいは「メモのどこから読むか」だけです。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box blue"><h3>幅優先探索（キュー：先に入れたものから読む）</h3>
+          スタートから<b>1歩、2歩、3歩…</b>と、近い順に広げていく。<br>
+          → <span class="bl">歩数（辺の数）がいちばん少ない道</span>が求まる。</div>
+        <div class="box"><h3>深さ優先探索（スタック：後から入れたものから読む）</h3>
+          行けるところまで進み、行き止まりで戻る。<br>
+          → 見つかる道が、いちばん短いとは限らない。</div>
+      </div>
+      <div class="col">
+        <div class="box"><h3>第5回とのつながり</h3>
+          幅優先探索の「<b>近い順に広げる</b>」という考え方は、ダイクストラ法にそのまま引きつがれます。<br><br>
+          ちがいは「近い」の意味。幅優先探索は<span class="bl">歩数</span>、ダイクストラ法は<span class="g">合計時間</span>で近さを測ります。<br><br>
+          道順を組み立てる <code>came_from</code> も、第2回から使っています。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 第3回 -->
+  <section class="slide">
+    <h2><span class="num">第3回</span>グラフ ── 迷路も路線図も「頂点と辺」</h2>
+    <p class="lead">駅を<b>頂点</b>（丸）、駅と駅のつながりを<b>辺</b>（線）として表し、Pythonに書き写しました。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box"><h3>隣接リスト</h3>頂点ごとに、となりの頂点を並べる。<br>
+          <code>"新宿": ["渋谷", "池袋", "東京"]</code></div>
+        <div class="box"><h3>隣接行列</h3>つながっていれば 1、いなければ 0 の表。</div>
+      </div>
+      <div class="col">
+        <div class="box"><h3>第5回とのつながり</h3>
+          第4回・第5回の例題も、第3回と同じ<b>新宿・渋谷・池袋・上野・東京・品川</b>の6駅の路線図を、<b>隣接リスト</b>で書いています（つながり方は少しちがいます）。<br><br>
+          ただし第3回の辺は「つながっている／いない」だけで、<span class="a">時間</span>はまだ書いていませんでした。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 第4回 -->
+  <section class="slide">
+    <h2><span class="num">第4回</span>重み付きグラフ ── 辺に時間を書く</h2>
+    <p class="lead">辺ごとに数字（<b>重み</b>）を書いたグラフ。Pythonでは <code>("渋谷", 7)</code> のように、となりの駅と時間を組にします。</p>
+    <div class="body">
+      <div class="col" style="flex:1.15">
+        <div class="figure">
+          <svg viewBox="0 0 440 250" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif">
+            <g stroke="#444" stroke-width="2">
+              <line x1="70" y1="70" x2="200" y2="40"/><line x1="200" y1="40" x2="330" y2="40"/>
+              <line x1="330" y1="40" x2="380" y2="150"/><line x1="380" y1="150" x2="250" y2="200"/>
+              <line x1="70" y1="70" x2="70" y2="200"/>
+            </g>
+            <line x1="70" y1="70" x2="250" y2="200" stroke="#5AAAFF" stroke-width="5"/>
+            <line x1="70" y1="200" x2="250" y2="200" stroke="#76B900" stroke-width="5"/>
+            <line x1="70" y1="70" x2="70" y2="200" stroke="#76B900" stroke-width="5"/>
+            <g font-size="14" text-anchor="middle" fill="#aaa">
+              <text x="130" y="46">9</text><text x="265" y="32">12</text><text x="368" y="92">6</text><text x="322" y="166">11</text>
+            </g>
+            <text x="56" y="140" font-size="15" fill="#76B900" font-weight="700" text-anchor="middle">7</text>
+            <text x="160" y="222" font-size="15" fill="#76B900" font-weight="700" text-anchor="middle">9</text>
+            <text x="172" y="128" font-size="15" fill="#5AAAFF" font-weight="700" text-anchor="middle">30</text>
+            <g font-size="13" font-weight="700" text-anchor="middle" fill="#eee">
+              <circle cx="70" cy="70" r="24" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="70" y="75">新宿</text>
+              <circle cx="200" cy="40" r="24" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="200" y="45">池袋</text>
+              <circle cx="330" cy="40" r="24" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="330" y="45">上野</text>
+              <circle cx="380" cy="150" r="24" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="380" y="155">東京</text>
+              <circle cx="250" cy="200" r="24" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="250" y="205">品川</text>
+              <circle cx="70" cy="200" r="24" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="70" y="205">渋谷</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box blue"><h3>幅優先探索の答え</h3>直通 <b>30分</b>（路線1本）。時間を使わないので、速い道を見のがす。</div>
+        <div class="box green"><h3>全探索の答え</h3>渋谷経由 <b>7 + 9 = 16分</b>。正しいが、地図が大きくなると終わらない。</div>
+        <div class="box"><h3>わかったこと</h3>「歩数が少ない道」と「時間が短い道」は<b>別もの</b>。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 2つの困りごと -->
+  <section class="slide">
+    <h2>第4回までに見つかった、2つの困りごと</h2>
+    <p class="lead">どちらの方法も、重み付きグラフで「合計時間がいちばん短い道」を求めるには足りません。</p>
+    <table>
+      <tr><th></th><th>幅優先探索（第2〜4回）</th><th>全探索（第1・4回）</th><th>ダイクストラ法（第5回）</th></tr>
+      <tr><td>いちばん少なくするもの</td><td>路線の本数（歩数）</td><td>合計時間</td><td><span class="g">合計時間</span></td></tr>
+      <tr><td>重み（時間）を使うか</td><td><span class="r">使わない</span></td><td>使う</td><td><span class="g">使う</span></td></tr>
+      <tr><td>調べる量</td><td>少ない</td><td><span class="r">全部の行き方（爆発する）</span></td><td><span class="g">各駅を1回ずつ確定</span></td></tr>
+      <tr><td>新宿 → 品川</td><td>30分（まちがい）</td><td>16分</td><td><span class="g">16分</span></td></tr>
+      <tr><td>使えないとき</td><td>時間が短い道を求めたいとき</td><td>地図が大きいとき</td><td>重みにマイナスがあるとき</td></tr>
+    </table>
+    <p class="goal">ダイクストラ法 ＝ 幅優先探索の「<span class="bl">近い順に広げる</span>」＋ 全探索の「<span class="g">時間を足して比べる</span>」</p>
+  </section>
+
+  <!-- 8 ダイクストラ法の考え方 -->
+  <section class="slide">
+    <h2><span class="num">第5回</span>ダイクストラ法の考え方</h2>
+    <p class="lead">出発点から各駅までの時間を、鉛筆で表（<b>距離表</b>）に書いていく。<b>近い駅から順に</b>、ペンでなぞって確定させる。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box green"><h3>① 選ぶ</h3>まだ確定していない駅のうち、表の時間が<b>いちばん小さい駅</b>を選ぶ。</div>
+        <div class="box amber"><h3>② 確定する</h3>選んだ駅の時間を「<b>もう変わらない</b>」と決める。</div>
+        <div class="box green"><h3>③ 書き直す</h3>となりの駅の「確定した駅の時間 ＋ 区間の時間」が表より小さければ、<b>書き直す</b>。</div>
+      </div>
+      <div class="col">
+        <div class="box"><h3>全部調べなくてよい理由</h3>
+          重み（時間）は<b>0以上</b>。だから、いま表でいちばん小さい駅へは、まだ確定していない駅を回って来ても、<b>それより短くならない</b>。<br><br>
+          → 1つの駅を調べるのは、<span class="g">確定したときの1回だけ</span>。駅が6つなら6回で終わる。</div>
+        <div class="box red"><h3>注意</h3>重みにマイナスがあると、この理由が成り立たず、まちがえる。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 手計算 -->
+  <section class="slide">
+    <h2><span class="num">第5回</span>手計算で1手順ずつたどる（新宿から）</h2>
+    <p class="lead">①〜③を、すべての駅が確定するまでくり返します。表の「－」は、まだ行き方が見つかっていない駅です。</p>
+    <table>
+      <tr><th>手順</th><th>確定する駅</th><th>やったこと</th><th>新宿</th><th>渋谷</th><th>池袋</th><th>品川</th><th>上野</th><th>東京</th></tr>
+      <tr><td>1</td><td>新宿（0分）</td><td>渋谷・池袋・品川に書き込む</td><td class="g">0</td><td>7</td><td>9</td><td>30</td><td>－</td><td>－</td></tr>
+      <tr><td>2</td><td>渋谷（7分）</td><td><span class="a">品川を 30 → 16 に書き直す（7 + 9）</span></td><td class="g">0</td><td class="g">7</td><td>9</td><td class="a">16</td><td>－</td><td>－</td></tr>
+      <tr><td>3</td><td>池袋（9分）</td><td>上野に書き込む（9 + 12）</td><td class="g">0</td><td class="g">7</td><td class="g">9</td><td>16</td><td>21</td><td>－</td></tr>
+      <tr><td>4</td><td>品川（16分）</td><td>東京に書き込む（16 + 11）</td><td class="g">0</td><td class="g">7</td><td class="g">9</td><td class="g">16</td><td>21</td><td>27</td></tr>
+      <tr><td>5</td><td>上野（21分）</td><td>東京は 21 + 6 = 27 で同じ → 何もしない</td><td class="g">0</td><td class="g">7</td><td class="g">9</td><td class="g">16</td><td class="g">21</td><td>27</td></tr>
+      <tr><td>6</td><td>東京（27分）</td><td>となりはすべて確定済み</td><td class="g">0</td><td class="g">7</td><td class="g">9</td><td class="g">16</td><td class="g">21</td><td class="g">27</td></tr>
+    </table>
+    <p class="goal">第4回で幅優先探索が見のがした <span class="g">16分</span> の道が、手順2の書き直しで見つかる。</p>
+  </section>
+
+  <!-- 10 第5回でやること -->
+  <section class="slide">
+    <h2><span class="num">第5回</span>今日やること</h2>
+    <p class="lead">例題（参考）でダイクストラ法の動きをつかみ、クリエイティブ演習でディズニーランドの地図を使った作品を作ります。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box"><h3>例題1 → 演習1：距離表が埋まっていく様子</h3>
+          例題1は路線図で、手計算と同じ順に確定するのを確かめる。<br>演習1では<b>自分のディズニー地図</b>を作り、「書き直した」が2つ以上出るしかけを入れる。</div>
+        <div class="box"><h3>例題2 → 演習2：道順を組み立てる</h3>
+          書き直すときに <code>came_from</code>（どこから来たか）も書き直し、ゴールから逆にたどる。<br>演習2では<b>自分だけの園内ナビ</b>を作る。</div>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>標準課題（70点）</h3>
+          自分の地図で、<b>確定の順番と時間</b>・<b>書き直し1つ</b>・<b>came_from で逆にたどった道順</b>を、図形で描く。
+          理解度チェックは「道を1本通行止めにしたら、どこが何分になるか」。</div>
+        <div class="box amber"><h3>発展課題（30点・任意）</h3>
+          作品2「路線図の最短経路アプリ」。今回は、自分の路線図が画面に出るところまで。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 この先 -->
+  <section class="slide">
+    <h2>この先の流れ</h2>
+    <p class="lead">第5回は「考え方」の回です。第6・7回で、速いプログラムにして、迷路にも使います。</p>
+    <div class="road">
+      <div class="step now"><div class="wk">第5回</div><div class="tt">ダイクストラ法（1）考え方</div><div class="tx">手計算で1手順ずつたどる。確定・書き直し・came_from</div></div>
+      <div class="step"><div class="wk">第6回</div><div class="tt">ダイクストラ法（2）実装入門</div><div class="tx">「いちばん小さい駅を選ぶ」を、heapq で速くする</div></div>
+      <div class="step"><div class="wk">第7回</div><div class="tt">ダイクストラ法（3）迷路への応用</div><div class="tx">床コスト付きの迷路で、幅優先探索との違いを見る</div></div>
+    </div>
+    <p class="goal">第5回のゴール：<span class="g">「近い順に確定し、より短い行き方が見つかれば書き直す」を、自分の言葉と図で説明できる</span></p>
+  </section>
+
+</div>
+
+<div class="bar" id="bar"></div>
+<nav class="nav">
+  <button id="prev" aria-label="前へ">◀</button>
+  <span class="count" id="count"></span>
+  <button id="next" aria-label="次へ">▶</button>
+</nav>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle('active', k === cur));
+  document.getElementById('count').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('bar').style.width = `${(cur + 1) / slides.length * 100}%`;
+  history.replaceState(null, '', `#${cur + 1}`);
+}
+document.getElementById('prev').onclick = e => { e.stopPropagation(); show(cur - 1); };
+document.getElementById('next').onclick = e => { e.stopPropagation(); show(cur + 1); };
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+  if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End') show(slides.length - 1);
+});
+document.querySelector('.deck').addEventListener('click', e => {
+  if (e.target.closest('a')) return;
+  show(e.clientX > innerWidth / 2 ? cur + 1 : cur - 1);
+});
+let x0 = null;
+addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 40) show(dx < 0 ? cur + 1 : cur - 1);
+  x0 = null;
+});
+show((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>

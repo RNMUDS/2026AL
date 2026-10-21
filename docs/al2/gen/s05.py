@@ -265,7 +265,9 @@ NAV = [
 
 sub = slide_submission("05")
 
-explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+explanation = f"""    <p style="margin-bottom:1rem"><a href="flow05.html" style="color:#76B900;font-weight:700">▶ 第1〜4回から第5回への流れをスライドで見る</a></p>
+
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第4回では、辺に<strong>区間ごとにかかる時間（分）</strong>を書いた路線図（重み付きグラフ）で、
       「合計時間がいちばん短い道」をさがしました。
       幅優先探索は、その時間を使わずに、<strong>路線の本数がいちばん少ない道</strong>を求めます。
