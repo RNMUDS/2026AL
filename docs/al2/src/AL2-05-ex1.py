@@ -630,7 +630,7 @@ def show_window(graph, start, log, title, closed=(), where=None):
         screen.blit(small.render(f"出発 {start}　丸の外の数字 = 距離表の時間", True, SUB), (30, 52))
         _draw_graph(screen, fonts, names, edges, pos, colored, rings, labels, closed)
         screen.blit(big.render("距離表", True, GREEN), (x0, 20))
-        screen.blit(small.render("緑 = 確定した場所　橙 = この手順で書き直した時間", True, SUB), (x0, 52))
+        screen.blit(small.render("緑 = 確定した場所　橙 = この手順で書き込み・書き直した時間", True, SUB), (x0, 52))
         table(dist, settled, None if final else current, [] if final else changes)
         by = 114 + len(names) * row_h + 16
         lines = []

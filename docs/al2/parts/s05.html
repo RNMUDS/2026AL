@@ -41,9 +41,9 @@
       全探索は正しい道（16分）を選べますが、地図が少し大きくなるだけで、調べる行き方の数が爆発的に増えます。
       そこで第5回は、<strong>行き方を全部は調べずに</strong>、合計時間がいちばん短い道を求める方法を学びます。
       全部調べなくてよいのは、<strong>出発点から近い駅の順に</strong>時間を決めていくからです。
-      近い駅から決めていけば、ある駅の時間が決まった時点で、それより遠い駅を回る行き方はどれも長くなるとわかるので、
-      調べる必要がありません（くわしい理由は、下の「いちばん小さい駅を確定してよい理由」で説明します）。
-      <strong>ダイクストラ法</strong>です。1959年にエドガー・ダイクストラが考えた方法で、
+      近い順に決めていけば、ある駅の時間を決めた時点で、まだ決めていない駅を回って来る行き方はそれより長くなるとわかるので、
+      その行き方を最後までたどる必要がありません（くわしい理由は、下の「いちばん小さい駅を確定してよい理由」で説明します）。
+      この方法が<strong>ダイクストラ法</strong>です。1959年にエドガー・ダイクストラが考えた方法で、
       今のカーナビや乗換案内の中でも使われています。
     </p>
 
@@ -417,9 +417,9 @@
       <p style="font-size:0.95rem">
         手順の②で「もう変わらない」と決めてしまってよいのは、<strong>重み（区間の時間）がすべて0以上</strong>だからです。
         手順4で、まだ確定していない駅のうち時間がいちばん小さいのは品川（16分）でした。
-        品川へ別の行き方でたどり着くには、必ず他の未確定の駅を通ります。
-        他の未確定の駅は、どれも16分以上かかります（上野 21分、東京 －）。
-        そこから品川へ進むと、重みが0以上なのでさらに時間が増えます。
+        確定済みの駅（新宿・渋谷・池袋）から品川へ直接来る行き方は、もう表に書き込んで比べてあります（直通 30分、渋谷経由 16分）。
+        それ以外の行き方は、確定済みの駅を出たあと、必ず未確定の上野を通ります（東京へも上野か品川を通らないと行けません）。
+        上野まででもう21分かかり、そこから品川へ進むと、重みが0以上なので時間はさらに増えます。
         つまり<strong>16分より短くなることはありえません</strong>。
       </p>
     </div>
@@ -468,10 +468,11 @@
         <line x1="136" y1="180" x2="308" y2="248" stroke="#666" stroke-width="2"/>
         <rect x="196" y="200" width="44" height="24" rx="6" fill="#0A0A0A" stroke="#888888"/>
         <text x="218" y="217" text-anchor="middle" fill="#bbb" font-size="12">2円</text>
-        <line x1="366" y1="246" x2="534" y2="184" stroke="#FF5252" stroke-width="3"/>
+        <line x1="366" y1="246" x2="526" y2="187" stroke="#FF5252" stroke-width="3"/>
+        <polygon points="534,184 520,182 525,195" fill="#FF5252"/>
         <rect x="432" y="196" width="56" height="24" rx="6" fill="#0A0A0A" stroke="#FF5252"/>
         <text x="460" y="213" text-anchor="middle" fill="#FF5252" font-size="12" font-weight="700">-5円</text>
-        <text x="460" y="240" text-anchor="middle" fill="#888888" font-size="10">B店でもらえるクーポン</text>
+        <text x="460" y="240" text-anchor="middle" fill="#888888" font-size="10">B店→A店の向きだけ（B店でもらえるクーポン）</text>
         <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.020;0.040;0.280;0.300;1" dur="12s" repeatCount="indefinite"/>
           <text x="350" y="60" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">① スタートを0円で確定</text>
           <text x="350" y="82" text-anchor="middle" fill="#ccc" font-size="11">A店は1円、B店は2円と分かった</text>
@@ -1179,7 +1180,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         screen.blit(small.render(<span class="str">f&quot;出発 {start}　丸の外の数字 = 距離表の時間&quot;</span>, <span class="kw">True</span>, SUB), (<span class="num">30</span>, <span class="num">52</span>))
         <span class="fn">_draw_graph</span>(screen, fonts, names, edges, pos, colored, rings, labels, closed)
         screen.blit(big.render(<span class="str">&quot;距離表&quot;</span>, <span class="kw">True</span>, GREEN), (x0, <span class="num">20</span>))
-        screen.blit(small.render(<span class="str">&quot;緑 = 確定した場所　橙 = この手順で書き直した時間&quot;</span>, <span class="kw">True</span>, SUB), (x0, <span class="num">52</span>))
+        screen.blit(small.render(<span class="str">&quot;緑 = 確定した場所　橙 = この手順で書き込み・書き直した時間&quot;</span>, <span class="kw">True</span>, SUB), (x0, <span class="num">52</span>))
         <span class="fn">table</span>(dist, settled, <span class="kw">None</span> <span class="kw">if</span> final <span class="kw">else</span> current, [] <span class="kw">if</span> final <span class="kw">else</span> changes)
         by = <span class="num">114</span> + <span class="fn">len</span>(names) * row_h + <span class="num">16</span>
         lines = []
@@ -1211,11 +1212,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1-ref_result.png">
+        <img src="images/a05_ex1-ref_result.png" alt="AL2-05-ex1-ref.py の実行結果。ダイクストラ法で、新宿から各駅までの最短時間を求める / ---------------------------------------------------- / 手順1  新宿（0分）を確定 / 渋谷 に 7分 を書き込んだ（新宿 0 + 7） / 池袋 に 9分 を書き込んだ（新宿 0 + 9） / 品川 に 30分 を書き込んだ（新宿 0 + 30） / 手順2  渋谷（7分）を確定 / 品川 を 30分 → 16分 に書き直した（渋谷 7 + 9） / 手順3  池袋（9分）を確定 / 上野 に 21分 を書き込んだ（池袋 9 + 12） / 手順4  品川（16分）を確定 / 東京 に 27分 を書き込んだ（品川 16 + 11） / 手順5  上野（21分）を確定 / 手順6  東京（27分）を確定 / ---------------------------------------------------- / 新宿から各駅までの最短時間 / 新宿: 0分 / 渋谷: 7分 / 池袋: 9分 / 上野: 21分 / 東京: 27分 / 品川: 16分" width="419" height="488" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1-ref_window.png">
+        <img src="images/a05_ex1-ref_window.png" alt="AL2-05-ex1-ref.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">手順1で新宿を確定すると、渋谷7分・池袋9分・品川30分が書き込まれます。手順2で渋谷を確定したとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。直通の30分より、渋谷で乗りかえる 7 + 9 = 16分 のほうが早いことが見つかったためです。品川の16分はそのあと書き直されず、手順4で確定しています。新宿から東京までは27分と求まりました。1章の手計算の図と、確定の順番も時間も一致しています。</p>
 <p class="run-label" style="margin-top:1.8rem">演習1（クリエイティブ）── <code>AL2-05-ex1.py</code> の名前で保存し、まずそのまま実行する。次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>
@@ -1870,7 +1871,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         screen.blit(small.render(<span class="str">f&quot;出発 {start}　丸の外の数字 = 距離表の時間&quot;</span>, <span class="kw">True</span>, SUB), (<span class="num">30</span>, <span class="num">52</span>))
         <span class="fn">_draw_graph</span>(screen, fonts, names, edges, pos, colored, rings, labels, closed)
         screen.blit(big.render(<span class="str">&quot;距離表&quot;</span>, <span class="kw">True</span>, GREEN), (x0, <span class="num">20</span>))
-        screen.blit(small.render(<span class="str">&quot;緑 = 確定した場所　橙 = この手順で書き直した時間&quot;</span>, <span class="kw">True</span>, SUB), (x0, <span class="num">52</span>))
+        screen.blit(small.render(<span class="str">&quot;緑 = 確定した場所　橙 = この手順で書き込み・書き直した時間&quot;</span>, <span class="kw">True</span>, SUB), (x0, <span class="num">52</span>))
         <span class="fn">table</span>(dist, settled, <span class="kw">None</span> <span class="kw">if</span> final <span class="kw">else</span> current, [] <span class="kw">if</span> final <span class="kw">else</span> changes)
         by = <span class="num">114</span> + <span class="fn">len</span>(names) * row_h + <span class="num">16</span>
         lines = []
@@ -1902,11 +1903,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_result.png">
+        <img src="images/a05_ex1_result.png" alt="AL2-05-ex1.py の実行結果。ダイクストラ法で、エントランスから園内の各場所までの最短時間を求める / -------------------------------------------------------- / 手順1  エントランス（0分）を確定 / ワールドバザール に 3分 を書き込んだ（エントランス 0 + 3） / 手順2  ワールドバザール（3分）を確定 / プラザ に 6分 を書き込んだ（ワールドバザール 3 + 3） / アドベンチャーランド に 10分 を書き込んだ（ワールドバザール 3 + 7） / トゥモローランド に 10分 を書き込んだ（ワールドバザール 3 + 7） / 手順3  プラザ（6分）を確定 / アドベンチャーランド を 10分 → 9分 に書き直した（プラザ 6 + 3） / トゥモローランド を 10分 → 9分 に書き直した（プラザ 6 + 3） / シンデレラ城 に 7分 を書き込んだ（プラザ 6 + 1） / 手順4  シンデレラ城（7分）を確定 / ファンタジーランド に 9分 を書き込んだ（シンデレラ城 7 + 2） / 手順5  アドベンチャーランド（9分）を確定 / ウエスタンランド に 12分 を書き込んだ（アドベンチャーランド 9 + 3） / 手順6  ファンタジーランド（9分）を確定 / トゥーンタウン に 13分 を書き込んだ（ファンタジーランド 9 + 4） / 手順7  トゥモローランド（9分）を確定 / 手順8  ウエスタンランド（12分）を確定 / クリッターカントリー に 16分 を書き込んだ（ウエスタンランド 12 + 4） / 手順9  トゥーンタウン（13分）を確定 / 手順10  クリッターカントリー（16分）を確定 / -------------------------------------------------------- / エントランスから園内の各場所までの最短時間 / エントランス: 0分 / ワールドバザール: 3分 / プラザ: 6分 / シンデレラ城: 7分 / アドベンチャーランド: 9分 / ウエスタンランド: 12分 / クリッターカントリー: 16分 / ファンタジーランド: 9分 / トゥーンタウン: 13分 / トゥモローランド: 9分" width="528" height="748" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_window.png">
+        <img src="images/a05_ex1_window.png" alt="AL2-05-ex1.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。</p>
       <div class="concept-box" style="margin-top:1rem">
@@ -1936,7 +1937,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
       </div>
       <p>ダイクストラ法は最短時間を求めますが、そのままでは「どの道を通ったか」が分かりません。
       時間を書き直すときに、<strong>どの場所から来たか</strong>（<code>came_from</code>）も一緒に書き直しておけば、
-      あとでゴールから逆にたどって道順を組み立てられます。第1回の幅優先探索で道を組み立てたときと同じやり方です。
+      あとでゴールから逆にたどって道順を組み立てられます。第2回・第4回の幅優先探索で道を組み立てたときと同じやり方です。
       演習2では、これを使って<strong>自分だけの園内ナビ</strong>を作ります。</p>
 
       <table>
@@ -2600,11 +2601,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2-ref_result.png">
+        <img src="images/a05_ex2-ref_result.png" alt="AL2-05-ex2-ref.py の実行結果。新宿から各駅への最短時間と道順 / ---------------------------------------------------- / 渋谷:  7分  新宿 → 渋谷 / 池袋:  9分  新宿 → 池袋 / 上野: 21分  新宿 → 池袋 → 上野 / 東京: 27分  新宿 → 渋谷 → 品川 → 東京 / 品川: 16分  新宿 → 渋谷 → 品川 / ---------------------------------------------------- / came_from の中身（その駅へいちばん早く来るときの、1つ前の駅） / 新宿: None（出発点） / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / 東京から逆にたどる: 東京 ← 品川 ← 渋谷 ← 新宿 / ひっくり返すと道順: 新宿 → 渋谷 → 品川 → 東京（27分）" width="423" height="408" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2-ref_window.png">
+        <img src="images/a05_ex2-ref_window.png" alt="AL2-05-ex2-ref.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」の27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 ← 品川 ← 渋谷 ← 新宿 となり、順番をひっくり返せば道順になります。品川の <code>came_from</code> は、時間が30分から16分に書き直されたときに「新宿」から「渋谷」に書き直されています（窓の前半の手順2）。</p>
 <p class="run-label" style="margin-top:1.8rem">演習2（クリエイティブ）── <code>AL2-05-ex2.py</code> の名前で保存し、まずそのまま実行する。次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>
@@ -2626,7 +2627,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">文の中に絵文字を入れてもかまいません（ターミナルによっては表示されないことがあります）。</p>
       </div>
 <details class="code-fold" open>
-<summary><span class="fold-name">AL2-05-ex2.py</span><span class="fold-meta">761行</span><span class="fold-hint"></span></summary>
+<summary><span class="fold-name">AL2-05-ex2.py</span><span class="fold-meta">762行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex2.py</span>
 <span class="cmt"># 第5回 クリエイティブ演習2: 自分だけの園内ナビを作る</span>
 <span class="cmt"># 回りたい場所を順番に並べると、ダイクストラ法で区間ごとにいちばん早い道を求めて、道順を案内する。</span>
@@ -2679,6 +2680,7 @@ plan = [<span class="str">&quot;エントランス&quot;</span>, <span class="st
 
 <span class="kw">def</span> <span class="fn">walk</span>(a, b):
     <span class="str">&quot;&quot;&quot;a から b まで歩く時間（となり合う2つの場所）。announce の中で使える。
+    graph は、下で park から通行止めの道を外して作る地図
     となり合っていない2つを渡すと None（何もない、という意味）が返る&quot;&quot;&quot;</span>
     <span class="kw">for</span> name, minutes <span class="kw">in</span> graph[a]:
         <span class="kw">if</span> name == b:
@@ -2708,7 +2710,7 @@ plan = [<span class="str">&quot;エントランス&quot;</span>, <span class="st
 
 
 <span class="cmt"># ------------------------------------------------------------</span>
-<span class="cmt"># ここから下は、例題1（参考）と同じダイクストラ法。読みながら、窓のアニメーションと見比べよう</span>
+<span class="cmt"># ここから下は、例題2（参考）と同じダイクストラ法。読みながら、窓のアニメーションと見比べよう</span>
 <span class="cmt"># ------------------------------------------------------------</span>
 
 <span class="cmt"># 書きまちがいを先に見つける（見つけたら、直し方を表示して止まる）</span>
@@ -3392,11 +3394,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_result.png">
+        <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。園内ナビ: エントランス → クリッターカントリー → トゥーンタウン → エントランス / ---------------------------------------------------- / 【エントランス から クリッターカントリー へ】 16分 / エントランス → ワールドバザール（3分） / ワールドバザール → プラザ（3分） / プラザ → アドベンチャーランド（3分） / アドベンチャーランド → ウエスタンランド（3分） / ウエスタンランド → クリッターカントリー（4分） /  / 【クリッターカントリー から トゥーンタウン へ】 13分 / クリッターカントリー → ウエスタンランド（4分） / ウエスタンランド → ファンタジーランド（5分） / ファンタジーランド → トゥーンタウン（4分） /  / 【トゥーンタウン から エントランス へ】 13分 / トゥーンタウン → ファンタジーランド（4分） / ファンタジーランド → シンデレラ城（2分） / シンデレラ城 → プラザ（1分） / プラザ → ワールドバザール（3分） / ワールドバザール → エントランス（3分） /  / ---------------------------------------------------- / ぜんぶ回ると、歩く時間は合計 42分 / よく歩くプラン。とちゅうで休けいも入れよう" width="538" height="528" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_window.png">
+        <img src="images/a05_ex2_window.png" alt="AL2-05-ex2.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。</p>
       <div class="concept-box" style="margin-top:1rem">
