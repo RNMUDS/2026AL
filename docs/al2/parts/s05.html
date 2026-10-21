@@ -47,6 +47,91 @@
       今のカーナビや乗換案内の中でも使われています。
     </p>
 
+    <div class="concept-box">
+      <h4>重み付きグラフと、幅優先探索・ダイクストラ法の関係</h4>
+      <p style="font-size:0.95rem;margin-bottom:0.6rem">
+        <strong>重み付きグラフ</strong>は、辺（路線）に時間やコストの数字（<strong>重み</strong>）が書いてある地図のことです。
+        同じ重み付きグラフでも、どちらの方法を使うかで「いちばん短い道」の意味が変わります。
+      </p>
+      <table>
+        <tr><th></th><th>幅優先探索（第1〜3回）</th><th>ダイクストラ法（第5回）</th></tr>
+        <tr><td>いちばん少なくするもの</td><td><strong style="color:#5AAAFF">路線の本数</strong></td><td><strong style="color:#76B900">合計時間（重みの合計）</strong></td></tr>
+        <tr><td>重み（時間）を使うか</td><td>使わない</td><td>使う</td></tr>
+        <tr><td>使えないとき</td><td>時間がいちばん短い道を求めたいとき</td><td>重みにマイナスがあるとき</td></tr>
+        <tr><td>新宿 → 品川 の答え</td><td>直通（路線1本・30分）</td><td>渋谷経由（路線2本・16分）</td></tr>
+      </table>
+    </div>
+
+      <div class="diagram-container">
+        <svg viewBox="0 0 700 348" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
+        <text x="350" y="26" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">同じ重み付きグラフでも、何を少なくするかで答えが変わる</text>
+        <text x="350" y="46" text-anchor="middle" fill="#888888" font-size="11">重み付きグラフ = 辺（路線）に時間やコストの数字（重み）が書いてある地図。どちらも 新宿 → 品川 をさがす</text>
+        <rect x="20" y="60" width="320" height="250" rx="12" fill="#141414" stroke="#5AAAFF" stroke-width="1.5"/>
+        <text x="180" y="84" text-anchor="middle" fill="#5AAAFF" font-size="14" font-weight="700">幅優先探索（第1〜3回）</text>
+        <text x="180" y="104" text-anchor="middle" fill="#ccc" font-size="11">路線の本数がいちばん少ない道</text>
+        <line x1="50" y1="148" x2="50" y2="250" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="41" y="196" text-anchor="middle" fill="#777" font-size="10">7</text>
+        <line x1="50" y1="148" x2="200" y2="128" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="125" y="135" text-anchor="middle" fill="#777" font-size="10">9</text>
+        <line x1="50" y1="148" x2="200" y2="250" stroke="#5AAAFF" stroke-width="4"/>
+        <text x="125" y="196" text-anchor="middle" fill="#5AAAFF" font-size="10" font-weight="700">30</text>
+        <line x1="50" y1="250" x2="200" y2="250" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="125" y="247" text-anchor="middle" fill="#777" font-size="10">9</text>
+        <line x1="200" y1="128" x2="315" y2="128" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="257" y="125" text-anchor="middle" fill="#777" font-size="10">12</text>
+        <line x1="315" y1="128" x2="315" y2="216" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="306" y="169" text-anchor="middle" fill="#777" font-size="10">6</text>
+        <line x1="315" y1="216" x2="200" y2="250" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="257" y="230" text-anchor="middle" fill="#777" font-size="10">11</text>
+        <circle cx="50" cy="148" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="50" y="152" text-anchor="middle" fill="#ddd" font-size="10">新宿</text>
+        <circle cx="50" cy="250" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="50" y="254" text-anchor="middle" fill="#ddd" font-size="10">渋谷</text>
+        <circle cx="200" cy="250" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="200" y="254" text-anchor="middle" fill="#ddd" font-size="10">品川</text>
+        <circle cx="200" cy="128" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="200" y="132" text-anchor="middle" fill="#ddd" font-size="10">池袋</text>
+        <circle cx="315" cy="128" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="315" y="132" text-anchor="middle" fill="#ddd" font-size="10">上野</text>
+        <circle cx="315" cy="216" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="315" y="220" text-anchor="middle" fill="#ddd" font-size="10">東京</text>
+        <text x="180" y="276" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿 → 品川（直通）</text>
+        <text x="180" y="296" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">路線1本 ／ 30分</text>
+        <rect x="360" y="60" width="320" height="250" rx="12" fill="#141414" stroke="#76B900" stroke-width="1.5"/>
+        <text x="520" y="84" text-anchor="middle" fill="#76B900" font-size="14" font-weight="700">ダイクストラ法（第5回）</text>
+        <text x="520" y="104" text-anchor="middle" fill="#ccc" font-size="11">合計時間がいちばん少ない道</text>
+        <line x1="390" y1="148" x2="390" y2="250" stroke="#76B900" stroke-width="4"/>
+        <text x="381" y="196" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">7</text>
+        <line x1="390" y1="148" x2="540" y2="128" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="465" y="135" text-anchor="middle" fill="#777" font-size="10">9</text>
+        <line x1="390" y1="148" x2="540" y2="250" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="465" y="196" text-anchor="middle" fill="#777" font-size="10">30</text>
+        <line x1="390" y1="250" x2="540" y2="250" stroke="#76B900" stroke-width="4"/>
+        <text x="465" y="247" text-anchor="middle" fill="#76B900" font-size="10" font-weight="700">9</text>
+        <line x1="540" y1="128" x2="655" y2="128" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="597" y="125" text-anchor="middle" fill="#777" font-size="10">12</text>
+        <line x1="655" y1="128" x2="655" y2="216" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="646" y="169" text-anchor="middle" fill="#777" font-size="10">6</text>
+        <line x1="655" y1="216" x2="540" y2="250" stroke="#3a3a3a" stroke-width="1.5"/>
+        <text x="597" y="230" text-anchor="middle" fill="#777" font-size="10">11</text>
+        <circle cx="390" cy="148" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="390" y="152" text-anchor="middle" fill="#ddd" font-size="10">新宿</text>
+        <circle cx="390" cy="250" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="390" y="254" text-anchor="middle" fill="#ddd" font-size="10">渋谷</text>
+        <circle cx="540" cy="250" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="540" y="254" text-anchor="middle" fill="#ddd" font-size="10">品川</text>
+        <circle cx="540" cy="128" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="540" y="132" text-anchor="middle" fill="#ddd" font-size="10">池袋</text>
+        <circle cx="655" cy="128" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="655" y="132" text-anchor="middle" fill="#ddd" font-size="10">上野</text>
+        <circle cx="655" cy="216" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>
+        <text x="655" y="220" text-anchor="middle" fill="#ddd" font-size="10">東京</text>
+        <text x="520" y="276" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">新宿 → 渋谷 → 品川</text>
+        <text x="520" y="296" text-anchor="middle" fill="#76B900" font-size="12" font-weight="700">路線2本 ／ 7 + 9 = 16分</text>
+        <text x="350" y="334" text-anchor="middle" fill="#888888" font-size="11">幅優先探索は線の数字（時間）を使わない。ダイクストラ法は使うが、数字にマイナスがあると正しく動かない</text>
+        </svg>
+      </div>
+
     <div class="analogy">
       出発点から各駅までの所要時間を、鉛筆で表に書いていく場面を思い浮かべてください。
       最初はどの駅も「わからない」ので空欄です。
@@ -1212,11 +1297,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1-ref_result.png" alt="AL2-05-ex1-ref.py の実行結果。ダイクストラ法で、新宿から各駅までの最短時間を求める / ---------------------------------------------------- / 手順1  新宿（0分）を確定 / 渋谷 に 7分 を書き込んだ（新宿 0 + 7） / 池袋 に 9分 を書き込んだ（新宿 0 + 9） / 品川 に 30分 を書き込んだ（新宿 0 + 30） / 手順2  渋谷（7分）を確定 / 品川 を 30分 → 16分 に書き直した（渋谷 7 + 9） / 手順3  池袋（9分）を確定 / 上野 に 21分 を書き込んだ（池袋 9 + 12） / 手順4  品川（16分）を確定 / 東京 に 27分 を書き込んだ（品川 16 + 11） / 手順5  上野（21分）を確定 / 手順6  東京（27分）を確定 / ---------------------------------------------------- / 新宿から各駅までの最短時間 / 新宿: 0分 / 渋谷: 7分 / 池袋: 9分 / 上野: 21分 / 東京: 27分 / 品川: 16分" width="419" height="488" loading="lazy">
+        <img src="images/a05_ex1-ref_result.png">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1-ref_window.png" alt="AL2-05-ex1-ref.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
+        <img src="images/a05_ex1-ref_window.png">
       </div>
       <p class="run-note">手順1で新宿を確定すると、渋谷7分・池袋9分・品川30分が書き込まれます。手順2で渋谷を確定したとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。直通の30分より、渋谷で乗りかえる 7 + 9 = 16分 のほうが早いことが見つかったためです。品川の16分はそのあと書き直されず、手順4で確定しています。新宿から東京までは27分と求まりました。1章の手計算の図と、確定の順番も時間も一致しています。</p>
 <p class="run-label" style="margin-top:1.8rem">演習1（クリエイティブ）── <code>AL2-05-ex1.py</code> の名前で保存し、まずそのまま実行する。次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>
@@ -1903,11 +1988,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_result.png" alt="AL2-05-ex1.py の実行結果。ダイクストラ法で、エントランスから園内の各場所までの最短時間を求める / -------------------------------------------------------- / 手順1  エントランス（0分）を確定 / ワールドバザール に 3分 を書き込んだ（エントランス 0 + 3） / 手順2  ワールドバザール（3分）を確定 / プラザ に 6分 を書き込んだ（ワールドバザール 3 + 3） / アドベンチャーランド に 10分 を書き込んだ（ワールドバザール 3 + 7） / トゥモローランド に 10分 を書き込んだ（ワールドバザール 3 + 7） / 手順3  プラザ（6分）を確定 / アドベンチャーランド を 10分 → 9分 に書き直した（プラザ 6 + 3） / トゥモローランド を 10分 → 9分 に書き直した（プラザ 6 + 3） / シンデレラ城 に 7分 を書き込んだ（プラザ 6 + 1） / 手順4  シンデレラ城（7分）を確定 / ファンタジーランド に 9分 を書き込んだ（シンデレラ城 7 + 2） / 手順5  アドベンチャーランド（9分）を確定 / ウエスタンランド に 12分 を書き込んだ（アドベンチャーランド 9 + 3） / 手順6  ファンタジーランド（9分）を確定 / トゥーンタウン に 13分 を書き込んだ（ファンタジーランド 9 + 4） / 手順7  トゥモローランド（9分）を確定 / 手順8  ウエスタンランド（12分）を確定 / クリッターカントリー に 16分 を書き込んだ（ウエスタンランド 12 + 4） / 手順9  トゥーンタウン（13分）を確定 / 手順10  クリッターカントリー（16分）を確定 / -------------------------------------------------------- / エントランスから園内の各場所までの最短時間 / エントランス: 0分 / ワールドバザール: 3分 / プラザ: 6分 / シンデレラ城: 7分 / アドベンチャーランド: 9分 / ウエスタンランド: 12分 / クリッターカントリー: 16分 / ファンタジーランド: 9分 / トゥーンタウン: 13分 / トゥモローランド: 9分" width="528" height="748" loading="lazy">
+        <img src="images/a05_ex1_result.png">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_window.png" alt="AL2-05-ex1.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
+        <img src="images/a05_ex1_window.png">
       </div>
       <p class="run-note">書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。</p>
       <div class="concept-box" style="margin-top:1rem">
@@ -2601,11 +2686,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2-ref_result.png" alt="AL2-05-ex2-ref.py の実行結果。新宿から各駅への最短時間と道順 / ---------------------------------------------------- / 渋谷:  7分  新宿 → 渋谷 / 池袋:  9分  新宿 → 池袋 / 上野: 21分  新宿 → 池袋 → 上野 / 東京: 27分  新宿 → 渋谷 → 品川 → 東京 / 品川: 16分  新宿 → 渋谷 → 品川 / ---------------------------------------------------- / came_from の中身（その駅へいちばん早く来るときの、1つ前の駅） / 新宿: None（出発点） / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / 東京から逆にたどる: 東京 ← 品川 ← 渋谷 ← 新宿 / ひっくり返すと道順: 新宿 → 渋谷 → 品川 → 東京（27分）" width="423" height="408" loading="lazy">
+        <img src="images/a05_ex2-ref_result.png">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2-ref_window.png" alt="AL2-05-ex2-ref.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
+        <img src="images/a05_ex2-ref_window.png">
       </div>
       <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」の27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 ← 品川 ← 渋谷 ← 新宿 となり、順番をひっくり返せば道順になります。品川の <code>came_from</code> は、時間が30分から16分に書き直されたときに「新宿」から「渋谷」に書き直されています（窓の前半の手順2）。</p>
 <p class="run-label" style="margin-top:1.8rem">演習2（クリエイティブ）── <code>AL2-05-ex2.py</code> の名前で保存し、まずそのまま実行する。次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>
@@ -3394,11 +3479,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。園内ナビ: エントランス → クリッターカントリー → トゥーンタウン → エントランス / ---------------------------------------------------- / 【エントランス から クリッターカントリー へ】 16分 / エントランス → ワールドバザール（3分） / ワールドバザール → プラザ（3分） / プラザ → アドベンチャーランド（3分） / アドベンチャーランド → ウエスタンランド（3分） / ウエスタンランド → クリッターカントリー（4分） /  / 【クリッターカントリー から トゥーンタウン へ】 13分 / クリッターカントリー → ウエスタンランド（4分） / ウエスタンランド → ファンタジーランド（5分） / ファンタジーランド → トゥーンタウン（4分） /  / 【トゥーンタウン から エントランス へ】 13分 / トゥーンタウン → ファンタジーランド（4分） / ファンタジーランド → シンデレラ城（2分） / シンデレラ城 → プラザ（1分） / プラザ → ワールドバザール（3分） / ワールドバザール → エントランス（3分） /  / ---------------------------------------------------- / ぜんぶ回ると、歩く時間は合計 42分 / よく歩くプラン。とちゅうで休けいも入れよう" width="538" height="528" loading="lazy">
+        <img src="images/a05_ex2_result.png">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_window.png" alt="AL2-05-ex2.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
+        <img src="images/a05_ex2_window.png">
       </div>
       <p class="run-note">書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。</p>
       <div class="concept-box" style="margin-top:1rem">

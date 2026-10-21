@@ -53,6 +53,44 @@ def trace(start="新宿"):
 
 
 # ────────────────────────────────────────────────────────────
+# 図0: 同じ重み付きグラフで、幅優先探索とダイクストラ法の答えを並べる
+# ────────────────────────────────────────────────────────────
+def fig_compare():
+    panels = [
+        (20, BLUE, "幅優先探索（第1〜3回）", "路線の本数がいちばん少ない道", [("新宿", "品川")],
+         "新宿 → 品川（直通）", "路線1本 ／ 30分"),
+        (360, GREEN, "ダイクストラ法（第5回）", "合計時間がいちばん少ない道", [("新宿", "渋谷"), ("渋谷", "品川")],
+         "新宿 → 渋谷 → 品川", "路線2本 ／ 7 + 9 = 16分"),
+    ]
+    s = [f'        <text x="350" y="26" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
+         '同じ重み付きグラフでも、何を少なくするかで答えが変わる</text>',
+         f'        <text x="350" y="46" text-anchor="middle" fill="{GRAY}" font-size="11">'
+         '重み付きグラフ = 辺（路線）に時間やコストの数字（重み）が書いてある地図。どちらも 新宿 → 品川 をさがす</text>']
+    for ox, color, title, goal, path, route, total in panels:
+        s.append(f'        <rect x="{ox}" y="60" width="320" height="250" rx="12" fill="#141414" stroke="{color}" stroke-width="1.5"/>')
+        s.append(f'        <text x="{ox+160}" y="84" text-anchor="middle" fill="{color}" font-size="14" font-weight="700">{title}</text>')
+        s.append(f'        <text x="{ox+160}" y="104" text-anchor="middle" fill="#ccc" font-size="11">{goal}</text>')
+        p = {st: (ox + 30 + (x - 170) * 0.68, 128 + (y - 66) * 0.68) for st, (x, y) in POS.items()}
+        on = {frozenset(e) for e in path}
+        for a, b, w in EDGES:
+            (x1, y1), (x2, y2) = p[a], p[b]
+            hit = frozenset((a, b)) in on
+            s.append(f'        <line x1="{x1:.0f}" y1="{y1:.0f}" x2="{x2:.0f}" y2="{y2:.0f}" '
+                     f'stroke="{color if hit else "#3a3a3a"}" stroke-width="{4 if hit else 1.5}"/>')
+            dx = -9 if abs(x1 - x2) < 5 else 0
+            s.append(f'        <text x="{(x1+x2)/2+dx:.0f}" y="{(y1+y2)/2-3:.0f}" text-anchor="middle" '
+                     f'fill="{color if hit else "#777"}" font-size="10"{" font-weight=" + chr(34) + "700" + chr(34) if hit else ""}>{w}</text>')
+        for st, (x, y) in p.items():
+            s.append(f'        <circle cx="{x:.0f}" cy="{y:.0f}" r="15" fill="#1A1A1A" stroke="#555" stroke-width="1.5"/>')
+            s.append(f'        <text x="{x:.0f}" y="{y+4:.0f}" text-anchor="middle" fill="#ddd" font-size="10">{st}</text>')
+        s.append(f'        <text x="{ox+160}" y="276" text-anchor="middle" fill="#E0E0E0" font-size="12" font-weight="700">{route}</text>')
+        s.append(f'        <text x="{ox+160}" y="296" text-anchor="middle" fill="{color}" font-size="12" font-weight="700">{total}</text>')
+    s.append(f'        <text x="350" y="334" text-anchor="middle" fill="{GRAY}" font-size="11">'
+             '幅優先探索は線の数字（時間）を使わない。ダイクストラ法は使うが、数字にマイナスがあると正しく動かない</text>')
+    return fig(700, 348, "\n".join(s))
+
+
+# ────────────────────────────────────────────────────────────
 # 図1: ダイクストラ法の3つの手順
 # ────────────────────────────────────────────────────────────
 def fig_three_steps():
@@ -241,6 +279,23 @@ explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       この方法が<strong>ダイクストラ法</strong>です。1959年にエドガー・ダイクストラが考えた方法で、
       今のカーナビや乗換案内の中でも使われています。
     </p>
+
+    <div class="concept-box">
+      <h4>重み付きグラフと、幅優先探索・ダイクストラ法の関係</h4>
+      <p style="font-size:0.95rem;margin-bottom:0.6rem">
+        <strong>重み付きグラフ</strong>は、辺（路線）に時間やコストの数字（<strong>重み</strong>）が書いてある地図のことです。
+        同じ重み付きグラフでも、どちらの方法を使うかで「いちばん短い道」の意味が変わります。
+      </p>
+      <table>
+        <tr><th></th><th>幅優先探索（第1〜3回）</th><th>ダイクストラ法（第5回）</th></tr>
+        <tr><td>いちばん少なくするもの</td><td><strong style="color:#5AAAFF">路線の本数</strong></td><td><strong style="color:#76B900">合計時間（重みの合計）</strong></td></tr>
+        <tr><td>重み（時間）を使うか</td><td>使わない</td><td>使う</td></tr>
+        <tr><td>使えないとき</td><td>時間がいちばん短い道を求めたいとき</td><td>重みにマイナスがあるとき</td></tr>
+        <tr><td>新宿 → 品川 の答え</td><td>直通（路線1本・30分）</td><td>渋谷経由（路線2本・16分）</td></tr>
+      </table>
+    </div>
+
+{fig_compare()}
 
     <div class="analogy">
       出発点から各駅までの所要時間を、鉛筆で表に書いていく場面を思い浮かべてください。
