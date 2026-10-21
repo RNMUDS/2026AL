@@ -198,13 +198,13 @@ def weighted_help():
 
 
 def dijkstra_help():
-    """確定の順番と書き直しの描き方を、4頂点 A・B・C・D の小さな例で示す。
+    """確定の順番・書き直し・道順の組み立ての描き方を、4頂点 A・B・C・D の小さな例で示す。
     下半分はスライドの配置の例。学生の地図の答えは含まない。"""
     BLUE = "#5AAAFF"
     s = [f'        <text x="350" y="24" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
          '描き方の例 ── 場所 A・B・C・D、出発 A の場合</text>',
          f'        <text x="350" y="44" text-anchor="middle" fill="{GRAY}" font-size="11">'
-         '自分の地図（ひな形より場所が2つ以上多い）で、同じ2つを描く</text>']
+         '自分の地図（ひな形より場所が2つ以上多い）と自分のナビで、同じ3つを描く</text>']
 
     def t(x, y, text, size=12, fill="#E0E0E0", anchor="middle", bold=False):
         w = ' font-weight="700"' if bold else ""
@@ -231,26 +231,37 @@ def dijkstra_help():
         t(lx, ly, f"{order} {minutes}分", 12, BLUE, bold=True)
     s.append('        <line x1="316" y1="66" x2="316" y2="258" stroke="#333"/>')
 
-    # ② 書き直し2つ
-    t(510, 74, "② 書き直しを2つ、足し算の式つきで", 13, AMBER, bold=True)
-    rows = [("B を確定したとき", "B", 2, 3, "C", 6, 5), ("C を確定したとき", "C", 5, 2, "D", 10, 7)]
-    for i, (title, a, da, w, b, old, new) in enumerate(rows):
-        y = 118 + i * 82
-        t(340, y - 18, title, 11, GRAY, "start")
-        node(370, y + 10, a)
-        t(370, y + 46, f"{da}分", 11, GREEN, bold=True)
-        edge((389, y + 10), (481, y + 10), w, AMBER, 4)
-        node(500, y + 10, b, AMBER)
-        t(530, y + 6, f"{old}分 → {new}分", 13, AMBER, "start", True)
-        t(530, y + 26, f"{da} + {w} = {new}", 12, "#E0E0E0", "start")
+    # ② 書き直し1つ
+    t(340, 74, "② 書き直し1つ、足し算の式つきで", 13, AMBER, "start", True)
+    t(340, 100, "B を確定したとき", 11, GRAY, "start")
+    node(370, 128, "B")
+    t(370, 164, "2分", 11, GREEN, bold=True)
+    edge((389, 128), (481, 128), 3, AMBER, 4)
+    node(500, 128, "C", AMBER)
+    t(530, 124, "6分 → 5分", 13, AMBER, "start", True)
+    t(530, 144, "2 + 3 = 5", 12, "#E0E0E0", "start")
+    s.append('        <line x1="330" y1="178" x2="690" y2="178" stroke="#333"/>')
 
-    y0 = 294
+    # ③ 道順の組み立て（ゴール D から came_from で逆にたどる）
+    t(340, 198, "③ 演習2の1区間を、ゴールから came_from でたどる", 13, BLUE, "start", True)
+    trace = ["D", "C", "B", "A"]
+    for i, name in enumerate(trace):
+        x = 365 + i * 92
+        node(x, 226, name, BLUE)
+        if i < len(trace) - 1:
+            s.append(f'        <line x1="{x + 70}" y1="226" x2="{x + 27}" y2="226" stroke="{BLUE}" stroke-width="2"/>')
+            s.append(f'        <polygon points="{x + 21},226 {x + 29},222 {x + 29},230" fill="{BLUE}"/>')
+            t(x + 46, 258, f"came_from[{name}]={trace[i + 1]}", 9, BLUE)
+    t(340, 286, "ひっくり返すと A → B → C → D（2 + 3 + 2 = 7分）", 12, "#E0E0E0", "start", True)
+
+    y0 = 316
     t(350, y0 - 6, "スライドの配置の例（1枚に収まらなければ分けてよい）", 13, GREEN, bold=True)
     s.append(f'        <rect x="110" y="{y0 + 6}" width="480" height="270" rx="8" fill="#F4F4F4" stroke="#888"/>')
-    t(126, y0 + 30, "第5回: 自分のディズニー地図で、距離表が書き直されていく様子", 12, "#222", "start", True)
+    t(126, y0 + 30, "第5回: 自分のディズニー地図で、距離表の書き直しと道順の組み立て", 12, "#222", "start", True)
     s.append(f'        <line x1="126" y1="{y0 + 40}" x2="574" y2="{y0 + 40}" stroke="#ccc"/>')
-    boxes = [(126, 250, "① 自分の地図", "#3E7A00", "丸・線・時間、", "確定の順番と最後の時間"),
-             (386, 180, "② 書き直し2つ", "#B26A00", "前 → 新、", "足し算の式")]
+    boxes = [(126, 200, "① 自分の地図", "#3E7A00", "丸・線・時間、", "確定の順番と最後の時間"),
+             (334, 104, "② 書き直し1つ", "#B26A00", "前 → 新、", "足し算の式"),
+             (446, 120, "③ 道順の組み立て", "#1565C0", "came_from の矢印、", "道順と区間の時間")]
     for x, w, title, color, l1, l2 in boxes:
         s.append(f'        <rect x="{x}" y="{y0 + 52}" width="{w}" height="150" rx="6" fill="#FFFFFF" '
                  'stroke="#999" stroke-dasharray="5 4"/>')

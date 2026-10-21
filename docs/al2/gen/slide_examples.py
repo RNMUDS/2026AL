@@ -197,7 +197,7 @@ def ex04():
 
 
 def ex05():
-    pos = {"新宿": (90, 168), "渋谷": (200, 248), "池袋": (200, 98), "上野": (330, 98), "東京": (400, 168), "品川": (330, 248)}
+    pos = {"新宿": (90, 176), "渋谷": (200, 256), "池袋": (200, 112), "上野": (330, 112), "東京": (400, 176), "品川": (330, 256)}
     edges = [("新宿", "渋谷", 7), ("新宿", "池袋", 9), ("新宿", "品川", 30), ("渋谷", "品川", 9), ("池袋", "上野", 12), ("上野", "東京", 6), ("東京", "品川", 11)]
     done = {"新宿": ("①", 0), "渋谷": ("②", 7), "池袋": ("③", 9), "品川": ("④", 16), "上野": ("⑤", 21), "東京": ("⑥", 27)}
     s = [_t(20, 76, "① 地図と、確定の順番・最後の時間", 11, INK, "start", 700)]
@@ -211,21 +211,32 @@ def ex05():
         s.append(f'<circle cx="{x}" cy="{y}" r="18" fill="#FFFFFF" stroke="{GREEN}" stroke-width="1.5"/>')
         s.append(_t(x, y + 4, name, 11, INK, "middle", 700))
         order, minutes = done[name]
-        dy = 34 if y > 200 else -24
+        dy = 34 if y > 200 else -26
         s.append(_t(x, y + dy, f"{order} {minutes}分", 10.5, BLUE, "middle", 700))
-    s.append(_t(452, 76, "② 書き直し", 11, INK, "start", 700))
-    s.append(_t(452, 98, "渋谷を確定したとき", 10, GRAY, "start"))
-    s.append(f'<circle cx="470" cy="128" r="16" fill="#FFFFFF" stroke="{GREEN}" stroke-width="1.5"/>')
-    s.append(_t(470, 132, "渋谷", 10, INK, "middle", 700))
-    s.append(_t(470, 160, "7分", 10, GREEN, "middle", 700))
-    s.append(_arrow(487, 128, 548, 128, AMBER, 2.5))
-    s.append(_t(517, 121, "9分", 10, AMBER, "middle", 700))
-    s.append(f'<circle cx="566" cy="128" r="16" fill="#FFFFFF" stroke="{AMBER}" stroke-width="1.5"/>')
-    s.append(_t(566, 132, "品川", 10, INK, "middle", 700))
-    s.append(_t(452, 190, "品川 30分 → 16分", 11.5, AMBER, "start", 700))
-    s.append(_t(452, 208, "7 + 9 = 16", 11, INK, "start"))
-    s.append(_t(452, 238, "（自分の地図では2つ描く）", 9.5, GRAY, "start"))
-    return _slide("05", "距離表が書き直されていく様子", "\n".join(s),
+    s.append(_t(452, 76, "② 書き直し（演習1）", 11, INK, "start", 700))
+    s.append(_t(452, 94, "渋谷を確定したとき", 10, GRAY, "start"))
+    s.append(f'<circle cx="470" cy="118" r="15" fill="#FFFFFF" stroke="{GREEN}" stroke-width="1.5"/>')
+    s.append(_t(470, 122, "渋谷", 10, INK, "middle", 700))
+    s.append(_t(470, 146, "7分", 10, GREEN, "middle", 700))
+    s.append(_arrow(486, 118, 548, 118, AMBER, 2.5))
+    s.append(_t(517, 111, "9分", 10, AMBER, "middle", 700))
+    s.append(f'<circle cx="565" cy="118" r="15" fill="#FFFFFF" stroke="{AMBER}" stroke-width="1.5"/>')
+    s.append(_t(565, 122, "品川", 10, INK, "middle", 700))
+    s.append(_t(452, 170, "品川 30分 → 16分（7 + 9 = 16）", 10.5, AMBER, "start", 700))
+    s.append(f'<line x1="440" y1="184" x2="620" y2="184" stroke="#DDD"/>')
+    s.append(_t(452, 202, "③ 道順の組み立て（演習2）", 11, INK, "start", 700))
+    s.append(_t(452, 218, "新宿→東京の区間を、ゴールから読む", 9.5, GRAY, "start"))
+    trace = ["東京", "品川", "渋谷", "新宿"]
+    for i, name in enumerate(trace):
+        x = 462 + i * 48
+        s.append(_box(x - 20, 226, 40, 22, "#FFFFFF", BLUE, 1.5))
+        s.append(_t(x, 241, name, 10, INK, "middle", 700))
+        if i < len(trace) - 1:
+            s.append(_arrow(x + 46 - 18, 237, x + 22, 237, BLUE, 1.5))
+            s.append(_t(x + 24, 262 + (i % 2) * 11, f"came_from[{name}]={trace[i + 1]}", 7.5, BLUE))
+    s.append(_t(452, 298, "ひっくり返す: 新宿→渋谷→品川→東京", 10, INK, "start", 700))
+    s.append(_t(452, 313, "区間の時間 7 + 9 + 11 = 27分", 10, GREEN, "start", 700))
+    return _slide("05", "距離表の書き直しと道順の組み立て", "\n".join(s),
                   ["理解度チェック: 渋谷—品川を通行止めにすると、品川は16分→30分（直通）になると予想した。",
                    "実行すると品川は30分になり、東京は上野経由でも27分なので変わらなかった（予想どおり）。"])
 
