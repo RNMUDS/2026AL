@@ -195,3 +195,72 @@ def weighted_help():
     t(350, y0 + 300, "図の中の頂点の名前・時間は、すべて自分で決めたものにする（A・B・C や授業の駅名は使わない）",
       11, "#E0E0E0")
     return fig(700, y0 + 316, "\n".join(s))
+
+
+def dijkstra_help():
+    """確定の順番と書き直しの描き方を、4頂点 A・B・C・D の小さな例で示す。
+    下半分はスライドの配置の例。学生の地図の答えは含まない。"""
+    BLUE = "#5AAAFF"
+    s = [f'        <text x="350" y="24" text-anchor="middle" fill="{GREEN}" font-weight="700" font-size="15">'
+         '描き方の例 ── 場所 A・B・C・D、出発 A の場合</text>',
+         f'        <text x="350" y="44" text-anchor="middle" fill="{GRAY}" font-size="11">'
+         '自分の地図（ひな形より場所が2つ以上多い）で、同じ2つを描く</text>']
+
+    def t(x, y, text, size=12, fill="#E0E0E0", anchor="middle", bold=False):
+        w = ' font-weight="700"' if bold else ""
+        s.append(f'        <text x="{x}" y="{y}" text-anchor="{anchor}" fill="{fill}" font-size="{size}"{w}>{text}</text>')
+
+    def node(x, y, name, ring=GREEN):
+        s.append(f'        <circle cx="{x}" cy="{y}" r="19" fill="#1A1A1A" stroke="{ring}" stroke-width="2"/>')
+        t(x, y + 5, name, 13, bold=True)
+
+    def edge(p, q, w, color="#888", width=2.5):
+        s.append(f'        <line x1="{p[0]}" y1="{p[1]}" x2="{q[0]}" y2="{q[1]}" stroke="{color}" stroke-width="{width}"/>')
+        mx, my = (p[0] + q[0]) / 2, (p[1] + q[1]) / 2
+        s.append(f'        <rect x="{mx - 18}" y="{my - 10}" width="36" height="20" rx="6" fill="#0A0A0A" stroke="#555"/>')
+        t(mx, my + 5, f"{w}分", 11, color if color != "#888" else "#ddd")
+
+    # ① 地図: 確定の順番と最後の時間
+    t(150, 74, "① 地図に、確定の順番と最後の時間", 13, GREEN, bold=True)
+    pos = {"A": (60, 160), "B": (150, 100), "C": (150, 220), "D": (250, 160)}
+    for a, b, w in [("A", "B", 2), ("A", "C", 6), ("B", "C", 3), ("C", "D", 2), ("B", "D", 8)]:
+        edge(pos[a], pos[b], w)
+    for (name, (x, y)), order, minutes in zip(pos.items(), "①②③④", [0, 2, 5, 7]):
+        node(x, y, name)
+        lx, ly = {"A": (x, y - 26), "B": (x + 50, y + 5), "C": (x, y + 38), "D": (x, y - 26)}[name]
+        t(lx, ly, f"{order} {minutes}分", 12, BLUE, bold=True)
+    s.append('        <line x1="316" y1="66" x2="316" y2="258" stroke="#333"/>')
+
+    # ② 書き直し2つ
+    t(510, 74, "② 書き直しを2つ、足し算の式つきで", 13, AMBER, bold=True)
+    rows = [("B を確定したとき", "B", 2, 3, "C", 6, 5), ("C を確定したとき", "C", 5, 2, "D", 10, 7)]
+    for i, (title, a, da, w, b, old, new) in enumerate(rows):
+        y = 118 + i * 82
+        t(340, y - 18, title, 11, GRAY, "start")
+        node(370, y + 10, a)
+        t(370, y + 46, f"{da}分", 11, GREEN, bold=True)
+        edge((389, y + 10), (481, y + 10), w, AMBER, 4)
+        node(500, y + 10, b, AMBER)
+        t(530, y + 6, f"{old}分 → {new}分", 13, AMBER, "start", True)
+        t(530, y + 26, f"{da} + {w} = {new}", 12, "#E0E0E0", "start")
+
+    y0 = 294
+    t(350, y0 - 6, "スライドの配置の例（1枚に収まらなければ分けてよい）", 13, GREEN, bold=True)
+    s.append(f'        <rect x="110" y="{y0 + 6}" width="480" height="270" rx="8" fill="#F4F4F4" stroke="#888"/>')
+    t(126, y0 + 30, "第5回: 自分のディズニー地図で、距離表が書き直されていく様子", 12, "#222", "start", True)
+    s.append(f'        <line x1="126" y1="{y0 + 40}" x2="574" y2="{y0 + 40}" stroke="#ccc"/>')
+    boxes = [(126, 250, "① 自分の地図", "#3E7A00", "丸・線・時間、", "確定の順番と最後の時間"),
+             (386, 180, "② 書き直し2つ", "#B26A00", "前 → 新、", "足し算の式")]
+    for x, w, title, color, l1, l2 in boxes:
+        s.append(f'        <rect x="{x}" y="{y0 + 52}" width="{w}" height="150" rx="6" fill="#FFFFFF" '
+                 'stroke="#999" stroke-dasharray="5 4"/>')
+        t(x + w / 2, y0 + 112, title, 12, color, bold=True)
+        t(x + w / 2, y0 + 134, l1, 10, "#777")
+        t(x + w / 2, y0 + 150, l2, 10, "#777")
+    s.append(f'        <rect x="126" y="{y0 + 212}" width="440" height="50" rx="6" fill="#FFFFFF" '
+             'stroke="#999" stroke-dasharray="5 4"/>')
+    t(346, y0 + 234, "理解度チェックの答え（1〜2行）", 12, "#222", bold=True)
+    t(346, y0 + 252, "通行止めにした道、予想、実行した結果", 10, "#777")
+    t(350, y0 + 300, "図の中の場所の名前・時間は、すべて自分の地図のものにする（A・B・C・D や授業の駅名は使わない）",
+      11, "#E0E0E0")
+    return fig(700, y0 + 316, "\n".join(s))

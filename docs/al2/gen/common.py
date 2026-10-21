@@ -27,8 +27,9 @@ def apply_blanks(src, items):
     return src
 
 
-FOLD_WEEKS = ("02", "03", "04")     # コードを開閉できる箱に入れる回（第2回から）
+FOLD_WEEKS = ("02", "03", "04", "05")     # コードを開閉できる箱に入れる回（第2回から）
 COMMENTED_REF_WEEKS = ("04",)      # 参考のコードにもコメントを付け、★ の行を実践の穴のヒントにする回
+CREATIVE_WEEKS = ("05",)           # 実践を穴埋めではなく、★ の部分を書き換えて作品を作る「クリエイティブ演習」にする回
 
 
 def fold(pre, filename, src):
@@ -78,7 +79,7 @@ def strip_comments(src):
     return text.strip("\n")
 
 
-def example_pair(filename, note, extra=""):
+def example_pair(filename, note, extra="", creative=None):
     """例題を「参考」と「実践」の2つで載せる。
     参考: src/XX-ref.py（コメントなしの完成コード。データは本文の説明と同じ）と、その実行結果
     実践: src/XX.py（データを変えた別問題。要の行が穴、丁寧なコメント付き）と、埋めたときの実行結果"""
@@ -94,11 +95,22 @@ def example_pair(filename, note, extra=""):
     week = re.search(r"AL2-(\d+)-", filename).group(1)
     ref_desc = ("完成したコード。<strong>★ の行が実践の穴</strong>にあたるので、そのコメントを穴埋めのヒントにする。"
                 if week in COMMENTED_REF_WEEKS else "完成したコード。コメントなしで全体の流れをつかむ。")
+    if week in CREATIVE_WEEKS:
+        ref_desc = "完成したコード。コメントを読みながら動かし、窓のアニメーションと見比べて進み方をつかむ。"
     ref_pre = (f'<p class="run-label">例題{n}（参考）── {ref_desc}'
                f'保存するなら <code>{ref_name}</code> の名前で</p>\n'
                + fold(f'<pre data-blanks="0"><span class="code-label">Python ── {ref_name}</span>\n{highlight(ref_src)}</pre>',
                       ref_name, ref_src) + "\n"
                + run(ref_img, note, win(ref_img)))
+    if week in CREATIVE_WEEKS:
+        prac = (f'<p class="run-label" style="margin-top:1.8rem">演習{n}（クリエイティブ）── '
+                f'<code>{filename}</code> の名前で保存し、まずそのまま実行する。'
+                f'次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>\n'
+                + (creative + "\n" if creative else "")
+                + code(filename) + "\n"
+                + run(prac_img, "書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。",
+                      win(prac_img)))
+        return ref_pre + "\n" + (extra + "\n" if extra else "") + prac
     prac = (f'<p class="run-label" style="margin-top:1.8rem">例題{n}（実践）── 参考と同じ方法を<strong>別のデータ</strong>で。'
             f'要の行が ____ になっているので、コメントを読みながら埋めて、<code>{filename}</code> の名前で保存して実行する</p>\n'
             + code(filename) + "\n"
@@ -233,14 +245,45 @@ def answers(items):
 </section>"""
 
 
+def _pair_note(no):
+    """setup_guide の最後に付ける「参考と実践」の説明。"""
+    ref_line = ("完成したコード。大事な行にコメントが付いていて、<strong>★ の行が実践の穴</strong>にあたる。まず読んで流れをつかみ、穴埋めのヒントにする"
+                if no in COMMENTED_REF_WEEKS else "コメントなしの完成したコード。まず読んで、全体の流れをつかむ")
+    if no in CREATIVE_WEEKS:
+        return f"""      <div class="note-warn">
+        <strong>今回は「参考」と「クリエイティブ演習」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: 完成したコード（第4回と同じ新宿の路線図）。コメントを読みながら動かし、窓でダイクストラ法の進み方を見る</li>
+          <li><strong>クリエイティブ演習</strong>: ディズニーランドの地図のひな形。<strong>穴埋めはありません</strong>。
+              そのまま動くので、まず実行してから、<strong>★ の付いた部分</strong>（地図・題名・通行止め・回る順番・案内文）を自由に書き換えて、自分の作品にする</li>
+        </ol>
+        <p style="margin-top:0.5rem">ファイル名は、参考が <code>AL2-{no}-ex1-ref.py</code>（ref = reference、参考）、
+        演習が <code>AL2-{no}-ex1.py</code> のように分けます（同じ名前にすると上書きされてしまうため）。
+        標準課題で使うのは<strong>演習1で作った自分の地図</strong>です。
+        書き換えたあとに動かなくなったら、ターミナルや窓に出る説明を読んで直します（各演習の「うまくいかないとき」の表も見る）。</p>
+      </div>"""
+    return f"""      <div class="note-warn">
+        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
+        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
+          <li><strong>参考</strong>: {ref_line}</li>
+          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
+              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
+        </ol>
+        <p style="margin-top:0.5rem">ファイル名は、参考が <code>AL2-{no}-ex1-ref.py</code>（ref = reference、参考）、
+        実践が <code>AL2-{no}-ex1.py</code> のように分けます（同じ名前にすると上書きされてしまうため）。
+        課題で使うのは<strong>実践</strong>のファイルです。
+        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
+        どうしても分からないときだけ、参考のコードと見比べてください。</p>
+      </div>"""
+
+
 def setup_guide(no, files):
     """VS Code でフォルダとファイルを用意する手順。no は "01" のような回番号。"""
     prev = f"No{int(no) - 1:02d}" if int(no) > 1 else None
     prev_line = (f'          &nbsp;&nbsp;&nbsp;&nbsp;├── {prev}/&nbsp;&nbsp;&nbsp;'
                  f'<span style="color:#555">← 前回のファイル</span><br>\n') if prev else ""
     filelist = ", ".join(f"<code>{f}</code>" for f in files)
-    ref_line = ("完成したコード。大事な行にコメントが付いていて、<strong>★ の行が実践の穴</strong>にあたる。まず読んで流れをつかみ、穴埋めのヒントにする"
-                if no in COMMENTED_REF_WEEKS else "コメントなしの完成したコード。まず読んで、全体の流れをつかむ")
+    kind = "演習" if no in CREATIVE_WEEKS else "実践"
     return f"""    <div class="card" style="border-left:4px solid #76B900;margin-bottom:2rem">
       <div class="card-header">
         <span class="tag" style="background:#1a2e0a;color:#76B900">準備</span>
@@ -280,22 +323,10 @@ def setup_guide(no, files):
           <li><strong>保存する</strong>（Ctrl+S / Cmd+S）</li>
           <li>右上の <strong>▷（再生ボタン）</strong>をクリックして実行する</li>
         </ol>
-        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル（実践）: {filelist}。参考のコードを保存するときは、名前の最後に <code>-ref</code> を付ける</p>
+        <p style="color:#888;font-size:0.85rem;margin-top:0.5rem">今回作るファイル（{kind}）: {filelist}。参考のコードを保存するときは、名前の最後に <code>-ref</code> を付ける</p>
       </div>
 
-      <div class="note-warn">
-        <strong>例題は「参考」と「実践」の2つで載せてあります。</strong>
-        <ol style="margin:0.4rem 0 0 1.2rem;padding:0;line-height:1.9">
-          <li><strong>参考</strong>: {ref_line}</li>
-          <li><strong>実践</strong>: アルゴリズムの要になる行が <code>____</code>（穴）になっている。
-              丁寧なコメントと、コードの下の「ヒント」「候補」を見て、<strong>自分で埋めてから</strong>実行する</li>
-        </ol>
-        <p style="margin-top:0.5rem">ファイル名は、参考が <code>AL2-{no}-ex1-ref.py</code>（ref = reference、参考）、
-        実践が <code>AL2-{no}-ex1.py</code> のように分けます（同じ名前にすると上書きされてしまうため）。
-        課題で使うのは<strong>実践</strong>のファイルです。
-        実行結果がページの画像と同じになれば正解です。ちがえば、どの穴がちがうかを考えて直します。
-        どうしても分からないときだけ、参考のコードと見比べてください。</p>
-      </div>
+{_pair_note(no)}
     </div>"""
 
 
