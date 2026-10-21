@@ -225,7 +225,7 @@ def dijkstra_help():
     pos = {"A": (60, 160), "B": (150, 100), "C": (150, 220), "D": (250, 160)}
     for a, b, w in [("A", "B", 2), ("A", "C", 6), ("B", "C", 3), ("C", "D", 2), ("B", "D", 8)]:
         edge(pos[a], pos[b], w)
-    for (name, (x, y)), order, minutes in zip(pos.items(), "①②③④", [0, 2, 5, 7]):
+    for (name, (x, y)), order, minutes in zip(pos.items(), ["1番", "2番", "3番", "4番"], [0, 2, 5, 7]):
         node(x, y, name)
         lx, ly = {"A": (x, y - 26), "B": (x + 50, y + 5), "C": (x, y + 38), "D": (x, y - 26)}[name]
         t(lx, ly, f"{order} {minutes}分", 12, BLUE, bold=True)

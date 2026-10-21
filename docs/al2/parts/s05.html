@@ -1297,11 +1297,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1-ref_result.png">
+        <img src="images/a05_ex1-ref_result.png" alt="AL2-05-ex1-ref.py の実行結果。ダイクストラ法で、新宿から各駅までの最短時間を求める / ---------------------------------------------------- / 手順1  新宿（0分）を確定 / 渋谷 に 7分 を書き込んだ（新宿 0 + 7） / 池袋 に 9分 を書き込んだ（新宿 0 + 9） / 品川 に 30分 を書き込んだ（新宿 0 + 30） / 手順2  渋谷（7分）を確定 / 品川 を 30分 → 16分 に書き直した（渋谷 7 + 9） / 手順3  池袋（9分）を確定 / 上野 に 21分 を書き込んだ（池袋 9 + 12） / 手順4  品川（16分）を確定 / 東京 に 27分 を書き込んだ（品川 16 + 11） / 手順5  上野（21分）を確定 / 手順6  東京（27分）を確定 / ---------------------------------------------------- / 新宿から各駅までの最短時間 / 新宿: 0分 / 渋谷: 7分 / 池袋: 9分 / 上野: 21分 / 東京: 27分 / 品川: 16分" width="419" height="488" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1-ref_window.png">
+        <img src="images/a05_ex1-ref_window.png" alt="AL2-05-ex1-ref.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">手順1で新宿を確定すると、渋谷7分・池袋9分・品川30分が書き込まれます。手順2で渋谷を確定したとき、<strong>品川の時間が30分から16分に書き直されて</strong>います。直通の30分より、渋谷で乗りかえる 7 + 9 = 16分 のほうが早いことが見つかったためです。品川の16分はそのあと書き直されず、手順4で確定しています。新宿から東京までは27分と求まりました。1章の手計算の図と、確定の順番も時間も一致しています。</p>
 <p class="run-label" style="margin-top:1.8rem">演習1（クリエイティブ）── <code>AL2-05-ex1.py</code> の名前で保存し、まずそのまま実行する。次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>
@@ -1322,7 +1322,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
     &quot;スプラッシュ&quot;: [(&quot;クリッターカントリー&quot;, 2)],                          # ← 足した場所の行</pre>
       </div>
 <details class="code-fold" open>
-<summary><span class="fold-name">AL2-05-ex1.py</span><span class="fold-meta">661行</span><span class="fold-hint"></span></summary>
+<summary><span class="fold-name">AL2-05-ex1.py</span><span class="fold-meta">663行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex1.py</span>
 <span class="cmt"># 第5回 クリエイティブ演習1: 自分だけのディズニーランドの地図を作る</span>
 <span class="cmt"># ダイクストラ法で、エントランスから園内の各場所まで「いちばん早く着く時間」を求める。</span>
@@ -1395,6 +1395,8 @@ closed = []
         name, minutes = road        <span class="cmt"># name = となりの場所、minutes = そこまで歩く時間</span>
         <span class="kw">if</span> <span class="fn">type</span>(minutes) != int:
             <span class="kw">raise</span> <span class="fn">SystemExit</span>(<span class="str">f&quot;{place} の行の {road} の時間がおかしい。時間は \&quot; \&quot; で囲まず、3 のような数で書こう&quot;</span>)
+        <span class="kw">if</span> minutes &lt; <span class="num">0</span>:
+            <span class="kw">raise</span> <span class="fn">SystemExit</span>(<span class="str">f&quot;{place} の行の {road} の時間がマイナス。時間は 0 以上の数で書こう（ダイクストラ法は、時間が 0 以上の地図でしか正しく動かないため）&quot;</span>)
         <span class="kw">if</span> name <span class="kw">not</span> <span class="kw">in</span> park:
             <span class="kw">raise</span> <span class="fn">SystemExit</span>(<span class="str">f&quot;park に「{name}」の行がない（{place} の行に書いてある）。行を足すか、名前を直そう&quot;</span>)
         <span class="kw">if</span> (place, minutes) <span class="kw">not</span> <span class="kw">in</span> park[name]:
@@ -1988,11 +1990,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_result.png">
+        <img src="images/a05_ex1_result.png" alt="AL2-05-ex1.py の実行結果。ダイクストラ法で、エントランスから園内の各場所までの最短時間を求める / -------------------------------------------------------- / 手順1  エントランス（0分）を確定 / ワールドバザール に 3分 を書き込んだ（エントランス 0 + 3） / 手順2  ワールドバザール（3分）を確定 / プラザ に 6分 を書き込んだ（ワールドバザール 3 + 3） / アドベンチャーランド に 10分 を書き込んだ（ワールドバザール 3 + 7） / トゥモローランド に 10分 を書き込んだ（ワールドバザール 3 + 7） / 手順3  プラザ（6分）を確定 / アドベンチャーランド を 10分 → 9分 に書き直した（プラザ 6 + 3） / トゥモローランド を 10分 → 9分 に書き直した（プラザ 6 + 3） / シンデレラ城 に 7分 を書き込んだ（プラザ 6 + 1） / 手順4  シンデレラ城（7分）を確定 / ファンタジーランド に 9分 を書き込んだ（シンデレラ城 7 + 2） / 手順5  アドベンチャーランド（9分）を確定 / ウエスタンランド に 12分 を書き込んだ（アドベンチャーランド 9 + 3） / 手順6  ファンタジーランド（9分）を確定 / トゥーンタウン に 13分 を書き込んだ（ファンタジーランド 9 + 4） / 手順7  トゥモローランド（9分）を確定 / 手順8  ウエスタンランド（12分）を確定 / クリッターカントリー に 16分 を書き込んだ（ウエスタンランド 12 + 4） / 手順9  トゥーンタウン（13分）を確定 / 手順10  クリッターカントリー（16分）を確定 / -------------------------------------------------------- / エントランスから園内の各場所までの最短時間 / エントランス: 0分 / ワールドバザール: 3分 / プラザ: 6分 / シンデレラ城: 7分 / アドベンチャーランド: 9分 / ウエスタンランド: 12分 / クリッターカントリー: 16分 / ファンタジーランド: 9分 / トゥーンタウン: 13分 / トゥモローランド: 9分" width="528" height="748" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex1_window.png">
+        <img src="images/a05_ex1_window.png" alt="AL2-05-ex1.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。</p>
       <div class="concept-box" style="margin-top:1rem">
@@ -2002,6 +2004,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
           <tr><td><code>park に「○○」の行がない</code></td><td>足した場所の行（<code>"○○": [ ... ],</code>）を書き忘れたか、名前の打ちまちがい。行を足すか、名前をそろえる</td></tr>
           <tr><td><code>SyntaxError</code><br>（<code>Perhaps you forgot a comma?</code> など）</td><td>カンマ・かっこ・<code>"</code> の閉じ忘れ。<code>("場所", 時間)</code> の組と組のあいだにカンマ、行の最後にもカンマ。エラーに出た行と、その1つ上の行を見る</td></tr>
           <tr><td><code>○○ の行の … がおかしい</code><br><code>… の時間がおかしい</code></td><td>組を <code>[ ]</code> で書いた、または時間を <code>"3"</code> のように <code>" "</code> で囲んだ。<code>("場所", 3)</code> のように <code>( )</code> で囲み、時間は数で書く</td></tr>
+          <tr><td><code>… の時間がマイナス</code></td><td>時間に <code>-3</code> のようなマイナスの数を書いた。ダイクストラ法は時間が0以上のときしか正しく動かない（1章の「成り立たなくなる場合」）。0以上の数に直す</td></tr>
           <tr><td><code>A の行に（B, 3）があるのに、B の行に（A, 3）がない</code></td><td>道を片方の行にしか書いていないか、行きと帰りで時間がちがう。両方の行に同じ時間で書く</td></tr>
           <tr><td><code>start の「○○」が park にない</code><br><code>plan の「○○」が park にない</code></td><td>名前の打ちまちがい。<code>park</code> に書いた名前と1文字もちがわないようにする</td></tr>
           <tr><td><code>where の「○○」が park にない</code></td><td><code>park</code> を貼りかえたり場所を消したりしたのに、<code>where</code> に古い名前が残っている。<code>where</code> も同じ名前にそろえるか、その行を消す</td></tr>
@@ -2686,11 +2689,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2-ref_result.png">
+        <img src="images/a05_ex2-ref_result.png" alt="AL2-05-ex2-ref.py の実行結果。新宿から各駅への最短時間と道順 / ---------------------------------------------------- / 渋谷:  7分  新宿 → 渋谷 / 池袋:  9分  新宿 → 池袋 / 上野: 21分  新宿 → 池袋 → 上野 / 東京: 27分  新宿 → 渋谷 → 品川 → 東京 / 品川: 16分  新宿 → 渋谷 → 品川 / ---------------------------------------------------- / came_from の中身（その駅へいちばん早く来るときの、1つ前の駅） / 新宿: None（出発点） / 渋谷: 新宿 / 池袋: 新宿 / 上野: 池袋 / 東京: 品川 / 品川: 渋谷 /  / 東京から逆にたどる: 東京 ← 品川 ← 渋谷 ← 新宿 / ひっくり返すと道順: 新宿 → 渋谷 → 品川 → 東京（27分）" width="423" height="408" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2-ref_window.png">
+        <img src="images/a05_ex2-ref_window.png" alt="AL2-05-ex2-ref.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">各駅への最短の行き方が、駅名を矢印でつないだ形で表示されました。東京へは「新宿 → 渋谷 → 品川 → 東京」の27分が最短です。<code>came_from</code> の中身を見ると、東京には「品川」、品川には「渋谷」、渋谷には「新宿」と書かれています。東京から逆にたどると 東京 ← 品川 ← 渋谷 ← 新宿 となり、順番をひっくり返せば道順になります。品川の <code>came_from</code> は、時間が30分から16分に書き直されたときに「新宿」から「渋谷」に書き直されています（窓の前半の手順2）。</p>
 <p class="run-label" style="margin-top:1.8rem">演習2（クリエイティブ）── <code>AL2-05-ex2.py</code> の名前で保存し、まずそのまま実行する。次に <strong>★ の部分を書き換えて</strong>、自分の作品にする</p>
@@ -2712,7 +2715,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         <p style="font-size:0.9rem;color:#888;margin-top:0.6rem">文の中に絵文字を入れてもかまいません（ターミナルによっては表示されないことがあります）。</p>
       </div>
 <details class="code-fold" open>
-<summary><span class="fold-name">AL2-05-ex2.py</span><span class="fold-meta">762行</span><span class="fold-hint"></span></summary>
+<summary><span class="fold-name">AL2-05-ex2.py</span><span class="fold-meta">764行</span><span class="fold-hint"></span></summary>
 <pre data-blanks="0"><span class="code-label">Python ── AL2-05-ex2.py</span>
 <span class="cmt"># 第5回 クリエイティブ演習2: 自分だけの園内ナビを作る</span>
 <span class="cmt"># 回りたい場所を順番に並べると、ダイクストラ法で区間ごとにいちばん早い道を求めて、道順を案内する。</span>
@@ -2808,6 +2811,8 @@ plan = [<span class="str">&quot;エントランス&quot;</span>, <span class="st
         name, minutes = road        <span class="cmt"># name = となりの場所、minutes = そこまで歩く時間</span>
         <span class="kw">if</span> <span class="fn">type</span>(minutes) != int:
             <span class="kw">raise</span> <span class="fn">SystemExit</span>(<span class="str">f&quot;{place} の行の {road} の時間がおかしい。時間は \&quot; \&quot; で囲まず、3 のような数で書こう&quot;</span>)
+        <span class="kw">if</span> minutes &lt; <span class="num">0</span>:
+            <span class="kw">raise</span> <span class="fn">SystemExit</span>(<span class="str">f&quot;{place} の行の {road} の時間がマイナス。時間は 0 以上の数で書こう（ダイクストラ法は、時間が 0 以上の地図でしか正しく動かないため）&quot;</span>)
         <span class="kw">if</span> name <span class="kw">not</span> <span class="kw">in</span> park:
             <span class="kw">raise</span> <span class="fn">SystemExit</span>(<span class="str">f&quot;park に「{name}」の行がない（{place} の行に書いてある）。行を足すか、名前を直そう&quot;</span>)
         <span class="kw">if</span> (place, minutes) <span class="kw">not</span> <span class="kw">in</span> park[name]:
@@ -3479,11 +3484,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 </details>
       <p class="run-label">▶ 実行結果（ターミナル）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_result.png">
+        <img src="images/a05_ex2_result.png" alt="AL2-05-ex2.py の実行結果。園内ナビ: エントランス → クリッターカントリー → トゥーンタウン → エントランス / ---------------------------------------------------- / 【エントランス から クリッターカントリー へ】 16分 / エントランス → ワールドバザール（3分） / ワールドバザール → プラザ（3分） / プラザ → アドベンチャーランド（3分） / アドベンチャーランド → ウエスタンランド（3分） / ウエスタンランド → クリッターカントリー（4分） /  / 【クリッターカントリー から トゥーンタウン へ】 13分 / クリッターカントリー → ウエスタンランド（4分） / ウエスタンランド → ファンタジーランド（5分） / ファンタジーランド → トゥーンタウン（4分） /  / 【トゥーンタウン から エントランス へ】 13分 / トゥーンタウン → ファンタジーランド（4分） / ファンタジーランド → シンデレラ城（2分） / シンデレラ城 → プラザ（1分） / プラザ → ワールドバザール（3分） / ワールドバザール → エントランス（3分） /  / ---------------------------------------------------- / ぜんぶ回ると、歩く時間は合計 42分 / よく歩くプラン。とちゅうで休けいも入れよう" width="538" height="528" loading="lazy">
       </div>
       <p class="run-label">▶ 開いた窓（最後まで進めたところ）</p>
       <div class="run-capture">
-        <img src="images/a05_ex2_window.png">
+        <img src="images/a05_ex2_window.png" alt="AL2-05-ex2.py を実行して開いた窓（最後まで進めたところ）" width="1060" height="620" loading="lazy">
       </div>
       <p class="run-note">書き換える前（ひな形のまま）の実行結果です。自分の地図や文に書き換えると、ターミナルも窓も変わります。</p>
       <div class="concept-box" style="margin-top:1rem">
@@ -3493,6 +3498,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
           <tr><td><code>park に「○○」の行がない</code></td><td>足した場所の行（<code>"○○": [ ... ],</code>）を書き忘れたか、名前の打ちまちがい。行を足すか、名前をそろえる</td></tr>
           <tr><td><code>SyntaxError</code><br>（<code>Perhaps you forgot a comma?</code> など）</td><td>カンマ・かっこ・<code>"</code> の閉じ忘れ。<code>("場所", 時間)</code> の組と組のあいだにカンマ、行の最後にもカンマ。エラーに出た行と、その1つ上の行を見る</td></tr>
           <tr><td><code>○○ の行の … がおかしい</code><br><code>… の時間がおかしい</code></td><td>組を <code>[ ]</code> で書いた、または時間を <code>"3"</code> のように <code>" "</code> で囲んだ。<code>("場所", 3)</code> のように <code>( )</code> で囲み、時間は数で書く</td></tr>
+          <tr><td><code>… の時間がマイナス</code></td><td>時間に <code>-3</code> のようなマイナスの数を書いた。ダイクストラ法は時間が0以上のときしか正しく動かない（1章の「成り立たなくなる場合」）。0以上の数に直す</td></tr>
           <tr><td><code>A の行に（B, 3）があるのに、B の行に（A, 3）がない</code></td><td>道を片方の行にしか書いていないか、行きと帰りで時間がちがう。両方の行に同じ時間で書く</td></tr>
           <tr><td><code>start の「○○」が park にない</code><br><code>plan の「○○」が park にない</code></td><td>名前の打ちまちがい。<code>park</code> に書いた名前と1文字もちがわないようにする</td></tr>
           <tr><td><code>where の「○○」が park にない</code></td><td><code>park</code> を貼りかえたり場所を消したりしたのに、<code>where</code> に古い名前が残っている。<code>where</code> も同じ名前にそろえるか、その行を消す</td></tr>
@@ -3537,11 +3543,11 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
       </div>
       <div class="setup-step">
         <p class="step-title">1. 演習1と演習2を、自分の地図で動かす</p>
-        <p style="font-size:0.95rem"><code>AL2-05-ex1.py</code> を、演習1の Lv1・Lv2 をすませた<strong>自分の地図</strong>にする。ひな形から<strong>場所を2つ以上足し</strong>、歩く時間を<strong>3本以上</strong>書き換える。ターミナルの「書き直した」の行が<strong>1つ以上</strong>出る地図にする（「書き込んだ」の行は数えない）。<code>closed</code> は空っぽ <code>[]</code> にしておく。<br><code>AL2-05-ex2.py</code> は、演習2の Lv1・Lv2 をすませる（<code>park</code> は演習1と同じ地図、<code>plan</code> は自分が回りたい順番）。<br>どちらも保存して実行し、ターミナルの表示をそのまま残しておく（あとで図と見比べる）。</p>
+        <p style="font-size:0.95rem"><code>AL2-05-ex1.py</code> を、演習1の Lv1・Lv2 をすませた<strong>自分の地図</strong>にする。ひな形から<strong>場所を2つ以上足し</strong>、歩く時間を<strong>3本以上</strong>書き換える。ターミナルの「書き直した」の行が<strong>2つ以上</strong>出る地図にする（演習1の Lv2 と同じ）（「書き込んだ」の行は数えない）。<code>closed</code> は空っぽ <code>[]</code> にしておく。<br><code>AL2-05-ex2.py</code> は、演習2の Lv1・Lv2 をすませる（<code>park</code> は演習1と同じ地図、<code>plan</code> は自分が回りたい順番）。<br>どちらも保存して実行し、ターミナルの表示をそのまま残しておく（あとで図と見比べる）。</p>
       </div>
       <div class="setup-step">
         <p class="step-title">2. ターミナルと窓を見ながら、図形で描く</p>
-        <p style="font-size:0.95rem">1章の図「手計算で1手順ずつたどる」と同じことを、自分の地図で描く。<br><strong>①自分の地図（演習1）</strong>: 場所を丸、道を線で描き、線のまん中に歩く時間を書く。丸の横に、<strong>確定した順番</strong>（①②③…）と<strong>最後の時間</strong>を書く（演習1のターミナルの「手順○ ○○（○分）を確定」の行を写す）。<br><strong>②書き直し（演習1）</strong>: ターミナルの「書き直した」の行から1つ選び、「どの場所を確定したとき」「どの場所の時間が 前 → 新 になったか」「足し算の式」を、地図の一部を抜き出した図で描く（例: 渋谷（7分）→ 9分の道 → 品川 30分 → 16分、7 + 9 = 16）。<br><strong>③道順の組み立て（演習2）</strong>: 演習2のターミナルから、通る場所が<strong>3つ以上</strong>ある区間（【○○ から ○○ へ】）を1つ選ぶ。ゴールから <code>came_from</code> を1つずつ読んで出発点までもどる様子を、<code>←</code> の矢印でつないで描く（例: 東京 ← 品川 ← 渋谷 ← 新宿）。矢印には「<code>came_from[東京] = 品川</code>」のように、読んだ中身を添える。その下に、ひっくり返した道順と区間の時間を書く。</p>
+        <p style="font-size:0.95rem">1章の図「手計算で1手順ずつたどる」と同じことを、自分の地図で描く。<br><strong>①自分の地図（演習1）</strong>: 場所を丸、道を線で描き、線のまん中に歩く時間を書く。丸の横に、<strong>確定した順番</strong>（1番、2番、3番…）と<strong>最後の時間</strong>を書く（演習1のターミナルの「手順○ ○○（○分）を確定」の行を写す）。<br><strong>②書き直し（演習1）</strong>: ターミナルの「書き直した」の行から1つ選び、「どの場所を確定したとき」「どの場所の時間が 前 → 新 になったか」「足し算の式」を、地図の一部を抜き出した図で描く（例: 渋谷（7分）→ 9分の道 → 品川 30分 → 16分、7 + 9 = 16）。<br><strong>③道順の組み立て（演習2）</strong>: 演習2のターミナルから、通る場所が<strong>3つ以上</strong>ある区間（【○○ から ○○ へ】）を1つ選ぶ。ゴールから <code>came_from</code> を1つずつ読んで出発点までもどる様子を、<code>←</code> の矢印でつないで描く（例: 東京 ← 品川 ← 渋谷 ← 新宿）。矢印には「<code>came_from[東京] = 品川</code>」のように、読んだ中身を添える。その下に、ひっくり返した道順と区間の時間を書く。</p>
       <div class="diagram-container">
         <svg viewBox="0 0 700 632" width="700" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif" style="background:#0A0A0A">
         <text x="350" y="24" text-anchor="middle" fill="#76B900" font-weight="700" font-size="15">描き方の例 ── 場所 A・B・C・D、出発 A の場合</text>
@@ -3564,16 +3570,16 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         <text x="200.0" y="135.0" text-anchor="middle" fill="#ddd" font-size="11">8分</text>
         <circle cx="60" cy="160" r="19" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
         <text x="60" y="165" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">A</text>
-        <text x="60" y="134" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">① 0分</text>
+        <text x="60" y="134" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">1番 0分</text>
         <circle cx="150" cy="100" r="19" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
         <text x="150" y="105" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">B</text>
-        <text x="200" y="105" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">② 2分</text>
+        <text x="200" y="105" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">2番 2分</text>
         <circle cx="150" cy="220" r="19" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
         <text x="150" y="225" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">C</text>
-        <text x="150" y="258" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">③ 5分</text>
+        <text x="150" y="258" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">3番 5分</text>
         <circle cx="250" cy="160" r="19" fill="#1A1A1A" stroke="#76B900" stroke-width="2"/>
         <text x="250" y="165" text-anchor="middle" fill="#E0E0E0" font-size="13" font-weight="700">D</text>
-        <text x="250" y="134" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">④ 7分</text>
+        <text x="250" y="134" text-anchor="middle" fill="#5AAAFF" font-size="12" font-weight="700">4番 7分</text>
         <line x1="316" y1="66" x2="316" y2="258" stroke="#333"/>
         <text x="340" y="74" text-anchor="start" fill="#FFB800" font-size="13" font-weight="700">② 書き直し1つ、足し算の式つきで</text>
         <text x="340" y="100" text-anchor="start" fill="#888888" font-size="11">B を確定したとき</text>
@@ -3628,10 +3634,10 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         <text x="346" y="568" text-anchor="middle" fill="#777" font-size="10">通行止めにした道、予想、実行した結果</text>
         <text x="350" y="616" text-anchor="middle" fill="#E0E0E0" font-size="11">図の中の場所の名前・時間は、すべて自分の地図のものにする（A・B・C・D や授業の駅名は使わない）</text>
         </svg>
-      </div><p style="font-size:0.9rem;color:#888">見本は1章の図「手計算で1手順ずつたどる」と、演習1・演習2の窓です。①の番号は、演習1の窓を → キーで進めたときに白い枠になった順番を写せばよい。③は、演習2の窓の後半（ゴールから線が伸びていく場面）を写せばよい。</p>
+      </div><p style="font-size:0.9rem;color:#888">見本は1章の図「手計算で1手順ずつたどる」と、演習1・演習2の窓です。確定した順番（1番、2番…）は、演習1の窓を → キーで進めたときに白い枠になった順番を写せばよい。③は、演習2の窓の後半（ゴールから線が伸びていく場面）を写せばよい。</p>
         <p class="step-title" style="margin-top:0.8rem">図に必ず入れる3つ</p>
         <ol>
-          <li>①丸で描いた場所（ひな形より2つ以上多い）と線で描いた道・時間、各場所の確定した順番の番号と最後の時間</li>
+          <li>①丸で描いた場所（ひな形より2つ以上多い）と線で描いた道・時間、各場所の確定した順番（1番、2番…）と最後の時間</li>
           <li>②書き直し1つの「前の時間 → 新しい時間」と足し算の式</li>
           <li>③演習2の1区間を、ゴールから <code>came_from</code> で逆にたどった矢印と、ひっくり返した道順・区間の時間</li>
         </ol>
@@ -3685,7 +3691,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
       <table>
         <tr><th>使うアルゴリズム</th><td>ダイクストラ法（第5〜6回）</td></tr>
         <tr><th>自分のデータ</th><td>自分がよく使う駅と、駅の間の所要時間</td></tr>
-        <tr><th>答え合わせ</th><td><code>AL2-05-ex1.py</code> に同じ路線図を入れて実行し、合計時間が一致することを確かめる</td></tr>
+        <tr><th>答え合わせ</th><td><code>AL2-05-ex1-ref.py</code>（例題1の参考）の <code>railway</code> に同じ路線図を入れて実行し、合計時間が一致することを確かめる</td></tr>
       </table>
       <div class="setup-step" style="margin-top:1rem">
         <p class="step-title">完成したときに画面でできること</p>
@@ -3705,14 +3711,14 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
       <div class="setup-step">
         <p class="step-title">満たすこと（3つとも必要）</p>
         <ol>
-          <li>標準課題で使った<strong>自分の地図（場所と時間）</strong>が、画面に丸と線のグラフとして描かれている</li>
-          <li>場所の数と道の数が表示されている</li>
-          <li><code>app.py</code> の中の地図データが自分のものになっている</li>
+          <li><strong>自分の路線図（自分がよく使う駅と、駅の間の所要時間）</strong>が、画面に丸と線のグラフとして描かれている</li>
+          <li>駅の数と路線（辺）の数が表示されている</li>
+          <li><code>app.py</code> の中の路線図データが自分のものになっている</li>
         </ol>
       </div>
       <div class="setup-step">
         <p class="step-title">発展課題のスライドに貼るもの</p>
-        <p style="font-size:0.95rem">アプリの画面のスクリーンショット（自分の場所の名前が写っている）。文章は1〜2行まで。
+        <p style="font-size:0.95rem">アプリの画面のスクリーンショット（自分の駅の名前が写っている）。文章は1〜2行まで。
         見出しは「第5回 発展: 路線図の最短経路アプリ」にする。</p>
       </div>
       <div class="concept-box" style="margin-top:1rem">
@@ -3801,7 +3807,7 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
         <rect x="30" y="20" width="640" height="360" rx="6" fill="#FFFFFF" stroke="#555"/>
         <text x="48" y="48" text-anchor="start" fill="#222222" font-size="15" font-weight="700">第5回: 距離表の書き直しと道順の組み立て</text>
         <line x1="48" y1="56" x2="652" y2="56" stroke="#DDD"/>
-        <g transform="translate(30,20)"><text x="20" y="76" text-anchor="start" fill="#222222" font-size="11" font-weight="700">① 地図と、確定の順番・最後の時間</text>
+        <g transform="translate(30,20)"><text x="20" y="70" text-anchor="start" fill="#222222" font-size="11" font-weight="700">① 地図と、確定の順番・最後の時間</text>
 <line x1="90" y1="176" x2="200" y2="256" stroke="#999" stroke-width="2"/>
 <rect x="130.0" y="207.0" width="30" height="18" rx="4" fill="#FFFFFF" stroke="#BBB" stroke-width="1"/>
 <text x="145.0" y="220.0" text-anchor="middle" fill="#222222" font-size="9.5">7分</text>
@@ -3825,22 +3831,22 @@ FONT_NAMES = <span class="str">&quot;hiraginosans,yugothic,meiryo,msgothic,notos
 <text x="365.0" y="220.0" text-anchor="middle" fill="#222222" font-size="9.5">11分</text>
 <circle cx="90" cy="176" r="18" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
 <text x="90" y="180" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">新宿</text>
-<text x="90" y="150" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">① 0分</text>
+<text x="90" y="152" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">1番 0分</text>
 <circle cx="200" cy="256" r="18" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
 <text x="200" y="260" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">渋谷</text>
-<text x="200" y="290" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">② 7分</text>
+<text x="200" y="290" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">2番 7分</text>
 <circle cx="200" cy="112" r="18" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
 <text x="200" y="116" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">池袋</text>
-<text x="200" y="86" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">③ 9分</text>
+<text x="200" y="88" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">3番 9分</text>
 <circle cx="330" cy="112" r="18" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
 <text x="330" y="116" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">上野</text>
-<text x="330" y="86" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">⑤ 21分</text>
+<text x="330" y="88" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">5番 21分</text>
 <circle cx="400" cy="176" r="18" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
 <text x="400" y="180" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">東京</text>
-<text x="400" y="150" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">⑥ 27分</text>
+<text x="400" y="152" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">6番 27分</text>
 <circle cx="330" cy="256" r="18" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>
 <text x="330" y="260" text-anchor="middle" fill="#222222" font-size="11" font-weight="700">品川</text>
-<text x="330" y="290" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">④ 16分</text>
+<text x="330" y="290" text-anchor="middle" fill="#1565C0" font-size="10.5" font-weight="700">4番 16分</text>
 <text x="452" y="76" text-anchor="start" fill="#222222" font-size="11" font-weight="700">② 書き直し（演習1）</text>
 <text x="452" y="94" text-anchor="start" fill="#777777" font-size="10">渋谷を確定したとき</text>
 <circle cx="470" cy="118" r="15" fill="#FFFFFF" stroke="#3E7A00" stroke-width="1.5"/>

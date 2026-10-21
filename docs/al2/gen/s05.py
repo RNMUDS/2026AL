@@ -410,6 +410,7 @@ trouble = """      <div class="concept-box" style="margin-top:1rem">
           <tr><td><code>park に「○○」の行がない</code></td><td>足した場所の行（<code>"○○": [ ... ],</code>）を書き忘れたか、名前の打ちまちがい。行を足すか、名前をそろえる</td></tr>
           <tr><td><code>SyntaxError</code><br>（<code>Perhaps you forgot a comma?</code> など）</td><td>カンマ・かっこ・<code>"</code> の閉じ忘れ。<code>("場所", 時間)</code> の組と組のあいだにカンマ、行の最後にもカンマ。エラーに出た行と、その1つ上の行を見る</td></tr>
           <tr><td><code>○○ の行の … がおかしい</code><br><code>… の時間がおかしい</code></td><td>組を <code>[ ]</code> で書いた、または時間を <code>"3"</code> のように <code>" "</code> で囲んだ。<code>("場所", 3)</code> のように <code>( )</code> で囲み、時間は数で書く</td></tr>
+          <tr><td><code>… の時間がマイナス</code></td><td>時間に <code>-3</code> のようなマイナスの数を書いた。ダイクストラ法は時間が0以上のときしか正しく動かない（1章の「成り立たなくなる場合」）。0以上の数に直す</td></tr>
           <tr><td><code>A の行に（B, 3）があるのに、B の行に（A, 3）がない</code></td><td>道を片方の行にしか書いていないか、行きと帰りで時間がちがう。両方の行に同じ時間で書く</td></tr>
           <tr><td><code>start の「○○」が park にない</code><br><code>plan の「○○」が park にない</code></td><td>名前の打ちまちがい。<code>park</code> に書いた名前と1文字もちがわないようにする</td></tr>
           <tr><td><code>where の「○○」が park にない</code></td><td><code>park</code> を貼りかえたり場所を消したりしたのに、<code>where</code> に古い名前が残っている。<code>where</code> も同じ名前にそろえるか、その行を消す</td></tr>

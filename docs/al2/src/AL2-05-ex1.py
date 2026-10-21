@@ -69,6 +69,8 @@ for place in park:
         name, minutes = road        # name = となりの場所、minutes = そこまで歩く時間
         if type(minutes) != int:
             raise SystemExit(f"{place} の行の {road} の時間がおかしい。時間は \" \" で囲まず、3 のような数で書こう")
+        if minutes < 0:
+            raise SystemExit(f"{place} の行の {road} の時間がマイナス。時間は 0 以上の数で書こう（ダイクストラ法は、時間が 0 以上の地図でしか正しく動かないため）")
         if name not in park:
             raise SystemExit(f"park に「{name}」の行がない（{place} の行に書いてある）。行を足すか、名前を直そう")
         if (place, minutes) not in park[name]:
