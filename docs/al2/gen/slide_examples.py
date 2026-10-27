@@ -242,20 +242,40 @@ def ex05():
 
 
 def ex06():
-    nodes = {0: (320, 90, 1), 1: (220, 160, 3), 2: (420, 160, 2), 3: (170, 230, 8), 4: (270, 230, 9), 5: (370, 230, 5)}
-    s = [_t(320, 70, "6つ入れ終わったときの heapq の中身 [1, 3, 2, 8, 9, 5] を木で描く", 11.5, INK, "middle", 700)]
-    for child, parent in [(1, 0), (2, 0), (3, 1), (4, 1), (5, 2)]:
-        (x1, y1, _), (x2, y2, _) = nodes[parent], nodes[child]
-        s.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="#888" stroke-width="2"/>')
-    for i, (x, y, v) in nodes.items():
-        s.append(f'<circle cx="{x}" cy="{y}" r="20" fill="{"#E8F5D8" if i == 0 else "#FFFFFF"}" stroke="{GREEN if i == 0 else "#666"}" stroke-width="2"/>')
-        s.append(_t(x, y + 5, str(v), 14, INK, "middle", 700))
-        s.append(_t(x + 26, y - 10, f"[{i}]", 9, GRAY, "start"))
-    s.append(_t(320, 275, "どの親も子より小さい（1 ≦ 3, 2 ／ 3 ≦ 8, 9 ／ 2 ≦ 5）", 11, GREEN, "middle", 700))
-    s.append(_t(320, 300, "取り出される順番: 1 → 2 → 3 → 5 → 8 → 9（毎回いちばん上を取る）", 11, INK))
-    s.append(_t(560, 90, "[ ] は中身の何番目か", 9.5, GRAY, "end"))
-    return _slide("06", "heapq の木", "\n".join(s),
-                  ["自分の6つの数では中身が [1, 3, 2, 8, 9, 5] になった。並びはばらばらだが、木にすると親≦子が守られている。"])
+    heap = [(15, "イッツ・ア・スモールワールド"), (25, "カリブの海賊"), (20, "ホーンテッドマンション"),
+            (40, "ビッグサンダー・マウンテン"), (50, "プーさんのハニーハント"), (60, "美女と野獣")]
+    spots = [(170, 98), (90, 160), (250, 160), (50, 222), (130, 222), (210, 222)]
+    s = [_t(20, 70, "① 6つ入れたときの箱の木（演習1）", 11, INK, "start", 700)]
+    for i in range(1, len(heap)):
+        (x1, y1), (x2, y2) = spots[(i - 1) // 2], spots[i]
+        s.append(f'<line x1="{x1}" y1="{y1 + 16}" x2="{x2}" y2="{y2 - 16}" stroke="#888" stroke-width="1.5"/>')
+    for i, ((m, name), (x, y)) in enumerate(zip(heap, spots)):
+        s.append(_box(x - 38, y - 16, 76, 32, "#E8F5D8" if i == 0 else "#FFFFFF", GREEN if i == 0 else "#666", 1.5, 6))
+        s.append(_t(x, y - 2, f"{m}分", 10.5, INK, "middle", 700))
+        s.append(_t(x, y + 11, name if len(name) <= 8 else name[:7] + "…", 7.5, GRAY))
+        s.append(_t(x + 38, y - 19, f"[{i}]", 8, GRAY, "end"))
+    s.append(_t(160, 262, "どの親も子より小さい（15 ≦ 25, 20 ／ 25 ≦ 40, 50 ／ 20 ≦ 60）", 9, GREEN, "middle", 700))
+    s.append(f'<line x1="330" y1="66" x2="330" y2="300" stroke="#DDD"/>')
+    s.append(_t(345, 74, "② 取り出した順（演習1）", 11, INK, "start", 700))
+    rows = [("1", "(15, イッツ・ア・スモールワールド)", INK), ("2", "(20, ホーンテッドマンション)", INK),
+            ("3", "(10, プーさんのハニーハント) ← お知らせで入れた", AMBER), ("4", "(25, カリブの海賊)", INK),
+            ("5", "(40, ビッグサンダー・マウンテン)", INK), ("×", "(50, プーさんのハニーハント) 3 で乗ったので読み飛ばし", RED),
+            ("6", "(60, 美女と野獣)", INK)]
+    for k, (no, text, color) in enumerate(rows):
+        s.append(_t(352, 94 + k * 15, no, 9.5, color, "start", 700))
+        s.append(_t(366, 94 + k * 15, text, 9.5, color, "start"))
+    s.append(f'<line x1="340" y1="206" x2="620" y2="206" stroke="#DDD"/>')
+    s.append(_t(345, 222, "③ 読み飛ばし（演習2）アドベンチャーランド", 11, INK, "start", 700))
+    s.append(_box(350, 232, 120, 22, "#FFFFFF", "#999", 1, 4))
+    s.append(_t(410, 247, "(10, アドベンチャー…)", 9, GRAY))
+    s.append(_t(476, 247, "ワールドバザール 3 + 7 = 10", 8.5, GRAY, "start"))
+    s.append(_box(350, 260, 120, 22, "#E8F5D8", GREEN, 1.5, 4))
+    s.append(_t(410, 275, "(9, アドベンチャー…)", 9, GREEN, "middle", 700))
+    s.append(_t(476, 275, "プラザ 6 + 3 = 9 で書き直し", 8.5, GREEN, "start", 700))
+    s.append(_t(350, 298, "9 が先に出て確定 → あとから出た 10 は読み飛ばし", 9.5, RED, "start", 700))
+    return _slide("06", "待ち時間ボードの木と読み飛ばし", "\n".join(s),
+                  ["理解度チェック: (50, プーさん) が出たとき、同じプーさんの (10, プーさん) がもう先に出て乗っている。",
+                   "10分 ＜ 50分 なので、あとから出た50分の組は古い情報で、もう乗らなくてよい。"])
 
 
 def ex07():
