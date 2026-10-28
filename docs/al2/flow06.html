@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回のポイント | アルゴリズム論及び演習II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111111; --panel: #1A1A1A; --panel2: #141414; --line: #333;
+  --text: #E0E0E0; --sub: #999; --green: #76B900; --lime: #93D500;
+  --amber: #FFB800; --blue: #5AAAFF; --red: #FF5252;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #000; color: var(--text);
+  -webkit-font-smoothing: antialiased; overflow: hidden; }
+
+/* 16:9 のスライドを画面いっぱいに置く。文字の大きさはスライドの幅（cqw）に合わせる */
+.deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+.slide { position: absolute; width: min(100vw, 177.78vh); height: min(56.25vw, 100vh);
+  background: radial-gradient(circle at 85% 10%, rgba(118,185,0,0.12), transparent 45%), var(--bg);
+  container-type: size; padding: 5cqw 6cqw 6cqw; display: none; flex-direction: column; overflow: hidden; }
+.slide.active { display: flex; }
+.slide h2 { font-size: 3.4cqw; font-weight: 900; line-height: 1.3; margin-bottom: 0.6cqw; }
+.slide h2 .num { color: var(--green); margin-right: 1cqw; }
+.lead { font-size: 1.9cqw; color: #ccc; margin-bottom: 2.4cqw; line-height: 1.6; }
+.body { flex: 1; display: flex; gap: 3cqw; min-height: 0; }
+.col { flex: 1; display: flex; flex-direction: column; gap: 1.6cqw; min-width: 0; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 1.2cqw; padding: 1.6cqw 2cqw; font-size: 1.75cqw; line-height: 1.65; }
+.box h3 { font-size: 1.9cqw; margin-bottom: 0.6cqw; color: var(--green); }
+.box.amber { border-color: var(--amber); } .box.amber h3 { color: var(--amber); }
+.box.blue { border-color: var(--blue); } .box.blue h3 { color: var(--blue); }
+.box.red { border-color: var(--red); } .box.red h3 { color: var(--red); }
+.box.green { border-color: var(--green); }
+.box ul { padding-left: 2.2cqw; } .box li + li { margin-top: 0.4cqw; }
+b, strong { color: #fff; }
+code { font-family: 'JetBrains Mono', ui-monospace, monospace; color: #cdd6f4; background: #0A0A0A; border-radius: 0.4cqw; padding: 0 0.4cqw; font-size: 0.95em; }
+.g { color: var(--green); font-weight: 700; } .a { color: var(--amber); font-weight: 700; }
+.bl { color: var(--blue); font-weight: 700; } .r { color: var(--red); font-weight: 700; }
+.muted { color: var(--sub); }
+svg { width: 100%; height: 100%; display: block; }
+.figure { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+
+/* 表紙 */
+.cover { justify-content: center; }
+.cover .badge { display: inline-block; align-self: flex-start; border: 1px solid rgba(255,255,255,0.25); border-radius: 100px;
+  padding: 0.4cqw 1.6cqw; font-size: 1.5cqw; margin-bottom: 2cqw; color: #ddd; }
+.cover h1 { font-size: 5.2cqw; font-weight: 900; line-height: 1.25; margin-bottom: 1.6cqw; }
+.cover h1 span { color: var(--green); }
+.cover p { font-size: 2cqw; color: #bbb; }
+
+/* 5回の道のり */
+.road { display: flex; gap: 1.2cqw; align-items: stretch; margin-top: 1cqw; }
+.step { flex: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 1.2cqw; padding: 1.4cqw 1.3cqw; position: relative; }
+.step .wk { font-size: 1.4cqw; color: var(--sub); font-weight: 700; }
+.step .tt { font-size: 1.9cqw; font-weight: 900; margin: 0.3cqw 0 0.8cqw; line-height: 1.3; }
+.step .tx { font-size: 1.45cqw; color: #ccc; line-height: 1.55; }
+.step.now { border: 2px solid var(--green); background: #16210c; }
+.step.now .wk { color: var(--green); }
+.step:not(:last-child)::after { content: "▶"; position: absolute; right: -1.1cqw; top: 45%; color: #666; font-size: 1.2cqw; }
+.goal { margin-top: 2cqw; font-size: 1.9cqw; text-align: center; color: #ccc; }
+
+/* 比べる表 */
+table { width: 100%; border-collapse: collapse; font-size: 1.65cqw; }
+th, td { border: 1px solid var(--line); padding: 0.8cqw 1.2cqw; text-align: left; vertical-align: top; }
+th { background: var(--panel); color: var(--green); font-weight: 700; }
+td:first-child { color: #bbb; white-space: nowrap; }
+table.compact { font-size: 1.45cqw; }
+table.compact th, table.compact td { padding: 0.35cqw 1cqw; }
+.why { flex: 0 0 auto; margin-top: 1.4cqw; }
+.why .box { font-size: 1.5cqw; padding: 1.1cqw 1.6cqw; height: 100%; }
+.why .box h3 { font-size: 1.65cqw; }
+.why + .goal { margin-top: 1.2cqw; }
+
+/* 操作 */
+.nav { position: fixed; bottom: 12px; right: 16px; display: flex; gap: 8px; align-items: center; z-index: 5; }
+.nav button { background: #1A1A1A; color: var(--text); border: 1px solid var(--green); border-radius: 999px;
+  width: 40px; height: 40px; font-size: 16px; cursor: pointer; }
+.nav button:hover { background: var(--green); color: #fff; }
+.nav .count { font-size: 13px; color: var(--sub); min-width: 52px; text-align: center; }
+.back { position: fixed; top: 10px; left: 16px; font-size: 13px; color: var(--sub); text-decoration: none; z-index: 5; }
+.back:hover { color: var(--green); }
+.bar { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--green); transition: width 0.25s; z-index: 5; }
+
+/* 第6回: 札と箱 */
+.cards { display: flex; flex-wrap: wrap; gap: 0.8cqw; }
+.card { min-width: 4.6cqw; padding: 0.6cqw 0.9cqw; border-radius: 0.8cqw; background: #222; border: 1px solid #444;
+  text-align: center; font-weight: 700; font-size: 1.8cqw; }
+.card.hit { background: #16210c; border: 2px solid var(--green); color: var(--green); }
+.card.eye { border-color: var(--amber); }
+.big { font-size: 4.2cqw; font-weight: 900; line-height: 1.2; }
+.center { text-align: center; }
+.tight { gap: 1.2cqw; } .tight .box { font-size: 1.6cqw; padding: 1.2cqw 1.8cqw; }
+</style>
+</head>
+<body>
+<a class="back" href="session06.html">← 第6回のページへ</a>
+
+<div class="deck">
+
+  <!-- 1 表紙 -->
+  <section class="slide cover">
+    <span class="badge">アルゴリズム論及び演習II　第6回のポイント</span>
+    <h1>答えは同じ。<br><span>「探し方」</span>だけを賢くする</h1>
+    <p>第6回は、ダイクストラ法を heapq（ヒープキュー）という道具で速くします。<br>→ キー・スペース・画面の右半分をクリックで次へ</p>
+  </section>
+
+  <!-- 2 前回のふり返り -->
+  <section class="slide">
+    <h2><span class="num">ふり返り</span>第5回のダイクストラ法は ①②③ のくり返し</h2>
+    <p class="lead">出発点から近い駅から順に、時間を「もう変わらない」と決めていきました。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box red"><h3>① 選ぶ　← 今回はここを変える</h3>まだ確定していない駅のうち、時間が<b>いちばん小さい駅</b>を選ぶ。<br>第5回は、<span class="r">全部の駅を1つずつ見て比べていた</span>。</div>
+        <div class="box"><h3>② 確定する</h3>選んだ駅の時間を「もう変わらない」と決める。</div>
+        <div class="box"><h3>③ 書き直す</h3>となりの駅に、もっと短い行き方が見つかれば時間を書き直す。</div>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>第6回で変えるのは ① だけ</h3>
+          ②と③の考え方はそのまま。だから<b>答え（最短の時間）は第5回とまったく同じ</b>です。<br><br>
+          変わるのは「いちばん小さいものの<span class="g">探し方</span>」と、それによる<span class="g">速さ</span>だけ。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 何が困る -->
+  <section class="slide">
+    <h2>全部見て比べると、何が困るの？</h2>
+    <p class="lead">駅が n 個あると、1回選ぶのに n 回見る。それを n 回くり返すので、合計 n × n 回見ることになります。</p>
+    <table>
+      <tr><th>地図</th><th>場所の数</th><th>全部見て比べる回数</th><th>感覚でいうと</th></tr>
+      <tr><td>第5回の路線図</td><td>6</td><td>6 × 6 = 36回</td><td>一瞬</td></tr>
+      <tr><td>小さな地図</td><td>10</td><td>10 × 10 = 100回</td><td>一瞬</td></tr>
+      <tr><td>カーナビの道路地図</td><td>10万</td><td><span class="r">10万 × 10万 = 100億回</span></td><td><span class="r">待っていられない</span></td></tr>
+    </table>
+    <p class="goal">場所が増えると、<span class="r">「いちばん小さいものを探す」作業</span>が一番の重荷になる。<br>→ ここを速くできれば、ダイクストラ法全体が速くなる。</p>
+  </section>
+
+  <!-- 4 魔法の箱 -->
+  <section class="slide">
+    <h2>ディズニーランドで考えてみよう</h2>
+    <p class="lead">「いま待ち時間がいちばん短いアトラクション」に行きたい。どうやって探す？</p>
+    <div class="body">
+      <div class="col">
+        <div class="box red"><h3>やり方A：毎回、園内を全部見て回る</h3>
+          全アトラクションの待ち時間を見比べて、いちばん短いものを探す。<br>→ アトラクションが多いほど大変。これが<b>第5回のやり方</b>。</div>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>やり方B：魔法の箱を使う</h3>
+          待ち時間の札を専用の箱に入れておくと、<br><b>手を入れると必ず「いちばん短い札」が出てくる</b>。<br>→ 見て回らなくていい。これが<b>第6回のやり方</b>。</div>
+        <div class="box"><h3>この箱の名前</h3>
+          <b>優先度付きキュー</b>。Python では <code>heapq</code>（ヒープキュー）という道具で使えます。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 比べる -->
+  <section class="slide">
+    <h2>「いちばん小さいもの」の探し方をくらべる</h2>
+    <p class="lead">同じ数の中から、いちばん小さい <b>3</b> を見つけたい。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box red"><h3>全部見る（第5回）</h3>
+          <div class="cards">
+            <span class="card eye">24</span><span class="card eye">7</span><span class="card eye">31</span><span class="card eye">12</span>
+            <span class="card eye">45</span><span class="card eye">9</span><span class="card eye">38</span><span class="card eye">16</span>
+            <span class="card eye">52</span><span class="card hit">3</span><span class="card eye">27</span><span class="card eye">19</span>
+          </div>
+          <p style="margin-top:1cqw">12個あれば <b>12回</b> 見る。100万個なら <span class="r">100万回</span>。</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>heapq に任せる（第6回）</h3>
+          <div class="cards">
+            <span class="card hit">3</span><span class="card">7</span><span class="card">9</span><span class="card">12</span>
+            <span class="card">16</span><span class="card">19</span><span class="card">24</span><span class="card">27</span>
+          </div>
+          <p style="margin-top:1cqw">いちばん小さい数は<b>いつも先頭</b>。先頭を見るだけ。<br>取り出したあとの並べ直しも、100万個で <span class="g">20回程度</span>。</p>
+        </div>
+      </div>
+    </div>
+    <p class="goal">100万回 → 20回。<span class="g">場所が多いほど、差は大きくなる</span>。</p>
+  </section>
+
+  <!-- 6 箱のきまり -->
+  <section class="slide">
+    <h2>なぜ先頭がいちばん小さいの？ ── 箱のきまりはたった1つ</h2>
+    <p class="lead">heapq は、中身を<b>木の形</b>に並べて、「<span class="g">親は必ず子より小さいか同じ</span>」というきまりを守っています。</p>
+    <div class="body">
+      <div class="col" style="flex:1.2">
+        <div class="figure">
+          <svg viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP, sans-serif">
+            <g stroke="#555" stroke-width="2">
+              <line x1="220" y1="45" x2="120" y2="130"/><line x1="220" y1="45" x2="320" y2="130"/>
+              <line x1="120" y1="130" x2="60" y2="215"/><line x1="120" y1="130" x2="180" y2="215"/>
+              <line x1="320" y1="130" x2="260" y2="215"/>
+            </g>
+            <g font-size="20" font-weight="700" text-anchor="middle">
+              <circle cx="220" cy="45" r="26" fill="#16210c" stroke="#76B900" stroke-width="3"/><text x="220" y="52" fill="#76B900">1</text>
+              <circle cx="120" cy="130" r="26" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="120" y="137" fill="#eee">3</text>
+              <circle cx="320" cy="130" r="26" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="320" y="137" fill="#eee">2</text>
+              <circle cx="60" cy="215" r="26" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="60" y="222" fill="#eee">8</text>
+              <circle cx="180" cy="215" r="26" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="180" y="222" fill="#eee">9</text>
+              <circle cx="260" cy="215" r="26" fill="#1A1A1A" stroke="#666" stroke-width="2"/><text x="260" y="222" fill="#eee">5</text>
+            </g>
+            <g font-size="12" fill="#999" text-anchor="middle">
+              <text x="275" y="40">0番目</text><text x="70" y="125">1番目</text><text x="372" y="125">2番目</text>
+              <text x="60" y="256">3番目</text><text x="180" y="256">4番目</text><text x="260" y="256">5番目</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="col tight">
+        <div class="box"><h3>リストとしての中身</h3><code>[1, 3, 2, 8, 9, 5]</code><br><span class="muted">ぱっと見はバラバラ。でも木にすると、どの親も子より小さい。</span></div>
+        <div class="box green"><h3>だから</h3>いちばん小さい数は、必ず木のてっぺん ＝ <b>0番目</b>にある。<br>→ <code>箱[0]</code> を見るだけで最小がわかる。</div>
+        <div class="box amber"><h3>注意</h3>箱に <code>append()</code> で直接入れると、きまりが崩れる。<br>入れるのは <code>heappush</code>、出すのは <code>heappop</code> だけ。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 3つの命令 -->
+  <section class="slide">
+    <h2>heapq の使い方は3つだけ</h2>
+    <p class="lead">箱はふつうのリスト。最初に <code>import heapq</code> と書いてから使います。</p>
+    <div class="body">
+      <div class="col">
+        <table>
+          <tr><th>書き方</th><th>すること</th></tr>
+          <tr><td><code>heapq.heappush(箱, 値)</code></td><td>箱に値を1つ入れる</td></tr>
+          <tr><td><code>heapq.heappop(箱)</code></td><td>いちばん小さい値を取り出す（箱からは消える）</td></tr>
+          <tr><td><code>箱[0]</code></td><td>取り出さずに、いちばん小さい値を見るだけ</td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>組（タプル）も入れられる</h3>
+          <code>(16, "品川")</code> のように<b>数を先に</b>書いた組を入れると、<b>1番目の数</b>の小さい順に出てくる。<br><br>
+          <code>(16, "品川")</code> と <code>(30, "品川")</code> → 16 のほうが先。<br>
+          数が同じなら、2番目の名前でくらべる（カタカナならだいたいアイウエオ順）。</div>
+      </div>
+    </div>
+    <p class="goal">ダイクストラ法では <code>(その駅までの時間, 駅名)</code> を箱に入れる → <span class="g">時間の短い駅から順に出てくる</span></p>
+  </section>
+
+  <!-- 8 何が変わる -->
+  <section class="slide">
+    <h2>heapq 版のダイクストラ法 ── 変わるのはここ</h2>
+    <p class="lead">箱の名前は <code>queue</code>（キュー：待ち行列）。中に <code>(時間, 駅名)</code> の組を入れます。</p>
+    <table>
+      <tr><th></th><th>第5回（全部見る）</th><th>第6回（heapq）</th></tr>
+      <tr><td>① 選ぶ</td><td>for で全部の駅を見て、いちばん小さい駅を探す</td><td><span class="g"><code>heapq.heappop(queue)</code> の1行</span>で取り出す</td></tr>
+      <tr><td>③ 書き直す</td><td>距離表を書き直すだけ</td><td>書き直したら、<code>(新しい時間, 駅名)</code> を <span class="g"><code>heappush</code> で箱にも入れる</span></td></tr>
+      <tr><td>確定済みの駅が出てきたら</td><td>（起きない）</td><td><span class="a">読み飛ばす</span>（次のスライド）</td></tr>
+      <tr><td>終わるとき</td><td>全部の駅が確定したとき</td><td>箱（queue）が空っぽになったとき</td></tr>
+    </table>
+    <p class="goal">②「確定する」の考え方は、第5回とまったく同じ。</p>
+  </section>
+
+  <!-- 9 7回の取り出し -->
+  <section class="slide">
+    <h2>新宿から、箱を使って解いてみる（heappop 7回）</h2>
+    <p class="lead">箱から出てくるのは、いつも<b>時間がいちばん小さい組</b>。出てきた駅を確定し、となりの駅の組を箱に入れます。</p>
+    <table class="compact">
+      <tr><th>回</th><th>取り出す前の箱の中身</th><th>取り出した組</th><th>したこと</th></tr>
+      <tr><td>1</td><td>(0, 新宿)</td><td class="g">(0, 新宿)</td><td>新宿を0分で確定。渋谷7・池袋9・品川30 を入れる</td></tr>
+      <tr><td>2</td><td>(7, 渋谷) (9, 池袋) (30, 品川)</td><td class="g">(7, 渋谷)</td><td>渋谷を7分で確定。<span class="a">品川 30→16 に書き直して (16, 品川) を入れる</span></td></tr>
+      <tr><td>3</td><td>(9, 池袋) (30, 品川) (16, 品川)</td><td class="g">(9, 池袋)</td><td>池袋を9分で確定。上野21 を入れる</td></tr>
+      <tr><td>4</td><td>(16, 品川) (30, 品川) (21, 上野)</td><td class="g">(16, 品川)</td><td>品川を16分で確定。東京27 を入れる</td></tr>
+      <tr><td>5</td><td>(21, 上野) (30, 品川) (27, 東京)</td><td class="g">(21, 上野)</td><td>上野を21分で確定。入れるものなし</td></tr>
+      <tr><td>6</td><td>(27, 東京) (30, 品川)</td><td class="g">(27, 東京)</td><td>東京を27分で確定。入れるものなし</td></tr>
+      <tr><td>7</td><td>(30, 品川)</td><td class="r">(30, 品川)</td><td><span class="r">品川はもう確定済み → 読み飛ばす</span></td></tr>
+    </table>
+    <p class="goal">確定の順番と時間（0・7・9・16・21・27分）は、<span class="g">第5回の手計算とまったく同じ</span>。</p>
+  </section>
+
+  <!-- 10 読み飛ばし -->
+  <section class="slide">
+    <h2>気をつけるところ ── 古い札は無視する</h2>
+    <p class="lead">heapq 版では、<b>同じ駅の札が箱に2枚入る</b>ことがあります。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box"><h3>品川に何が起きた？</h3>
+          1回目：新宿から直通で <code>(30, 品川)</code> を入れる。<br>
+          2回目：渋谷経由のほうが速いとわかり、<code>(16, 品川)</code> を<b>もう1枚</b>入れる。<br><br>
+          古い30分の札は消さずに残しておく（箱の途中の札を消すのは手間がかかるから）。</div>
+        <div class="box green"><h3>でも大丈夫</h3>小さい順に出てくるので、<b>16分の札が先に出て</b>品川が確定する。<br>
+          最後に出てくる30分の札は「<span class="r">もう決まった駅の古い札</span>」なので<b>無視（読み飛ばし）</b>すればOK。</div>
+      </div>
+      <div class="col">
+        <div class="box amber"><h3>コードでは</h3>
+          <code>minutes, current = heapq.heappop(queue)</code><br>
+          <code>if current in settled:</code><br>
+          <code>&nbsp;&nbsp;&nbsp;&nbsp;continue</code>　← 確定済みなら次へ<br><br>
+          <span class="muted">読み飛ばさないと、確定済みの駅をもう一度「確定」と表示して、むだな作業が増えます。</span></div>
+        <div class="box"><h3>読み飛ばしは何回起きる？</h3>時間の<b>書き直しが起きた回数</b>だけ起きる。<br>（新宿の例では書き直しが1回 → 読み飛ばしも1回）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 今日やること -->
+  <section class="slide">
+    <h2><span class="num">第6回</span>今日やること</h2>
+    <p class="lead">例題（参考）で heapq とダイクストラ法の動きをつかみ、クリエイティブ演習でディズニーランドの作品を作ります。</p>
+    <div class="body">
+      <div class="col">
+        <div class="box"><h3>例題1 → 演習1：待ち時間ボード</h3>
+          heapq の箱に待ち時間の札を入れ、<b>短い順に回る</b>待ち時間ボードを作る。窓で箱の木の形が変わる様子を見る。</div>
+        <div class="box"><h3>例題2 → 演習2：自分の地図を解き直す</h3>
+          第5回で作った<b>自分のディズニー地図</b>を heapq 版で解き直し、<b>第5回と同じ答え</b>になることを確かめる。「読み飛ばす」を4回以上出す。</div>
+      </div>
+      <div class="col">
+        <div class="box green"><h3>標準課題（70点）</h3>
+          自分の待ち時間ボードの<b>箱の中身を木の形</b>で描き、取り出す順番を示す。<br>
+          自分の地図で、<b>同じ場所の札が2枚入って、古いほうを読み飛ばす</b>ところを図で説明する。</div>
+        <div class="box amber"><h3>発展課題（30点・任意）</h3>
+          作品2「路線図の最短経路アプリ」。駅を選ぶと、最短の行き方が色で出るところまで。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 まとめ -->
+  <section class="slide">
+    <h2>まとめ ── 第6回をひと言でいうと</h2>
+    <p class="big center" style="margin:2cqw 0 3cqw">毎回全部を見て探すのをやめて、<br><span class="g">いちばん小さいものが先頭に来る箱</span>を使う</p>
+    <div class="road">
+      <div class="step"><div class="wk">第5回</div><div class="tt">ダイクストラ法（1）考え方</div><div class="tx">選ぶ・確定する・書き直す。手計算でたどる</div></div>
+      <div class="step now"><div class="wk">第6回（今回）</div><div class="tt">ダイクストラ法（2）実装入門</div><div class="tx">①「選ぶ」を heapq で速くする。答えは同じ</div></div>
+      <div class="step"><div class="wk">第7回</div><div class="tt">ダイクストラ法（3）迷路への応用</div><div class="tx">床コスト付きの迷路で、幅優先探索との違いを見る</div></div>
+    </div>
+    <p class="goal">第6回のゴール：<span class="g">heapq の箱の中身と、取り出す順番・読み飛ばしを、自分の数値で図にして説明できる</span></p>
+  </section>
+
+</div>
+
+<div class="bar" id="bar"></div>
+<nav class="nav">
+  <button id="prev" aria-label="前へ">◀</button>
+  <span class="count" id="count"></span>
+  <button id="next" aria-label="次へ">▶</button>
+</nav>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle('active', k === cur));
+  document.getElementById('count').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('bar').style.width = `${(cur + 1) / slides.length * 100}%`;
+  history.replaceState(null, '', `#${cur + 1}`);
+}
+document.getElementById('prev').onclick = e => { e.stopPropagation(); show(cur - 1); };
+document.getElementById('next').onclick = e => { e.stopPropagation(); show(cur + 1); };
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+  if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End') show(slides.length - 1);
+});
+document.querySelector('.deck').addEventListener('click', e => {
+  if (e.target.closest('a')) return;
+  show(e.clientX > innerWidth / 2 ? cur + 1 : cur - 1);
+});
+let x0 = null;
+addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 40) show(dx < 0 ? cur + 1 : cur - 1);
+  x0 = null;
+});
+show((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>

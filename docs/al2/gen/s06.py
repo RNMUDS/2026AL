@@ -195,7 +195,9 @@ NAV = [
 
 sub = slide_submission("06")
 
-explanation = f"""    <p style="font-size:1.05rem;margin-bottom:1.5rem">
+explanation = f"""    <p style="margin-bottom:1rem"><a href="flow06.html" style="color:#76B900;font-weight:700">▶ 第6回のポイントをスライドで見る</a></p>
+
+    <p style="font-size:1.05rem;margin-bottom:1.5rem">
       第5回のダイクストラ法は、①②③（選ぶ・確定する・書き直す）のくり返しでした。
       このうち①の「まだ確定していない場所のうち、時間がいちばん小さい場所を選ぶ」では、
       <strong>毎回すべての場所を1つずつ見て</strong>くらべていました。
