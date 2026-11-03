@@ -278,40 +278,114 @@ def ex06():
                    "10分 ＜ 50分 なので、あとから出た50分の組は古い情報で、もう乗らなくてよい。"])
 
 
+PARK7 = ["G..~.....#.", ".#.~.###.#.", ".#...###...", ".##PPPPPPP#", "..~P.....P.",
+         "#.~P.###.P.", "#..PPP.PPP.", "##~~...~~##", "##...S...##"]
+COST7 = {".": 1, "S": 1, "G": 1, "~": 3, "P": 9}
+
+
+def _park7():
+    """第7回の演習のひな形の地図を、幅優先探索とダイクストラ法で解く。(幅の道, ダイクストラの道, 全マスの時間) を返す。"""
+    import heapq
+    from collections import deque
+    rows, cols = len(PARK7), len(PARK7[0])
+    start, goal = (8, 5), (0, 0)
+
+    def nb(r, c):
+        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and PARK7[nr][nc] != "#":
+                yield nr, nc
+
+    def back(came):
+        p, n = [], goal
+        while n is not None:
+            p.append(n)
+            n = came[n]
+        return p[::-1]
+    came = {start: None}
+    q = deque([start])
+    while q:
+        u = q.popleft()
+        if u == goal:
+            break
+        for v in nb(*u):
+            if v not in came:
+                came[v] = u
+                q.append(v)
+    bfs = back(came)
+    dist, came2, done, pq = {start: 0}, {start: None}, set(), [(0, start)]
+    while pq:
+        d, u = heapq.heappop(pq)
+        if u in done:
+            continue
+        done.add(u)
+        for v in nb(*u):
+            nd = d + COST7[PARK7[v[0]][v[1]]]
+            if nd < dist.get(v, 1e9):
+                dist[v], came2[v] = nd, u
+                heapq.heappush(pq, (nd, v))
+    return bfs, back(came2), dist
+
+
 def ex07():
-    cost = [[1, 1, 1, 9, 1], [9, 9, 1, 9, 1], [1, 1, 1, 9, 1], [1, 9, 9, 9, 1], [1, 1, 1, 1, 1]]
-    best = [[0, 1, 2, 11, 12], [9, 10, 3, 12, 13], [6, 5, 4, 13, 14], [7, 14, 13, 20, 13], [8, 9, 10, 11, 12]]
-    order = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0)]
-    path = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4)]
-    cell = 44; ox, oy = 60, 70
-    s = []
-    for r in range(5):
-        for c in range(5):
-            x, y = ox + c * cell, oy + r * cell
-            steps = r + c
-            far = best[r][c] > steps
-            s.append(_box(x, y, cell, cell, "#FFE0B2" if cost[r][c] == 9 else ("#E8F5D8" if far else "#FFFFFF"), "#AAA", 1, 0))
-            s.append(_t(x + cell / 2, y + cell / 2 + 6, str(best[r][c]), 14, RED if far else INK, "middle", 700))
-            s.append(_t(x + cell - 3, y + 11, str(cost[r][c]), 8, GRAY, "end"))
-    pts = " ".join(f"{ox + c * cell + cell / 2},{oy + r * cell + cell / 2}" for r, c in path)
-    s.append(f'<polyline points="{pts}" fill="none" stroke="{GREEN}" stroke-width="3" opacity="0.5"/>')
-    for k, (r, c) in enumerate(order, 1):
-        x, y = ox + c * cell, oy + r * cell
-        s.append(f'<circle cx="{x + 9}" cy="{y + 9}" r="7" fill="{BLUE}"/>')
-        s.append(_t(x + 9, y + 12, str(k), 8, "#FFFFFF", "middle", 700))
-    s.append(_t(300, 90, "大きい数字 = スタートからの最小コスト", 11, INK, "start", 700))
-    s.append(_t(300, 106, "右上の小さい数字 = そのマスのコスト", 10, GRAY, "start"))
-    s.append(f'<circle cx="307" cy="128" r="7" fill="{BLUE}"/>'); s.append(_t(307, 131, "1", 8, "#FFFFFF", "middle", 700))
-    s.append(_t(320, 132, "確定した順番 ①〜⑧（コストの小さい順）", 10.5, INK, "start"))
-    s.append(_t(320, 148, "(0,0)=0 → (0,1)=1 → (0,2)=2 → (1,2)=3 → (2,2)=4 …", 9.5, BLUE, "start"))
-    s.append(_box(300, 164, 14, 14, "#FFE0B2", "#AAA")); s.append(_t(320, 175, "コスト 9 のマス", 10.5, INK, "start"))
-    s.append(_box(300, 186, 14, 14, "#E8F5D8", "#AAA")); s.append(_t(320, 197, "最小コスト > 歩数 のマス（赤い数字）", 10.5, INK, "start"))
-    s.append(_t(300, 222, "例: (2,0) は 2歩で着くが最小コストは 6。", 10.5, RED, "start"))
-    s.append(_t(300, 238, "下へ 9+9 と進むより、右へ回って 1 を通る方が安い", 10.5, RED, "start"))
-    s.append(f'<line x1="300" y1="262" x2="340" y2="262" stroke="{GREEN}" stroke-width="3" opacity="0.5"/>')
-    s.append(_t(348, 266, "ゴールまでの経路（12秒）", 10.5, INK, "start"))
-    return _slide("07", "ダイクストラ法の広がり方（最小コスト）", "\n".join(s),
-                  ["自分のコストでは、最小コストの表が実行結果と一致し、確定の順番は (0,0)→(0,1)→(0,2)→(1,2)→(2,2)→… だった。"])
+    bfs, dij, dist = _park7()
+    cell = 19
+    terrain = {".": "#FFFFFF", "S": "#FFFFFF", "G": "#FFFFFF", "~": "#E6D9F2", "P": "#F8C9C9", "#": "#9AA0AE"}
+    bands = [(5, "#CDE8B5"), (10, "#E5EFA5"), (15, "#FBE3A6"), (99, "#F6C39B")]
+    s = [_t(20, 76, "① 2つの道（演習1）", 11, INK, "start", 700),
+         _t(336, 76, "② 時間マップ（演習2）", 11, INK, "start", 700)]
+
+    def grid(ox, oy, color_of, nums):
+        for r, line in enumerate(PARK7):
+            for c, ch in enumerate(line):
+                x, y = ox + c * cell, oy + r * cell
+                s.append(_box(x, y, cell, cell, color_of(r, c, ch), "#AAA", 0.8, 0))
+                if ch in "SG":
+                    s.append(_t(x + cell / 2, y + 15, ch, 10, INK, "middle", 700))
+                elif (r, c) in nums:
+                    s.append(_t(x + cell / 2, y + 14, str(nums[(r, c)]), 8.5, INK, "middle", 700))
+
+    def line(ox, oy, path, color, dx):
+        pts = " ".join(f"{ox + c * cell + cell / 2 + dx},{oy + r * cell + cell / 2 + dx}" for r, c in path)
+        s.append(f'<polyline points="{pts}" fill="none" stroke="{color}" stroke-width="2.5" opacity="0.85"/>')
+    ox, oy = 20, 86
+    grid(ox, oy, lambda r, c, ch: terrain[ch], {})
+    line(ox, oy, bfs, AMBER, -2)
+    line(ox, oy, dij, GREEN, 2)
+    lx = 236
+    s.append(_t(lx, 104, "白 = 道 1分", 8.5, INK, "start"))
+    s.append(_box(lx, 112, 10, 10, terrain["~"], "#AAA")); s.append(_t(lx + 14, 121, "~ 人ごみ 3分", 8.5, INK, "start"))
+    s.append(_box(lx, 128, 10, 10, terrain["P"], "#AAA")); s.append(_t(lx + 14, 137, "P パレード 9分", 8.5, INK, "start"))
+    s.append(_box(lx, 144, 10, 10, terrain["#"], "#AAA")); s.append(_t(lx + 14, 153, "# 建物", 8.5, INK, "start"))
+    s.append(f'<line x1="{lx}" y1="174" x2="{lx + 15}" y2="174" stroke="{AMBER}" stroke-width="2.5"/>')
+    s.append(_t(lx, 190, "幅優先探索", 9, AMBER, "start", 700))
+    s.append(_t(lx, 203, f"{len(bfs) - 1}歩 ／ 39分", 9, AMBER, "start"))
+    s.append(f'<line x1="{lx}" y1="218" x2="{lx + 15}" y2="218" stroke="{GREEN}" stroke-width="2.5"/>')
+    s.append(_t(lx, 234, "ダイクストラ法", 9, GREEN, "start", 700))
+    s.append(_t(lx, 247, f"{len(dij) - 1}歩 ／ {dist[(0, 0)]}分", 9, GREEN, "start"))
+
+    def band_color(r, c, ch):
+        if ch == "#":
+            return terrain["#"]
+        return next(col for lim, col in bands if dist[(r, c)] <= lim)
+    ox2 = 336
+    on_route = {p: dist[p] for p in dij}
+    grid(ox2, oy, band_color, on_route)
+    for r, c in dij:                        # 道のマスは緑の枠で囲む
+        s.append(_box(ox2 + c * cell + 1, oy + r * cell + 1, cell - 2, cell - 2, "none", GREEN, 2, 2))
+    gx, gy = ox2 + cell / 2, oy + cell / 2
+    s.append(f'<circle cx="{gx}" cy="{gy}" r="12" fill="none" stroke="{RED}" stroke-width="2"/>')
+    ly = 104
+    for k, ((lim, col), name) in enumerate(zip(bands, ["0〜5分 すぐ着く", "6〜10分 ちょっと歩く", "11〜15分 けっこう遠い", "16分〜 それより遠い"])):
+        s.append(_box(556, ly + k * 18, 10, 10, col, "#AAA"))
+        s.append(_t(570, ly + 9 + k * 18, name.split(" ")[0], 8.5, INK, "start"))
+    s.append(_t(556, 190, "緑の枠 = 道", 8.5, INK, "start"))
+    s.append(_t(556, 202, "数字 = S からの時間", 8.5, INK, "start"))
+    s.append(_t(556, 226, "G = 15分", 9, RED, "start", 700))
+    s.append(_t(556, 238, "①の緑と同じ", 9, RED, "start"))
+    return _slide("07", "パレードをよける道と、自分の時間マップ", "\n".join(s),
+                  ["幅優先探索の道は P を3回・~ を1回通り 9 + 27 + 3 = 39分。ダイクストラ法は P をよけ、~ 1回で 12 + 3 = 15分（差は24分）。",
+                   "時間マップの G のマスも15分で、①のダイクストラ法の合計時間と一致した。"])
 
 
 def ex08():

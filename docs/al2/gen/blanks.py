@@ -59,14 +59,6 @@ BLANKS = {
       "合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）",
       ["len(route) < len(best_route)", "route_minutes(route) > route_minutes(best_route)"]),
 ],
-"AL2-07-ex2.py": [
-    B("order.append((current, total))", "order.append((current, total))",
-      "確定した順番に、マスと合計秒数を記録する",
-      ["order.append(current)", "order.insert(0, current)"]),
-    B("heapq.heappush(pq, (new_total, (nr, nc)))", "(new_total, (nr, nc))",
-      "（合計秒数, マス）の組を入れる。秒数で並ぶようにする",
-      ["((nr, nc), new_total)", "new_total"]),
-],
 "AL2-08-ex2.py": [
     B("all_orders = list(permutations([1, 2, 3, 4]))", "permutations([1, 2, 3, 4])",
       "1〜4番の都市の並べ方をすべて作る（学校は0番で固定）",
@@ -176,17 +168,6 @@ BLANKS.update({
     B("total = total + minutes", "total + minutes",
       "見つかった路線の時間を合計に足す",
       ["total + 1", "minutes"]),
-],
-"AL2-07-ex1.py": [
-    B("current = queue.popleft()", "queue.popleft()",
-      "幅優先探索: メモのいちばん古い行を読む",
-      ["queue.pop()", "queue[-1]"]),
-    B("total, current = heapq.heappop(pq)", "heapq.heappop(pq)",
-      "ダイクストラ法: 合計コストがいちばん小さいマスを取り出す",
-      ["pq.pop()", "pq.popleft()"]),
-    B("new_total = total + cost_map[nxt[0]][nxt[1]]", "total + cost_map[nxt[0]][nxt[1]]",
-      "取り出したマスまでの合計に、となりのマスのコストを足す",
-      ["total + 1", "cost_map[nxt[0]][nxt[1]]"]),
 ],
 "AL2-08-ex1.py": [
     B("d = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)", "math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)",
