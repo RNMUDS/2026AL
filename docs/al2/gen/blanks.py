@@ -59,14 +59,6 @@ BLANKS = {
       "合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）",
       ["len(route) < len(best_route)", "route_minutes(route) > route_minutes(best_route)"]),
 ],
-"AL2-08-ex2.py": [
-    B("all_orders = list(permutations([1, 2, 3, 4]))", "permutations([1, 2, 3, 4])",
-      "1〜4番の都市の並べ方をすべて作る（学校は0番で固定）",
-      ["permutations([0, 1, 2, 3, 4])", "[1, 2, 3, 4]"]),
-    B("total = total + distance[here][0]", "distance[here][0]",
-      "最後の都市から学校（0番）へ戻る距離を足す",
-      ["distance[here][1]", "0"]),
-],
 "AL2-09-ex2.py": [
     B("if j in visited:", "j in visited",
       "すでに行った都市は候補にしない",
@@ -168,14 +160,6 @@ BLANKS.update({
     B("total = total + minutes", "total + minutes",
       "見つかった路線の時間を合計に足す",
       ["total + 1", "minutes"]),
-],
-"AL2-08-ex1.py": [
-    B("d = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)", "math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)",
-      "2点のあいだの直線距離（三平方の定理: 横の差の2乗 + 縦の差の2乗 の平方根）",
-      ["(x1 - x2) + (y1 - y2)", "math.sqrt(x1 * x2 + y1 * y2)"]),
-    B("row.append(round(d, 1))", "round(d, 1)",
-      "小数第1位までに丸めて表に入れる",
-      ["int(d)", "d * 10"]),
 ],
 "AL2-09-ex1.py": [
     B("if nearest is None or distance[here][j] < distance[here][nearest]:", "distance[here][j] < distance[here][nearest]",
