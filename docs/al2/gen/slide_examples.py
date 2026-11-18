@@ -423,29 +423,65 @@ def ex08():
 
 
 def ex09():
-    cities = [("学校", 2, 2), ("郵便局", 10, 3), ("図書館", 14, 9), ("カフェ", 6, 12), ("公園", 3, 8)]
-    def P(x, y):
-        return 70 + x * 22, 300 - y * 18
+    import math
+    from itertools import permutations
+    spots = [("メインゲート", 9, 14), ("スチールドラゴン2000", 3, 5), ("嵐", 6, 10), ("大観覧車オーロラ", 12, 8), ("アクロバット", 17, 10)]
+    short = ["ゲート", "スチールドラゴン", "嵐", "観覧車", "アクロバット"]
+    n = len(spots)
+    t = [[round(math.hypot(a[1] - b[1], a[2] - b[2]), 1) for b in spots] for a in spots]
+    route, here, firsts = [0], 0, []                 # 貪欲法（演習1と同じ）。firsts = 各回の (いまいる場所, 候補)
+    while len(route) < n:
+        cand = [j for j in range(n) if j not in route]
+        firsts.append((here, cand))
+        here = min(cand, key=lambda j: t[here][j])
+        route.append(here)
+    loop = route + [0]
+    total = round(sum(t[a][b] for a, b in zip(loop, loop[1:])), 1)
+    best = round(min(sum(t[a][b] for a, b in zip((0,) + o + (0,), o + (0,))) for o in permutations(range(1, n))), 1)
+
+    def P(i):
+        return 66 + (spots[i][1] - 3) * 19, 96 + (spots[i][2] - 5) * 20
     s = []
-    route = [(0, 4, "6.1"), (4, 3, "5.0"), (3, 2, "8.5"), (2, 1, "7.2"), (1, 0, "8.1")]
-    for k, (a, b, d) in enumerate(route, 1):
-        (x1, y1), (x2, y2) = P(cities[a][1], cities[a][2]), P(cities[b][1], cities[b][2])
-        s.append(_arrow(x1, y1, x2, y2, GREEN, 2.5))
-        mx, my = (x1 + x2) / 2, (y1 + y2) / 2
-        s.append(f'<circle cx="{mx}" cy="{my}" r="10" fill="#FFFFFF" stroke="{GREEN}"/>')
-        s.append(_t(mx, my + 4, "①②③④⑤"[k - 1], 11, GREEN, "middle", 700))
-        s.append(_t(mx + 13, my - 8, d, 10, AMBER, "start"))
-    for name, x, y in cities:
-        px, py = P(x, y)
-        s.append(f'<circle cx="{px}" cy="{py}" r="6" fill="{INK}"/>')
-        s.append(_t(px + 9, py - 6, f"{name}({x},{y})", 10, INK, "start"))
-    s.append(_t(430, 100, "貪欲法の進み方", 12, INK, "start", 700))
-    for k, line in enumerate(["① 学校 → 公園 6.1", "② 公園 → カフェ 5.0", "③ カフェ → 図書館 8.5", "④ 図書館 → 郵便局 7.2", "⑤ 郵便局 → 学校 8.1"]):
-        s.append(_t(430, 122 + k * 20, line, 11, INK, "start"))
-    s.append(_t(430, 236, "合計 34.9", 13, GREEN, "start", 700))
-    s.append(_t(430, 258, "毎回「いちばん近い都市」を選ぶ", 10.5, GRAY, "start"))
+    for (here, cand), color in zip(firsts[:2], (BLUE, AMBER)):      # 1回目・2回目の候補への細い線と分
+        for j in cand:
+            (x1, y1), (x2, y2) = P(here), P(j)
+            s.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" stroke-width="1" stroke-dasharray="4 3"/>')
+            ang = math.atan2(y2 - y1, x2 - x1)           # 数字は線の少し横に書く（矢印と重ならないように）
+            lx, ly = x1 + (x2 - x1) * 0.78 + 11 * math.sin(ang), y1 + (y2 - y1) * 0.78 - 11 * math.cos(ang)
+            s.append(_t(round(lx), round(ly + 1), t[here][j], 8.5, color))
+    for k in range(n):
+        (x1, y1), (x2, y2) = P(loop[k]), P(loop[k + 1])
+        ang = math.atan2(y2 - y1, x2 - x1)
+        s.append(_arrow(x1 + 9 * math.cos(ang), y1 + 9 * math.sin(ang), round(x2 - 9 * math.cos(ang), 1), round(y2 - 9 * math.sin(ang), 1), GREEN, 2.5))
+        mx, my = x1 + (x2 - x1) * 0.45, y1 + (y2 - y1) * 0.45
+        s.append(f'<circle cx="{mx:.0f}" cy="{my:.0f}" r="9" fill="#FFFFFF" stroke="{GREEN}"/>')
+        s.append(_t(round(mx), round(my + 4), "①②③④⑤"[k], 10.5, GREEN, "middle", 700))
+    for i, (name, x, y) in enumerate(spots):
+        px, py = P(i)
+        s.append(f'<circle cx="{px}" cy="{py}" r="7" fill="{AMBER if i == 0 else INK}"/>')
+        if i == n - 1:
+            s.append(_t(px + 8, py + 20, f"{short[i]}({x},{y})", 9.5, INK, "end"))
+        else:
+            s.append(_t(px + 11, py + (4 if i == 0 else -10), f"{short[i]}({x},{y})", 9.5, INK, "start"))
+    s.append(_t(410, 80, "貪欲法の進み方（合計は実行結果と同じ）", 11, INK, "start", 700))
+    for k in range(n):
+        a, b = loop[k], loop[k + 1]
+        tail = "（戻る）" if k == n - 1 else ""
+        s.append(_t(410, 100 + k * 17, f'{"①②③④⑤"[k]} {short[a]} → {short[b]}{tail}  {t[a][b]}分', 10, INK, "start"))
+    s.append(_t(410, 100 + n * 17 + 6, f"貪欲法の合計 {total}分", 12, GREEN, "start", 700))
+    late = round(total - best, 1)
+    s.append(_box(404, 206, 218, 62, "#FFFFFF", "#BBB"))
+    s.append(_t(412, 222, f"全探索（演習2）の合計 {best}分", 10, INK, "start", 700))
+    gap = f"差 {late}分（貪欲法は {round(late / best * 100, 1)}% 長い）" if late > 0 else "差 0分（この5か所では、たまたま同じ）"
+    s.append(_t(412, 238, gap, 10, RED, "start"))
+    s.append(_t(412, 254, "20か所: 貪欲法 0.00002秒 / 全探索 約500年", 9, INK, "start"))
+    s.append(_t(48, 302, "青の点線 = 1回目の候補（ゲートから）　橙の点線 = 2回目の候補（嵐から）　数字 = 歩く分", 9, GRAY, "start"))
+    s.append(_t(48, 316, "1回目は 5.0分の嵐、2回目は 5.8分のスチールドラゴンが「いちばん近い」", 9, GRAY, "start"))
+    long_k = max(range(n), key=lambda k: t[loop[k]][loop[k + 1]])
+    a, b = loop[long_k], loop[long_k + 1]
     return _slide("09", "貪欲法の進み方", "\n".join(s),
-                  ["自分の座標では、学校→公園→カフェ→図書館→郵便局→学校 の順に進み、合計 34.9 になった（実行結果と一致）。"])
+                  [f"いちばん長い矢印は {'①②③④⑤'[long_k]} の {short[a]}→{short[b]}（{t[a][b]}分）。近い場所を先にえらび、残った場所が遠かったため。",
+                   "20か所では貪欲法は 0.00002秒、全探索は約500年。場所が多くて全探索が終わらないときに、貪欲法が役に立つ。"])
 
 
 def ex10():
