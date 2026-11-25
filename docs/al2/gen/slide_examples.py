@@ -485,31 +485,82 @@ def ex09():
 
 
 def ex10():
-    rows = [("00001", "学校", [("学校", "0.0")]),
-            ("00011", "学校, 郵便局", [("郵便局", "8.1")]),
-            ("00111", "学校, 郵便局, 図書館", [("郵便局", "21.1"), ("図書館", "15.3")]),
-            ("01111", "学校, 郵便局, 図書館, カフェ", [("郵便局", "26.5"), ("図書館", "26.5"), ("カフェ", "23.8")]),
-            ("11111", "全部", [("郵便局", "26.8"), ("図書館", "28.1"), ("カフェ", "30.4"), ("公園", "28.8")])]
-    s = [_t(40, 78, "状態 = （回った都市の集合, いまいる都市）。表には各状態までの最短距離を覚えておく", 10.5, INK, "start", 700)]
-    for i, (bits, names, vals) in enumerate(rows):
-        y = 90 + i * 46
-        s.append(_box(40, y, 300, 38, "#E8F5D8" if i == 4 else LIGHT, GREEN if i == 4 else "#AAA", 1.5 if i == 4 else 1))
-        s.append(_t(50, y + 16, bits, 12, GREEN, "start", 700))
-        s.append(_t(110, y + 16, f"= {names}", 10, INK, "start"))
-        s.append(_t(50, y + 31, "いまいる都市ごとの最短:  " + "  ".join(f"{n} {v}" for n, v in vals), 9.5, "#444", "start"))
-        if i < 4:
-            s.append(_arrow(60, y + 38, 60, y + 46, GRAY, 1.5))
-            s.append(_t(70, y + 45, "都市を1つ足す", 8.5, GRAY, "start"))
-    s.append(_t(360, 100, "最後の行から答えを出す", 11, INK, "start", 700))
-    for k, line in enumerate(["郵便局 26.8 + 8.1 = 34.9 ★", "図書館 28.1 + 13.9 = 42.0", "カフェ 30.4 + 10.8 = 41.2", "公園 28.8 + 6.1 = 34.9 ★"]):
-        s.append(_t(360, 120 + k * 18, line, 10.5, GREEN if "★" in line else INK, "start"))
-    s.append(_t(360, 200, "（最後の都市から学校へ戻る距離を足す）", 9.5, GRAY, "start"))
-    s.append(_t(360, 226, "bitDP の答え: 34.9", 13, GREEN, "start", 700))
-    s.append(_t(360, 246, "実行結果の「bitDP の答え: 34.9」と一致", 10, INK, "start"))
-    s.append(_t(360, 274, "同じ集合に別の順番で着いても、", 9.5, RED, "start"))
-    s.append(_t(360, 288, "表には短いほうだけ残る（だから速い）", 9.5, RED, "start"))
+    import math
+    spots = [("メインゲート", 9, 14), ("スチールドラゴン2000", 3, 5), ("白鯨", 15, 3), ("嵐", 6, 10),
+             ("大観覧車オーロラ", 12, 8), ("アクロバット", 17, 10)]
+    short = ["ゲート", "スチールドラゴン", "白鯨", "嵐", "観覧車", "アクロバット"]
+    n = len(spots)
+    t = [[round(math.hypot(a[1] - b[1], a[2] - b[2]), 1) for b in spots] for a in spots]
+    inf = float("inf")                               # bitDP（演習2と同じ）
+    best = [[inf] * n for _ in range(1 << n)]
+    prev = [[None] * n for _ in range(1 << n)]
+    best[1][0] = 0
+    for v in range(1 << n):
+        for h in range(n):
+            if best[v][h] == inf:
+                continue
+            for x in range(n):
+                if v & (1 << x):
+                    continue
+                if best[v][h] + t[h][x] < best[v | (1 << x)][x]:
+                    best[v | (1 << x)][x] = best[v][h] + t[h][x]
+                    prev[v | (1 << x)][x] = h
+    full = (1 << n) - 1
+    answer, last = inf, None
+    for h in range(1, n):
+        if best[full][h] + t[h][0] < answer:
+            answer, last = best[full][h] + t[h][0], h
+    route, v, h = [], full, last
+    while h is not None:
+        route.append(h)
+        v, h = v - (1 << h), prev[v][h]
+    route.reverse()
+    answer = round(answer, 1)
+    g, here = [0], 0                                 # 貪欲法（第9回と同じ）
+    while len(g) < n:
+        here = min((j for j in range(n) if j not in g), key=lambda j: t[here][j])
+        g.append(here)
+    g_total = round(sum(t[a][b] for a, b in zip(g, g[1:] + [0])), 1)
+
+    s = [_t(40, 72, "状態 = （スタンプカード, いまいる場所）。表には、各状態までのいちばん早い分だけを残す", 10.5, INK, "start", 700)]
+    v, total = 0, 0
+    for k, place in enumerate(route):
+        if k:
+            total += t[route[k - 1]][place]
+        v |= 1 << place
+        y = 80 + k * 39
+        hot = k == 3
+        s.append(_box(40, y, 250, 24, "#FFF6E0" if hot else LIGHT, AMBER if hot else "#AAA", 1.5 if hot else 1))
+        s.append(_t(48, y + 16, format(v, f"0{n}b"), 12, GREEN, "start", 700))
+        s.append(_t(104, y + 16, f"いま {short[place]}", 10, INK, "start"))
+        s.append(_t(282, y + 16, f"{round(total, 1)}分", 10.5, INK, "end", 700))
+        if k < n - 1:
+            nxt = route[k + 1]
+            s.append(_arrow(60, y + 25, 60, y + 38, GRAY, 1.5))
+            s.append(_t(70, y + 35, f"{short[nxt]}へ行く（＋{t[place][nxt]}分）", 8.5, GRAY, "start"))
+    back = t[route[-1]][0]
+    s.append(_t(40, 80 + n * 39 + 2, f"最後に ゲートへ戻る ＋{back}分 → 合計 {answer}分", 10.5, GREEN, "start", 700))
+    a, b, c = route[1], route[2], route[3]
+    this_way = round(t[0][a] + t[a][b] + t[b][c], 1)
+    other_way = round(t[0][b] + t[b][a] + t[a][c], 1)
+    y4 = 80 + 3 * 39
+    s.append(_arrow(322, y4 + 12, 292, y4 + 12, AMBER, 1.5))
+    s.append(_box(322, y4 - 30, 290, 62, "#FFFFFF", AMBER))
+    s.append(_t(330, y4 - 14, "同じ状態に、2つの順番でたどり着ける", 10, AMBER, "start", 700))
+    s.append(_t(330, y4 + 3, f"ゲート→{short[a]}→{short[b]}→{short[c]}: {this_way}分 ★残る", 9.5, GREEN, "start", 700))
+    s.append(_t(330, y4 + 20, f"ゲート→{short[b]}→{short[a]}→{short[c]}: {other_way}分 ×捨てる", 9.5, RED, "start"))
+    s.append(_t(330, 96, f"2進数のけた（右はしが0番）: {' '.join(str(i) for i in range(n - 1, -1, -1))}", 9, GRAY, "start"))
+    s.append(_t(330, 110, "0=ゲート 1=スチールドラゴン 2=白鯨", 9, GRAY, "start"))
+    s.append(_t(330, 124, "3=嵐 4=観覧車 5=アクロバット", 9, GRAY, "start"))
+    late = round(g_total - answer, 1)
+    s.append(_box(322, 240, 290, 76, "#FFFFFF", "#BBB"))
+    s.append(_t(330, 256, f"貪欲法 {g_total}分 / bitDP {answer}分", 10, INK, "start", 700))
+    s.append(_t(330, 272, f"差 {late}分（貪欲法は {round(late / answer * 100, 1)}% 長い）", 10, RED, "start"))
+    s.append(_t(330, 290, "20か所: 貪欲法 0.00002秒 / bitDP 約6秒（見積もり）", 9, INK, "start"))
+    s.append(_t(330, 304, "　　　　全探索 約500年（見積もり）", 9, INK, "start"))
     return _slide("10", "bitDP の状態と表", "\n".join(s),
-                  ["自分の座標では、表の5行の値が実行結果と一致し、最後の行に学校へ戻る距離を足すと 34.9 が最小になった。"])
+                  ["(1) スタンプカードといまいる場所が同じなら、この先の回り方も同じ。だから、おそいほうは調べなくてよい。",
+                   "(2) 必ず最短がほしく20か所くらいまでなら bitDP、もっと多いなら貪欲法。全探索は10か所くらいまで。"])
 
 
 def ex11():

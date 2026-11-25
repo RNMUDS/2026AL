@@ -59,17 +59,6 @@ BLANKS = {
       "合計時間が短いほうを最良にする（幅優先探索は駅の数しか見ていない）",
       ["len(route) < len(best_route)", "route_minutes(route) > route_minutes(best_route)"]),
 ],
-"AL2-10-ex2.py": [
-    B("if visited & (1 << next_city):", "visited & (1 << next_city)",
-      "next_city のけたが1なら、すでに回った都市",
-      ["visited | (1 << next_city)", "visited == next_city"]),
-    B("new_visited = visited | (1 << next_city)", "visited | (1 << next_city)",
-      "next_city のけたを1にした、新しい「回った集合」",
-      ["visited & (1 << next_city)", "visited + 1"]),
-    B("if new_length < best[new_visited][next_city]:", "new_length < best[new_visited][next_city]",
-      "表の値より短いときだけ書き直す",
-      ["new_length > best[new_visited][next_city]", "new_length < INF"]),
-],
 "AL2-11-ex2.py": [
     B("if count <= 12:", "count <= 12",
       "全探索は12都市までにする（それ以上は長すぎる）",
@@ -149,14 +138,6 @@ BLANKS.update({
     B("total = total + minutes", "total + minutes",
       "見つかった路線の時間を合計に足す",
       ["total + 1", "minutes"]),
-],
-"AL2-10-ex1.py": [
-    B("bits = bits | (1 << i)", "bits | (1 << i)",
-      "i番の都市のけたを1にして「回った」ことにする（| は「または」）",
-      ["bits & (1 << i)", "bits + i"]),
-    B("if bits & (1 << i):", "bits & (1 << i)",
-      "i番のけたが1かどうかを調べる（& は「かつ」）",
-      ["bits | (1 << i)", "bits == i"], nth=1),
 ],
 "AL2-11-ex1.py": [
     B("return greedy_from(0)", "greedy_from(0)",
