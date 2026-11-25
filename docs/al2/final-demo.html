@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>最終制作の見本デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* レイアウト: 授業サイトと同じ暗い地に緑。各デモは「キャンバス＋右の操作パネル」の2列、狭い画面では1列。 */
+:root {
+  color-scheme: dark;
+  --bg: #111111;
+  --panel: #1a1a1a;
+  --line: #2c2f28;
+  --text: #e4e6df;
+  --muted: #9aa092;
+  --green: #76B900;   /* 最適（bitDP）・授業サイトのアクセント */
+  --amber: #FFB800;   /* 貪欲法・星 */
+  --cyan: #4FC3F7;    /* あなた・プレイヤー */
+  --red: #FF5C5C;     /* 敵 */
+  --font-body: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.75; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+
+header { padding: clamp(28px, 5vw, 52px) 0 20px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-size: 0.82rem; color: var(--green); font-weight: 700; letter-spacing: 0.06em; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); font-weight: 900; line-height: 1.3; text-wrap: balance; margin: 4px 0 10px; }
+header p { color: var(--muted); max-width: 44em; }
+.jump { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.jump a { color: var(--text); text-decoration: none; border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 16px; font-weight: 700; font-size: 0.92rem; }
+.jump a:hover { border-color: var(--green); }
+.jump a span { color: var(--green); font-family: var(--font-mono); margin-right: 8px; }
+
+section { padding: clamp(28px, 5vw, 48px) 0; }
+section + section { border-top: 1px solid var(--line); }
+.course { font-family: var(--font-mono); font-size: 0.8rem; color: var(--green); letter-spacing: 0.08em; }
+h2 { font-size: clamp(1.25rem, 3vw, 1.6rem); font-weight: 800; line-height: 1.35; text-wrap: balance; }
+.lead { color: var(--muted); max-width: 46em; margin: 6px 0 18px; }
+
+.demo { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+@media (max-width: 880px) { .demo { grid-template-columns: minmax(0, 1fr); } }
+.stage { min-width: 0; }
+canvas { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: #151515; touch-action: none; }
+#mapB { aspect-ratio: 1000 / 620; cursor: pointer; }
+#gameC { aspect-ratio: 840 / 600; }
+.msg { min-height: 1.75em; margin-top: 10px; font-size: 0.92rem; color: var(--text); }
+
+.panel { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.box h3 { font-size: 0.82rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.04em; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+button, select { font: inherit; color: var(--text); }
+button { background: #232520; border: 1px solid #3a3e34; border-radius: 9px; padding: 7px 12px; font-size: 0.88rem; font-weight: 500; cursor: pointer; }
+button:hover { border-color: var(--green); }
+button[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #101400; font-weight: 700; }
+button.primary { background: var(--green); border-color: var(--green); color: #101400; font-weight: 700; }
+button:disabled { opacity: 0.4; cursor: default; }
+select { background: #232520; border: 1px solid #3a3e34; border-radius: 9px; padding: 7px 10px; font-size: 0.88rem; width: 100%; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.hint { font-size: 0.8rem; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+
+.bars { display: grid; gap: 10px; }
+.bar-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.86rem; gap: 8px; }
+.bar-head b { font-weight: 700; }
+.bar-head .val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.84rem; }
+.track { height: 8px; border-radius: 4px; background: #262822; overflow: hidden; margin-top: 3px; }
+.fill { height: 100%; border-radius: 4px; width: 0; transition: width 0.25s; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+th, td { text-align: right; padding: 4px 4px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 500; font-size: 0.78rem; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--font-mono); }
+
+.hud { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 10px; font-size: 0.92rem; }
+.hud b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 500; color: var(--amber); }
+.dpad { display: none; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(2, 52px); gap: 6px; justify-content: center; margin-top: 12px; }
+.dpad button { font-size: 1.2rem; padding: 0; touch-action: none; user-select: none; -webkit-user-select: none; }
+.dpad .up { grid-column: 2; grid-row: 1; }
+.dpad .left { grid-column: 1; grid-row: 2; }
+.dpad .down { grid-column: 2; grid-row: 2; }
+.dpad .right { grid-column: 3; grid-row: 2; }
+@media (pointer: coarse) { .dpad { display: grid; } }
+
+.explain { margin-top: 18px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: 12px; padding: 16px 18px; }
+.explain h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.explain ul { padding-left: 1.3em; max-width: 50em; }
+.explain li { margin: 3px 0; font-size: 0.93rem; }
+.explain .remix { margin-top: 10px; font-size: 0.9rem; color: var(--muted); max-width: 50em; }
+label.check { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer; }
+input[type="checkbox"] { accent-color: var(--green); width: 16px; height: 16px; }
+footer { padding: 24px 0 40px; color: var(--muted); font-size: 0.84rem; border-top: 1px solid var(--line); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .fill { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">アルゴリズム論及び演習II ／ 最終制作</div>
+    <h1>最終制作の見本デモ</h1>
+    <p>「自分の好きな世界 × アルゴリズム」で作る作品の見本です。どちらも後期に学んだアルゴリズムが中で動いていて、2つ以上のやり方を比べられます。実際の制作は Python と pygame で行います。</p>
+    <nav class="jump" aria-label="デモへ移動">
+      <a href="#course-b"><span>B</span>巡りプランナー</a>
+      <a href="#course-c"><span>C</span>追いかけてくる迷路</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="course-b">
+  <div class="wrap">
+    <div class="course">COURSE B</div>
+    <h2>巡りプランナー：全部まわって駅に戻る、いちばん短い道</h2>
+    <p class="lead">駅を出発し、すべての地点を1回ずつまわって駅に戻ります。貪欲法と bitDP が出したルートを見比べたあと、自分でルートを作って勝負できます。</p>
+    <div class="demo">
+      <div class="stage">
+        <canvas id="mapB" aria-label="地点とルートの地図"></canvas>
+        <p class="msg" id="msgB" aria-live="polite"></p>
+      </div>
+      <div class="panel">
+        <div class="box">
+          <h3>テーマ</h3>
+          <select id="themeB" aria-label="テーマ">
+            <option value="ramen">ラーメン巡り</option>
+            <option value="anime">アニメの舞台めぐり</option>
+            <option value="cafe">カフェ巡り</option>
+          </select>
+        </div>
+        <div class="box">
+          <h3>モード</h3>
+          <div class="row">
+            <button id="modeView" aria-pressed="true">アルゴリズムを見る</button>
+            <button id="modePlay" aria-pressed="false">自分で挑戦</button>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button id="shuffleB">配置を変える</button>
+            <button id="undoB" disabled>1つ戻す</button>
+            <button id="retryB" disabled>やり直す</button>
+          </div>
+          <p class="hint" id="hintB"></p>
+        </div>
+        <div class="box">
+          <h3>ルートの長さ</h3>
+          <div class="bars">
+            <div>
+              <div class="bar-head"><span><i class="sw" style="background:var(--cyan)"></i><b>あなた</b></span><span class="val" id="valYou">—</span></div>
+              <div class="track"><div class="fill" id="barYou" style="background:var(--cyan)"></div></div>
+            </div>
+            <div>
+              <div class="bar-head"><span><i class="sw" style="background:var(--amber)"></i><b>貪欲法</b></span><span class="val" id="valGreedy">—</span></div>
+              <div class="track"><div class="fill" id="barGreedy" style="background:var(--amber)"></div></div>
+            </div>
+            <div>
+              <div class="bar-head"><span><i class="sw" style="background:var(--green)"></i><b>bitDP（最適）</b></span><span class="val" id="valOpt">—</span></div>
+              <div class="track"><div class="fill" id="barOpt" style="background:var(--green)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <h3>計算の量（地点 <span id="nB">0</span> か所）</h3>
+          <table>
+            <tr><th>やり方</th><th>調べる数</th></tr>
+            <tr><td>全探索</td><td class="num" id="cntBrute">—</td></tr>
+            <tr><td>bitDP</td><td class="num" id="cntDp">—</td></tr>
+            <tr><td>貪欲法</td><td class="num" id="cntGreedy">—</td></tr>
+          </table>
+          <p class="hint">地点を増やすと全探索だけが急に増えます。地点は12か所まで置けます。</p>
+        </div>
+      </div>
+    </div>
+    <div class="explain">
+      <h3>どこでアルゴリズムが動いているか</h3>
+      <ul>
+        <li><b>貪欲法（第9回）</b>：いまいる地点からいちばん近い未訪問の地点へ進む、をくり返します。速いけれど、最後に遠くへ戻る道が残ることがあります。</li>
+        <li><b>bitDP（第10回）</b>：「どの地点をまわり終えたか」と「いまどこにいるか」の組ごとに最短の長さを表に書き、いちばん短い一周を求めます。</li>
+        <li><b>比較</b>：同じ地図で2つのルートの長さと、調べた数を並べています。地点を動かすと、その場で両方を計算し直します。</li>
+      </ul>
+      <p class="remix">自分の作品にするなら：地点を自分の好きな場所に置きかえる、距離を移動時間や料金に変える、営業時間や「最初にここへ行く」などの条件を足す。</p>
+    </div>
+  </div>
+</section>
+
+<section id="course-c">
+  <div class="wrap">
+    <div class="course">COURSE C</div>
+    <h2>追いかけてくる迷路：敵の頭脳を3種類から選ぶ</h2>
+    <p class="lead">敵に捕まらずに星を8個集めるとクリアです。敵の頭脳を切りかえると追いかけ方が変わります。同じ迷路で3つを試して、強さを比べてください。</p>
+    <div class="demo">
+      <div class="stage">
+        <div class="hud">
+          <span>星 <b id="hudStar">0 / 8</b></span>
+          <span>時間 <b id="hudTime">0.0 秒</b></span>
+          <span>敵の頭脳 <b id="hudBrain">BFS</b></span>
+        </div>
+        <canvas id="gameC" aria-label="迷路ゲーム"></canvas>
+        <div class="dpad" aria-label="移動ボタン">
+          <button class="up" data-dir="up" aria-label="上">▲</button>
+          <button class="left" data-dir="left" aria-label="左">◀</button>
+          <button class="down" data-dir="down" aria-label="下">▼</button>
+          <button class="right" data-dir="right" aria-label="右">▶</button>
+        </div>
+        <p class="msg" id="msgC" aria-live="polite"></p>
+      </div>
+      <div class="panel">
+        <div class="box">
+          <h3>ゲーム</h3>
+          <div class="row">
+            <button class="primary" id="startC">スタート</button>
+            <button id="newMazeC">新しい迷路</button>
+          </div>
+          <p class="hint">移動は矢印キーか W A S D。青い沼に入ると、あなたも敵も3倍の時間がかかります。</p>
+        </div>
+        <div class="box">
+          <h3>敵の頭脳</h3>
+          <div class="row">
+            <button data-brain="greedy" aria-pressed="false">貪欲</button>
+            <button data-brain="bfs" aria-pressed="true">BFS</button>
+            <button data-brain="dijkstra" aria-pressed="false">ダイクストラ</button>
+          </div>
+          <p class="hint" id="brainDesc"></p>
+          <label class="check" style="margin-top:10px"><input type="checkbox" id="showPath" checked> 敵が考えた道を表示する</label>
+        </div>
+        <div class="box">
+          <h3>この迷路での記録</h3>
+          <table>
+            <thead><tr><th>頭脳</th><th>回数</th><th>最高の星</th><th>最短クリア</th></tr></thead>
+            <tbody id="recC"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="explain">
+      <h3>どこでアルゴリズムが動いているか</h3>
+      <ul>
+        <li><b>迷路づくり（第2回 深さ優先探索）</b>：行き止まりまで掘り進んでは戻る、をくり返して迷路を作り、逃げ道になる輪を少し足しています。</li>
+        <li><b>貪欲</b>：プレイヤーとの直線的な距離が縮まるマスへ進むだけです。壁をはさむと立ち往生します。</li>
+        <li><b>BFS（第2回 幅優先探索）</b>：歩数がいちばん少ない道を選びます。沼の重さは数えないので、沼に入って遅れることがあります。</li>
+        <li><b>ダイクストラ法（第5〜7回）</b>：沼を3歩分と数え、いちばん早く着く道を選びます。敵は1マス進むたびに計算し直します。</li>
+      </ul>
+      <p class="remix">自分の作品にするなら：迷路を好きな場所の地図にする、敵を2体にして頭脳を変える、アイテムで壁を壊せるようにする、星を全部取る最短の順番を表示する（コースBの考え方）。</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">このページは動きを確かめるための見本です。授業での制作と発表は pygame で行います。</div>
+</footer>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FONT = '"Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif';
+const C = { green: '#76B900', amber: '#FFB800', cyan: '#4FC3F7', red: '#FF5C5C', text: '#e4e6df', muted: '#9aa092' };
+
+function fit(canvas, LW, LH) {
+  const r = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.max(1, Math.round(r.width * dpr));
+  const h = Math.max(1, Math.round(w * LH / LW));
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  return { scale: w / LW, css: r.width / LW };
+}
+
+/*ALGO-START*/
+function makeTable(pts) {
+  return pts.map(a => pts.map(b => Math.hypot(a.x - b.x, a.y - b.y)));
+}
+function routeLength(route, d) {
+  let s = 0;
+  for (let i = 0; i < route.length; i++) s += d[route[i]][route[(i + 1) % route.length]];
+  return s;
+}
+// 貪欲法: いちばん近い未訪問の地点へ進む
+function greedyRoute(d) {
+  const n = d.length, used = new Array(n).fill(false), route = [0];
+  used[0] = true;
+  let cur = 0, count = 0;
+  for (let k = 1; k < n; k++) {
+    let best = -1;
+    for (let j = 0; j < n; j++) {
+      if (used[j]) continue;
+      count++;
+      if (best < 0 || d[cur][j] < d[cur][best]) best = j;
+    }
+    used[best] = true; route.push(best); cur = best;
+  }
+  return { route, count };
+}
+// bitDP: dp[まわり終えた地点の集合][いまいる地点] = そこまでの最短の長さ
+function bitDpRoute(d) {
+  const n = d.length, m = n - 1;
+  if (m <= 0) return { route: [0], count: 0 };
+  const full = 1 << m;
+  const dp = new Float64Array(full * m).fill(Infinity);
+  const prev = new Int8Array(full * m).fill(-1);
+  for (let i = 0; i < m; i++) dp[(1 << i) * m + i] = d[0][i + 1];
+  let count = 0;
+  for (let mask = 1; mask < full; mask++) {
+    for (let i = 0; i < m; i++) {
+      if (!(mask >> i & 1)) continue;
+      const cur = dp[mask * m + i];
+      if (cur === Infinity) continue;
+      for (let j = 0; j < m; j++) {
+        if (mask >> j & 1) continue;
+        const nm = mask | (1 << j), v = cur + d[i + 1][j + 1];
+        count++;
+        if (v < dp[nm * m + j]) { dp[nm * m + j] = v; prev[nm * m + j] = i; }
+      }
+    }
+  }
+  let bi = 0, best = Infinity;
+  for (let i = 0; i < m; i++) {
+    const v = dp[(full - 1) * m + i] + d[i + 1][0];
+    if (v < best) { best = v; bi = i; }
+  }
+  const route = [];
+  let mask = full - 1, i = bi;
+  while (i !== -1) { route.push(i + 1); const p = prev[mask * m + i]; mask ^= (1 << i); i = p; }
+  route.push(0); route.reverse();
+  return { route, count };
+}
+function factorial(k) { let f = 1; for (let i = 2; i <= k; i++) f *= i; return f; }
+
+const INITIAL_SPOTS = [[120, 330], [110, 80], [540, 350], [840, 120], [660, 270], [420, 490], [900, 360], [330, 260], [640, 140], [350, 70]];
+
+// 迷路: 0=道 1=壁 2=沼
+function buildMaze(W, H, rnd) {
+  const g = Array.from({ length: H }, () => new Array(W).fill(1));
+  const stack = [[1, 1]];
+  g[1][1] = 0;
+  while (stack.length) {                      // 深さ優先探索で掘る
+    const [x, y] = stack[stack.length - 1];
+    const opts = [[2, 0], [-2, 0], [0, 2], [0, -2]].filter(([dx, dy]) => {
+      const nx = x + dx, ny = y + dy;
+      return nx > 0 && ny > 0 && nx < W - 1 && ny < H - 1 && g[ny][nx] === 1;
+    });
+    if (!opts.length) { stack.pop(); continue; }
+    const [dx, dy] = opts[Math.floor(rnd() * opts.length)];
+    g[y + dy / 2][x + dx / 2] = 0; g[y + dy][x + dx] = 0;
+    stack.push([x + dx, y + dy]);
+  }
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {   // 輪を足す
+    if (g[y][x] !== 1) continue;
+    const horiz = x % 2 === 0 && y % 2 === 1, vert = x % 2 === 1 && y % 2 === 0;
+    if ((horiz || vert) && rnd() < 0.24) g[y][x] = 0;
+  }
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {   // 沼
+    if (g[y][x] !== 0) continue;
+    if (x + y <= 4 || (W - 2 - x) + (H - 2 - y) <= 3) continue;
+    if (rnd() < 0.13) g[y][x] = 2;
+  }
+  return g;
+}
+const DIRS = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+const stepCost = v => v === 2 ? 3 : 1;
+function tracePath(prev, W, sx, sy, tx, ty) {
+  const path = [];
+  let k = ty * W + tx;
+  if (prev[k] === -2) return null;
+  while (k !== -1) { path.push([k % W, Math.floor(k / W)]); k = prev[k]; }
+  path.reverse();
+  return path;
+}
+// 幅優先探索: 歩数が最小の道
+function bfsPath(g, sx, sy, tx, ty) {
+  const H = g.length, W = g[0].length;
+  const prev = new Int32Array(W * H).fill(-2);
+  const q = [[sx, sy]];
+  prev[sy * W + sx] = -1;
+  for (let h = 0; h < q.length; h++) {
+    const [x, y] = q[h];
+    if (x === tx && y === ty) break;
+    for (const [dx, dy] of DIRS) {
+      const nx = x + dx, ny = y + dy;
+      if (g[ny][nx] === 1 || prev[ny * W + nx] !== -2) continue;
+      prev[ny * W + nx] = y * W + x;
+      q.push([nx, ny]);
+    }
+  }
+  return tracePath(prev, W, sx, sy, tx, ty);
+}
+// ダイクストラ法: 沼を3歩分と数えて、合計が最小の道
+function dijkstraPath(g, sx, sy, tx, ty) {
+  const H = g.length, W = g[0].length, N = W * H;
+  const dist = new Float64Array(N).fill(Infinity);
+  const prev = new Int32Array(N).fill(-2);
+  const done = new Uint8Array(N);
+  dist[sy * W + sx] = 0; prev[sy * W + sx] = -1;
+  for (;;) {
+    let u = -1;
+    for (let k = 0; k < N; k++) if (!done[k] && dist[k] < Infinity && (u < 0 || dist[k] < dist[u])) u = k;
+    if (u < 0 || u === ty * W + tx) break;
+    done[u] = 1;
+    const x = u % W, y = Math.floor(u / W);
+    for (const [dx, dy] of DIRS) {
+      const nx = x + dx, ny = y + dy;
+      if (g[ny][nx] === 1) continue;
+      const v = ny * W + nx, nd = dist[u] + stepCost(g[ny][nx]);
+      if (nd < dist[v]) { dist[v] = nd; prev[v] = u; }
+    }
+  }
+  return tracePath(prev, W, sx, sy, tx, ty);
+}
+// 貪欲: 直線的な距離が縮まるマスにだけ進む
+function greedyStep(g, sx, sy, tx, ty) {
+  const now = Math.abs(tx - sx) + Math.abs(ty - sy);
+  let best = null, bd = now;
+  for (const [dx, dy] of DIRS) {
+    const nx = sx + dx, ny = sy + dy;
+    if (g[ny][nx] === 1) continue;
+    const dd = Math.abs(tx - nx) + Math.abs(ty - ny);
+    if (dd < bd) { bd = dd; best = [nx, ny]; }
+  }
+  return best ? [[sx, sy], best] : [[sx, sy]];
+}
+/*ALGO-END*/
+
+/* ================= コースB: 巡りプランナー ================= */
+const BW = 1000, BH = 620, METER = 5, MAX_SPOTS = 12;
+const THEMES = {
+  ramen: { icon: '🍜', start: '駅', names: ['麺屋こがね', '中華そば青葉軒', 'とんこつ番長', '塩の灯', '味噌蔵ふじ', 'つけ麺大河', '煮干し堂', '担々亭あかね', '鶏白湯しろ', '家系いわお', '油そば小町', '大盛り山脈'] },
+  anime: { icon: '📍', start: '駅', names: ['あの踏切', '坂の上の神社', '海辺の堤防', '商店街のアーケード', '高校の正門', '展望台', '川沿いの桜並木', '角の喫茶店', '古い図書館', '終点のバス停', '白い灯台', '駄菓子屋'] },
+  cafe: { icon: '☕', start: '駅', names: ['珈琲こもれび', '喫茶ミモザ', 'カフェ月と森', '焙煎所カモメ', 'ラテ工房しずく', '紅茶の窓辺', '純喫茶ルビー', 'ベーカリー麦', 'パフェの庭', '抹茶処みどり', '猫とカップ', '屋上カフェ空'] }
+};
+const B = { spots: [], mode: 'view', my: [], theme: 'ramen', d: null, greedy: null, opt: null, gLen: 0, oLen: 0, drag: null };
+const mapB = $('mapB'), ctxB = mapB.getContext('2d');
+
+function freeNameIndex() {
+  const used = new Set(B.spots.map(s => s.k));
+  for (let k = 0; k < MAX_SPOTS; k++) if (!used.has(k)) return k;
+  return -1;
+}
+function spotName(s) { const t = THEMES[B.theme]; return s.k < 0 ? t.start : t.names[s.k]; }
+const km = v => (v * METER / 1000).toFixed(2) + ' km';
+
+function solveB() {
+  B.d = makeTable(B.spots);
+  B.greedy = greedyRoute(B.d);
+  B.opt = bitDpRoute(B.d);
+  B.gLen = routeLength(B.greedy.route, B.d);
+  B.oLen = routeLength(B.opt.route, B.d);
+}
+function myComplete() { return B.my.length === B.spots.length - 1 && B.spots.length > 1; }
+function myLen() { return routeLength([0, ...B.my], B.d); }
+
+function renderPanelB() {
+  const play = B.mode === 'play', done = myComplete(), reveal = !play || done;
+  $('modeView').setAttribute('aria-pressed', String(!play));
+  $('modePlay').setAttribute('aria-pressed', String(play));
+  $('undoB').disabled = !play || B.my.length === 0;
+  $('retryB').disabled = !play || B.my.length === 0;
+  $('hintB').textContent = play
+    ? '駅から出発します。行きたい順に地点を押してください。全部選ぶと答え合わせをします。'
+    : '地図の空いた場所を押すと地点が増えます。地点はドラッグで動かせて、押すと消えます。';
+  const max = Math.max(B.gLen, B.oLen, done ? myLen() : 0) || 1;
+  const set = (id, bar, v, show) => {
+    $(id).textContent = show ? km(v) + (v > B.oLen * 1.0005 ? '（+' + ((v / B.oLen - 1) * 100).toFixed(1) + '%）' : '') : (play ? '？' : '—');
+    $(bar).style.width = show ? (v / max * 100) + '%' : '0';
+  };
+  set('valYou', 'barYou', done ? myLen() : 0, play && done);
+  set('valGreedy', 'barGreedy', B.gLen, reveal);
+  set('valOpt', 'barOpt', B.oLen, reveal);
+  const m = B.spots.length - 1;
+  $('nB').textContent = m;
+  $('cntBrute').textContent = factorial(m).toLocaleString('ja-JP') + ' 通り';
+  $('cntDp').textContent = B.opt.count.toLocaleString('ja-JP') + ' 回';
+  $('cntGreedy').textContent = B.greedy.count.toLocaleString('ja-JP') + ' 回';
+
+  let msg;
+  if (!play) {
+    const gap = (B.gLen / B.oLen - 1) * 100;
+    msg = gap < 0.05
+      ? 'この配置では貪欲法も最適と同じ長さです。地点を動かして、差が出る配置を探してみてください。'
+      : '貪欲法は最適より ' + gap.toFixed(1) + '% 長いルートになりました。黄色の点線が貪欲法、緑が最適です。';
+  } else if (!done) {
+    msg = B.my.length === 0 ? '最初に行く地点を押してください。' : (B.my.length + ' / ' + m + ' か所を選びました。');
+  } else {
+    const v = myLen();
+    if (v <= B.oLen * 1.0005) msg = '最適と同じ長さです。bitDP に並びました。';
+    else if (v < B.gLen * 0.9995) msg = '貪欲法より短いルートです。最適との差は +' + ((v / B.oLen - 1) * 100).toFixed(1) + '% でした。';
+    else if (v <= B.gLen * 1.0005) msg = '貪欲法と同じ長さです。最適との差は +' + ((v / B.oLen - 1) * 100).toFixed(1) + '% でした。';
+    else msg = '今回は貪欲法のほうが短いルートでした。「やり直す」でもう一度挑戦できます。';
+  }
+  $('msgB').textContent = msg;
+}
+function changedB() { solveB(); renderPanelB(); }
+
+function setSpots(coords) {
+  B.spots = coords.map(([x, y], i) => ({ x, y, k: i - 1 }));
+  B.my = [];
+}
+function shuffleB() {
+  const n = B.spots.length;
+  let bestGap = -1, bestSet = null;
+  for (let t = 0; t < 40; t++) {
+    const pts = [];
+    let guard = 0;
+    while (pts.length < n && guard++ < 4000) {
+      const p = [70 + Math.random() * (BW - 140), 60 + Math.random() * (BH - 140)];
+      if (pts.every(q => Math.hypot(q[0] - p[0], q[1] - p[1]) > 95)) pts.push(p);
+    }
+    if (pts.length < n) continue;
+    const d = makeTable(pts.map(([x, y]) => ({ x, y })));
+    const gap = routeLength(greedyRoute(d).route, d) / routeLength(bitDpRoute(d).route, d);
+    if (gap > bestGap) { bestGap = gap; bestSet = pts; }
+    if (gap > 1.06) break;
+  }
+  if (bestSet) setSpots(bestSet);
+  changedB();
+}
+
+function posB(e) {
+  const r = mapB.getBoundingClientRect();
+  return { x: (e.clientX - r.left) / r.width * BW, y: (e.clientY - r.top) / r.height * BH, css: r.width / BW };
+}
+function hitB(p) {
+  const rad = Math.max(28, 20 / p.css);
+  let best = -1, bd = rad;
+  B.spots.forEach((s, i) => { const d = Math.hypot(s.x - p.x, s.y - p.y); if (d < bd) { bd = d; best = i; } });
+  return best;
+}
+mapB.addEventListener('pointerdown', e => {
+  const p = posB(e), i = hitB(p);
+  if (B.mode === 'play') {
+    if (i > 0 && !B.my.includes(i) && !myComplete()) { B.my.push(i); renderPanelB(); }
+    return;
+  }
+  if (i >= 0) {
+    B.drag = { i, moved: false, sx: p.x, sy: p.y };
+    mapB.setPointerCapture(e.pointerId);
+  } else if (B.spots.length - 1 < MAX_SPOTS) {
+    B.spots.push({ x: Math.min(BW - 40, Math.max(40, p.x)), y: Math.min(BH - 60, Math.max(40, p.y)), k: freeNameIndex() });
+    changedB();
+  } else {
+    $('msgB').textContent = '地点は12か所までです。どれかを押して消すと、新しく置けます。';
+  }
+});
+mapB.addEventListener('pointermove', e => {
+  if (!B.drag) return;
+  const p = posB(e);
+  if (!B.drag.moved && Math.hypot(p.x - B.drag.sx, p.y - B.drag.sy) < 8 / p.css) return;
+  B.drag.moved = true;
+  const s = B.spots[B.drag.i];
+  s.x = Math.min(BW - 40, Math.max(40, p.x)); s.y = Math.min(BH - 60, Math.max(40, p.y));
+  changedB();
+});
+function endDragB() {
+  if (!B.drag) return;
+  const { i, moved } = B.drag;
+  B.drag = null;
+  if (moved) return;
+  if (i === 0) { $('msgB').textContent = '駅は出発地点なので消せません。ドラッグで動かせます。'; return; }
+  if (B.spots.length - 1 <= 3) { $('msgB').textContent = '地点は3か所より少なくできません。'; return; }
+  B.spots.splice(i, 1);
+  changedB();
+}
+mapB.addEventListener('pointerup', endDragB);
+mapB.addEventListener('pointercancel', () => { B.drag = null; });
+
+$('modeView').addEventListener('click', () => { B.mode = 'view'; B.my = []; renderPanelB(); });
+$('modePlay').addEventListener('click', () => { B.mode = 'play'; B.my = []; renderPanelB(); });
+$('undoB').addEventListener('click', () => { B.my.pop(); renderPanelB(); });
+$('retryB').addEventListener('click', () => { B.my = []; renderPanelB(); });
+$('shuffleB').addEventListener('click', shuffleB);
+$('themeB').addEventListener('change', e => { B.theme = e.target.value; });
+
+function pathB(route, closed) {
+  ctxB.beginPath();
+  route.forEach((idx, n) => { const s = B.spots[idx]; n ? ctxB.lineTo(s.x, s.y) : ctxB.moveTo(s.x, s.y); });
+  if (closed) ctxB.closePath();
+}
+function drawB(now) {
+  const f = fit(mapB, BW, BH), ctx = ctxB;
+  ctx.setTransform(f.scale, 0, 0, f.scale, 0, 0);
+  ctx.fillStyle = '#151515'; ctx.fillRect(0, 0, BW, BH);
+  ctx.strokeStyle = '#20231d'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 50; x < BW; x += 50) { ctx.moveTo(x, 0); ctx.lineTo(x, BH); }
+  for (let y = 50; y < BH; y += 50) { ctx.moveTo(0, y); ctx.lineTo(BW, y); }
+  ctx.stroke();
+  // 縮尺
+  const fs = Math.max(13, 11 / f.css);
+  ctx.strokeStyle = C.muted; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(BW - 130, BH - 22); ctx.lineTo(BW - 30, BH - 22); ctx.stroke();
+  ctx.fillStyle = C.muted; ctx.font = `${fs}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText('500 m', BW - 80, BH - 26);
+
+  const play = B.mode === 'play', done = myComplete(), reveal = !play || done;
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  if (reveal && B.spots.length > 1) {
+    ctx.setLineDash([14, 12]); ctx.strokeStyle = C.amber; ctx.lineWidth = 7; ctx.globalAlpha = 0.75;
+    pathB(B.greedy.route, true); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1; ctx.strokeStyle = C.green; ctx.lineWidth = 4;
+    pathB(B.opt.route, true); ctx.stroke();
+  }
+  if (play && B.my.length) {
+    ctx.strokeStyle = C.cyan; ctx.lineWidth = done ? 3 : 5; ctx.setLineDash(done ? [3, 9] : []);
+    pathB([0, ...B.my], done); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // 最適ルートを歩く点
+  if (!play && !reduceMotion && B.oLen > 0) {
+    const r = B.opt.route; let target = (now / 1000 * 190) % B.oLen;
+    for (let i = 0; i < r.length; i++) {
+      const a = B.spots[r[i]], b = B.spots[r[(i + 1) % r.length]], seg = B.d[r[i]][r[(i + 1) % r.length]];
+      if (target <= seg && seg > 0) {
+        const t = target / seg;
+        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, 7, 0, Math.PI * 2); ctx.fill();
+        break;
+      }
+      target -= seg;
+    }
+  }
+  const R = Math.max(22, 15 / f.css), icon = THEMES[B.theme].icon;
+  B.spots.forEach((s, i) => {
+    const order = B.my.indexOf(i);
+    ctx.fillStyle = '#1a1a1a'; ctx.beginPath(); ctx.arc(s.x, s.y, R, 0, Math.PI * 2); ctx.fill();
+    ctx.lineWidth = 3; ctx.strokeStyle = i === 0 ? '#fff' : (play && order >= 0 ? C.cyan : '#5a6050'); ctx.stroke();
+    ctx.font = `${R * 1.05}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = C.text;
+    ctx.fillText(i === 0 ? '🚉' : icon, s.x, s.y + R * 0.06);
+    const name = spotName(s);
+    ctx.font = `500 ${fs}px ${FONT}`; ctx.textBaseline = 'top';
+    const w = ctx.measureText(name).width;
+    const lx = Math.min(BW - w / 2 - 6, Math.max(w / 2 + 6, s.x));
+    ctx.fillStyle = 'rgba(17,17,17,0.82)'; ctx.fillRect(lx - w / 2 - 4, s.y + R + 3, w + 8, fs + 6);
+    ctx.fillStyle = C.text; ctx.fillText(name, lx, s.y + R + 5);
+    if (play && order >= 0) {
+      ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.arc(s.x + R * 0.8, s.y - R * 0.8, R * 0.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#06222e'; ctx.font = `700 ${R * 0.6}px ${FONT}`; ctx.textBaseline = 'middle';
+      ctx.fillText(String(order + 1), s.x + R * 0.8, s.y - R * 0.78);
+    }
+  });
+}
+
+/* ================= コースC: 追いかけてくる迷路 ================= */
+const GW = 21, GH = 15, CELL = 40, CW = GW * CELL, CH = GH * CELL;
+const P_MS = 135, E_MS = 190, STARS = 8;
+const BRAINS = {
+  greedy: { name: '貪欲', desc: 'プレイヤーとの直線的な距離が縮まるマスへ進みます。壁の向こうにいると立ち往生します。' },
+  bfs: { name: 'BFS', desc: '歩数がいちばん少ない道を選びます。沼の重さは数えません。' },
+  dijkstra: { name: 'ダイクストラ', desc: '沼を3歩分と数えて、いちばん早く着く道を選びます。' }
+};
+const gameC = $('gameC'), ctxC = gameC.getContext('2d');
+const G = { grid: null, starHome: [], stars: [], p: null, e: null, status: 'ready', time: 0, brain: 'bfs', path: [], got: 0, records: {} };
+const held = [];
+const DIRV = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+const KEYS = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right' };
+
+function entity(x, y) { return { cx: x, cy: y, fx: x, fy: y, t0: 0, dur: 1, moving: false, wait: 0 }; }
+function entPos(en) {
+  if (!en.moving) return [en.cx, en.cy];
+  const t = Math.min(1, (G.time - en.t0) / en.dur);
+  return [en.fx + (en.cx - en.fx) * t, en.fy + (en.cy - en.fy) * t];
+}
+function startMove(en, nx, ny, base) {
+  en.fx = en.cx; en.fy = en.cy; en.cx = nx; en.cy = ny;
+  en.t0 = G.time; en.dur = base * stepCost(G.grid[ny][nx]); en.moving = true;
+}
+function resetRecords() {
+  G.records = {};
+  for (const k in BRAINS) G.records[k] = { plays: 0, stars: 0, best: null };
+}
+function resetGame() {
+  G.p = entity(1, 1); G.e = entity(GW - 2, GH - 2);
+  G.stars = G.starHome.map(s => s.slice());
+  G.status = 'ready'; G.time = 0; G.got = 0; G.path = [];
+  $('startC').textContent = 'スタート';
+  $('msgC').textContent = '「スタート」を押すと敵が動き出します。';
+  renderHud();
+}
+function newMaze() {
+  G.grid = buildMaze(GW, GH, Math.random);
+  const cells = [];
+  for (let y = 1; y < GH - 1; y++) for (let x = 1; x < GW - 1; x++) {
+    if (G.grid[y][x] === 1) continue;
+    if (x + y < 7 || (x === GW - 2 && y === GH - 2)) continue;
+    cells.push([x, y]);
+  }
+  G.starHome = [];
+  while (G.starHome.length < STARS && cells.length) {
+    const c = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
+    if (G.starHome.every(s => Math.abs(s[0] - c[0]) + Math.abs(s[1] - c[1]) >= 4)) G.starHome.push(c);
+  }
+  resetRecords(); resetGame(); renderRecords();
+}
+function renderHud() {
+  $('hudStar').textContent = G.got + ' / ' + G.starHome.length;
+  $('hudTime').textContent = (G.time / 1000).toFixed(1) + ' 秒';
+  $('hudBrain').textContent = BRAINS[G.brain].name;
+}
+function renderRecords() {
+  $('recC').innerHTML = Object.keys(BRAINS).map(k => {
+    const r = G.records[k];
+    return `<tr><td>${BRAINS[k].name}</td><td class="num">${r.plays}</td><td class="num">${r.plays ? r.stars + ' / ' + G.starHome.length : '—'}</td><td class="num">${r.best === null ? '—' : (r.best / 1000).toFixed(1) + ' 秒'}</td></tr>`;
+  }).join('');
+}
+function renderBrain() {
+  document.querySelectorAll('[data-brain]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.brain === G.brain)));
+  $('brainDesc').textContent = BRAINS[G.brain].desc;
+  renderHud();
+}
+function finish(won) {
+  G.status = won ? 'won' : 'lost';
+  const r = G.records[G.brain];
+  r.plays++; r.stars = Math.max(r.stars, G.got);
+  if (won && (r.best === null || G.time < r.best)) r.best = G.time;
+  renderRecords();
+  $('startC').textContent = 'もう一度';
+  $('msgC').textContent = won
+    ? BRAINS[G.brain].name + ' の敵から逃げ切りました。' + (G.time / 1000).toFixed(1) + ' 秒でクリアです。別の頭脳でも試してください。'
+    : BRAINS[G.brain].name + ' の敵に捕まりました。星は ' + G.got + ' 個でした。';
+}
+function think() {
+  const e = G.e, p = G.p;
+  if (G.brain === 'greedy') G.path = greedyStep(G.grid, e.cx, e.cy, p.cx, p.cy);
+  else if (G.brain === 'bfs') G.path = bfsPath(G.grid, e.cx, e.cy, p.cx, p.cy) || [[e.cx, e.cy]];
+  else G.path = dijkstraPath(G.grid, e.cx, e.cy, p.cx, p.cy) || [[e.cx, e.cy]];
+  return G.path.length > 1 ? G.path[1] : null;
+}
+function stepGame(dt) {
+  if (G.status !== 'playing') return;
+  G.time += dt;
+  const p = G.p, e = G.e;
+  if (p.moving && G.time >= p.t0 + p.dur) p.moving = false;
+  if (!p.moving) {
+    const si = G.stars.findIndex(s => s[0] === p.cx && s[1] === p.cy);
+    if (si >= 0) { G.stars.splice(si, 1); G.got++; if (!G.stars.length) { renderHud(); finish(true); return; } }
+    for (let i = held.length - 1; i >= 0; i--) {
+      const [dx, dy] = DIRV[held[i]], nx = p.cx + dx, ny = p.cy + dy;
+      if (G.grid[ny][nx] !== 1) { startMove(p, nx, ny, P_MS); break; }
+    }
+  }
+  if (e.moving && G.time >= e.t0 + e.dur) e.moving = false;
+  if (!e.moving && G.time >= e.wait) {
+    const nxt = think();
+    if (nxt) startMove(e, nxt[0], nxt[1], E_MS); else e.wait = G.time + E_MS;
+  }
+  const [px, py] = entPos(p), [ex, ey] = entPos(e);
+  if (Math.hypot(px - ex, py - ey) < 0.55) { renderHud(); finish(false); return; }
+  renderHud();
+}
+
+function press(dir) { const i = held.indexOf(dir); if (i >= 0) held.splice(i, 1); held.push(dir); }
+function release(dir) { const i = held.indexOf(dir); if (i >= 0) held.splice(i, 1); }
+window.addEventListener('keydown', e => {
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  if (!(k in KEYS) || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target instanceof HTMLSelectElement || e.target instanceof HTMLInputElement) return;
+  if (G.status !== 'playing') return;
+  e.preventDefault(); press(KEYS[k]);
+});
+window.addEventListener('keyup', e => {
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  if (k in KEYS) release(KEYS[k]);
+});
+window.addEventListener('blur', () => { held.length = 0; });
+document.querySelectorAll('.dpad button').forEach(b => {
+  const d = b.dataset.dir;
+  b.addEventListener('pointerdown', e => { e.preventDefault(); press(d); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => b.addEventListener(t, () => release(d)));
+  b.addEventListener('contextmenu', e => e.preventDefault());
+});
+$('startC').addEventListener('click', () => {
+  if (G.status !== 'ready') resetGame();
+  G.status = 'playing'; G.e.wait = 500;
+  $('startC').textContent = '最初から';
+  $('msgC').textContent = '星を全部集めてください。';
+  $('startC').blur();
+});
+$('newMazeC').addEventListener('click', newMaze);
+document.querySelectorAll('[data-brain]').forEach(b => b.addEventListener('click', () => {
+  G.brain = b.dataset.brain; renderBrain(); resetGame();
+}));
+
+function drawC() {
+  const f = fit(gameC, CW, CH), ctx = ctxC;
+  ctx.setTransform(f.scale, 0, 0, f.scale, 0, 0);
+  ctx.fillStyle = '#141414'; ctx.fillRect(0, 0, CW, CH);
+  for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) {
+    const v = G.grid[y][x], X = x * CELL, Y = y * CELL;
+    if (v === 1) {
+      ctx.fillStyle = '#2a3a1c'; ctx.fillRect(X, Y, CELL, CELL);
+      ctx.fillStyle = '#34481f'; ctx.fillRect(X + 3, Y + 3, CELL - 6, CELL - 6);
+    } else if (v === 2) {
+      ctx.fillStyle = '#1b2a4d'; ctx.fillRect(X + 1, Y + 1, CELL - 2, CELL - 2);
+      ctx.strokeStyle = '#4d6fb8'; ctx.lineWidth = 2;
+      for (const oy of [14, 26]) {
+        ctx.beginPath(); ctx.moveTo(X + 8, Y + oy);
+        ctx.quadraticCurveTo(X + 14, Y + oy - 5, X + 20, Y + oy);
+        ctx.quadraticCurveTo(X + 26, Y + oy + 5, X + 32, Y + oy); ctx.stroke();
+      }
+    }
+  }
+  if ($('showPath').checked && G.path.length > 1 && G.status !== 'ready') {
+    ctx.strokeStyle = 'rgba(255,92,92,0.5)'; ctx.lineWidth = 6; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.setLineDash([2, 12]);
+    ctx.beginPath();
+    const [ex, ey] = entPos(G.e);
+    ctx.moveTo(ex * CELL + CELL / 2, ey * CELL + CELL / 2);
+    G.path.slice(1).forEach(([x, y]) => ctx.lineTo(x * CELL + CELL / 2, y * CELL + CELL / 2));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  ctx.fillStyle = C.amber; ctx.font = `28px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  G.stars.forEach(([x, y]) => ctx.fillText('★', x * CELL + CELL / 2, y * CELL + CELL / 2 + 2));
+  const body = (en, color, angry) => {
+    const [x, y] = entPos(en), cx = x * CELL + CELL / 2, cy = y * CELL + CELL / 2;
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.arc(cx - 5, cy - 2, 2.6, 0, Math.PI * 2); ctx.arc(cx + 5, cy - 2, 2.6, 0, Math.PI * 2); ctx.fill();
+    if (angry) {
+      ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx - 9, cy - 8); ctx.lineTo(cx - 2, cy - 5); ctx.moveTo(cx + 9, cy - 8); ctx.lineTo(cx + 2, cy - 5); ctx.stroke();
+    }
+  };
+  body(G.p, C.cyan, false); body(G.e, C.red, true);
+  if (G.status !== 'playing') {
+    const big = Math.max(30, 20 / f.css), small = Math.max(16, 12 / f.css);
+    const title = G.status === 'ready' ? '星を8個集めよう' : (G.status === 'won' ? 'クリア！' : '捕まった…');
+    const sub = G.status === 'ready' ? '「スタート」で開始' : '「もう一度」で同じ迷路に再挑戦';
+    const bh = big + small + 50;
+    ctx.fillStyle = 'rgba(10,10,10,0.8)'; ctx.fillRect(0, CH / 2 - bh / 2, CW, bh);
+    ctx.fillStyle = G.status === 'lost' ? C.red : (G.status === 'won' ? C.green : C.text);
+    ctx.font = `900 ${big}px ${FONT}`; ctx.fillText(title, CW / 2, CH / 2 - small / 2 - 4);
+    ctx.fillStyle = C.muted; ctx.font = `${small}px ${FONT}`; ctx.fillText(sub, CW / 2, CH / 2 + big / 2 + 8);
+  }
+}
+
+/* ================= 起動 ================= */
+setSpots(INITIAL_SPOTS); changedB();
+newMaze(); renderBrain();
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(50, now - last); last = now;
+  stepGame(dt);
+  drawB(now); drawC();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
